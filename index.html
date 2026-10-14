@@ -171,9 +171,18 @@
   #welcome-backdrop.show { display: block; }
   #welcome {
     position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
-    width: 380px; max-width: 92vw; z-index: 30001; display: none;
+    width: 560px; max-width: 92vw; z-index: 30001; display: none;
   }
   #welcome.show { display: flex; }
+  #welcome .w-feat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 12px; }
+  #welcome .w-feat button { all: unset; box-sizing: border-box; cursor: pointer; border: 1px solid #000; background: #fff; display: flex; flex-direction: column; }
+  #welcome .w-feat button:hover, #welcome .w-feat button:focus-visible { outline: 2px solid #000; outline-offset: 1px; }
+  #welcome .w-feat img { width: 100%; aspect-ratio: 16/10; object-fit: cover; object-position: top left; display: block; border-bottom: 1px solid #000; }
+  #welcome .w-feat span { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 11px; padding: 5px 7px 6px; line-height: 1.3; }
+  #welcome .w-lead { font-size: 15px; line-height: 1.4; margin: 0 0 4px; }
+  #welcome .w-small { font-size: 11px; color: rgba(0,0,0,0.6); margin: 0 0 12px; }
+  #welcome .w-actions { display: flex; justify-content: flex-end; }
+  @media (max-width: 520px) { #welcome .w-feat { grid-template-columns: 1fr; } #welcome .w-feat button { flex-direction: row; } #welcome .w-feat img { width: 40%; aspect-ratio: auto; border-bottom: 0; border-right: 1px solid #000; } #welcome .w-feat span { align-self: center; } }
 
   /* ---------- CAPA SEO / LECTORES DE PANTALLA (oculta, siempre en el DOM) ---------- */
   #mobile-view { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -245,6 +254,9 @@
   @media (max-width: 760px) { .cs-pair { grid-template-columns: 1fr; } }
   .cs-paper ul.cs-list { font-size: 14px; line-height: 1.72; margin: 0 0 14px; padding-left: 20px; }
   .cs-paper ul.cs-list li { margin-bottom: 8px; }
+  .case-card .thumb.build { background: repeating-linear-gradient(-45deg,#f4d03f 0 10px,#1c1c1c 10px 20px); }
+  .case-card .thumb.build.pause { background: repeating-linear-gradient(-45deg,#e4e4e4 0 10px,#b5b5b5 10px 20px); }
+  .case-card .thumb.build span { background: #fff; border: 1px solid #000; box-shadow: 2px 2px 0 #000; padding: 5px 12px; font-family: "ChicagoCS",Geneva,sans-serif; font-size: 11px; color: #000; }
   .case-card .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
 </style>
 </head>
@@ -268,10 +280,15 @@
     <div class="box" aria-hidden="true"></div>
   </div>
   <div class="content">
-    <h2 id="welcome-title">Bienvenido a mi escritorio ✦</h2>
-    <p>Esto es un portfolio en construcción inspirado en el sistema de diseño <strong>de Mac de los 90</strong>. Abre las carpetas para ver mis proyectos.</p>
-    <p>¿Un proyecto no te convence? <strong>Arrástralo a la Papelera</strong>. ¿Te arrepientes? Haz clic en la Papelera y todo vuelve a su sitio. 🙂</p>
-    <p style="text-align:right;margin-bottom:0;"><button class="btn" id="welcome-ok">Entendido →</button></p>
+    <h2 id="welcome-title">Hola, soy Mery ✦</h2>
+    <p class="w-lead">Diseño, monto y opero: hago que los negocios pequeños se vean bien <strong>y</strong> funcionen por dentro.</p>
+    <p class="w-small">Esto es mi escritorio, como el de un Mac de los 90. Abre las carpetas para ver mis proyectos. Estos tres son un buen principio:</p>
+    <div class="w-feat">
+      <button type="button" data-open="case-puti"><img src="putidimadre/case/miniatura.jpg" alt=""><span>Puti Di Madre<br>Una pizzería que le gana margen a las apps</span></button>
+      <button type="button" data-open="case-presupuestos"><img src="generador-de-presupuestos/img/miniatura.jpg" alt=""><span>Presupuestar sin echar la tarde<br>De 1 hora a 10 minutos</span></button>
+      <button type="button" data-href="wellness/index.html"><img src="wellness/case/miniatura.jpg" alt=""><span>Shiatsu<br>Identidad real y web</span></button>
+    </div>
+    <div class="w-actions"><button class="btn" id="welcome-ok">Explorar el escritorio →</button></div>
   </div>
 </div>
 
@@ -326,17 +343,17 @@ const NESTED = {
     id: "personal-arte", title: "Personal · Arte", color: "#eba0ac",
     intro: "Lo que hago cuando nadie me lo pide. Collages, calendario y experimentos.",
     cards: [
-      { kind: "project", title: "Collages", tag: "showcase", desc: "Serie de collages personales.", href: null },
-      { kind: "project", title: "Calendario", tag: "showcase", desc: "Proyecto de calendario ilustrado.", href: null },
+      { kind: "project", title: "Collages", tag: "showcase", desc: "Serie de collages personales.", href: null, pausa: true },
+      { kind: "project", title: "Calendario", tag: "showcase", desc: "Proyecto de calendario ilustrado.", href: null, pausa: true },
     ],
   },
   "trabajo-grafico": {
     id: "trabajo-grafico", title: "Trabajo gráfico", color: "#f0c766",
     intro: "Piezas gráficas de encargo a lo largo de los años.",
     cards: [
-      { kind: "project", title: "Vallas", tag: "showcase", desc: "Publicidad exterior.", href: null },
-      { kind: "project", title: "Talavera", tag: "showcase", desc: "Proyecto gráfico Talavera.", href: null },
-      { kind: "project", title: "Promos", tag: "showcase", desc: "Material promocional.", href: null },
+      { kind: "project", title: "Piezas de diseño", tag: "showcase", desc: "Diseños para McDonald's sobre todo, y algunas piezas más.", href: null, pausa: true },
+      { kind: "project", title: "Talavera", tag: "showcase", desc: "Proyecto gráfico Talavera.", href: null, pausa: true },
+      { kind: "project", title: "Promos", tag: "showcase", desc: "Material promocional.", href: null, pausa: true },
     ],
   },
 };
@@ -357,9 +374,9 @@ const DESKTOP = [
     id: "soluciones", kind: "folder", icon: ICONS.directory, title: "Soluciones de negocio", color: "#7fbf7a",
     intro: "Identidades y webs que captan clientes de verdad.",
     cards: [
-      { kind: "project", title: "Shiatsu ★", tag: "real", desc: "Identidad real + web spec para un servicio de shiatsu.", href: "wellness/index.html" },
+      { kind: "project", title: "Shiatsu ★", tag: "real", desc: "Identidad real + web spec para un servicio de shiatsu.", href: "wellness/index.html", thumb: '<img src="wellness/case/miniatura.jpg" alt="Web de Eme Pérez, shiatsu">' },
       { kind: "project", title: "Puti Di Madre", tag: "spec", desc: "Pizzería de barrio, solo recogida: recuperar el margen que se llevan las apps de reparto.", caseStudy: "case-puti", thumb: '<img src="putidimadre/case/miniatura.jpg" alt="Portada de la web de Puti Di Madre">' },
-      { kind: "project", title: "La Mezcaloteca", tag: "spec", desc: "Rediseño para convertir: web + email marketing.", href: null },
+      { kind: "project", title: "La Mezcaloteca", tag: "spec", desc: "Rediseño para convertir: web + email marketing.", href: null, pausa: true },
     ],
   },
   {
@@ -367,26 +384,24 @@ const DESKTOP = [
     intro: "Apps no-code que usan equipos reales cada día.",
     cards: [
       { kind: "project", title: "Presupuestar sin echar la tarde", tag: "en uso", desc: "Del PDF del fabricante al presupuesto del cliente, de cerca de una hora a unos 10 minutos.", caseStudy: "case-presupuestos", thumb: '<img src="generador-de-presupuestos/img/miniatura.jpg" alt="El presupuesto de Luz Norte en la herramienta">' },
-      { kind: "project", title: "Gestión de grupos", tag: "en uso", desc: "Herramienta no-code para McDonald's Xanadú.", href: null },
-      { kind: "project", title: "Gestión de delivery", tag: "en curso", desc: "Control de incidencias de delivery en McDonald's.", href: null },
-      { kind: "project", title: "+ nuevas herramientas", tag: "en curso", desc: "Hueco para lo que venga.", href: null },
+      { kind: "project", title: "Gestión de grupos", tag: "en uso", desc: "Herramienta no-code para McDonald's Xanadú.", href: null, pausa: true },
+      { kind: "project", title: "Gestión de delivery", tag: "en curso", desc: "Control de incidencias de delivery en McDonald's.", href: null, pausa: true },
+      { kind: "project", title: "+ nuevas herramientas", tag: "en curso", desc: "Hueco para lo que venga.", href: null, pausa: true },
     ],
   },
   {
     id: "exploracion", kind: "folder", icon: ICONS.directory, title: "Exploración de producto", color: "#f0c766",
     intro: "Conceptos de UI y producto que exploro por mi cuenta.",
     cards: [
-      { kind: "project", title: "MVM MAISON", tag: "concepto", desc: "Marketplace de relojes de lujo.", href: null },
       { kind: "project", title: "Spotify Now Playing", tag: "concepto", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" alt="Clubs cerca de ti en Spotify Now Playing">' },
-      { kind: "project", title: "Luna Bag", tag: "aparcado", desc: "Concepto aparcado: un bolso inteligente que dejé en pausa, por si vuelve.", href: null, disabledLabel: "En pausa" },
     ],
   },
   {
     id: "vozvisual", kind: "folder", icon: ICONS.directory, title: "Voz visual", color: "#eba0ac",
     intro: "Lo más personal: la parte que da personalidad a todo lo demás.",
     cards: [
-      { kind: "project", title: "Evolución del depredador", tag: "showcase", desc: "Scrollytelling true-crime.", caseStudy: "case-depredador" },
-      { kind: "project", title: "Mesa de lectura", tag: "concepto", desc: "Prototipo de gesto: barajar cartas con física, antes que la imagen.", href: "mesa-de-lectura/index.html" },
+      { kind: "project", title: "Evolución del depredador", tag: "showcase", desc: "Scrollytelling true-crime.", caseStudy: "case-depredador", thumb: '<img src="depredador/case/miniatura.jpg" alt="Portada de Evolución del depredador">' },
+      { kind: "project", title: "Mesa de lectura", tag: "concepto", desc: "Prototipo de gesto: barajar cartas con física, antes que la imagen.", href: "mesa-de-lectura/index.html", thumb: '<img src="mesa-de-lectura/case/miniatura.jpg" alt="Mesa de lectura, tarot con física">' },
       { kind: "folder", ref: "personal-arte", title: "Personal · Arte", desc: "Collages, calendario y experimentos." },
     ],
   },
@@ -409,6 +424,11 @@ function tagHtml(t) {
   return '<span class="type-tag" style="background:' + c.bg + ';border-color:' + c.bd + ';color:' + c.bd + '">' + c.label + "</span>";
 }
 
+function buildThumb(card) {
+  const pausa = card.pausa || card.tag === "aparcado";
+  return '<div class="thumb build' + (pausa ? " pause" : "") + '"><span>' + (pausa ? "En pausa" : "En construcción") + "</span></div>";
+}
+
 function cardHtml(card) {
   if (card.kind === "folder") {
     return '<article class="case-card">' +
@@ -423,9 +443,9 @@ function cardHtml(card) {
     ? '<button class="btn" onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>'
     : card.href
     ? '<a class="btn" href="' + card.href + '">Abrir proyecto →</a>'
-    : '<span class="btn disabled">' + (card.disabledLabel || "Próximamente") + "</span>";
+    : '<span class="btn disabled">' + (card.disabledLabel || (card.pausa ? "En pausa" : "Próximamente")) + "</span>";
   return '<article class="case-card">' +
-    '<div class="thumb">' + (card.thumb || "captura pendiente") + "</div>" +
+    (card.thumb ? '<div class="thumb">' + card.thumb + "</div>" : buildThumb(card)) +
     '<div class="cbody">' + tagHtml(card.tag) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + btn + "</div>" +
     "</article>";
 }
@@ -1010,6 +1030,10 @@ desktop.addEventListener("mousedown", (e) => {
   const okBtn = document.getElementById("welcome-ok");
   okBtn.focus();
   okBtn.addEventListener("click", close);
+  w.querySelectorAll(".w-feat button").forEach((b) => b.addEventListener("click", () => {
+    close();
+    if (b.dataset.open) openWindow(b.dataset.open); else window.location.href = b.dataset.href;
+  }));
   document.getElementById("welcome-close").addEventListener("click", close);
   back.addEventListener("click", close);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
