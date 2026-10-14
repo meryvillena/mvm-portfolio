@@ -134,6 +134,8 @@
   .btn.disabled { background: #eee; color: rgba(0,0,0,0.4); border-color: rgba(0,0,0,0.3); cursor: default; }
   .btn:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }
 
+  .photo.logo { background: #fff; border-style: solid; padding: 0; }
+  .photo.logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .photo {
     height: 140px; display: flex; align-items: center; justify-content: center;
     border: 1px dashed rgba(0,0,0,0.4); background: rgba(0,0,0,0.05);
@@ -474,7 +476,7 @@ function folderHtml(entry) {
 }
 
 function aboutHtml() {
-  return '<div class="photo">Tu foto</div>' +
+  return '<div class="photo logo"><img src="sobre-mi/logo-mvm-maison.jpg" alt="Logo de MVM Maison"></div>' +
     "<h2>Detrás de MVM Maison</h2>" +
     "<p>Diseño, monto y opero. Ocho años en operaciones (McDonald's incluido) me enseñaron que la estética sin sistema no aguanta —así que ahora junto las dos cosas.</p>" +
     "<p>Mi ventaja: entiendo el negocio <em>por dentro</em>, no solo la pantalla.</p>" +
