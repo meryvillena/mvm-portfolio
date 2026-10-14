@@ -462,7 +462,7 @@ function aboutHtml() {
     "<p>Diseño, monto y opero. Ocho años en operaciones (McDonald's incluido) me enseñaron que la estética sin sistema no aguanta —así que ahora junto las dos cosas.</p>" +
     "<p>Mi ventaja: entiendo el negocio <em>por dentro</em>, no solo la pantalla.</p>" +
     '<div class="chips"><span>8 años en operaciones</span><span>no-code</span><span>diseño</span></div>' +
-    '<div class="cards">' + cardHtml({ kind: "project", title: "Este escritorio", tag: "showcase", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio" }) + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Vallas, Talavera, promos y más." }) + "</div>";
+    '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>";
 }
 
 function contactHtml(idSuffix) {
@@ -938,56 +938,6 @@ function casePutiHtml() {
     </div>`;
 }
 (function(){ var w = makeWindow("case-puti", "Puti Di Madre.doc", ICONS.doc, casePutiHtml(), 140, 60, 680); if (w) w.classList.add("docwin"); })();
-
-// ===== CASE STUDY: Este escritorio (el propio portfolio) =====
-function casePortfolioHtml() {
-  return `<div class="cs-toolbar">
-      <div class="cs-tfont">Chicago&nbsp;▾</div>
-      <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
-      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
-      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
-      <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Izquierda">
-      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centro">
-      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Derecha">
-    </div>
-    <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
-    <div class="cs-paper">
-      <div class="cs-cta-row"><a class="btn" href="sistema-diseno-board.html" target="_blank" rel="noopener">Ver el sistema de diseño →</a></div>
-      <h1>Este escritorio</h1>
-      <p class="cs-sub">Un portfolio con forma de Mac de los 90.</p>
-      <div class="cs-meta">Meta · sobre el propio portfolio&nbsp;&nbsp;·&nbsp;&nbsp;sistema de diseño</div>
-      <div class="cs-cover">portada — captura pendiente</div>
-
-      <h2>Empezó en el Mac de mi tía Elvira</h2>
-      <p>Antes de saber qué era un “sistema de diseño”, ya usaba uno sin enterarme. De pequeña, mi tía Elvira me sentaba delante de su Macintosh y me enseñaba a mover el ratón: clic, arrastrar, soltar. Carpetas que se abrían, una papelera que devolvía lo que tirabas, iconos que hacían justo lo que prometían. Me parecía magia, pero en realidad era orden. Creo que ahí, sin darme cuenta, empecé a querer el diseño.</p>
-
-      <h2>Una conexión que me hizo ilusión</h2>
-      <p>Leyendo sobre sistemas de diseño me topé con algo bonito: aunque el término es reciente, su raíz es antigua — las <em>Human Interface Guidelines</em> de Apple (1987), hechas para el Mac. Consistencia, componentes que se repiten, cuidar a quien lo usa. Me hizo ilusión pensar que aquello que me enseñaba mi tía y lo que intento hacer ahora vienen del mismo sitio. Así que, cuando tocó montar mi portfolio, tiré de ahí.</p>
-
-      <h2>Por qué un escritorio</h2>
-      <p>Podía hacer otra cuadrícula de proyectos, como todo el mundo. Pero me apetecía algo que se pareciera a mí y que me hiciera ilusión abrir. Un sitio para curiosear: carpetas por categoría, ventanas que abres, una papelera para tirar lo que no te guste (y recuperarlo). No sé si es lo más práctico del mundo, pero es honesto: si sabes usar un Mac, sabes usar esto.</p>
-
-      <h2>Lo que hay por debajo</h2>
-      <p>Aunque parezca un juego, intenté que por dentro fuera un sistema de verdad, no un adorno. Poco a poco fui atando lo básico: unos colores (el gris Platinum, uno por categoría), tres tipografías con su función —Chicago para titulares, Geneva para leer, Monaco para lo técnico— y piezas que se repiten (ventanas, tarjetas, botones) para que lo nuevo encaje con lo de antes.</p>
-
-      <h2>Cositas que cuidé</h2>
-      <ul>
-        <li>Los case studies <strong>se abren como documentos</strong>, con su regla y su tipo de editor: leer sobre un proyecto también tenía que sentirse Mac.</li>
-        <li>En móvil <strong>no quise rendirme a una lista sosa</strong>: mantuve el escritorio como pude.</li>
-        <li><strong>Sin frameworks ni programas raros:</strong> es un archivo que subo tal cual. Me gusta que sea sencillo y mío.</li>
-        <li>La papelera no borra nada — es un guiño, no un susto.</li>
-      </ul>
-
-      <h2>Por qué lo cuento</h2>
-      <p>No es el portfolio más impresionante del mundo, pero es el más mío. Y si dice algo de cómo trabajo, es esto: me gusta partir de algo con raíz, cuidar los detalles y no perder mi voz por el camino. Empezó con mi tía enseñándome a mover un ratón. Supongo que sigo en las mismas — intentando que la tecnología se sienta un poco más cercana.</p>
-      <p style="font-style:italic;color:#5a534a;">Gracias, tía Elvira.</p>
-
-      <div class="cs-cta-row bottom"><a class="btn" href="sistema-diseno-board.html" target="_blank" rel="noopener">Ver el sistema de diseño →</a></div>
-    </div>`;
-}
-(function(){ var w = makeWindow("case-portfolio", "Este escritorio.doc", ICONS.doc, casePortfolioHtml(), 195, 100, 680); if (w) w.classList.add("docwin"); })();
 
 // Formulario de contacto (escritorio)
 attachContact("");
