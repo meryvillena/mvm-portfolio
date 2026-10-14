@@ -367,7 +367,7 @@ const DESKTOP = [
       "<h2>Hola, soy Mery ✦</h2>" +
       "<p><em>[Manifiesto — copy final pendiente.]</em> Diseño, monto y opero. Hago que los negocios pequeños se vean bien <strong>y</strong> funcionen por dentro.</p>" +
       "<p><strong>¿Por dónde empezar?</strong> Abre <em>Soluciones de negocio</em> y <em>Herramientas y operaciones</em>: es lo que hago para clientes de verdad.</p>" +
-      "<p class=\"small\">Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve.</p>"
+      "<p class=\"small\">Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.</p>"
     },
   },
   {
@@ -621,7 +621,7 @@ function showTrashBalloon(tx, ty) {
   b.className = "balloon";
   b.style.left = Math.max(8, tx - 190) + "px";
   b.style.top = (ty - 92) + "px";
-  b.innerHTML = '<span class="balloon-close" role="button" tabindex="0">✕</span>Si un proyecto no te gusta, arrástralo aquí. Clic en la Papelera y vuelve todo.';
+  b.innerHTML = '<span class="balloon-close" role="button" tabindex="0">✕</span>Si un proyecto no te gusta, arrástralo aquí. Clic en la Papelera y todo vuelve a su lugar.';
   desktop.appendChild(b);
   requestAnimationFrame(() => b.classList.add("show"));
   const remove = () => { b.classList.remove("show"); setTimeout(() => b.remove(), 300); };
