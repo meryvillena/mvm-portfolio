@@ -384,9 +384,8 @@ const DESKTOP = [
     intro: "Apps no-code que usan equipos reales cada día.",
     cards: [
       { kind: "project", title: "Presupuestar sin echar la tarde", tag: "en uso", desc: "Del PDF del fabricante al presupuesto del cliente, de cerca de una hora a unos 10 minutos.", caseStudy: "case-presupuestos", thumb: '<img src="generador-de-presupuestos/img/miniatura.jpg" alt="El presupuesto de Luz Norte en la herramienta">' },
-      { kind: "project", title: "Gestión de grupos", tag: "en uso", desc: "Herramienta no-code para McDonald's Xanadú.", href: null, pausa: true },
-      { kind: "project", title: "Gestión de delivery", tag: "en curso", desc: "Control de incidencias de delivery en McDonald's.", href: null, pausa: true },
-      { kind: "project", title: "+ nuevas herramientas", tag: "en curso", desc: "Hueco para lo que venga.", href: null, pausa: true },
+      { kind: "project", title: "Gestión de grupos", tag: "en uso", desc: "Herramienta no-code para restaurantes y eventos.", href: null, pausa: true },
+      { kind: "project", title: "Gestión de delivery", tag: "en curso", desc: "Control de incidencias y facturación para restaurantes.", href: null, pausa: true },
     ],
   },
   {
@@ -426,7 +425,7 @@ function tagHtml(t) {
 
 function buildThumb(card) {
   const pausa = card.pausa || card.tag === "aparcado";
-  return '<div class="thumb build' + (pausa ? " pause" : "") + '"><span>' + (pausa ? "En pausa" : "En construcción") + "</span></div>";
+  return '<div class="thumb build' + (pausa ? " pause" : "") + '"><span>' + "En construcción" + "</span></div>";
 }
 
 function cardHtml(card) {
@@ -443,7 +442,7 @@ function cardHtml(card) {
     ? '<button class="btn" onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>'
     : card.href
     ? '<a class="btn" href="' + card.href + '">Abrir proyecto →</a>'
-    : '<span class="btn disabled">' + (card.disabledLabel || (card.pausa ? "En pausa" : "Próximamente")) + "</span>";
+    : '<span class="btn disabled">' + (card.disabledLabel || (card.pausa ? "En construcción" : "Próximamente")) + "</span>";
   return '<article class="case-card">' +
     (card.thumb ? '<div class="thumb">' + card.thumb + "</div>" : buildThumb(card)) +
     '<div class="cbody">' + tagHtml(card.tag) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + btn + "</div>" +
