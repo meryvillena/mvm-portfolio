@@ -286,7 +286,7 @@
     <div class="w-feat">
       <button type="button" data-open="case-puti"><img src="putidimadre/case/miniatura.jpg" alt=""><span>Puti Di Madre<br>Una pizzería que le gana margen a las apps</span></button>
       <button type="button" data-open="case-presupuestos"><img src="generador-de-presupuestos/img/miniatura.jpg" alt=""><span>Presupuestar sin echar la tarde<br>De 1 hora a 10 minutos</span></button>
-      <button type="button" data-href="wellness/index.html"><img src="wellness/case/miniatura.jpg" alt=""><span>Shiatsu<br>Identidad real y web</span></button>
+      <button type="button" data-open="case-spotify"><img src="spotify/capturas/miniatura.jpg" alt=""><span>Spotify Now Playing<br>Descubre clubs por su música</span></button>
     </div>
     <div class="w-actions"><button class="btn" id="welcome-ok">Explorar el escritorio →</button></div>
   </div>
@@ -1035,7 +1035,6 @@ desktop.addEventListener("mousedown", (e) => {
     if (b.dataset.open) openWindow(b.dataset.open); else window.location.href = b.dataset.href;
   }));
   document.getElementById("welcome-close").addEventListener("click", close);
-  back.addEventListener("click", close);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
 })();
 
