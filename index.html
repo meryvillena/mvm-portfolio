@@ -424,6 +424,7 @@ function tagHtml(t) {
 }
 
 function buildThumb(card) {
+  if (card.href || card.caseStudy) return '<div class="thumb">captura pendiente</div>'; // proyecto real sin imagen aún: nunca "en construcción"
   const pausa = card.pausa || card.tag === "aparcado";
   return '<div class="thumb build' + (pausa ? " pause" : "") + '"><span>' + "En construcción" + "</span></div>";
 }
@@ -478,7 +479,7 @@ function aboutHtml() {
     "<p>Diseño, monto y opero. Ocho años en operaciones (McDonald's incluido) me enseñaron que la estética sin sistema no aguanta —así que ahora junto las dos cosas.</p>" +
     "<p>Mi ventaja: entiendo el negocio <em>por dentro</em>, no solo la pantalla.</p>" +
     '<div class="chips"><span>8 años en operaciones</span><span>no-code</span><span>diseño</span></div>' +
-    '<div class="cards">' + cardHtml({ kind: "project", title: "Este escritorio", tag: "showcase", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio" }) + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>";
+    '<div class="cards">' + cardHtml({ kind: "project", title: "Este escritorio", tag: "showcase", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" alt="El escritorio de este portfolio">' }) + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>";
 }
 
 function contactHtml(idSuffix) {
