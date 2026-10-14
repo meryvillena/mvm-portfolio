@@ -1,0 +1,3863 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Mesa de lectura — Prototipo</title>
+<meta name="description" content="Prototipo de interacción para explorar el gesto físico de manipular una baraja." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%AE%3C/text%3E%3C/svg%3E" />
+<style>
+  /* La mesa es de noche. Los colores salen de la paleta del propio tapete:
+     lo que antes era tinta ahora es luz, y el papel es violeta oscuro. */
+  :root {
+    --ink: #3d2a5c;
+    --ink-rgb: 61, 42, 92;
+    --paper: #efe6f7;
+    --paper-rgb: 239, 230, 247;
+    --table: #c6b6de;
+    /* La cara de la carta: morado claro, no blanco. Va un punto por encima del
+       tapete para que la carta se despegue de la mesa sin encenderse. */
+    --carta-cara: #ded1f0;
+    --brillo-rgb: 255, 255, 255;
+    --line: rgba(var(--ink-rgb), 0.26);
+    /* La carta creció (era 112 × 174) para que su microfrase pudiera llegar a
+       un cuerpo legible. La proporción, 0,64, es la de una carta de tarot y no
+       se toca: si cambia, la carta deja de parecer una carta. */
+    --card-w: 128px;
+    --card-h: 199px;
+    /* El cuerpo de letra de la cara va atado al tamaño de la carta: si la carta
+       encoge, el texto encoge con ella y sigue cabiendo. */
+    --carta-texto: 12px;
+    --carta-simbolo: 46px;
+    --font-mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+  }
+
+  body {
+    overflow: hidden;
+    background: #cdbfe0;
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button { font: inherit; }
+
+  .prototype {
+    width: 100vw;
+    height: 100dvh;
+    min-height: 620px;
+    padding: 14px;
+  }
+
+  .table {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(var(--ink-rgb), 0.23);
+    border-radius: 5px;
+    /* Superficie lisa. El tapete dibujado entrará aquí cuando esté. */
+    background:
+      radial-gradient(circle at 50% 34%, rgba(var(--brillo-rgb), .28), transparent 46%),
+      repeating-linear-gradient(105deg, rgba(var(--brillo-rgb), .05) 0, rgba(var(--brillo-rgb), .05) 1px, rgba(var(--ink-rgb), .022) 2px, rgba(var(--ink-rgb), .022) 4px),
+      var(--table);
+    box-shadow: inset 0 0 100px rgba(var(--ink-rgb), .12);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .topbar {
+    position: absolute;
+    z-index: 1000;
+    top: 26px;
+    right: 30px;
+    left: 30px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 4px 0 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(23px, 2.4vw, 37px);
+    font-weight: 400;
+    letter-spacing: -.04em;
+  }
+
+  .status {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    pointer-events: auto;
+  }
+
+  .table-actions { display: flex; gap: 7px; }
+
+  .status .count {
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  .status button {
+    height: 34px;
+    padding: 0 14px;
+    border: 1px solid var(--ink);
+    border-radius: 100px;
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+    transition: color 160ms ease, background 160ms ease;
+  }
+
+  .status button:hover, .status button:focus-visible {
+    color: var(--paper);
+    background: var(--ink);
+    outline: none;
+  }
+
+  .oracle-dialogue {
+    position: absolute;
+    z-index: 1400;
+    bottom: 28px;
+    left: 30px;
+    display: flex;
+    max-width: min(520px, calc(100% - 260px));
+    align-items: flex-end;
+    gap: 12px;
+    pointer-events: none;
+    animation: oracle-enter 340ms steps(5, end) both;
+  }
+
+  /* El 🔮 es lo único clicable del oráculo: sirve para adelantar la frase.
+     El resto sigue sin recibir clics para no estorbar al arrastrar cartas. */
+  .oracle-avatar {
+    display: grid;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid rgba(var(--ink-rgb), .74);
+    background: rgba(var(--paper-rgb), .8);
+    box-shadow: 3px 3px 0 rgba(var(--ink-rgb), .18);
+    padding: 0;
+    font-size: 23px;
+    filter: grayscale(.18);
+    cursor: pointer;
+    pointer-events: auto;
+    appearance: none;
+    transition: filter 160ms ease, transform 160ms ease;
+  }
+
+  .oracle-avatar:hover,
+  .oracle-avatar:focus-visible {
+    filter: grayscale(0);
+    transform: translateY(-1px);
+  }
+
+  .speech-bubble {
+    position: relative;
+    min-height: 42px;
+    padding: 12px 26px 12px 15px;
+    border: 1px solid rgba(var(--ink-rgb), .76);
+    background: rgba(var(--paper-rgb), .92);
+    box-shadow: 4px 4px 0 rgba(var(--ink-rgb), .16);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.55;
+    letter-spacing: .035em;
+  }
+
+  .speech-bubble::before {
+    position: absolute;
+    bottom: 10px;
+    left: -7px;
+    width: 12px;
+    height: 12px;
+    border-bottom: 1px solid rgba(var(--ink-rgb), .76);
+    border-left: 1px solid rgba(var(--ink-rgb), .76);
+    background: rgba(var(--paper-rgb), .98);
+    content: "";
+    transform: rotate(45deg);
+  }
+
+  /* Cuando el oráculo ha terminado la frase y espera a que hagas clic:
+     la burbuja se vuelve pulsable y aparece una flecha que late */
+  .oracle-esperando .speech-bubble,
+  .oracle-esperando .buho-dialogo-globo {
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  .oracle-esperando .buho-cursor { display: none; }
+
+  .oracle-esperando .buho-dialogo-globo::after {
+    position: absolute;
+    right: 10px;
+    bottom: 6px;
+    font-size: 12px;
+    line-height: 1;
+    content: "▸";
+    animation: continuar-late 1300ms ease-in-out infinite;
+  }
+
+  /* El búho tiene su propio rincón, arriba a la derecha, con el mismo sistema
+     que Madame pero en talla pequeña y mirando hacia el otro lado. */
+  .buho-dialogo {
+    position: absolute;
+    z-index: 1300;
+    top: 84px;
+    right: 30px;
+    display: flex;
+    max-width: min(330px, calc(100% - 90px));
+    align-items: flex-end;
+    gap: 10px;
+    animation: oracle-enter 340ms steps(5, end) both;
+    pointer-events: none;
+  }
+
+  /* El aviso del búho es una frase larga: tiene que poder partirse en varias
+     líneas o en móvil se corta a media palabra */
+  .buho-dialogo-globo { white-space: normal; }
+
+  /* El display:flex de arriba ganaría al atributo hidden si no se dice esto */
+  .buho-dialogo[hidden] { display: none; }
+
+  .buho-dialogo-avatar {
+    display: grid;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    border: 1px solid rgba(var(--ink-rgb), .74);
+    background: rgba(var(--paper-rgb), .8);
+    box-shadow: 3px 3px 0 rgba(var(--ink-rgb), .18);
+    font-size: 16px;
+    line-height: 1;
+    filter: grayscale(.18);
+  }
+
+  .buho-dialogo-globo {
+    position: relative;
+    padding: 9px 12px;
+    border: 1px solid rgba(var(--ink-rgb), .76);
+    background: rgba(var(--paper-rgb), .92);
+    box-shadow: 3px 3px 0 rgba(var(--ink-rgb), .14);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: .03em;
+  }
+
+  /* El pico apunta hacia el búho, que aquí está a la derecha */
+  .buho-dialogo-globo::before {
+    position: absolute;
+    right: -6px;
+    bottom: 8px;
+    width: 10px;
+    height: 10px;
+    border-top: 1px solid rgba(var(--ink-rgb), .76);
+    border-right: 1px solid rgba(var(--ink-rgb), .76);
+    background: rgba(var(--paper-rgb), .96);
+    content: "";
+    transform: rotate(45deg);
+  }
+
+  /* Mientras Madame no ha llegado, solo se ve su bola */
+  .sin-madame .speech-bubble { display: none; }
+
+  /* La bola late despacio para que se entienda que se puede pulsar */
+  .bola-llamando { animation: bola-late 2400ms ease-in-out infinite; }
+
+  @keyframes bola-late {
+    0%, 100% { transform: translateY(0); box-shadow: 3px 3px 0 rgba(var(--ink-rgb), .18); }
+    50% { transform: translateY(-2px); box-shadow: 3px 5px 0 rgba(var(--ink-rgb), .14); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bola-llamando { animation: none; }
+  }
+
+  /* El búho no habla en la burbuja: es señalética. Aparece en las etiquetas
+     pequeñas que indican qué hace cada cosa. */
+  .buho-label {
+    position: absolute;
+    z-index: 1500;
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 4px);
+    transition: opacity 150ms ease, transform 150ms ease;
+  }
+
+  .buho-label-visible { opacity: 1; transform: translate(-50%, 0); }
+
+  /* El búho en su recuadro, como el avatar de Madame pero a escala de cartel */
+  .buho-icono {
+    display: grid;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    place-items: center;
+    border: 1px solid rgba(var(--ink-rgb), .74);
+    background: rgba(var(--paper-rgb), .88);
+    box-shadow: 2px 2px 0 rgba(var(--ink-rgb), .18);
+    font-size: 12px;
+    line-height: 1;
+    filter: grayscale(.18);
+  }
+
+  .buho-globo {
+    position: relative;
+    padding: 6px 9px;
+    border: 1px solid rgba(var(--ink-rgb), .74);
+    background: rgba(var(--paper-rgb), .96);
+    box-shadow: 3px 3px 0 rgba(var(--ink-rgb), .16);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .09em;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  /* El pico del globo, igual que el de la burbuja grande */
+  .buho-globo::before {
+    position: absolute;
+    bottom: 6px;
+    left: -5px;
+    width: 8px;
+    height: 8px;
+    border-bottom: 1px solid rgba(var(--ink-rgb), .74);
+    border-left: 1px solid rgba(var(--ink-rgb), .74);
+    background: rgba(var(--paper-rgb), .98);
+    content: "";
+    transform: rotate(45deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .buho-label { transition: none; }
+  }
+
+  .oracle-esperando .typing-cursor { display: none; }
+
+  .oracle-esperando .speech-bubble::after {
+    position: absolute;
+    right: 11px;
+    bottom: 8px;
+    font-size: 13px;
+    line-height: 1;
+    content: "▸";
+    animation: continuar-late 1300ms ease-in-out infinite;
+  }
+
+  @keyframes continuar-late {
+    0%, 100% { opacity: .3; transform: translateX(0); }
+    50% { opacity: 1; transform: translateX(3px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .oracle-esperando .speech-bubble::after { animation: none; opacity: .8; }
+  }
+
+  /* El nombre de la carta y su microfrase, cuando el oráculo la presenta */
+  .speech-bubble strong {
+    font-weight: 700;
+    letter-spacing: .07em;
+  }
+
+  .speech-bubble em {
+    font-style: italic;
+    opacity: .78;
+  }
+
+  .typing-cursor {
+    display: inline-block;
+    width: 7px;
+    height: 12px;
+    margin-left: 3px;
+    background: currentColor;
+    vertical-align: -2px;
+    animation: cursor-blink 660ms steps(1, end) infinite;
+  }
+
+  .typing-cursor-idle { animation-duration: 980ms; }
+
+  @keyframes cursor-blink {
+    0%, 47% { opacity: 1; }
+    48%, 100% { opacity: 0; }
+  }
+
+  @keyframes oracle-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slots {
+    position: absolute;
+    z-index: 2;
+    top: 48%;
+    left: 57%;
+    display: flex;
+    gap: clamp(22px, 4vw, 66px);
+    transform: translate(-50%, -50%);
+  }
+
+  .slot {
+    position: relative;
+    /* Nunca se encoge: la casilla tiene que medir lo mismo que la carta. Sin
+       esto, cuando la fila no cabía, las tres casillas se estrechaban y la
+       carta sobresalía de su hueco. */
+    flex: 0 0 auto;
+    width: var(--card-w);
+    height: var(--card-h);
+    border: 1px solid rgba(var(--ink-rgb), .32);
+    border-radius: 7px;
+    background: rgba(var(--brillo-rgb), .025);
+    transition: background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  }
+
+  .slot::before, .slot::after {
+    position: absolute;
+    content: "";
+    background: var(--line);
+  }
+
+  .slot::before { top: 50%; left: 20%; width: 60%; height: 1px; }
+  .slot::after { top: 30%; left: 50%; width: 1px; height: 40%; }
+
+  .slot span {
+    position: absolute;
+    right: 0;
+    bottom: -24px;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .13em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .slot-active {
+    transform: scale(1.035);
+    background: rgba(249,246,236,.42);
+    box-shadow: 0 0 0 7px rgba(249,246,236,.17);
+  }
+
+  /* La casilla que se ha quedado vacía porque una carta se negó a ser leída:
+     late despacio hasta que pones otra, para que se entienda que es a propósito */
+  .slot-esperando {
+    background: rgba(249,246,236,.46);
+    animation: slot-espera 1800ms ease-in-out infinite;
+  }
+
+  @keyframes slot-espera {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(249,246,236,.14); }
+    50% { box-shadow: 0 0 0 11px rgba(249,246,236,.32); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slot-esperando { animation: none; box-shadow: 0 0 0 7px rgba(249,246,236,.24); }
+  }
+
+  .deck-label {
+    position: absolute;
+    z-index: 1;
+    /* Colgada del mazo: media carta a la izquierda y media carta hacia abajo,
+       calculado con las medidas de la carta para que siga al mazo si cambian. */
+    top: calc(50% + var(--card-h) / 2 + 20px);
+    left: calc(14% - var(--card-w) / 2);
+    display: flex;
+    width: var(--card-w);
+    justify-content: space-between;
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  .deck-label small { opacity: .55; font-size: inherit; }
+
+  .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--card-w);
+    height: var(--card-h);
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    color: var(--ink);
+    background: transparent;
+    box-shadow: 0 3px 8px rgba(28,30,28,.22);
+    cursor: grab;
+    touch-action: none;
+    perspective: 900px;
+    will-change: transform;
+    transition: box-shadow 140ms ease, filter 140ms ease;
+  }
+
+  .card:hover {
+    filter: brightness(1.035);
+    box-shadow: 0 9px 18px rgba(28,30,28,.22);
+  }
+
+  .card:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+  }
+
+  .card-dragging {
+    cursor: grabbing;
+    box-shadow: 0 22px 42px rgba(28,30,28,.32);
+    filter: brightness(1.05);
+  }
+
+  .card-arranging {
+    transition:
+      transform 820ms cubic-bezier(.18,.72,.2,1),
+      box-shadow 140ms ease,
+      filter 140ms ease;
+  }
+
+  .card-arranging.card-dragging { transition: none; }
+
+  .card-inner {
+    position: absolute;
+    inset: 0;
+    display: block;
+    transform-style: preserve-3d;
+    transition: transform 480ms cubic-bezier(.2,.76,.24,1);
+  }
+
+  .card-flipped .card-inner { transform: rotateY(180deg); }
+
+  /* La carta de la que habla Madame se levanta de la mesa. El aumento es
+     exactamente el doble, nunca un número roto: con pixel art, multiplicar por
+     un entero convierte cada píxel en cuatro cuadrados limpios; con 1,8 los
+     píxeles se parten y el dibujo tiembla. */
+  .card-leyendo .card-inner { transform: scale(2); }
+  .card-leyendo.card-flipped .card-inner { transform: rotateY(180deg) scale(2); }
+
+  /* Mientras está en alto no la tapa nada salvo las manos de Madame (900) */
+  .card-leyendo {
+    z-index: 860 !important;
+    filter: drop-shadow(0 18px 22px rgba(var(--ink-rgb), .28));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-leyendo .card-inner,
+    .card-leyendo.card-flipped .card-inner { transition: none; }
+  }
+
+  .card-side {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    overflow: hidden;
+    place-items: center;
+    border: 1px solid rgba(var(--ink-rgb), .30);
+    border-radius: 7px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .card-side::before {
+    position: absolute;
+    inset: 7px;
+    border: 1px solid rgba(37,39,37,.39);
+    border-radius: 3px;
+    content: "";
+  }
+
+  /* Las dos caras son opuestas a propósito: el reverso, el secreto, va en el
+     morado oscuro; el anverso, la revelación, en morado claro con la línea y
+     la letra en oscuro. Girar una carta pasa de oscuro a claro, y por eso se
+     nota. */
+  .card-back {
+    color: #cbb8e6;
+    border-color: rgba(var(--ink-rgb), .75);
+    background:
+      linear-gradient(rgba(var(--brillo-rgb), .07), rgba(0,0,0,.10)),
+      repeating-linear-gradient(45deg, transparent 0, transparent 7px, rgba(var(--brillo-rgb),.05) 8px),
+      var(--ink);
+  }
+
+  .card-front {
+    transform: rotateY(180deg);
+    color: var(--ink);
+    border-color: rgba(var(--ink-rgb), .38);
+    background:
+      radial-gradient(circle at 50% 42%, rgba(var(--brillo-rgb), .22), transparent 34%),
+      var(--carta-cara);
+  }
+
+  /* PRUEBA (12 ago): las dos primeras cartas ilustradas de verdad, en su
+     rejilla de 128 × 200 píxeles. Las diez restantes siguen siendo
+     tipográficas. Las imágenes van por ruta relativa mientras se decide; al
+     cerrar el diseño se incrustan en base64 como el resto. */
+  /* El dibujo trae la ilustración y el marco, pero NO el texto: el nombre y la
+     microfrase los escribe la pieza encima. Dibujados dentro de la imagen se
+     destruían al reducir la carta a su rejilla, y ampliarla después solo
+     agrandaba el borrón. Como texto de verdad se leen a cualquier tamaño. */
+  .card-front-ilustrada {
+    display: block;
+    transform: rotateY(180deg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+  }
+  .card-front-ilustrada::before { display: none; }
+
+  /* El nombre y la microfrase viven en la banda que el dibujo deja libre
+     abajo. Se reparten esa banda: el nombre arriba, la frase debajo. */
+  .face-pie {
+    position: absolute;
+    right: 7%;
+    bottom: 3%;
+    left: 7%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    height: 36%;
+    text-align: center;
+  }
+  /* El numeral también lo pone la pieza: dentro de la imagen cada carta lo
+     traía a un tamaño distinto (medidos: de 13 a 21 px). Así las doce lo
+     llevan idéntico y en el mismo sitio. */
+  .face-numeral-ilustrado {
+    position: absolute;
+    top: 5%;
+    right: 0;
+    left: 0;
+    text-align: center;
+  }
+
+  .face-pie .face-nombre { min-height: 0; line-height: 1.15; }
+  /* La frase, un punto por debajo del nombre: es la voz baja de la carta */
+  .face-pie .face-frase {
+    min-height: 0;
+    font-size: calc(var(--carta-texto) - 1px);
+    line-height: 1.2;
+  }
+  .carta-01 { background-image: url("_ilustraciones/carta-01-deadline.png"); }
+  .carta-03 { background-image: url("_ilustraciones/carta-03-cliente-que-ya-lo-tenia-claro.png"); }
+  .carta-04 { background-image: url("_ilustraciones/carta-04-referencia-inalcanzable.png"); }
+  .carta-05 { background-image: url("_ilustraciones/carta-05-cambio-pequenito.png"); }
+  .carta-06 { background-image: url("_ilustraciones/carta-06-reunion-que-podia-ser-correo.png"); }
+  .carta-08 { background-image: url("_ilustraciones/carta-08-idea-de-madrugada.png"); }
+  .carta-09 { background-image: url("_ilustraciones/carta-09-version-final-final.png"); }
+  .carta-10 { background-image: url("_ilustraciones/carta-10-archivo-perdido.png"); }
+  .carta-11 { background-image: url("_ilustraciones/carta-11-opinion-de-ultima-hora.png"); }
+  .carta-12 { background-image: url("_ilustraciones/carta-12-sindrome-de-la-impostora.png"); }
+  .carta-07 { background-image: url("_ilustraciones/carta-07-presupuesto-fantasma.png"); }
+  .carta-02 { background-image: url("_ilustraciones/carta-02-musa-en-huelga.png"); }
+
+  /* El marco interior se tiñe con la tinta de su cara: claro sobre el reverso
+     oscuro, oscuro sobre el anverso claro. */
+  .card-back::before { border-color: rgba(203, 184, 230, .34); }
+  .card-front::before { border-color: rgba(var(--ink-rgb), .34); }
+
+  /* Cara tipográfica de las cartas piloto (maqueta sin ilustración):
+     numeral arriba, símbolo protagonista, nombre en mayúsculas, microfrase discreta */
+  .card-front-arcano {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 11px 12px;
+    text-align: center;
+  }
+
+  .face-numeral {
+    font-family: Georgia, serif;
+    font-size: 12px;
+    letter-spacing: .2em;
+  }
+
+  /* El símbolo mengua con la carta: en el móvil, a su tamaño de escritorio se
+     comía la línea que necesita la microfrase más larga. */
+  .face-simbolo {
+    display: grid;
+    flex: 0 0 var(--carta-simbolo);
+    width: var(--carta-simbolo);
+    height: var(--carta-simbolo);
+    place-items: center;
+    line-height: 1;
+    opacity: .82;
+  }
+
+  .face-simbolo svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.35;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .face-nombre {
+    display: grid;
+    min-height: 29px;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--carta-texto);
+    letter-spacing: .09em;
+    line-height: 1.3;
+    text-wrap: balance;
+    text-transform: uppercase;
+  }
+
+  .face-nombre-largo {
+    font-size: calc(var(--carta-texto) - 2px);
+    letter-spacing: .055em;
+    line-height: 1.25;
+  }
+
+  .face-frase {
+    display: grid;
+    min-height: 27px;
+    place-items: center;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: var(--carta-texto);
+    line-height: 1.35;
+    opacity: .72;
+    text-wrap: balance;
+  }
+
+  .card-placed {
+    animation: card-confirm 360ms cubic-bezier(.2,.7,.2,1);
+    box-shadow: 0 5px 12px rgba(28,30,28,.18);
+  }
+
+  @keyframes card-confirm {
+    0% { box-shadow: 0 5px 12px rgba(28,30,28,.18); }
+    48% { box-shadow: 0 0 0 7px rgba(249,246,236,.38), 0 9px 18px rgba(28,30,28,.2); }
+    100% { box-shadow: 0 5px 12px rgba(28,30,28,.18); }
+  }
+
+  /* Aviso "haz clic" — aparece al pasar el ratón por una carta boca abajo
+     y desaparece para siempre en cuanto giras tu primera carta */
+  /* Los carteles del búho tienen la misma hechura que la burbuja de Madame,
+     pero en pequeño: el bicho en su recuadro y el globo al lado, con su sombra */
+  .card-hint {
+    position: absolute;
+    z-index: 1200;
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 4px);
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+
+  .card-hint-visible { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-hint { transition: none; }
+  }
+
+  .card-mark { font-family: Georgia, serif; font-size: 26px; opacity: .65; }
+
+  .card-number, .face-index {
+    position: absolute;
+    right: 13px;
+    bottom: 11px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+  }
+
+  .face-index { top: 12px; right: auto; bottom: auto; left: 13px; }
+
+  .face-orbit {
+    position: relative;
+    display: grid;
+    width: 58px;
+    height: 58px;
+    place-items: center;
+    border: 1px solid rgba(var(--ink-rgb), .48);
+    border-radius: 50%;
+  }
+
+  .face-orbit::before, .face-orbit::after {
+    position: absolute;
+    content: "";
+    border: 1px solid rgba(var(--ink-rgb), .24);
+    border-radius: 50%;
+  }
+
+  .face-orbit::before { inset: -11px 8px; }
+  .face-orbit::after { inset: 8px -11px; }
+  .face-sun { font-size: 18px; }
+
+  .face-name {
+    position: absolute;
+    right: 0;
+    bottom: 11px;
+    left: 0;
+    font-family: Georgia, serif;
+    font-size: 12px;
+    font-style: italic;
+    letter-spacing: .08em;
+    text-align: center;
+  }
+
+  .phase-note {
+    position: absolute;
+    z-index: 1000;
+    right: 30px;
+    bottom: 25px;
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    /* Si la fila no cabe (pantalla estrecha, o con los botones de prueba
+       puestos), baja de línea en vez de salirse de la mesa. */
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  /* «Fase 0» y «Validando el gesto antes que la imagen» eran andamio de taller:
+     fuera. El sitio que dejaron lo ocupan los botones de prueba. */
+
+  /* El enlace para compartir la tirada */
+  .compartir {
+    padding: 5px 11px;
+    border: 1px solid rgba(var(--ink-rgb), .5);
+    border-radius: 999px;
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: background 160ms ease, border-color 160ms ease;
+  }
+
+  .compartir:hover { border-color: var(--ink); background: rgba(249,246,236,.5); }
+
+  .sound-trigger svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.9;
+  }
+
+  .boton-redondo {
+    display: grid;
+    width: 29px;
+    height: 29px;
+    place-items: center;
+    border: 1px solid rgba(var(--ink-rgb), .72);
+    border-radius: 50%;
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+    transition: color 160ms ease, background 160ms ease, transform 240ms ease;
+  }
+
+  .boton-redondo:hover,
+  .boton-redondo:focus-visible,
+  .lab-trigger-active {
+    color: var(--paper);
+    background: var(--ink);
+    outline: none;
+    transform: rotate(38deg);
+  }
+
+  .physics-lab {
+    position: absolute;
+    z-index: 3000;
+    top: 78px;
+    right: 28px;
+    width: min(390px, calc(100% - 32px));
+    padding: 18px;
+    border: 1px solid rgba(var(--ink-rgb), .82);
+    background: rgba(226,223,213,.97);
+    box-shadow: 8px 8px 0 rgba(var(--ink-rgb), .18);
+    animation: lab-enter 180ms steps(4, end) both;
+  }
+
+  .physics-lab[hidden] { display: none; }
+
+  .physics-lab .lab-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(var(--ink-rgb), .25);
+    padding-bottom: 13px;
+  }
+
+  .physics-lab small,
+  .physics-lab h2,
+  .lab-hint,
+  .lab-control {
+    font-family: var(--font-mono);
+  }
+
+  .physics-lab small {
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .physics-lab h2 {
+    margin: 4px 0 0;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -.02em;
+  }
+
+  .physics-lab .lab-close {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border: 1px solid rgba(var(--ink-rgb), .7);
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .lab-presets {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin: 14px 0 18px;
+  }
+
+  .lab-presets button {
+    padding: 7px 3px;
+    border: 1px solid rgba(var(--ink-rgb), .48);
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+
+  .lab-presets button:hover,
+  .lab-presets button:focus-visible,
+  .physics-lab .lab-close:hover,
+  .physics-lab .lab-close:focus-visible {
+    color: var(--paper);
+    background: var(--ink);
+    outline: none;
+  }
+
+  .lab-controls { display: grid; gap: 12px; }
+
+  .lab-control {
+    display: grid;
+    grid-template-columns: 93px 1fr 42px;
+    gap: 9px;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .lab-control input {
+    width: 100%;
+    accent-color: var(--ink);
+  }
+
+  .lab-control output {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .lab-hint {
+    margin: 16px 0 0;
+    border-top: 1px solid rgba(var(--ink-rgb), .25);
+    padding-top: 11px;
+    opacity: .55;
+    font-size: 10px;
+    letter-spacing: .04em;
+  }
+
+  @keyframes lab-enter {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 760px) {
+    /* En el móvil tres cartas de 128 no caben en fila: suman más que el ancho
+       de la pantalla. La carta baja a 104 conservando la proporción. */
+    :root { --card-w: 104px; --card-h: 162px; --carta-texto: 10px; --carta-simbolo: 38px; }
+    .card-front-arcano { padding: 11px 8px 9px; }
+    .prototype { min-height: 560px; padding: 7px; }
+    .topbar { top: 20px; right: 18px; left: 18px; }
+    .eyebrow, .status .count, .deck-label { display: none; }
+    .table-actions { gap: 4px; }
+    .status button { height: 31px; padding: 0 9px; font-size: 11px; }
+    .oracle-dialogue { right: 14px; bottom: 64px; left: 14px; max-width: none; }
+    .buho-dialogo { top: 72px; right: 14px; max-width: calc(100% - 28px); }
+    .buho-dialogo-avatar { flex-basis: 26px; width: 26px; height: 26px; font-size: 14px; }
+    .buho-dialogo-globo { padding: 8px 10px; font-size: 12px; }
+    .oracle-avatar { flex-basis: 36px; width: 36px; height: 36px; font-size: 19px; }
+    .speech-bubble { padding: 9px 11px; font-size: 13px; }
+    .slots { top: 34%; left: 50%; width: auto; justify-content: center; gap: 12px; }
+    .phase-note { right: 18px; bottom: 16px; left: 18px; gap: 8px; }
+    .physics-lab { top: 66px; right: 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      scroll-behavior: auto !important;
+      transition-duration: .01ms !important;
+    }
+  }
+
+  #tarot-crystal-orb {
+    display: grid;
+    place-items: center;
+    min-height: 520px;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  #tarot-crystal-orb .orb {
+    position: relative;
+    width: min(390px, 78vw);
+    aspect-ratio: 1;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid #604170;
+    border-radius: 50%;
+    background: #180f32;
+    box-shadow:
+      inset 22px 14px 0 rgba(255,255,255,.09),
+      inset -28px -30px 0 rgba(22,7,49,.42),
+      0 20px 0 rgba(41,22,61,.18);
+    image-rendering: pixelated;
+    cursor: crosshair;
+    transition: filter 180ms steps(3, end);
+  }
+
+  #tarot-crystal-orb .orb:hover { filter: brightness(1.12) saturate(1.12); }
+
+  #tarot-crystal-orb canvas,
+  #tarot-crystal-orb .nebula,
+  #tarot-crystal-orb .glass {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+
+  #tarot-crystal-orb .edge-canvas {
+    z-index: 5;
+    pointer-events: none;
+    image-rendering: pixelated;
+  }
+
+  #tarot-crystal-orb canvas {
+    z-index: 1;
+    image-rendering: pixelated;
+  }
+
+  #tarot-crystal-orb .nebula {
+    z-index: 2;
+    opacity: .72;
+    mix-blend-mode: screen;
+    background:
+      radial-gradient(ellipse at 48% 48%, rgba(255,215,255,.36) 0 4%, transparent 15%),
+      conic-gradient(from 20deg at 50% 50%, transparent, rgba(192,118,255,.25), transparent 24%, rgba(106,207,255,.2), transparent 58%, rgba(255,142,220,.25), transparent);
+    animation: orb-nebula-turn 16s steps(64, end) infinite;
+  }
+
+  #tarot-crystal-orb .orb.is-hovered .nebula { animation-duration: 4.8s; }
+
+  #tarot-crystal-orb .glass {
+    z-index: 3;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 31% 23%, rgba(255,255,255,.64) 0 2%, rgba(222,236,255,.3) 3% 8%, transparent 12%),
+      radial-gradient(ellipse at 35% 29%, rgba(255,255,255,.13) 0 8%, transparent 23%),
+      radial-gradient(circle at 57% 63%, transparent 0 44%, rgba(198,161,255,.1) 62%, rgba(19,7,43,.38) 82%),
+      linear-gradient(135deg, rgba(255,255,255,.18), transparent 28% 68%, rgba(177,110,255,.18));
+    box-shadow:
+      inset 12px 10px 0 rgba(255,255,255,.08),
+      inset -15px -17px 0 rgba(44,15,80,.25);
+  }
+
+  @keyframes orb-nebula-turn { to { transform: rotate(360deg); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    #tarot-crystal-orb .nebula { animation: none; }
+  }
+
+  /* ---- la bola, tal cual la diseñó Mery ----
+     Solo se ajusta su sitio: centrada, del tamaño que pide la mesa y subida
+     hasta que asoma algo más de la mitad. Cuando entren las manos, quedará
+     entre ellas. */
+  #tarot-crystal-orb {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 50%;
+    min-height: 0;
+    width: min(300px, 30%);
+    pointer-events: none;
+    transform: translate(-50%, -47%);
+  }
+  /* La bola grande es un botón: cuando el búho dice «pulsa la bola», nadie
+     mira el iconito de abajo, mira esta. Manda cursor de mano, no la cruz de
+     inspeccionar que traía el componente. */
+  #tarot-crystal-orb .orb { width: 100%; pointer-events: auto; cursor: pointer; }
+  #tarot-crystal-orb .orb:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 6px;
+  }
+
+
+  /* ---- las piedras ----
+     Pixel art generado a partir de los dibujos de Mery: silueta y color suyos,
+     reconstruidos con cuatro tonos y borde duro. Viven en el perímetro para no
+     estorbar a las cartas. */
+  /* Las piedras van por encima de las cartas (que como mucho llegan a 800) y
+     por debajo de las manos (900): están sobre el tapete, no dentro del juego.
+     El contenedor no recibe el ratón; cada piedra sí, para poder arrastrarla. */
+  .piedras { position: absolute; z-index: 850; inset: 0; pointer-events: none; }
+
+  .piedra {
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    image-rendering: pixelated;
+    /* Dos sombras: una dura y desplazada, que es la del pixel art, y otra
+       blanda y pegada al pie, que es la que apoya la piedra en el tapete.
+       Al ser el PNG traslúcido, la sombra hereda esa transparencia sola. */
+    filter:
+      drop-shadow(4px 6px 0 rgba(var(--ink-rgb), .14))
+      drop-shadow(0 4px 7px rgba(var(--ink-rgb), .30));
+  }
+
+  .piedra-amatista {
+    top: 14%; left: 12%;
+    width: 104px; height: 108px;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAA2CAMAAAC/bkrSAAAAElBMVEUAAABOMlduRnqOW56pgLbKsdJA7FU4AAAABnRSTlMA5LqqxPgJIniiAAACoElEQVR42pVWjZojIQgbfnz/Vz6ToDPq9Nr1u92zWyIQInhdX5dxXX9akVzxm7U8eLaW/Se++ZN5t+QCpMldfsZVQGXeckKSmzdExHDRMnNu6py+P7OzuG1q081wUvnp/+0RmsK5F/wGF89gFBvIeWBZcTX5GXt+vYLc2yeQ88MbKMQXEoBLGucEeRjzW0GdhAe9ZVwpOVB+gkxc998FrfgaMU6Y7ewVq7QjaqTF2AQCU08QAlZNxHlhPOApBSTqBI06tuLQjQT6CNHXnG7QqD4xsFpAiydQo+hGScrORqkM8XWlLwLq53uBUup5gOTHcwNlgcZSeLhY8Eo4i76BmkDuKwiBk7hgnidolMSDKVlH9U8dhD+2zmX49eLJlTA3xh/IK0FbdC7dNr4RxSg+Q+MBBEFcvbfEC4jWNFQ6zpxMdwL9qJ94aKhc6N/EEBQ848lC6CbFAJHf2xGO42ZhIau5BXWiMioj1Ums2Ep3jitLkLIib7RtiR1U+OxelZGpSEMyRR5BwvjiSO2N9YG+CC0Erh0+A2TXLrsJsnEpQAWoo1t8dx2gnFFRQ+KAGiqPbtehoCF+g/5naXEXCrM4csaGAeRFm0pZAyftxc/lbdaofAUHEdXkpG4jYfZVcm1FW8+DSuBpRrb32cLvxFwMVzWbqEeP3RFblC7FI745yaTHLaGLk7jpPg9MjbwJ8mOMWVmo7Gw4Yz6P6tk5yX22YXXDxyzsjdE8XgY6/jpPlp5qhnKAnWwXqJ8/zHKiSyZnQjU0gXq+A6ZTaPjDa4M95h4x9+qg+AQCKqSe+7WgQP3zc8jUjNU8Zmq8Yfa/F1Q1ccDqOUQJ2beH2hwtpkENqf7wvit3qjCeeL88C3lda9RA9z+/Pm2OvL+8WedF/2zyDxqXFniDUopYAAAAAElFTkSuQmCC");
+  }
+  .piedra-cuarzo {
+    top: 22%; right: 14%;
+    width: 88px; height: 80px;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAApCAMAAAB5lzuAAAAAElBMVEUAAAB5VV6qeITbmqrns7/w0NiXBRwCAAAABnRSTlMA5LqqxPgJIniiAAABvUlEQVR42pWV24LCMAhEBSb//8ubGSCNUavLw67WExguoY/HYdb2+MHsd9psDKR95c08gKDBv9HmcIxYdkNPDfSKMS3dh9stDLGl/KPvqZfuxrJ5Ktzf0pP1wLjc5n/3d0rkF+XxHt7kUqlOZIRX2VnfgpfscCV5wGQ9ntTy0Ewi9MCeWMoVVGXW59ke93EIYRl8RgyyrvgVQuGec7S4HLcGOVc72f2t2Da/Ib1F+2VtJGr+AlywWbAb0DzUWEi04rnGsGFmR8X164IhNgTPMNYwEwnBXRKodeBsNGwN04HQ7gfF1omkx4IlDcgsAw2raPEC8wH/qANVEjmdbQk5QtaaMlyPPC9HT0jUwyxIw/QaKU98VlBCXPfBVRoWe8L87kW7skXNEXJYeKaKbRkqon3zRM5E5pDT5QXLLYM2Dg5Ulp9yNQILjtQcjbv3wLGXo7aCravql6WgqF5ScyzPvbROOG+ApkkjaLbWQFbZd9O8oEu/jZ5SB07noj2XwjbUtoYGIuPia/Xtt1wLPFumitXq1Rjh3GO57v1igbWrGcTsw0siLk2VydvFbpuxM1mi25dA020/vY3+85472T+xCA9S8qXPswAAAABJRU5ErkJggg==");
+  }
+  .piedra-luna {
+    bottom: 16%; right: 22%;
+    width: 80px; height: 80px;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAElBMVEUAAABpXG2Ugpm/p8XQvdXi1+UbQLSVAAAABnRSTlMA5LqqxPgJIniiAAABkElEQVR42oWVC47DMAhEi4H7X3kZBrCTplmkVlH9MvwM/Xy2ydjn1QJYYfH9SgZmZu7xZW+qsnRt+02KqG1SKfvIeRx7mhlp/yYjOl1aXJAlGxE8gUgkMdWKQe+aqbe5IIhqhH0hxeP37XcU8XRqhuNJJCy0j/RP7wDVWpBBDqq7noJSD1jZAAWMsyaj0qfndK0tKkc9CXbOkbwVeQ8zwQmxQQPIItk6wErDlLcHpCUIvkhZCeIozyMZPLFI6GyXM0Ez3pgAKDmBZgh+gKkIOTazROmZiVfWeJ2HO1IrRUQgBIvUdK0H2Pl4g6tB9YqibIlnQySnAD0Y73ioIcuXcbfUCGp21Tao3fFMsEA6b7A/JWccjXRdoKwuedYpe8WHAemcpBbph50gAgbJFK7cAcL7Gu9jfUHXCYrNjHr3sEgUeU8O1Oh+iL7Lcl0aspxXVaYxlfh9u2SEyjHR5ngl9LqwIs5aOwijxian676DsBN5vnc0r9jTWuuK7E3lPxZl6ujYy+oVVGAmR/5b/F9/JH/VsA57e/+2FwAAAABJRU5ErkJggg==");
+  }
+
+  @media (max-width: 760px) {
+    .piedra-amatista { width: 62px; height: 64px; top: 10%; left: 6%; }
+    .piedra-cuarzo { width: 52px; height: 48px; top: 15%; right: 7%; }
+    .piedra-luna { width: 48px; height: 48px; bottom: 10%; right: 10%; }
+  }
+
+  .piedra-punta {
+    top: 12%; right: 30%;
+    width: 92px; height: 110px;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAA3CAMAAABEvohWAAAAElBMVEUAAABaUmF/c4iklLC7rsTVzdtIpCcwAAAABnRSTlMA5LqqxPgJIniiAAACNklEQVR42o2WiXLDMAhEw/X/vxx2QYp8yI5m2mmTZ7SsAPnzeVsy1uevpb3kv8DR650Xy5Wk5wo3eYmtDOtulnjEs3ziYHOBfsQpGrBSkas/4qoBwQyOPxQJyD7LCKaJ6MRT0BaX3Dt1qHei0LTHKRxHw/ipXJRbyD62ZnBB/HDi++gZ1K3PHrGfcfhdoaGHhrabchu70uzKwr/hW1wEtumKO+25xWkGlGCDrIMUY1UOdzhMqTRzd60KxlPmd0ZCSQuXiXMbFNkZR1rDQuOP9K9yVK7CnV/LwLNu21I94bCYsFVsPER8+HnCUbOLFEATR7KH9mslUIBkrcYFCoCOHtsjc/co+/R3pN4HBvqEozS0uu2HJ1N4wNYDjI7xOqCy3LgdfMo89Rx74KWIR9muo24WnJ6AcyQmQh77jzzSFDkWSuM6w5uPrLMc19go2cYrUYqvpiAei+NoNfa6WjU9UzW3Nom6L3hpQCOVlFLOgRGrhTNijcIxuMZneO5gStzgYb/PDo73VK5da0CzRXqD00VAy6vXOcTH7J+467lqzWfUGbxTiLBLkfcXDOu9gfelcbqSCs9j9saYSOPo5itO0zlgSk7TFyWHjhvOTC2YZhucVTJjI7zdX17ShWUd38fa3KQyjxA78ViDDt3fuxz+VlvUGZRBm9eAMZFNy+uBy/bi6snIhvAug4dLtJEYN7q/3ehaEUvTG47B4YuF+/t59pQtlr+9u/RFXcv+evHS/9+6Dq90D/gX7KcSKR1mVHkAAAAASUVORK5CYII=");
+  }
+  .piedra-esquirla {
+    bottom: 22%; left: 13%;
+    width: 84px; height: 104px;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAA0CAMAAADLwVqCAAAAElBMVEUAAABZTl5+boSijqq5qb/UytgY/50aAAAABnRSTlMA5LqqxPgJIniiAAAB2klEQVR42o2W2ZaDMAxD8ZL//+WxJDNtSgjw0OX0Rt6dHseLx+x4+Xj48U7RfKS9AX3U8wZ1D5Dx6IJZFpeFjn1ktJ2FjXhCaTuCaJ2wjXFIZpCvUxvUS0lopm9RC2kWWuFv0LLOwN3rLWyDWkjTHQ57oX6DKiIaNsRUaK5rQDdp3aEOTb/J64TmBqV1ZL3s1iGH+XW1DEJMZTVVtuYd+h8R+jTNblB0iNy0TiYdyGu/tnVoFoLEUtSu6CefIKpgLvUramgQRQT/WnzpwCefRFUmfIkfVB0CkoAjaKMDlVy7t46ihz6U5oxi4M58EhjR1n/RdpOaIUfDz5rmd/pxUtNePwXCGIoemulzjToi5CVCaPs89TRrREl80jidmj+DYrQd0qwzfU7tGl8hVaud8xPaT9wTTU4dxWbC8jDGphe4gljn2VNMCCmQLuaMmVij4aSGXpQz9zmhJxoafNUBgsqDXRo/uEZGo9FoLtFoMFgHSmYuxym6q7TOUtYXC5UOyDhaiJ0C64ubgk1OyQ4ebYBDq82j9dyoHB13O0rlytGo47rYocyAIsv7be6cgXGiie45dutcrUiXd5dU32Y68HTxoVWl60+3P27TykCtiedLmnNgb/8iPAj+AX0PDcA01vrRAAAAAElFTkSuQmCC");
+  }
+  .piedra-lavanda {
+    bottom: 12%; left: 32%;
+    width: 80px; height: 82px;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAMAAABwfJv6AAAAElBMVEUAAABIKVJlOnOCS5WfdK/Eqc3wj17zAAAABnRSTlMA5LqqxPgJIniiAAABsElEQVR42o2VC5LDMAhDK8D3v/IiAXHST7Kedjdu3wgBNn299kKv18PycK24x4BYvW5V4TFgmLv9JDEUl2QfwLTY4HcDHoKYSv6zXJL/QOErCkw98b/A1Omw/EPNVQ7iitobaBs0uwomyJihFwPH5H/SBKowa1ozBajHODQrRe903A7QTJqTknpXcaTBB27ZoEv0DTL09NAMMqxosAHLOrlU6gXZaB8YcBxG9cWsahWdvIJbKQ44cnGAFAG7VxmrRK6IJgtQj9y0azDGSiiowgbMywe3DbIxpYsyl1pAIhmAaO5GcXWbTbVju4FKqkJsUFB0RRiXoETTNHvDo8hS60jkl+RXfkMMcLKhc4k8UCsEqtZRx9HQ9k6gylipNlhEilK5HAosg9VgxQLGIOG+EKgsQ7kdbd4ZR2xQlTPptbt8o3YbrCFRtlpuPxqTxGmaeIOsxyxFuIL8gL0zVdlb1qsPON+t1Fy7XfI6c+gyrQSyT+xfnZfo6/Y+1lgtnbDYmK7Ox0hRkcw7Ax1PaeNz3rofx7Sut7t/m3tKPXqcqc/2Y+oCc+UCDz8P+O/Pxz34B03yDklVWeCMAAAAAElFTkSuQmCC");
+  }
+
+  @media (max-width: 760px) {
+    .piedra-punta { width: 54px; height: 64px; top: 9%; right: 26%; }
+    .piedra-esquirla { width: 50px; height: 62px; bottom: 20%; left: 7%; }
+    .piedra-lavanda { width: 48px; height: 50px; bottom: 9%; left: 28%; }
+  }
+
+  /* Botones de prueba de las piedras. TEMPORALES: se quitan cuando decidamos
+     en qué momentos vibran y se intercambian solas. */
+  /* Viven dentro del pie, en el hueco que dejó la nota de fase. Van en el flujo
+     de la fila, sin posición propia: así no se pelean con nada. */
+  .pruebas-piedras {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    border: 1px dashed rgba(var(--ink-rgb), .5);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .pruebas-piedras span { opacity: .5; }
+  .pruebas-piedras button {
+    padding: 4px 9px;
+    border: 1px solid rgba(var(--ink-rgb), .55);
+    border-radius: 999px;
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+    text-transform: uppercase;
+  }
+  .pruebas-piedras button:hover { color: var(--paper); background: var(--ink); }
+
+  /* ---- las manos de Madame ----
+     Madame se sienta enfrente, así que sus manos entran por el borde de allá,
+     una a cada lado de la bola. El dibujo es uno solo: cada ventana enseña su
+     mitad. */
+  /* Las manos van por encima de las cartas y de las piedras: son las de Madame,
+     que está al otro lado de la mesa, y las cosas de la mesa pasan por debajo
+     de ellas. Por debajo del título y del pie (1000), que no son mesa sino
+     rótulos. Como no reciben el ratón, tapar una carta no impide arrastrarla. */
+  .manos { position: absolute; inset: 0; pointer-events: none; z-index: 900; }
+
+  /* Las ventanas no llevan alto ni recorte propios: si se los pones, las yemas
+     se quedan cortadas por abajo. Quien recorta es la mesa, que ya esconde todo
+     lo que se sale por arriba. */
+  .mano-hueco {
+    position: absolute;
+    top: 0;
+  }
+  .mano-hueco-izq { right: 56%; width: 24%; }
+  .mano-hueco-der { left: 56%; width: 24%; }
+
+  /* El dibujo se sube: las muñecas quedan fuera de pantalla y solo entran las
+     manos, como si Madame las apoyara desde el otro lado de la mesa. El margen
+     va en porcentaje del ancho, que es la misma medida con la que crece el
+     dibujo: así asoma siempre lo mismo, mida lo que mida la pantalla.
+
+     Hay dos posturas y una sola cifra las separa:
+       --asomo: -26%  manos enteras, mientras Madame presenta la tirada
+       --asomo: -100% solo los dedos, cuando la mesa tiene que quedar libre
+     El viaje va a saltos (steps) en vez de deslizarse: el pixel art de los
+     ochenta se movía por bloques, no con un travelling suave. */
+  .manos { --asomo: -26%; }
+  .manos.manos-dentro { --asomo: -100%; }
+
+  .mano-lienzo {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: var(--asomo);
+    image-rendering: pixelated;
+    transition: margin-top 760ms steps(11, end);
+  }
+
+  @media (max-width: 760px) {
+    .manos { --asomo: -30%; }
+    .manos.manos-dentro { --asomo: -104%; }
+    .mano-hueco-izq { right: 54%; width: 28%; }
+    .mano-hueco-der { left: 54%; width: 28%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mano-lienzo { transition: none; }
+  }
+
+  /* ---- dedos gordos ----
+     En pantalla táctil no hay puntero fino: un botón de 29 px se falla. Aquí
+     no se agranda el botón —eso descolocaba la fila del título en móvil— sino
+     una zona invisible por encima de él. El dibujo queda igual y el dedo
+     acierta: el mínimo cómodo son 44 px. */
+  @media (pointer: coarse) {
+    .status button,
+    .compartir,
+    .boton-redondo {
+      position: relative;
+    }
+    .status button::after,
+    .compartir::after,
+    .boton-redondo::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 44px;
+      min-height: 44px;
+      width: 100%;
+      height: 100%;
+      content: "";
+      transform: translate(-50%, -50%);
+    }
+  }
+
+</style>
+</head>
+<body>
+  <main class="prototype">
+    <section class="table" aria-label="Mesa de lectura">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Prototipo de interacción · 12</p>
+          <h1>Mesa de lectura</h1>
+        </div>
+        <div class="status">
+          <span class="count" aria-live="polite">0 / 3</span>
+          <nav class="table-actions" aria-label="Acciones del mazo">
+            <button type="button" data-action="scatter">Barajar</button>
+            <button type="button" data-action="fan">Abrir</button>
+            <button type="button" data-action="gather">Recoger</button>
+          </nav>
+        </div>
+      </header>
+
+      <div class="oracle-dialogue" role="status">
+        <button type="button" class="oracle-avatar" aria-label="Continuar la lectura" title="Continuar">🔮</button>
+        <span class="speech-bubble">
+          <span class="bubble-text"></span><span class="typing-cursor" aria-hidden="true"></span>
+        </span>
+      </div>
+
+<div id="tarot-crystal-orb">
+  <div class="orb" role="button" tabindex="0" aria-label="Llamar a Madame Cesoir">
+    <canvas class="galaxy-canvas" width="144" height="144"></canvas>
+    <div class="nebula"></div>
+    <div class="glass"></div>
+    <canvas class="edge-canvas" width="144" height="144" aria-hidden="true"></canvas>
+  </div>
+</div>
+
+
+
+      <div class="manos" aria-hidden="true">
+        <div class="mano-hueco mano-hueco-izq"><canvas class="mano-lienzo" width="332" height="588"></canvas></div>
+        <div class="mano-hueco mano-hueco-der"><canvas class="mano-lienzo" width="338" height="588"></canvas></div>
+      </div>
+
+      <div class="piedras" aria-hidden="true">
+        <span class="piedra piedra-amatista"></span>
+        <span class="piedra piedra-cuarzo"></span>
+        <span class="piedra piedra-luna"></span>
+        <span class="piedra piedra-punta"></span>
+        <span class="piedra piedra-esquirla"></span>
+        <span class="piedra piedra-lavanda"></span>
+      </div>
+
+      <div class="slots" aria-label="Posiciones de lectura"></div>
+
+      <div class="deck-label" aria-hidden="true">
+        <span>El mazo</span>
+        <small>12 cartas</small>
+      </div>
+
+      <div class="card-hint" aria-hidden="true"><span class="buho-icono">🦉</span><span class="buho-globo">Haz clic</span></div>
+      <div class="buho-label" aria-hidden="true"></div>
+
+      <div class="buho-dialogo" role="status" hidden>
+        <span class="buho-dialogo-globo">
+          <span class="buho-texto"></span><span class="typing-cursor buho-cursor"></span>
+        </span>
+        <span class="buho-dialogo-avatar" aria-hidden="true">🦉</span>
+      </div>
+
+      <footer class="phase-note">
+        <div class="pruebas-piedras">
+          <span>pruebas</span>
+          <button type="button" data-piedras="vibrar">Vibrar</button>
+          <button type="button" data-piedras="intercambiar">Intercambiar</button>
+          <button type="button" data-manos="alternar">Manos</button>
+        </div>
+        <button type="button" class="compartir" hidden>Copiar enlace</button>
+        <button type="button" class="boton-redondo sound-trigger" aria-pressed="false" aria-label="Activar el sonido de la mesa"></button>
+        <button type="button" class="boton-redondo lab-trigger" aria-label="Abrir laboratorio de física" aria-expanded="false">⚙</button>
+      </footer>
+
+      <aside class="physics-lab" role="dialog" aria-label="Laboratorio de física" hidden>
+        <div class="lab-head">
+          <div>
+            <small>Mesa / laboratorio</small>
+            <h2>Calibración física</h2>
+          </div>
+          <button type="button" class="lab-close" aria-label="Cerrar">×</button>
+        </div>
+        <div class="lab-presets"></div>
+        <div class="lab-controls"></div>
+        <p class="lab-hint">Los cambios se guardan automáticamente</p>
+      </aside>
+    </section>
+  </main>
+
+<script>
+(function () {
+  "use strict";
+
+  var CARD_COUNT = 12;
+  // El tamaño de la carta se decide en un solo sitio, la hoja de estilos, y el
+  // código lo lee de ahí. Antes estaba escrito dos veces y bastaba con cambiar
+  // uno para que la física dejara de coincidir con el dibujo.
+  function medidaCSS(nombre, porDefecto) {
+    var v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(nombre));
+    return isNaN(v) ? porDefecto : v;
+  }
+  var CARD_WIDTH = medidaCSS("--card-w", 128);
+  var CARD_HEIGHT = medidaCSS("--card-h", 199);
+
+  // Maqueta visual de los doce arcanos. Los iconos son SVG de línea
+  // incrustados: no cargan librerías, fuentes ni recursos de internet.
+  function icono(trazos) {
+    return '<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">' + trazos + '</svg>';
+  }
+
+  // La fuente oficial de nombres y microfrases es BARAJA-MAESTRA.md.
+  var ARCANOS = {
+    1: {
+      numeral: "I",
+      nombre: "Deadline",
+      simbolo: icono(
+        '<path d="M9 3h14M9 29h14M10 4c0 6 4 8 6 10-2 2-6 4-6 14M22 4c0 6-4 8-6 10 2 2 6 4 6 14"/>' +
+        '<path d="M13 23h6M23.5 20.5l3 2.5m-3 0 3-2.5"/>'
+      ),
+      microfrase: "Siempre llega antes de lo previsto.",
+    },
+    2: {
+      numeral: "II",
+      nombre: "La Musa en Huelga",
+      simbolo: icono(
+        '<path d="M7 5h18v15H7zM16 20v10"/>' +
+        '<path d="m16 8 1.4 3h3.3l-2.6 2 1 3.2-3.1-1.8-3.1 1.8 1-3.2-2.6-2h3.3z"/>' +
+        '<path d="M11 24h10M12 27h8"/>'
+      ),
+      microfrase: "Su horario no coincide con el tuyo.",
+    },
+    3: {
+      numeral: "III",
+      nombre: "El Cliente que ya lo tenía claro",
+      simbolo: icono(
+        '<path d="M5 5h22v15H15l-7 6v-6H5z"/>' +
+        '<path d="M13 16c2-3 4 3 6 0 1-1 2-1 3 0"/>'
+      ),
+      microfrase: "Te lo dijo. De alguna manera.",
+    },
+    4: {
+      numeral: "IV",
+      nombre: "La Referencia Inalcanzable",
+      simbolo: icono(
+        '<path d="M8 4h16c0 8-3 12-8 12S8 12 8 4zM16 16v9m-6 4h12M12 25h8"/>' +
+        '<circle cx="16" cy="10" r="3"/>'
+      ),
+      microfrase: "Quieren superproducción con presupuesto mínimo.",
+    },
+    5: {
+      numeral: "V",
+      nombre: "El Cambio Pequeñito",
+      simbolo: icono(
+        '<path d="M6 23 12 11l8 8 6-13M12 11l-4-5M20 19l7 6"/>' +
+        '<circle cx="6" cy="23" r="1.5"/><circle cx="12" cy="11" r="1.5"/>' +
+        '<circle cx="20" cy="19" r="1.5"/><circle cx="26" cy="6" r="1.5"/><circle cx="27" cy="25" r="2.2"/>'
+      ),
+      microfrase: "Hay milagros que caben en un píxel.",
+    },
+    6: {
+      numeral: "VI",
+      nombre: "La Reunión que podía ser un correo",
+      simbolo: icono(
+        '<circle cx="16" cy="16" r="3"/><path d="M16 13V8m-2 2 2-3 2 3"/>' +
+        '<path d="M7 7h6v4H7zM19 7h6v4h-6zM7 21h6v4H7zM19 21h6v4h-6z"/>' +
+        '<path d="M10 11v4m12-4v4M10 21v-4m12 4v-4"/>'
+      ),
+      microfrase: "Alguien tenía que decirlo en voz alta.",
+    },
+    7: {
+      numeral: "VII",
+      nombre: "El Presupuesto Fantasma",
+      simbolo: icono(
+        '<path d="M8 28V13a8 8 0 0 1 16 0v15l-4-3-4 3-4-3z"/>' +
+        '<circle cx="13" cy="13" r="1"/><circle cx="19" cy="13" r="1"/>' +
+        '<circle cx="16" cy="20" r="4"/><path d="M14.5 20h3M16 18.5v3"/>'
+      ),
+      microfrase: "La promesa llegó. El dinero no.",
+    },
+    8: {
+      numeral: "VIII",
+      nombre: "La Idea de Madrugada",
+      simbolo: icono(
+        '<path d="m16 4 1.7 5.3H23l-4.3 3.1 1.7 5.2-4.4-3.2-4.4 3.2 1.7-5.2L9 9.3h5.3z"/>' +
+        '<path d="M7 21h18v8H7zM11 24h10M11 27h7"/>'
+      ),
+      microfrase: "También funciona con luz natural.",
+    },
+    9: {
+      numeral: "IX",
+      nombre: "La Versión Final Final",
+      simbolo: icono(
+        '<path d="M5 7h16v20H5zM9 4h16v20h-4M9 11h8M9 15h5"/>' +
+        '<path d="m9 21 2 2 5-6M18 29h10M21 26l-3 3 3 3"/>'
+      ),
+      microfrase: "Lo has terminado. Ahora falta dejarlo.",
+    },
+    10: {
+      numeral: "X",
+      nombre: "El Archivo Perdido",
+      simbolo: icono(
+        '<path d="M4 9h10l3 3h11v14H4zM4 9V6h9l3 3"/>' +
+        '<path d="M17 26c0 3-5 1-4 4" stroke-dasharray="2 2"/>'
+      ),
+      microfrase: "En su ausencia, todo parecía imprescindible.",
+    },
+    11: {
+      numeral: "XI",
+      nombre: "La Opinión de Última Hora",
+      simbolo: icono(
+        '<path d="M2 14c4-5 8-6 12-3l2 2 2-2c4-3 8-2 12 3-3 5-8 8-14 8S5 19 2 14z" fill="currentColor" stroke="none"/>' +
+        '<path d="M6 15c4-2 7-1 10 0 3-1 6-2 10 0-3 3-6 4-10 4s-7-1-10-4z" fill="#efe6f7" stroke="none"/>' +
+        '<path d="M11.5 18c3 1 6 1 9 0v7c0 4-2 6-4.5 6s-4.5-2-4.5-6z" fill="currentColor" stroke="#efe6f7" stroke-width="1.15" transform="translate(0 -2)"/>' +
+        '<path d="M16 20v8" stroke="#efe6f7" stroke-width="1.1" transform="translate(0 -2)"/>'
+      ),
+      microfrase: "Ha llegado tarde. Puede que justo a tiempo.",
+    },
+    12: {
+      numeral: "XII",
+      nombre: "El Síndrome de la Impostora",
+      simbolo: icono(
+        '<path d="M17 8a5 5 0 0 1 10 0v4h-10zM15 12h14v14H15z"/>' +
+        '<circle cx="7" cy="20" r="4"/><path d="M11 20h8m-3 0v3m-3-3v3"/>'
+      ),
+      microfrase: "La puerta sabía a quién dejaba pasar.",
+    },
+  };
+
+  // La sala de espera: el búho deja una nota mientras Madame no ha llegado.
+  // Sirve para que la gente toquetee la mesa antes de girar cartas a lo loco.
+  // TEXTO PROVISIONAL, pendiente de aprobación en BARAJA-MAESTRA.md.
+  // ---- la sala de espera: el búho explica ----
+  // Hablador la primera vez, telegráfico a partir de la segunda: quien vuelve
+  // no tiene por qué tragarse otra vez el tutorial. Sabemos si es la primera
+  // visita porque la pieza recuerda qué arcanos te ha enseñado.
+  // TEXTOS PROVISIONALES EN PIEZA — pendientes de aprobación en BARAJA-MAESTRA.md
+  function avisoDelBuho() {
+    if (arcanosVistos.length) {
+      return [
+        "Madame Cesoir está terminando otra consulta.",
+        "Ya sabes cómo va. Piensa tu pregunta y pulsa la bola.",
+      ];
+    }
+    return [
+      "Madame Cesoir está terminando otra consulta.",
+      "Mientras tanto puedes barajar, abrir la baraja y curiosear.",
+      "Piensa tu pregunta. No la escribas: Madame no oye. De todos modos, ya la sabe.",
+      "Cuando la tengas, pulsa la bola.",
+    ];
+  }
+
+  // ---- Madame presume a qué has venido ----
+  // No hay ninguna caja de texto: la pregunta la piensas tú y ella la da por
+  // sabida. El chiste es que acierta como aciertan los horóscopos.
+  // TEXTOS PROVISIONALES EN PIEZA — pendientes de aprobación en BARAJA-MAESTRA.md
+  var PRESUNCIONES = [
+    "No hace falta que me lo cuentes. Es por trabajo. Siempre es por trabajo.",
+    "Ya sé a qué vienes. Traes una pregunta que empieza por «debería». Todas empiezan por «debería».",
+    "Veo que llevas semanas esperando que alguien te conteste. Has decidido consultar a las cartas antes que volver a insistir.",
+    "No me lo digas. Quieres saber si eso que estás haciendo lleva a alguna parte.",
+    "Lo tuyo se ve desde aquí: has venido a que te confirmen algo que ya has decidido.",
+    "Vienes con una duda que no te atreves a decir en voz alta en una reunión. Aquí puedes.",
+  ];
+
+  var DIALOGUE = [
+    "",  // lo rellena presumirLaPregunta() al llamar a Madame
+    "Mezcla bien las cartas. Cuando estés lista. Elige tres. Si haces trampas, es cosa tuya.",
+  ];
+
+  function presumirLaPregunta() {
+    DIALOGUE[0] = elegir(PRESUNCIONES);
+  }
+  // ---- contenido aprobado de la lectura (fuente: BARAJA-MAESTRA.md, 26 jul 2026) ----
+  // Cada carta: lectura por casilla + remate (el remate solo se usa si cae en Futuro).
+  var LECTURAS = {
+    1: {
+      pasado: "Traes algo que debió terminar hace tiempo. Lo seguiste cuidando cuando quizá tocaba soltarlo. Deadline tiene poca paciencia para esas sutilezas.",
+      presente: "El tiempo ha dejado de ser negociable. Aún puedes decidir qué salvar. Lo demás tendrá que aprender a aceptar la imperfección.",
+      futuro: "Entregarás. Durante unos minutos la llamarás versión definitiva. El futuro, que ha visto tus carpetas, sabe que lo definitivo es una cortesía administrativa.",
+      remate: "Las cartas ven una entrega. La aprobación, en cambio, queda fuera de su jurisdicción.",
+    },
+    2: {
+      pasado: "La esperaste más de lo que te gustaría admitir. Apareció lo justo para mantener tu interés. Después volvió a hacer lo que mejor sabe: no dar explicaciones.",
+      presente: "No sabes si va a volver, pero sigues trabajando alrededor de su ausencia. Es una relación poco equilibrada. Por suerte, ella parece bastante cómoda.",
+      futuro: "Volverá cuando ya no la necesites. Encontrará el trabajo hecho y se instalará como si nunca se hubiera ido. Ciertas ausencias confían demasiado en su encanto.",
+      remate: "No la esperes despierta. Conoce perfectamente tus horarios, aunque nunca los respete.",
+    },
+    3: {
+      pasado: "Seguiste las indicaciones que tenías. Después descubriste que no eran las que él recordaba haber dado. El correo conserva una versión menos imaginativa de los hechos.",
+      presente: "Una preferencia recién nacida se presenta ante ti como una verdad antigua. Ha necesitado ver tu trabajo para revelarse. Algunas certezas maduran mejor en horas ajenas.",
+      futuro: "Veo una revelación tardía. Aparecerá cuando pongas la próxima propuesta sobre la mesa. Entonces sabrá, con una claridad conmovedora, qué deberías haber hecho.",
+      remate: "Las cartas comprenden su método. Ellas también leen mucho mejor el futuro cuando ya ha ocurrido.",
+    },
+    4: {
+      pasado: "Perseguiste el reflejo de un éxito ajeno. Te pidieron invocar su grandeza sin traer la ofrenda necesaria. El presupuesto fue el único que habló con sinceridad.",
+      presente: "La expectativa y el presupuesto sostienen extremos opuestos del mismo encargo. Entre ambas han colocado tu nombre. Confían en que hagas de médium.",
+      futuro: "Veo una renuncia cuidadosamente presentada como decisión creativa. La referencia irá desapareciendo a medida que se acerque la entrega. Al final, todos recordarán haber pedido exactamente lo posible.",
+      remate: "Las cartas ven cierto parecido. Recomiendan no abrir ambas imágenes a la vez.",
+    },
+    5: {
+      pasado: "Un error diminuto estuvo a punto de hacerse pasar por destino. Alguien lo vio a tiempo y te tendió la mano. La catástrofe quedó reducida a cinco minutos y una caña pendiente.",
+      presente: "Algo mínimo se ha salido del dibujo. La fortuna ha elegido los ojos de otro para mostrártelo. Esta vez, el milagro llegará antes de la hora de salida.",
+      futuro: "Antes de que se cierre el día, una mano ajena tocará el punto exacto. Bastará un gesto para devolver cada cosa a su lugar. Los astros, por una vez, han abierto la versión correcta.",
+      remate: "El universo no exige grandes sacrificios. Esta vez, una caña bastará.",
+    },
+    6: {
+      pasado: "Nadie esperaba nada de aquel círculo. Una sola voz nombró lo que todos evitaban. Por una vez, la reunión devolvió más tiempo del que había robado.",
+      presente: "La decisión se ha sentado en medio y se niega a quedarse sola. Escucha el momento en que la sala se quede en silencio. La frase importante llegará justo después de que alguien diga: «ya que estamos».",
+      futuro: "El destino ha reservado una sala. Sentará a las personas correctas alrededor de una decisión que llevaba demasiado tiempo escondida. Cuando termine, nadie tendrá que preguntar para qué había venido.",
+      remate: "Las cartas confirman un hecho insólito: esta vez, el correo no habría bastado.",
+    },
+    7: {
+      pasado: "Fuiste llamada por una promesa resplandeciente. Al cruzar el umbral, el oro perdió su peso y las voces desaparecieron. Solo quedó tu nombre, escrito junto a todas las tareas.",
+      presente: "Todo el proyecto descansa sobre un solo par de manos. A tu alrededor, las promesas siguen dando órdenes, aunque ya no tengan cuerpo. Hasta los fantasmas saben delegar.",
+      futuro: "El velo caerá antes de la entrega. La gran oportunidad mostrará su forma verdadera: una montaña de trabajo con tu nombre. Las promesas también pesan, sobre todo cuando tienes que cargarlas tú.",
+      remate: "Las cartas no encuentran el presupuesto. Al parecer, también tendrás que buscarlo tú.",
+    },
+    8: {
+      pasado: "Cuando bajaste la guardia, algo que llevaba tiempo rodeándote encontró por fin una entrada. No vino de la nada: venía de todo lo que habías estado mirando sin verlo. La noche solo se llevó el mérito.",
+      presente: "Entre lo conocido acaba de aparecer una forma nueva. No la obligues a explicarse todavía. Algunas verdades necesitan existir un rato antes de soportar una presentación.",
+      futuro: "La señal sobrevivirá al día. Resistirá las preguntas, los cambios y la inevitable petición de «ver otra opción». Entonces comprenderás que no era una ocurrencia, sino un camino.",
+      remate: "Las cartas confirman que era buena. No recomiendan convertir el insomnio en metodología.",
+    },
+    9: {
+      pasado: "Aquel final cambió de nombre para no marcharse. Cada sello reveló una grieta nueva, real o imaginada. El perfeccionismo y el miedo tienen una caligrafía sorprendentemente parecida.",
+      presente: "Algo que dabas por terminado se ha detenido en el umbral. Puede salir tal como está, pero tú aún conservas las llaves. El último gesto pertenece a la mano, no a la obra.",
+      futuro: "Se acerca un final que no pedirá ceremonia. La obra dejará de llamarte, o tú aprenderás a no responder. Después escribirás «definitiva» como quien traza un círculo de protección.",
+      remate: "Las cartas dan el asunto por cerrado. Han guardado una copia, por si acaso.",
+    },
+    10: {
+      pasado: "La ausencia volvió sagrado cuanto tocaba. Lo perdido creció mientras lo buscabas. La memoria, libre de pruebas, aprovechó para hacer algunas mejoras.",
+      presente: "Del mismo vacío parten dos caminos. Uno conduce a recuperar lo que era; el otro, a construir sin obedecerlo. No decidas mientras el pánico siga fingiendo que es criterio.",
+      futuro: "Algo regresará de esta pérdida, aunque quizá no sea el archivo. Puede aparecer una copia o una versión mejor nacida de su ausencia. El destino, prudentemente, recomienda guardar ambas.",
+      remate: "Las cartas evitan juzgar. Aun así, preguntan si había copia de seguridad.",
+    },
+    11: {
+      pasado: "Todo estaba decidido hasta que una frase llegó tarde. Abrió una duda cuando ya no quedaba sitio para ella. Tal vez salvó el trabajo; tal vez solo te quitó la paz.",
+      presente: "Una voz nueva ronda lo que dabas por cerrado. No sabes si trae una advertencia o hambre de protagonismo. Déjala hablar antes de entregarle las llaves.",
+      futuro: "Antes de que se te caiga el bolígrafo, llegará una última voz. Puede traer una grieta real o un espejo para sus propias dudas. Lo que permanezca cuando calle será la única respuesta.",
+      remate: "Las cartas recomiendan escucharla. Para obedecerla haría falta otra tirada.",
+    },
+    12: {
+      pasado: "Hubo otras habitaciones que también te parecieron demasiado grandes. Con el tiempo, dejaron de hacer eco bajo tus pasos. El miedo recuerda mal los lugares que acabaron pareciéndose a casa.",
+      presente: "Ahora habitas un lugar que todavía no has aprendido a llamar tuyo. La duda camina por delante y se presenta antes que tú. No confundas su seguridad con autoridad.",
+      futuro: "Veo la habitación aprendiendo tu forma. Lo que hoy parece prestado acabará llevando las marcas de tus manos. La duda seguirá pidiendo credenciales, pero para entonces tú tendrás las llaves.",
+      remate: "Las cartas confirman tu acceso. La duda no figura en el organigrama.",
+    },
+  };
+
+  // Parejas curadas: la frase solo aparece si ambas cartas están en la tirada.
+  var AFINIDADES = [
+    { pareja: [1, 2], frase: "La inspiración llegará tarde. The Deadline, por supuesto, no piensa esperarla." },
+    { pareja: [1, 9], frase: "El tiempo exige un cierre. El perfeccionismo ha solicitado una prórroga." },
+    { pareja: [2, 8], frase: "La ausente ha vuelto de noche, cuando nadie podía pedirle explicaciones." },
+    { pareja: [3, 11], frase: "Una certeza tardía ha encontrado compañía. Ninguna recuerda haber llegado después." },
+    { pareja: [4, 7], frase: "La ambición ha acudido al ritual. Los recursos han enviado sus disculpas." },
+    { pareja: [5, 6], frase: "Una frase y un gesto bastarán. El día, contra todo pronóstico, puede salvarse." },
+    { pareja: [5, 11], frase: "Esta vez, la última observación señala exactamente el punto que faltaba." },
+    { pareja: [8, 12], frase: "La idea sabe lo que vale. La duda ha pedido una segunda opinión." },
+    { pareja: [9, 10], frase: "Lo que no pudiste soltar ha decidido desaparecer por su cuenta." },
+    { pareja: [7, 12], frase: "Te dejaron sola con el trabajo y después te preguntaste si estabas preparada. Qué oportuno." },
+  ];
+
+  // Apartes: un comentario al margen que el oráculo suelta a veces tras leer una
+  // carta. Como mucho uno por lectura, para que el humor no se vuelva un tic.
+  var APARTES = {
+    1: "El reloj agradece que sigas fingiendo sorpresa.",
+    2: "No es desinterés. Es una política de disponibilidad muy selectiva.",
+    3: "Su memoria cuenta con dirección de arte propia.",
+    4: "La grandeza, por lo visto, venía sin ficha técnica.",
+    5: "No te acostumbres. La eficiencia también tiene días libres.",
+    6: "Se ruega discreción: una reunión útil podría generar expectativas.",
+    7: "El dinero ha prometido manifestarse. El trabajo no ha esperado.",
+    8: "Anótalo. El sueño no ofrece actas.",
+    9: "Cerrar también es una herramienta, aunque no aparezca en el menú.",
+    10: "La memoria ha abierto el archivo sin problemas. Qué conveniente.",
+    11: "Llegar tarde no le ha restado volumen.",
+    12: "La duda ha vuelto a revisar tu acreditación. Sigue sin encontrar el error.",
+  };
+  var PROBABILIDAD_APARTE = 0.34;
+
+  // Energía de cada arcano (columna "Energía" del inventario de la baraja).
+  // Cuatro de advertencia, cuatro ambiguas y cuatro favorables.
+  var ENERGIA = {
+    1: "Advertencia", 2: "Ambigua",     3: "Advertencia", 4: "Advertencia",
+    5: "Favorable",   6: "Favorable",   7: "Advertencia", 8: "Favorable",
+    9: "Ambigua",    10: "Ambigua",    11: "Ambigua",    12: "Favorable",
+  };
+
+  // Presentación de cada carta antes de leerla: el oráculo la nombra en voz alta.
+  // {carta} y {microfrase} se sustituyen por los datos del arcano que haya salido.
+  var PRESENTACIONES = {
+    pasado: [
+      "En lo que fue aparece **{carta}**. *{microfrase}*",
+      "Desde el pasado habla **{carta}**. *{microfrase}*",
+      "Lo que traes tiene un nombre: **{carta}**. *{microfrase}*",
+    ],
+    presente: [
+      "En el centro de la mesa está **{carta}**. *{microfrase}*",
+      "El presente toma la forma de **{carta}**. *{microfrase}*",
+      "Ahora habla **{carta}**. *{microfrase}*",
+    ],
+    futuro: [
+      "El futuro muestra **{carta}**. *{microfrase}*",
+      "Más adelante aparece **{carta}**. *{microfrase}*",
+      "Y al final del camino, **{carta}**. *{microfrase}*",
+    ],
+  };
+
+  // Cierre de síntesis: relaciona la tirada según el arco de energía
+  // que va de la carta de Pasado a la de Futuro.
+  var CIERRES = {
+    "Advertencia→Advertencia": "El aviso no ha quedado atrás: ha cambiado de forma. Conviene avanzar sin confundir la repetición con el destino.",
+    "Advertencia→Ambigua": "Vienes de una señal clara y avanzas hacia un terreno que todavía no se ha decidido. Lo aprendido servirá, pero no bastará por sí solo.",
+    "Advertencia→Favorable": "El aviso ha cumplido su función. Lo que viene no promete facilidad, pero sí una salida.",
+    "Ambigua→Advertencia": "La incertidumbre encuentra más adelante un límite. Lo que viene exige atención antes de convertirse en certeza.",
+    "Ambigua→Ambigua": "Nada ha terminado de inclinarse. El camino sigue abierto, y también la responsabilidad de elegirlo.",
+    "Ambigua→Favorable": "Lo incierto empieza a ordenar sus formas. Hay una posibilidad favorable, pero todavía necesita tu participación.",
+    "Favorable→Advertencia": "Vienes de un tramo amable. No lo confundas con inmunidad: más adelante hay una señal que conviene escuchar.",
+    "Favorable→Ambigua": "Lo que empezó a favor desemboca en una pregunta. No es una pérdida, pero tampoco una respuesta.",
+    "Favorable→Favorable": "La mesa concede una rara continuidad. Lo que te sostuvo seguirá abriendo camino.",
+  };
+
+  // Frases con las que el oráculo hilvana la lectura (elige una variante al azar).
+  var SISTEMA = {
+    apertura: [
+      "Tres cartas han aceptado hablar. Empecemos por lo que todavía te acompaña.",
+      "La mesa ya ha tomado una decisión. Veamos qué ha colocado delante de ti.",
+    ],
+    // Los conectores y las entradas (paso al presente, entrada al futuro, a la
+    // afinidad y al remate) se retiraron el 27 jul 2026: solo anunciaban lo que
+    // venía después. Siguen escritos en BARAJA-MAESTRA.md por si vuelven.
+    reanuda: [
+      "Esta sí ha venido. Procura no demostrar demasiado interés.",
+    ],
+  };
+
+  // ---- sonido ----
+  // Los sonidos de carta se fabrican aquí mismo con el navegador: un pulso
+  // corto de ruido filtrado suena a cartón. Así no hace falta ningún archivo
+  // de audio y el HTML sigue siendo un único fichero autocontenido.
+  var audioCtx = null;
+  var sonidoActivo = false;
+
+  function audio() {
+    if (audioCtx === null) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      try { audioCtx = new AC(); } catch (e) { return null; }
+    }
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    return audioCtx;
+  }
+
+  function ruidoBlanco(c, segundos) {
+    var muestras = Math.max(1, Math.floor(c.sampleRate * segundos));
+    var buffer = c.createBuffer(1, muestras, c.sampleRate);
+    var datos = buffer.getChannelData(0);
+    for (var i = 0; i < muestras; i++) datos[i] = Math.random() * 2 - 1;
+    return buffer;
+  }
+
+  // Nada de reverberación: una cola artificial sobre un golpe corto es
+  // justo lo que suena a caja de lata. Una carta se oye seca y de cerca.
+  var salidaSeca = null;
+
+  function prepararSalidas(c) {
+    if (salidaSeca) return;
+    salidaSeca = c.createGain();
+    salidaSeca.gain.value = 1;
+    salidaSeca.connect(c.destination);
+  }
+
+  // Un golpe de cartón: ruido corto entre dos filtros FIJOS. Sin barridos de
+  // frecuencia (eso suena a puerta) y sin resonancias (eso suena a lata).
+  function chasquido(o) {
+    var c = audio();
+    if (!c) return;
+    prepararSalidas(c);
+    var t = c.currentTime;
+    var fuente = c.createBufferSource();
+    fuente.buffer = ruidoBlanco(c, o.dur);
+
+    var techo = c.createBiquadFilter();
+    techo.type = "lowpass";
+    techo.Q.value = 0.5;
+    techo.frequency.value = o.techo;
+
+    var suelo = c.createBiquadFilter();
+    suelo.type = "highpass";
+    suelo.Q.value = 0.5;
+    suelo.frequency.value = o.suelo || 120;
+
+    var volumen = c.createGain();
+    volumen.gain.setValueAtTime(o.vol, t);
+    volumen.gain.exponentialRampToValueAtTime(0.0001, t + o.dur);
+
+    fuente.connect(techo);
+    techo.connect(suelo);
+    suelo.connect(volumen);
+    volumen.connect(salidaSeca);
+    fuente.start(t + (o.retraso || 0));
+    fuente.stop(t + (o.retraso || 0) + o.dur + 0.02);
+  }
+
+  // Se mantiene solo para el tecleo, que sí funciona con un cuerpo afinado
+  function roce(o) {
+    chasquido({ dur: o.dur, techo: o.desde, suelo: 160, vol: o.vol });
+  }
+
+  // El cuerpo del golpe: lo que hace que una carta suene a algo con peso
+  function golpe(o) {
+    var c = audio();
+    if (!c) return;
+    prepararSalidas(c);
+    var t = c.currentTime;
+    var osc = c.createOscillator();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(o.desde, t);
+    osc.frequency.exponentialRampToValueAtTime(o.hasta, t + o.dur);
+    var volumen = c.createGain();
+    volumen.gain.setValueAtTime(0.0001, t);
+    volumen.gain.linearRampToValueAtTime(o.vol, t + 0.008);
+    volumen.gain.exponentialRampToValueAtTime(0.0001, t + o.dur);
+    osc.connect(volumen);
+    volumen.connect(salidaSeca);
+    osc.start(t);
+    osc.stop(t + o.dur + 0.05);
+  }
+
+  // Una pizca de variación para que dos cartas nunca suenen idénticas
+  function pizca(base, margen) { return base * (1 + (Math.random() - 0.5) * margen); }
+
+  // Todos los sonidos de carta son chasquidos muy cortos de ruido filtrado.
+  // Una carta real casi no dura: es un golpe, no un sonido sostenido.
+  function sonar(nombre) {
+    if (!sonidoActivo || !audio()) return;
+    if (nombre === "coger") {
+      chasquido({ dur: 0.020, techo: pizca(5200, 0.2), suelo: 900, vol: 0.030 });
+    } else if (nombre === "imantar") {
+      // La carta cae sobre el tapete: el filo primero, el cuerpo después
+      chasquido({ dur: 0.016, techo: pizca(6000, 0.15), suelo: 1200, vol: 0.045 });
+      chasquido({ dur: 0.045, techo: pizca(700, 0.15), suelo: 130, vol: 0.075, retraso: 0.008 });
+    } else if (nombre === "girar") {
+      // Dos filos seguidos: el naipe escapa del dedo y vuelve a caer
+      chasquido({ dur: 0.014, techo: pizca(7000, 0.15), suelo: 1500, vol: 0.040 });
+      chasquido({ dur: 0.030, techo: pizca(2600, 0.2), suelo: 500, vol: 0.045, retraso: 0.030 });
+    } else if (nombre === "lanzar") {
+      chasquido({ dur: 0.026, techo: pizca(4200, 0.2), suelo: 700, vol: 0.045 });
+    } else if (nombre === "manos-fuera" || nombre === "manos-dentro") {
+      // Madame mueve las manos sobre el tapete: tela y piel rozando, no un
+      // golpe. Largo, sordo y muy bajo, casi por debajo de lo que se nota.
+      var lento = nombre === "manos-fuera";
+      chasquido({ dur: lento ? 0.20 : 0.15, techo: pizca(900, 0.15), suelo: 190, vol: 0.014 });
+      chasquido({ dur: lento ? 0.13 : 0.10, techo: pizca(2100, 0.2), suelo: 520, vol: 0.008, retraso: 0.055 });
+    }
+  }
+
+  // El golpe contra el borde de la mesa: madera y cartón, nada de metal.
+  // Se limita para que una carta rebotando no suene a ametralladora.
+  function rebote(m, velocidad) {
+    if (!sonidoActivo || velocidad < 0.12) return;
+    var ahora = performance.now();
+    if (m.ultimoRebote && ahora - m.ultimoRebote < 90) return;
+    m.ultimoRebote = ahora;
+    var fuerza = Math.min(1, velocidad / 1.6);
+    chasquido({ dur: 0.014, techo: pizca(3400, 0.25), suelo: 800, vol: 0.020 + fuerza * 0.020 });
+    chasquido({ dur: 0.050, techo: pizca(520, 0.2), suelo: 110, vol: 0.030 + fuerza * 0.045, retraso: 0.005 });
+  }
+
+  // El barajado son muchas cartas cayendo unas sobre otras
+  function sonarBarajado(cuantas) {
+    if (!sonidoActivo) return;
+    for (var i = 0; i < cuantas; i++) {
+      setTimeout(function () {
+        roce({ dur: 0.07, desde: pizca(1900, 0.35), hasta: 600, vol: 0.038, ataque: 0.006 });
+      }, i * 42 + Math.random() * 26);
+    }
+  }
+
+  // El tecleo del oráculo: un golpecito seco por letra, muy bajito y solo
+  // una de cada dos, que si no parece una ametralladora.
+  var letrasTecleadas = 0;
+
+  function sonarTecla(caracter) {
+    if (!sonidoActivo || caracter === " " || !audio()) return;
+    letrasTecleadas += 1;
+    if (letrasTecleadas % 2 !== 0) return;
+    // Teclado de Mac: un "toc" mate y grave, no un "tic" agudo. El cuerpo manda
+    // y el chasquido agudo es apenas un roce por encima.
+    golpe({ dur: 0.045, desde: pizca(205, 0.18), hasta: 92, vol: 0.03 });
+    roce({ dur: 0.016, desde: pizca(1050, 0.3), hasta: 420, vol: 0.009, ataque: 0.002 });
+  }
+
+  // El altavoz se dibuja con la misma línea fina que los símbolos de las cartas:
+  // un emoji en color desentonaría en una página que es toda tinta.
+  var ICONO_ALTAVOZ = {
+    encendido: icono('<path d="M6 12h5l6-5v18l-6-5H6z"/><path d="M21 12.5c1.7 1.7 1.7 5.3 0 7M24.5 9.5c3.2 3.2 3.2 9.8 0 13"/>'),
+    apagado: icono('<path d="M6 12h5l6-5v18l-6-5H6z"/><path d="m21 12 7 8M28 12l-7 8"/>'),
+  };
+
+  function aplicarSonido(activo) {
+    sonidoActivo = activo;
+    soundTrigger.innerHTML = activo ? ICONO_ALTAVOZ.encendido : ICONO_ALTAVOZ.apagado;
+    soundTrigger.setAttribute("aria-pressed", activo ? "true" : "false");
+    soundTrigger.setAttribute("aria-label", activo ? "Silenciar la mesa" : "Activar el sonido de la mesa");
+    try { window.localStorage.setItem("mesa-sonido", activo ? "1" : "0"); } catch (e) {}
+  }
+
+  // ---- los arcanos que has conocido ----
+  // El mazo se acuerda de qué cartas te ha enseñado. Se guarda en el navegador,
+  // así que la cuenta sobrevive a cerrar la pestaña.
+  var arcanosVistos = [];
+
+  function cargarArcanosVistos() {
+    try {
+      var guardado = window.localStorage.getItem("mesa-arcanos");
+      if (guardado) arcanosVistos = JSON.parse(guardado).filter(function (n) { return n >= 1 && n <= CARD_COUNT; });
+    } catch (e) { arcanosVistos = []; }
+  }
+
+  function anotarArcano(id) {
+    if (arcanosVistos.indexOf(id) !== -1) return;
+    arcanosVistos.push(id);
+    try { window.localStorage.setItem("mesa-arcanos", JSON.stringify(arcanosVistos)); } catch (e) {}
+  }
+
+  // El recuento no vive en el pie como un marcador de videojuego: lo cuenta el
+  // búho en su rincón cuando la lectura ha terminado, que es cuando toca.
+  // TEXTOS PROVISIONALES, pendientes de aprobación.
+  var NUMEROS = ["cero", "uno", "dos", "tres", "cuatro", "cinco", "seis",
+                 "siete", "ocho", "nueve", "diez", "once", "doce"];
+
+  function frasesDelRecuento() {
+    var vistos = arcanosVistos.length;
+    if (!vistos) return null;
+    if (vistos === CARD_COUNT) {
+      return [
+        "Has conocido los doce arcanos.",
+        "La baraja ya no te esconde nada. Aun así, nunca dice lo mismo dos veces.",
+      ];
+    }
+    var faltan = CARD_COUNT - vistos;
+    return [
+      "Has conocido " + NUMEROS[vistos] + " de los doce arcanos.",
+      faltan === 1
+        ? "Te falta uno solo. Baraja otra vez y puede que aparezca."
+        : "Te faltan " + NUMEROS[faltan] + ". La mesa sigue puesta.",
+    ];
+  }
+
+  // ---- compartir la tirada ----
+  // Las tres cartas caben en la propia dirección (#t=1-4-12), así que se puede
+  // compartir una tirada sin servidor ninguno.
+  function enlaceDeLaTirada() {
+    var mesa = cartasEnMesa();
+    if (!mesa[0] || !mesa[1] || !mesa[2]) return null;
+    var base = window.location.href.split("#")[0];
+    return base + "#t=" + mesa[0].id + "-" + mesa[1].id + "-" + mesa[2].id;
+  }
+
+  function tiradaDelEnlace() {
+    var m = /^#t=(\d+)-(\d+)-(\d+)$/.exec(window.location.hash);
+    if (!m) return null;
+    var ids = [+m[1], +m[2], +m[3]];
+    var validas = ids.every(function (id) { return id >= 1 && id <= CARD_COUNT; });
+    var repetidas = ids[0] === ids[1] || ids[1] === ids[2] || ids[0] === ids[2];
+    return validas && !repetidas ? ids : null;
+  }
+
+  function colocarEnCasilla(card, indice) {
+    var tableBounds = table.getBoundingClientRect();
+    var slotBounds = slotEls[indice].getBoundingClientRect();
+    card.x = slotBounds.left - tableBounds.left;
+    card.y = slotBounds.top - tableBounds.top;
+    card.rotation = 0;
+    card.slot = indice;
+    card.flipped = true;
+    card.z = siguienteZ();
+    anotarArcano(card.id);
+    applyCard(card);
+  }
+
+  function restaurarTirada(ids) {
+    ids.forEach(function (id, indice) {
+      var card = cards.filter(function (c) { return c.id === id; })[0];
+      if (card) colocarEnCasilla(card, indice);
+    });
+    // Quien abre una tirada compartida no ha tocado nada: sería absurdo que
+    // Madame le reprochara cómo ha barajado o cuánto ha tardado en decidir.
+    gestos = { fuerte: 0, mezclas: 0, cambios: 0, giroSuelto: 0, inicio: null };
+    renderStatus();
+    updateSelection();
+  }
+
+  // ---- la carta esquiva ----
+  // A veces una carta se niega a ser leída y el oráculo pide otra en su lugar.
+  // La primera vez que aparece salta siempre (si no, casi nadie lo descubriría);
+  // a partir de ahí, solo una de cada tres veces, para que siga siendo un hallazgo.
+  var CARTA_ESQUIVA = 2; // La Musa en Huelga
+  var PROBABILIDAD_ESQUIVA = 0.34;
+
+  // Textos aprobados: la Musa como amante esquiva que confirma la cita y no acude.
+  var NEGATIVA = [
+    "**La Musa** debía acudir a esta cita.",
+    "Confirmó lo justo para que la esperaras. Después hizo lo que mejor sabe: no dar explicaciones.",
+    "No va a venir. La carta se retira; elige otra y colócala en esta casilla.",
+  ];
+
+  var PHYSICS_PRESETS = {
+    Controlada: { throwForce: 1.05, friction: 0.958, bounce: 0.28, rotation: 3.2, snap: 76, dragLag: 12, scatter: 0.82 },
+    Expresiva:  { throwForce: 1.55, friction: 0.972, bounce: 0.4,  rotation: 4.2, snap: 70, dragLag: 18, scatter: 1 },
+    Ritual:     { throwForce: 0.88, friction: 0.966, bounce: 0.18, rotation: 2.3, snap: 98, dragLag: 25, scatter: 0.66 },
+    Caótica:    { throwForce: 2.05, friction: 0.982, bounce: 0.56, rotation: 5.4, snap: 58, dragLag: 10, scatter: 1.38 },
+  };
+
+  var LAB_CONTROLS = [
+    ["Impulso", "throwForce", 0.6, 2.4, 0.05],
+    ["Deslizamiento", "friction", 0.94, 0.989, 0.001],
+    ["Rebote", "bounce", 0.08, 0.7, 0.02],
+    ["Rotación", "rotation", 1, 6.5, 0.1],
+    ["Magnetismo", "snap", 40, 120, 1],
+    ["Peso en mano", "dragLag", 0, 34, 1],
+    ["Barajar", "scatter", 0.45, 1.7, 0.05],
+  ];
+
+  var SLOT_LABELS = ["Pasado", "Presente", "Futuro"];
+
+  // ---- DOM refs ----
+  var table = document.querySelector(".table");
+  var slotsWrap = document.querySelector(".slots");
+  var statusCount = document.querySelector(".status .count");
+  var bubbleText = document.querySelector(".bubble-text");
+  var oracleAvatar = document.querySelector(".oracle-avatar");
+  var oracleDialogue = document.querySelector(".oracle-dialogue");
+  var speechBubble = document.querySelector(".speech-bubble");
+  var soundTrigger = document.querySelector(".sound-trigger");
+  var botonCompartir = document.querySelector(".compartir");
+  var buhoLabel = document.querySelector(".buho-label");
+  var buhoDialogo = document.querySelector(".buho-dialogo");
+  var buhoDialogoGlobo = document.querySelector(".buho-dialogo-globo");
+  var buhoTexto = document.querySelector(".buho-texto");
+  var buhoCursor = document.querySelector(".buho-cursor");
+  var typingCursor = document.querySelector(".oracle-dialogue .typing-cursor");
+
+  // Los dos personajes escriben igual, cada uno en su bocadillo. El motor de
+  // escritura apunta al canal que esté hablando en cada momento.
+  var CANAL_MADAME = { dialogo: oracleDialogue, texto: bubbleText, cursor: typingCursor };
+  var CANAL_BUHO = { dialogo: buhoDialogo, texto: buhoTexto, cursor: buhoCursor };
+  var canal = CANAL_MADAME;
+  var frasesBuho = [];   // lo que el búho tenga que decir en cada momento
+  var buhoStep = 0;
+  var labTrigger = document.querySelector(".lab-trigger");
+  var physicsLab = document.querySelector(".physics-lab");
+  var labClose = document.querySelector(".lab-close");
+  var labPresets = document.querySelector(".lab-presets");
+  var labControls = document.querySelector(".lab-controls");
+  var cardHint = document.querySelector(".card-hint");
+
+  // ---- state ----
+  var cards = [];
+  var slotEls = [];
+  var drag = null;
+  var zCounter = CARD_COUNT + 1;
+
+  // Cada carta que coges sube al frente. Esa cuenta no puede crecer sin freno:
+  // si llegara a 900 se metería por delante de las manos de Madame. Al
+  // acercarse, se renumeran las cartas respetando el orden que tienen ahora.
+  function siguienteZ() {
+    if (zCounter >= 800) {
+      cards.slice().sort(function (a, b) { return a.z - b.z; })
+        .forEach(function (c, i) { c.z = i + 1; c.el.style.zIndex = c.z; });
+      zCounter = CARD_COUNT + 1;
+    }
+    zCounter += 1;
+    return zCounter;
+  }
+  var frame = null;
+  var arrangementTimer = null;
+  var motion = new Map();
+  var hintDismissed = false; // el aviso "haz clic" muere con el primer giro
+  var draggedId = null;
+  var activeSlot = null;
+  var arranging = false;
+
+  // Gestos de quien juega: el oráculo se fija en CÓMO juegas, no solo en qué sale.
+  // Se vacían cada vez que se monta una lectura nueva.
+  var gestos = { fuerte: 0, mezclas: 0, cambios: 0, giroSuelto: 0, inicio: null };
+
+  // Estado de la carta esquiva
+  var espera = null;              // { slot } mientras el oráculo espera otra carta
+  var huecoPendiente = null;      // casilla que quedará vacía al acabar la negativa
+  var esquivaDescubierta = false; // ¿ya ha saltado alguna vez en esta visita?
+  var yaSeNegoEstaLectura = false;
+  var yaHuboAparte = false;       // como mucho un aparte por lectura
+
+  var dialogueIndex = 0;
+  var dialogueOverride = null;
+  var recuentoPendiente = false; // el búho espera turno tras la despedida
+  var dialogueComplete = false;
+  var readingStep = null;
+  var readingLines = []; // la lectura montada para la tirada actual
+  var readingCards = []; // de qué carta habla cada frase (null si de ninguna)
+  var typingInterval = null;
+  var autoAdvanceTimer = null;
+  var readingTimer = null;
+
+  var physics = Object.assign({}, PHYSICS_PRESETS.Expresiva);
+
+  function reducedMotion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  // ---- build slots ----
+  SLOT_LABELS.forEach(function (label) {
+    var slot = document.createElement("div");
+    slot.className = "slot";
+    var span = document.createElement("span");
+    span.textContent = label;
+    slot.appendChild(span);
+    slotsWrap.appendChild(slot);
+    slotEls.push(slot);
+  });
+
+  // ---- build cards ----
+  function buildCardEl(id) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "card";
+    var pad = String(id).padStart(2, "0");
+    var arcano = ARCANOS[id];
+    var nombreLargo = arcano.nombre.length > 23 ? " face-nombre-largo" : "";
+    // Las cartas que ya tienen ilustración usan su dibujo; las demás siguen
+    // con la cara tipográfica hasta que lleguen las suyas.
+    var ILUSTRADAS = { 1: "carta-01", 2: "carta-02", 3: "carta-03", 4: "carta-04",
+                       5: "carta-05", 6: "carta-06", 7: "carta-07", 8: "carta-08", 9: "carta-09", 10: "carta-10", 11: "carta-11", 12: "carta-12" };
+    var front = ILUSTRADAS[id]
+      // El dibujo deja libre el tercio de abajo y ahí escribe la pieza el
+      // nombre y la microfrase, como texto de verdad: así se leen tanto en la
+      // carta pequeña como cuando Madame la levanta.
+      ? '<span class="card-side card-front card-front-ilustrada ' + ILUSTRADAS[id] + '">' +
+          '<span class="face-numeral face-numeral-ilustrado">' + arcano.numeral + '</span>' +
+          '<span class="face-pie">' +
+            '<span class="face-nombre' + nombreLargo + '">' + arcano.nombre + '</span>' +
+            '<span class="face-frase">' + arcano.microfrase + '</span>' +
+          '</span>' +
+        '</span>'
+      : '<span class="card-side card-front card-front-arcano">' +
+          '<span class="face-numeral">' + arcano.numeral + '</span>' +
+          '<span class="face-simbolo">' + arcano.simbolo + '</span>' +
+          '<span class="face-nombre' + nombreLargo + '">' + arcano.nombre + '</span>' +
+          '<span class="face-frase">' + arcano.microfrase + '</span>' +
+        '</span>';
+    btn.innerHTML =
+      '<span class="card-inner">' +
+        '<span class="card-side card-back">' +
+          '<span class="card-mark">✦</span>' +
+          '<span class="card-number">' + pad + '</span>' +
+        '</span>' +
+        front +
+      '</span>';
+    return btn;
+  }
+
+  // Dónde acaban las casillas, contando desde el borde de la mesa
+  function bajoLasCasillas() {
+    var mesa = table.getBoundingClientRect();
+    if (!slotEls.length || !mesa.height) return mesa.height * 0.55;
+    return slotEls[0].getBoundingClientRect().bottom - mesa.top;
+  }
+
+  // En pantallas anchas el mazo vive a la izquierda de las casillas. En
+  // pantallas estrechas no cabe al lado, así que se coloca centrado y debajo:
+  // si no, tapa la casilla de Pasado y su etiqueta.
+  function makeDeckData(width, height) {
+    var estrecha = width < 620;
+    var x = estrecha
+      ? (width - CARD_WIDTH) / 2
+      : Math.max(28, width * 0.14 - CARD_WIDTH / 2);
+    var y = estrecha
+      ? Math.min(bajoLasCasillas() + 44, Math.max(120, height - CARD_HEIGHT - 96))
+      : Math.max(110, height * 0.5 - CARD_HEIGHT / 2);
+    var arr = [];
+    for (var i = 0; i < CARD_COUNT; i++) {
+      arr.push({
+        x: x + (i % 4) * 1.4,
+        y: y - i * 0.8,
+        rotation: ((i % 5) - 2) * 0.35,
+        z: i + 1,
+        slot: null,
+        flipped: false,
+      });
+    }
+    return arr;
+  }
+
+  for (var i = 0; i < CARD_COUNT; i++) {
+    var el = buildCardEl(i + 1);
+    var card = { id: i + 1, x: 0, y: 0, rotation: 0, z: i + 1, slot: null, flipped: false, el: el };
+    cards.push(card);
+    table.appendChild(el);
+    bindCardEvents(card);
+  }
+
+  function applyCard(card) {
+    card.el.style.transform = "translate3d(" + card.x + "px, " + card.y + "px, 0) rotate(" + card.rotation + "deg)";
+    card.el.style.zIndex = card.z;
+    card.el.classList.toggle("card-dragging", draggedId === card.id);
+    card.el.classList.toggle("card-placed", card.slot !== null);
+    card.el.classList.toggle("card-flipped", card.flipped);
+    card.el.classList.toggle("card-arranging", arranging);
+    var placed = card.slot !== null ? ", colocada" : "";
+    var revealedName = card.flipped ? ", " + ARCANOS[card.id].nombre : "";
+    card.el.setAttribute("aria-label",
+      "Carta " + card.id + ", " + (card.flipped ? "revelada" : "boca abajo") + revealedName + placed +
+      ". Haz clic o pulsa Enter para darle la vuelta.");
+  }
+
+  function applyAll() { cards.forEach(applyCard); }
+
+  function setArranging(on) {
+    arranging = on;
+    cards.forEach(function (c) { c.el.classList.toggle("card-arranging", on); });
+  }
+
+  function renderStatus() {
+    var selected = cards.filter(function (c) { return c.slot !== null; }).length;
+    statusCount.textContent = selected + " / 3";
+  }
+
+  // ---- motion / physics ----
+  function stopAllMotion() {
+    if (frame !== null) { cancelAnimationFrame(frame); frame = null; }
+    motion.clear();
+    if (arrangementTimer !== null) { clearTimeout(arrangementTimer); arrangementTimer = null; }
+  }
+
+  function resetDeck() {
+    var bounds = table.getBoundingClientRect();
+    if (!bounds) return;
+    stopAllMotion();
+    zCounter = CARD_COUNT + 1;
+    var deck = makeDeckData(bounds.width, bounds.height);
+    cards.forEach(function (c, idx) {
+      c.x = deck[idx].x; c.y = deck[idx].y; c.rotation = deck[idx].rotation;
+      c.z = deck[idx].z; c.slot = null; c.flipped = false;
+    });
+    draggedId = null;
+    activeSlot = null;
+    drag = null;
+    setActiveSlotHighlight(null);
+    applyAll();
+    renderStatus();
+    updateSelection();
+  }
+
+  function slotGeometry() {
+    var bounds = table.getBoundingClientRect();
+    return slotEls.map(function (slot) {
+      var b = slot.getBoundingClientRect();
+      return {
+        x: b.left - bounds.left,
+        y: b.top - bounds.top,
+        centerX: b.left - bounds.left + b.width / 2,
+        centerY: b.top - bounds.top + b.height / 2,
+      };
+    });
+  }
+
+  function findClosestSlot(centerX, centerY) {
+    var tableBounds = table.getBoundingClientRect();
+    var closest = null;
+    slotEls.forEach(function (slot, index) {
+      var b = slot.getBoundingClientRect();
+      var slotX = b.left - tableBounds.left + b.width / 2;
+      var slotY = b.top - tableBounds.top + b.height / 2;
+      var distance = Math.hypot(centerX - slotX, centerY - slotY);
+      if (distance < 88 && (!closest || distance < closest.distance)) {
+        closest = { index: index, distance: distance };
+      }
+    });
+    return closest ? closest.index : null;
+  }
+
+  function setActiveSlotHighlight(index) {
+    slotEls.forEach(function (slot, i) {
+      slot.classList.toggle("slot-active", i === index);
+    });
+  }
+
+  function runPhysics() {
+    var bounds = table.getBoundingClientRect();
+    if (!bounds || motion.size === 0) { frame = null; return; }
+
+    var slots = slotGeometry();
+    var occupied = new Set();
+    cards.forEach(function (c) { if (c.slot !== null) occupied.add(c.slot); });
+    var selectionChanged = false;
+
+    cards.forEach(function (card) {
+      var m = motion.get(card.id);
+      if (!m || card.slot !== null) return;
+
+      m.velocityX *= physics.friction;
+      m.velocityY *= physics.friction;
+      var x = card.x + m.velocityX * 16;
+      var y = card.y + m.velocityY * 16;
+      var maxX = bounds.width - CARD_WIDTH - 10;
+      var maxY = bounds.height - CARD_HEIGHT - 14;
+
+      if (x <= 10 || x >= maxX) { x = Math.max(10, Math.min(maxX, x)); rebote(m, Math.abs(m.velocityX)); m.velocityX *= -physics.bounce; }
+      if (y <= 76 || y >= maxY) { y = Math.max(76, Math.min(maxY, y)); rebote(m, Math.abs(m.velocityY)); m.velocityY *= -physics.bounce; }
+
+      var centerX = x + CARD_WIDTH / 2;
+      var centerY = y + CARD_HEIGHT / 2;
+      var captured = -1;
+      if (m.canSnap) {
+        for (var s = 0; s < slots.length; s++) {
+          if (!slots[s] || occupied.has(s)) continue;
+          if (Math.hypot(centerX - slots[s].centerX, centerY - slots[s].centerY) < physics.snap) { captured = s; break; }
+        }
+      }
+
+      if (captured !== -1) {
+        occupied.add(captured);
+        motion.delete(card.id);
+        card.x = slots[captured].x;
+        card.y = slots[captured].y;
+        card.rotation = 0;
+        card.slot = captured;
+        selectionChanged = true;
+        applyCard(card);
+        return;
+      }
+
+      if (Math.hypot(m.velocityX, m.velocityY) < 0.018) {
+        motion.delete(card.id);
+        card.x = x; card.y = y; card.rotation = card.rotation * 0.45;
+        applyCard(card);
+        return;
+      }
+
+      card.x = x; card.y = y;
+      card.rotation = Math.max(-11, Math.min(11, m.velocityX * physics.rotation));
+      applyCard(card);
+    });
+
+    if (selectionChanged) { renderStatus(); updateSelection(); }
+    frame = requestAnimationFrame(runPhysics);
+  }
+
+  function throwCard(id, vx, vy) {
+    if (reducedMotion() || Math.hypot(vx, vy) < 0.035) return;
+    if (Math.hypot(vx, vy) > 0.9) gestos.fuerte += 1;
+    sonar("lanzar");
+    motion.set(id, {
+      velocityX: Math.max(-3.8, Math.min(3.8, vx * physics.throwForce)),
+      velocityY: Math.max(-3.8, Math.min(3.8, vy * physics.throwForce)),
+      canSnap: true,
+    });
+    if (frame === null) frame = requestAnimationFrame(runPhysics);
+  }
+
+  function arrangeCards(getLayout) {
+    cancelarEspera();
+    stopAllMotion();
+    if (arrangementTimer !== null) { clearTimeout(arrangementTimer); arrangementTimer = null; }
+    setArranging(true);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        cards.forEach(function (card, index) {
+          var layout = getLayout(card, index);
+          for (var k in layout) { card[k] = layout[k]; }
+          card.slot = null;
+          applyCard(card);
+        });
+        renderStatus();
+        updateSelection();
+      });
+    });
+    arrangementTimer = setTimeout(function () {
+      setArranging(false);
+      arrangementTimer = null;
+      applyAll();
+    }, 940);
+  }
+
+  function gatherDeck() {
+    sonarBarajado(6);
+    var bounds = table.getBoundingClientRect();
+    var deck = makeDeckData(bounds.width, bounds.height);
+    arrangeCards(function (card, index) {
+      return { x: deck[index].x, y: deck[index].y, rotation: deck[index].rotation, flipped: false, z: index + 1 };
+    });
+    zCounter = CARD_COUNT + 1;
+  }
+
+  // Mezcla un array en el sitio (Fisher-Yates)
+  function barajarArray(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function fanDeck() {
+    sonarBarajado(9);
+    var bounds = table.getBoundingClientRect();
+    // El abanico se reparte el ancho que hay de verdad: con un mínimo fijo se
+    // salía de la mesa en pantallas estrechas
+    var availableWidth = Math.max(120, bounds.width - CARD_WIDTH - 40);
+    var spacing = Math.min(72, availableWidth / (CARD_COUNT - 1));
+    var totalWidth = spacing * (CARD_COUNT - 1) + CARD_WIDTH;
+    var startX = Math.max(24, (bounds.width - totalWidth) / 2);
+    var baseY = Math.min(bounds.height - CARD_HEIGHT - 54, Math.max(250, bounds.height * 0.57));
+    // Barajamos las posiciones del abanico: las cartas nunca salen en orden,
+    // que aquí se viene a elegir a ciegas
+    var order = barajarArray(cards.map(function (_, i) { return i; }));
+    arrangeCards(function (card, index) {
+      var pos = order[index];
+      var normalized = pos / (CARD_COUNT - 1) - 0.5;
+      return {
+        x: startX + pos * spacing,
+        y: baseY + Math.abs(normalized) * 34,
+        rotation: normalized * 24,
+        flipped: false,
+        z: pos + 1,
+      };
+    });
+    zCounter = CARD_COUNT + 1;
+  }
+
+  // Doce sitios repartidos por la mesa, desordenados pero sin amontonarse
+  // ni pegarse a los bordes. El control "Barajar" del laboratorio regula
+  // cuánto se dispersan.
+  function repartoDesordenado(bounds) {
+    var tableTop = table.getBoundingClientRect().top;
+    var bajoLasCasillas = slotEls[0].getBoundingClientRect().bottom - tableTop + 26;
+    // Las cartas no deben tapar ni las casillas ni la burbuja del oráculo
+    var techoOraculo = document.querySelector(".oracle-dialogue").getBoundingClientRect().top - tableTop - 14;
+    var margen = 18;
+    var top = Math.max(90, bajoLasCasillas);
+    var bottom = Math.min(bounds.height - CARD_HEIGHT - 20, techoOraculo - CARD_HEIGHT);
+    // En ventanas bajas la banda se queda corta: las cartas se solapan más,
+    // que para eso están revueltas
+    if (bottom < top) bottom = top;
+    var columnas = 4, filas = 3;
+    var anchoUtil = Math.max(40, bounds.width - CARD_WIDTH - margen * 2);
+    var altoUtil = bottom - top;
+    var desorden = Math.max(0.4, physics.scatter);
+
+    var sitios = [];
+    for (var f = 0; f < filas; f++) {
+      for (var c = 0; c < columnas; c++) {
+        sitios.push({
+          x: margen + (anchoUtil * c) / (columnas - 1) + (Math.random() - 0.5) * 30 * desorden,
+          y: top + (altoUtil * f) / (filas - 1) + (Math.random() - 0.5) * 26 * desorden,
+          rot: (Math.random() - 0.5) * 44 * desorden,
+        });
+      }
+    }
+    sitios.forEach(function (p) {
+      // Una carta ladeada ocupa más sitio del que mide: el rectángulo que la
+      // envuelve crece con el ángulo. Si no se cuenta ese sobrante, las cartas
+      // más giradas se salen por el borde de la mesa.
+      var a = Math.abs(p.rot) * Math.PI / 180;
+      var sobraX = (CARD_WIDTH * Math.cos(a) + CARD_HEIGHT * Math.sin(a) - CARD_WIDTH) / 2;
+      var sobraY = (CARD_HEIGHT * Math.cos(a) + CARD_WIDTH * Math.sin(a) - CARD_HEIGHT) / 2;
+      p.x = Math.min(Math.max(margen + sobraX, p.x), bounds.width - CARD_WIDTH - margen - sobraX);
+      p.y = Math.min(Math.max(top - 10 + sobraY, p.y), bottom - sobraY);
+    });
+
+    // Barajar de verdad: se mezclan los sitios y también el orden de apilado
+    barajarArray(sitios);
+    var zetas = barajarArray(cards.map(function (_, i) { return i + 1; }));
+    sitios.forEach(function (p, i) { p.z = zetas[i]; });
+    return sitios;
+  }
+
+  // Barajar: el mazo se recoge en el centro, se mezcla y las cartas quedan
+  // repartidas y desordenadas por la mesa. Se puede repetir sin que se
+  // acaben amontonando contra los bordes.
+  function barajarMazo() {
+    gestos.mezclas += 1;
+    sonarBarajado(14);
+    var bounds = table.getBoundingClientRect();
+    var reparto = repartoDesordenado(bounds);
+
+    if (reducedMotion()) {
+      cancelarEspera();
+      stopAllMotion();
+      cards.forEach(function (card, index) {
+        var sitio = reparto[index];
+        card.x = sitio.x; card.y = sitio.y; card.rotation = sitio.rot; card.z = sitio.z;
+        card.slot = null; card.flipped = false;
+        applyCard(card);
+      });
+      renderStatus();
+      updateSelection();
+      zCounter = CARD_COUNT + 1;
+      return;
+    }
+
+    // 1) las cartas se juntan en el centro, como quien recoge el mazo para barajar
+    arrangeCards(function (card, index) {
+      return {
+        x: bounds.width / 2 - CARD_WIDTH / 2 + (Math.random() - 0.5) * 30,
+        y: bounds.height * 0.5 - CARD_HEIGHT / 2 + (Math.random() - 0.5) * 30,
+        rotation: (Math.random() - 0.5) * 26,
+        flipped: false,
+        z: index + 1,
+      };
+    });
+
+    // 2) y vuelven a la mesa mezcladas, en sitios y orden nuevos
+    setTimeout(function () {
+      arrangeCards(function (card, index) {
+        var sitio = reparto[index];
+        return { x: sitio.x, y: sitio.y, rotation: sitio.rot, flipped: false, z: sitio.z };
+      });
+      zCounter = CARD_COUNT + 1;
+    }, 360);
+  }
+
+  // ---- flipping ----
+  function flipCard(id) {
+    var card = cards.find(function (c) { return c.id === id; });
+    if (!card) return;
+    card.flipped = !card.flipped;
+    sonar("girar");
+    if (card.flipped) anotarArcano(card.id);
+    // Girar una carta que aún no está en su casilla: mirar antes de decidir
+    if (card.flipped && card.slot === null) gestos.giroSuelto += 1;
+    if (card.flipped) dismissHint();
+    applyCard(card);
+    updateSelection();
+  }
+
+  // ---- aviso "haz clic" ----
+  function showHint(card) {
+    if (hintDismissed || card.flipped || drag || arranging) return;
+    // Si la carta está muy arriba, el aviso sale por debajo para no chocar con la cabecera
+    var nearTop = card.y < 130;
+    // Sujeto el aviso dentro de la mesa para que no se corte en los bordes
+    var half = cardHint.offsetWidth / 2;
+    var tableWidth = table.getBoundingClientRect().width;
+    var left = Math.min(Math.max(card.x + CARD_WIDTH / 2, half + 10), tableWidth - half - 10);
+    cardHint.style.left = left + "px";
+    cardHint.style.top = nearTop ? (card.y + CARD_HEIGHT + 12) + "px" : (card.y - 40) + "px";
+    cardHint.classList.add("card-hint-visible");
+  }
+
+  function hideHint() {
+    cardHint.classList.remove("card-hint-visible");
+  }
+
+  function dismissHint() {
+    hintDismissed = true;
+    hideHint();
+  }
+
+  // ---- pointer interactions ----
+  function bindCardEvents(card) {
+    var el = card.el;
+    el.addEventListener("pointerdown", function (event) { onPointerDown(event, card); });
+    el.addEventListener("pointermove", onPointerMove);
+    el.addEventListener("pointerup", onPointerUp);
+    el.addEventListener("pointercancel", onPointerUp);
+    el.addEventListener("pointerenter", function (event) {
+      if (event.pointerType === "mouse") showHint(card);
+    });
+    el.addEventListener("pointerleave", hideHint);
+    el.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); flipCard(card.id); }
+    });
+  }
+
+  function onPointerDown(event, card) {
+    var tableBounds = table.getBoundingClientRect();
+    if (!tableBounds) return;
+    motion.delete(card.id);
+    if (gestos.inicio === null) gestos.inicio = performance.now();
+    sonar("coger");
+    hideHint();
+    manosDentro(true);
+    try { event.currentTarget.setPointerCapture(event.pointerId); } catch (e) {}
+    var pointerX = event.clientX - tableBounds.left;
+    var pointerY = event.clientY - tableBounds.top;
+    drag = {
+      id: card.id,
+      pointerId: event.pointerId,
+      offsetX: pointerX - card.x,
+      offsetY: pointerY - card.y,
+      lastX: pointerX,
+      lastY: pointerY,
+      lastTime: performance.now(),
+      velocityX: 0,
+      velocityY: 0,
+      moved: 0,
+      attached: card.slot !== null,
+      startX: pointerX,
+      startY: pointerY,
+    };
+    draggedId = card.id;
+    card.z = siguienteZ();
+    applyCard(card);
+  }
+
+  function onPointerMove(event) {
+    var tableBounds = table.getBoundingClientRect();
+    if (!drag || drag.pointerId !== event.pointerId || !tableBounds) return;
+    var card = cards.find(function (c) { return c.id === drag.id; });
+    if (!card) return;
+
+    var pointerX = event.clientX - tableBounds.left;
+    var pointerY = event.clientY - tableBounds.top;
+    var distanceFromStart = Math.hypot(pointerX - drag.startX, pointerY - drag.startY);
+
+    if (drag.attached && distanceFromStart < 24) { drag.moved = distanceFromStart; return; }
+    if (drag.attached) {
+      drag.attached = false;
+      gestos.cambios += 1; // saca una carta que ya había colocado: cambio de opinión
+      card.slot = null;
+      renderStatus();
+      updateSelection();
+    }
+
+    var now = performance.now();
+    var elapsed = Math.max(8, now - drag.lastTime);
+    var instantX = (pointerX - drag.lastX) / elapsed;
+    var instantY = (pointerY - drag.lastY) / elapsed;
+    drag.velocityX = drag.velocityX * 0.58 + instantX * 0.42;
+    drag.velocityY = drag.velocityY * 0.58 + instantY * 0.42;
+    drag.moved += Math.hypot(pointerX - drag.lastX, pointerY - drag.lastY);
+    drag.lastX = pointerX;
+    drag.lastY = pointerY;
+    drag.lastTime = now;
+
+    var maxX = tableBounds.width - CARD_WIDTH;
+    var maxY = tableBounds.height - CARD_HEIGHT;
+    var targetX = pointerX - drag.offsetX;
+    var targetY = pointerY - drag.offsetY;
+    var lagX = Math.max(-38, Math.min(38, drag.velocityX * physics.dragLag));
+    var lagY = Math.max(-38, Math.min(38, drag.velocityY * physics.dragLag));
+    var x = Math.min(Math.max(10, targetX - lagX), maxX - 10);
+    var y = Math.min(Math.max(76, targetY - lagY), maxY - 14);
+
+    card.x = x;
+    card.y = y;
+    card.rotation = Math.max(-8, Math.min(8, drag.velocityX * 3.1));
+    applyCard(card);
+
+    activeSlot = findClosestSlot(x + CARD_WIDTH / 2, y + CARD_HEIGHT / 2);
+    setActiveSlotHighlight(activeSlot);
+  }
+
+  function onPointerUp(event) {
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    var card = cards.find(function (c) { return c.id === drag.id; });
+    var slotIndex = activeSlot;
+    var isTap = drag.moved < 8;
+
+    // Un solo clic (o toque) sin apenas mover la carta = darle la vuelta
+    if (isTap) flipCard(drag.id);
+
+    if (slotIndex !== null && card) {
+      sonar("imantar");
+      var tableBounds = table.getBoundingClientRect();
+      var slotBounds = slotEls[slotIndex].getBoundingClientRect();
+      var x = slotBounds.left - tableBounds.left;
+      var y = slotBounds.top - tableBounds.top;
+      cards.forEach(function (c) {
+        if (c.id === drag.id) { c.x = x; c.y = y; c.rotation = 0; c.slot = slotIndex; applyCard(c); }
+        else if (c.slot === slotIndex) {
+          // La carta que ya estaba en esa casilla se aparta hacia abajo, fuera de ella,
+          // para que lo que se ve coincida con lo que cuenta el marcador.
+          c.slot = null;
+          c.y = Math.min(c.y + CARD_HEIGHT * 0.7 + 24, tableBounds.height - CARD_HEIGHT - 14);
+          c.x = Math.min(Math.max(10, c.x + (Math.random() * 40 - 20)), tableBounds.width - CARD_WIDTH - 10);
+          c.rotation = Math.random() * 10 - 5;
+          applyCard(c);
+        }
+      });
+      renderStatus();
+      updateSelection();
+    } else if (!isTap && card) {
+      throwCard(drag.id, drag.velocityX, drag.velocityY);
+    }
+
+    drag = null;
+    draggedId = null;
+    activeSlot = null;
+    setActiveSlotHighlight(null);
+    if (card) applyCard(card);
+  }
+
+  // ---- dialogue engine ----
+  function currentPhrase() {
+    if (canal === CANAL_BUHO) return frasesBuho[buhoStep];
+    return dialogueOverride !== null ? dialogueOverride : DIALOGUE[dialogueIndex];
+  }
+
+  // ¿Le queda algo por decir a quien está hablando ahora?
+  function quedaFrase() {
+    if (canal === CANAL_BUHO) return buhoStep < frasesBuho.length - 1;
+    return readingStep !== null && readingStep < readingLines.length - 1;
+  }
+
+  function pasarDeFrase() {
+    if (canal === CANAL_BUHO) { buhoStep += 1; marcarEsperaDeClic(false); startTyping(); return; }
+    setReadingStep(readingStep + 1);
+  }
+
+  // ---- motor de lecturas ----
+  function elegir(variantes) {
+    return variantes[Math.floor(Math.random() * variantes.length)];
+  }
+
+  // El oráculo comenta cómo has jugado. Solo salta si has hecho algo llamativo,
+  // así que no aparece en todas las tiradas: parte de la gracia es que sorprenda.
+  // Textos aprobados en BARAJA-MAESTRA.md (sección «Observaciones de gesto»).
+  // El oráculo solo comenta cuando haces algo de verdad llamativo (topes altos):
+  // así es raro en el juego normal, pero SIEMPRE reacciona si insistes en el gesto.
+  function observacionDeGestos() {
+    var segundos = gestos.inicio === null ? 0 : (performance.now() - gestos.inicio) / 1000;
+    if (gestos.fuerte >= 2) return "Has arrojado las cartas con cierta vehemencia. El destino suele preferir que lo invoquen sin amenazas.";
+    if (gestos.mezclas >= 5) return "Has mezclado las cartas con insistencia. El destino tolera las dudas; las negociaciones, bastante menos.";
+    if (gestos.cambios >= 2) return "Has cambiado de sitio una carta que ya habías elegido. El destino también conoce esa costumbre de llamar ajuste a cambiar de opinión.";
+    if (gestos.giroSuelto >= 2) return "Has mirado una carta antes de entregársela a la mesa. El destino lo ha visto; por elegancia, fingirá que no.";
+    if (segundos > 0 && segundos < 20) return "Has elegido sin apenas dudar. El destino rara vez presencia tanta decisión en horario laboral.";
+    if (segundos > 150) return "Has tardado tanto en elegir que las cartas han empezado a deliberar sobre ti. Sus conclusiones no son unánimes.";
+    return null;
+  }
+
+  // Presenta una carta por su nombre antes de leerla, con su microfrase.
+  function presentar(casilla, card) {
+    return elegir(PRESENTACIONES[casilla])
+      .replace("{carta}", ARCANOS[card.id].nombre)
+      .replace("{microfrase}", ARCANOS[card.id].microfrase);
+  }
+
+  var CASILLAS = ["pasado", "presente", "futuro"];
+
+  function cartasEnMesa() {
+    var porCasilla = [null, null, null];
+    cards.forEach(function (c) { if (c.slot !== null) porCasilla[c.slot] = c; });
+    return porCasilla;
+  }
+
+  // ¿Esta carta se niega a ser leída? Solo puede pasar una vez por lectura.
+  function seNiegaALeerse(card) {
+    if (card.id !== CARTA_ESQUIVA || yaSeNegoEstaLectura) return false;
+    var salta = !esquivaDescubierta || Math.random() < PROBABILIDAD_ESQUIVA;
+    if (salta) { yaSeNegoEstaLectura = true; esquivaDescubierta = true; }
+    return salta;
+  }
+
+  // Despedidas: el oráculo cierra SIEMPRE con una (al azar) para que quede claro
+  // que la tirada ha terminado. Aprobadas por Mery en BARAJA-MAESTRA.md.
+  var DESPEDIDAS = [
+    "Las cartas han hablado. A partir de aquí, negarán cualquier responsabilidad.",
+    "La lectura termina aquí. Las consecuencias, como siempre, empiezan después.",
+    "El porvenir queda en tus manos. Las cartas se limitan a señalarlo desde una distancia prudencial.",
+    "El oráculo da por concluida la sesión. El destino se reserva el derecho a introducir cambios.",
+    "Ya conoces el augurio. Fingir que no lo has oído también es una decisión.",
+  ];
+
+  // Cada cuánto aparece el remate final (guiño ocasional, no en cada tirada).
+  var PROBABILIDAD_REMATE = 0.4;
+
+  // Final de la lectura: afinidad, cierre de síntesis y remate
+  // Cada frase de la lectura viaja con la carta de la que habla (o con null si
+  // no habla de ninguna). Es lo que permite levantar esa carta mientras suena.
+  function lineasDeCierre(mesa) {
+    var lines = [], deQuien = [];
+    function di(frase, carta) { lines.push(frase); deQuien.push(carta || null); }
+    // Afinidades: como mucho una por lectura, para no romper el ritmo
+    var ids = [mesa[0].id, mesa[1].id, mesa[2].id];
+    var parejas = AFINIDADES.filter(function (a) {
+      return ids.indexOf(a.pareja[0]) !== -1 && ids.indexOf(a.pareja[1]) !== -1;
+    });
+    // La afinidad habla de dos cartas a la vez, así que no levanta ninguna
+    if (parejas.length) di(elegir(parejas).frase, null);
+    // El oráculo concluye antes de permitirse el chiste
+    var arco = ENERGIA[mesa[0].id] + "→" + ENERGIA[mesa[2].id];
+    if (CIERRES[arco]) di(CIERRES[arco], null);
+    // El remate es un guiño final que solo aparece de vez en cuando. Llega sin
+    // anunciarse: un chiste que se avisa deja de serlo. Es de la carta de Futuro.
+    if (Math.random() < PROBABILIDAD_REMATE) di(LECTURAS[mesa[2].id].remate, mesa[2].id);
+    // Y siempre una despedida al final: así se sabe que la tirada ha terminado.
+    di(elegir(DESPEDIDAS), null);
+    return { lines: lines, deQuien: deQuien };
+  }
+
+  // Recorre las casillas desde `desde`. Si una carta se niega a ser leída,
+  // la lectura se corta ahí y devuelve el hueco que hay que rellenar.
+  function lineasDeCasillas(mesa, desde) {
+    var lines = [], deQuien = [];
+    function di(frase, carta) { lines.push(frase); deQuien.push(carta || null); }
+    for (var i = desde; i < 3; i++) {
+      if (seNiegaALeerse(mesa[i])) {
+        // La negativa habla de la carta que se está yendo
+        NEGATIVA.forEach(function (frase) { di(frase, mesa[i].id); });
+        return { lines: lines, deQuien: deQuien, hueco: i };
+      }
+      di(presentar(CASILLAS[i], mesa[i]), mesa[i].id);
+      di(LECTURAS[mesa[i].id][CASILLAS[i]], mesa[i].id);
+      // Un aparte como mucho por lectura, y no siempre
+      if (!yaHuboAparte && APARTES[mesa[i].id] && Math.random() < PROBABILIDAD_APARTE) {
+        yaHuboAparte = true;
+        di(APARTES[mesa[i].id], mesa[i].id);
+      }
+    }
+    var cierre = lineasDeCierre(mesa);
+    return { lines: lines.concat(cierre.lines), deQuien: deQuien.concat(cierre.deQuien), hueco: null };
+  }
+
+  // Monta la lectura de la tirada actual siguiendo la estructura aprobada en
+  // BARAJA-MAESTRA.md: apertura + las tres cartas (presentadas y leídas) +
+  // afinidad si la hay + cierre de síntesis + remate.
+  function buildReading() {
+    var mesa = cartasEnMesa();
+    if (!mesa[0] || !mesa[1] || !mesa[2]) return { lines: [], hueco: null };
+
+    yaSeNegoEstaLectura = false;
+    yaHuboAparte = false;
+    recuentoPendiente = false;
+    if (!esperandoAMadame) callaElBuho(); // el recuento anterior deja sitio
+    var lines = [elegir(SISTEMA.apertura)];
+    var deQuien = [null];
+    var observacion = observacionDeGestos();
+    if (observacion) { lines.push(observacion); deQuien.push(null); }
+    // Cada lectura consume los gestos: la siguiente empieza a contar de cero
+    gestos = { fuerte: 0, mezclas: 0, cambios: 0, giroSuelto: 0, inicio: null };
+
+    var resto = lineasDeCasillas(mesa, 0);
+    return {
+      lines: lines.concat(resto.lines),
+      deQuien: deQuien.concat(resto.deQuien),
+      hueco: resto.hueco,
+    };
+  }
+
+  // ---- la carta que se niega a ser leída ----
+  // La carta se va sola de la casilla y el oráculo espera a que saques otra.
+  function apartarCarta(card) {
+    card.slot = null;
+    card.flipped = false;
+    card.z = siguienteZ();
+    applyCard(card);
+    if (reducedMotion()) return;
+    motion.set(card.id, {
+      velocityX: -1.5 - Math.random() * 0.7,
+      velocityY: 0.8 + Math.random() * 0.5,
+      canSnap: false,
+    });
+    if (frame === null) frame = requestAnimationFrame(runPhysics);
+  }
+
+  function iniciarEspera(slot) {
+    var card = cards.filter(function (c) { return c.slot === slot; })[0];
+    espera = { slot: slot };
+    huecoPendiente = null;
+    if (card) apartarCarta(card);
+    slotEls[slot].classList.add("slot-esperando");
+    renderStatus();
+  }
+
+  function reanudarLectura() {
+    var slot = espera.slot;
+    slotEls[slot].classList.remove("slot-esperando");
+    espera = null;
+    var mesa = cartasEnMesa();
+    if (!mesa[0] || !mesa[1] || !mesa[2]) return;
+    var resto = lineasDeCasillas(mesa, slot);
+    readingLines = readingLines.concat([elegir(SISTEMA.reanuda)]).concat(resto.lines);
+    readingCards = readingCards.concat([null]).concat(resto.deQuien);
+    huecoPendiente = resto.hueco;
+    setReadingStep(readingStep + 1);
+    renderStatus();
+  }
+
+  function cancelarEspera() {
+    if (espera === null) return;
+    slotEls[espera.slot].classList.remove("slot-esperando");
+    espera = null;
+    huecoPendiente = null;
+  }
+
+  // Ritmo del oráculo. Va despacio a propósito: es una lectura, no un aviso.
+  // La lectura no avanza sola: cada frase espera a que hagas clic, así que
+  // el ritmo lo marcas tú y el texto puede escribirse algo más rápido.
+  var TYPING_SPEED = 42;      // milisegundos por letra
+
+  // El texto aprobado marca con **negrita** el nombre de la carta y con
+  // *cursiva* su microfrase. Como la frase se escribe letra a letra, se parte
+  // en tramos con estilo y se van revelando en orden.
+  function trozos(texto) {
+    var out = [];
+    var re = /\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+    var last = 0;
+    var m;
+    while ((m = re.exec(texto)) !== null) {
+      if (m.index > last) out.push({ t: texto.slice(last, m.index), e: null });
+      out.push({ t: m[1] !== undefined ? m[1] : m[2], e: m[1] !== undefined ? "strong" : "em" });
+      last = re.lastIndex;
+    }
+    if (last < texto.length) out.push({ t: texto.slice(last), e: null });
+    return out;
+  }
+
+  // Longitud de la frase tal como se ve, sin las marcas de estilo
+  function textoVisible(texto) {
+    return texto.replace(/\*\*([^*]+)\*\*/g, "$1").replace(/\*([^*]+)\*/g, "$1");
+  }
+
+  function escapar(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function pintarFrase(tramos, hasta) {
+    var html = "";
+    var n = 0;
+    for (var i = 0; i < tramos.length && n < hasta; i++) {
+      var tramo = tramos[i];
+      var cuantos = Math.min(tramo.t.length, hasta - n);
+      var visible = escapar(tramo.t.slice(0, cuantos));
+      html += tramo.e ? "<" + tramo.e + ">" + visible + "</" + tramo.e + ">" : visible;
+      n += cuantos;
+    }
+    canal.texto.innerHTML = html;
+  }
+
+  function clearDialogueTimers() {
+    if (autoAdvanceTimer !== null) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+    if (readingTimer !== null) { clearTimeout(readingTimer); readingTimer = null; }
+  }
+
+  function startTyping() {
+    if (typingInterval !== null) { clearInterval(typingInterval); typingInterval = null; }
+    clearDialogueTimers();
+    var phrase = currentPhrase();
+    var tramos = trozos(phrase);
+    var visible = textoVisible(phrase);
+    var largo = visible.length;
+    dialogueComplete = false;
+    // Si vuelve a hablar Madame, su burbuja reaparece: se esconde al cederle
+    // el cierre al búho y no hay otro sitio donde volver a encenderla.
+    if (canal === CANAL_MADAME) oracleDialogue.classList.remove("sin-madame");
+    canal.texto.textContent = "";
+    canal.cursor.classList.remove("typing-cursor-idle");
+
+    if (reducedMotion()) {
+      pintarFrase(tramos, largo);
+      dialogueComplete = true;
+      onDialogueComplete();
+      return;
+    }
+
+    var ch = 0;
+    typingInterval = setInterval(function () {
+      ch += 1;
+      pintarFrase(tramos, ch);
+      sonarTecla(visible.charAt(ch - 1));
+      if (ch >= largo) {
+        clearInterval(typingInterval);
+        typingInterval = null;
+        dialogueComplete = true;
+        canal.cursor.classList.add("typing-cursor-idle");
+        onDialogueComplete();
+      }
+    }, TYPING_SPEED);
+  }
+
+  // Clic en la burbuja: si está escribiendo, muestra la frase entera;
+  // si ya ha terminado, pasa a la siguiente. Para quien lee a otro ritmo.
+  // Un clic: si está escribiendo, muestra la frase entera; si ya ha terminado,
+  // pasa a la siguiente. Vale igual para Madame y para el búho.
+  function advanceDialogue() {
+    if (typingInterval !== null) {
+      clearInterval(typingInterval);
+      typingInterval = null;
+      var entera = currentPhrase();
+      pintarFrase(trozos(entera), textoVisible(entera).length);
+      dialogueComplete = true;
+      canal.cursor.classList.add("typing-cursor-idle");
+      onDialogueComplete();
+      return;
+    }
+    // Madame ya se ha despedido: el clic siguiente le cede la palabra al búho,
+    // que es quien lleva la cuenta de los arcanos. Nunca hablan a la vez.
+    if (recuentoPendiente && canal === CANAL_MADAME) {
+      recuentoPendiente = false;
+      marcarEsperaDeClic(false);
+      oracleDialogue.classList.add("sin-madame");
+      mostrarRecuentoDelBuho();
+      return;
+    }
+    if (quedaFrase()) pasarDeFrase();
+  }
+
+  // La bola llama a Madame, esté el búho por donde esté
+  function tocarLaBola() {
+    if (llamarAMadame()) return;
+    advanceDialogue();
+  }
+
+  function onDialogueComplete() {
+    // El búho escribe igual que Madame: al acabar la frase espera un clic
+    if (canal === CANAL_BUHO) {
+      if (dialogueComplete && quedaFrase()) marcarEsperaDeClic(true);
+      return;
+    }
+    // Effect A: intro auto-advance
+    if (dialogueComplete && dialogueIndex === 0 && dialogueOverride === null) {
+      autoAdvanceTimer = setTimeout(function () { setDialogueIndex(1); }, 2300);
+    }
+    // Effect B: reading progression
+    if (readingStep === null || !dialogueComplete) return;
+
+    // La carta esquiva: al terminar la negativa, la carta se va y el oráculo espera
+    if (huecoPendiente !== null && readingStep === readingLines.length - 1) {
+      var casilla = huecoPendiente;
+      readingTimer = setTimeout(function () { iniciarEspera(casilla); }, 700);
+      return;
+    }
+
+    // La lectura no corre sola: se queda esperando a que hagas clic
+    if (readingStep < readingLines.length - 1) marcarEsperaDeClic(true);
+    // Y cuando Madame se despide, el recuento del búho queda a la espera: no
+    // se suelta encima de la despedida. Primero cierra ella, luego habla él.
+    else { recuentoPendiente = true; marcarEsperaDeClic(true); }
+  }
+
+  // Mientras el oráculo espera clic, la burbuja se vuelve pulsable y enseña
+  // una flecha, para que se entienda que la lectura sigue cuando tú quieras.
+  function marcarEsperaDeClic(on) {
+    canal.dialogo.classList.toggle("oracle-esperando", on);
+  }
+
+  function setDialogueIndex(i) {
+    if (dialogueIndex === i && dialogueOverride === null) return;
+    dialogueIndex = i;
+    startTyping();
+  }
+
+  // ---- la sala de espera ----
+  // Madame no habla hasta que la llaman: hasta entonces solo hay una nota del
+  // búho y la mesa entera para trastear.
+  var esperandoAMadame = true;
+
+  // La nota del búho no se escribe letra a letra: los carteles no hablan,
+  // simplemente están puestos.
+  function hablaElBuho(frases) {
+    frasesBuho = frases;
+    buhoStep = 0;
+    canal = CANAL_BUHO;
+    buhoDialogo.hidden = false;
+    startTyping();
+  }
+
+  function callaElBuho() {
+    if (canal === CANAL_BUHO) {
+      if (typingInterval !== null) { clearInterval(typingInterval); typingInterval = null; }
+      marcarEsperaDeClic(false);
+      canal = CANAL_MADAME;
+    }
+    buhoDialogo.hidden = true;
+  }
+
+  function mostrarNotaDelBuho() {
+    oracleDialogue.classList.add("sin-madame");
+    oracleAvatar.classList.add("bola-llamando");
+    hablaElBuho(avisoDelBuho());
+  }
+
+  // Al terminar la lectura, el búho anota cuántos arcanos llevas conocidos
+  function mostrarRecuentoDelBuho() {
+    var frases = frasesDelRecuento();
+    if (frases) hablaElBuho(frases);
+  }
+
+  function salirDeLaEspera() {
+    if (!esperandoAMadame) return false;
+    esperandoAMadame = false;
+    callaElBuho();
+    oracleDialogue.classList.remove("sin-madame");
+    oracleAvatar.classList.remove("bola-llamando");
+    return true;
+  }
+
+  // Pulsar la bola es lo que hace aparecer a Madame
+  function llamarAMadame() {
+    if (!salirDeLaEspera()) return false;
+    dialogueOverride = null;
+    dialogueIndex = 0;
+    // Lo primero que hace al aparecer es dar por sabido a qué vienes
+    presumirLaPregunta();
+    startTyping();
+    return true;
+  }
+
+  // En la burbuja habla siempre Madame Cesoir 🔮. El búho 🦉 no habla:
+  // es señalética, y vive en las etiquetas pequeñas de la mesa.
+  function setDialogueOverride(v) {
+    if (dialogueOverride === v) return;
+    dialogueOverride = v;
+    startTyping();
+  }
+
+  // La carta de la que se está hablando se levanta de la mesa. Es lo que
+  // vuelve legible su dibujo y, sobre todo, lo que deja claro a cuál de las
+  // tres se refiere Madame.
+  function levantarCarta(id) {
+    cards.forEach(function (c) {
+      c.el.classList.toggle("card-leyendo", c.id === id);
+    });
+  }
+
+  function setReadingStep(step) {
+    if (readingStep === step) return;
+    marcarEsperaDeClic(false);
+    readingStep = step;
+    if (readingTimer !== null) { clearTimeout(readingTimer); readingTimer = null; }
+    if (step !== null) {
+      levantarCarta(readingCards[step]);
+      setDialogueOverride(readingLines[step]);
+    } else {
+      levantarCarta(null);
+    }
+  }
+
+  function updateSelection() {
+    // Si el búho tenía la palabra (el recuento del final) y vuelves a tocar la
+    // mesa, se calla y le devuelve el turno a Madame. Sin esto, la siguiente
+    // frase de ella se escribía dentro del globo del búho.
+    if (!esperandoAMadame && canal === CANAL_BUHO) callaElBuho();
+
+    var placed = cards.filter(function (c) { return c.slot !== null; });
+    var selected = placed.length;
+    var revealed = selected === 3 && placed.every(function (c) { return c.flipped; });
+
+    // Con una carta esquiva sobre la mesa, la lectura está congelada esperando
+    // el relevo: no se toca el diálogo hasta que el hueco tenga carta y esté girada.
+    if (espera !== null) {
+      var relevo = cards.filter(function (c) { return c.slot === espera.slot; })[0];
+      if (revealed && relevo && relevo.flipped) reanudarLectura();
+      return;
+    }
+
+    // El enlace para compartir solo tiene sentido con la tirada completa
+    botonCompartir.hidden = !revealed;
+
+    // Si alguien va directo a tocar las cartas sin llamarla, Madame se
+    // incorpora igualmente y saluda. Antes solo se cerraba la sala de espera
+    // y se quedaba muda hasta completar la tirada.
+    if (selected > 0) llamarAMadame();
+
+    if (selected < 3) {
+      setReadingStep(null);
+      if (dialogueOverride !== null) {
+        dialogueIndex = 1;
+        dialogueOverride = null;
+        startTyping();
+      }
+      return;
+    }
+
+    if (!revealed) {
+      setReadingStep(null);
+      setDialogueOverride("Dale la vuelta a tus cartas.");
+    } else if (readingStep === null) {
+      var lectura = buildReading();
+      readingLines = lectura.lines;
+      readingCards = lectura.deQuien;
+      huecoPendiente = lectura.hueco;
+      setReadingStep(0);
+    }
+  }
+
+  // ---- physics lab ----
+  function savePhysics() {
+    try { window.localStorage.setItem("mesa-physics", JSON.stringify(physics)); } catch (e) {}
+  }
+
+  function loadPhysics() {
+    try {
+      var saved = window.localStorage.getItem("mesa-physics");
+      if (saved) physics = Object.assign({}, PHYSICS_PRESETS.Expresiva, JSON.parse(saved));
+    } catch (e) {
+      try { window.localStorage.removeItem("mesa-physics"); } catch (e2) {}
+    }
+  }
+
+  function buildLab() {
+    Object.keys(PHYSICS_PRESETS).forEach(function (name) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = name;
+      b.addEventListener("click", function () {
+        physics = Object.assign({}, PHYSICS_PRESETS[name]);
+        savePhysics();
+        syncLabControls();
+      });
+      labPresets.appendChild(b);
+    });
+
+    LAB_CONTROLS.forEach(function (def) {
+      var label = def[0], key = def[1], min = def[2], max = def[3], step = def[4];
+      var wrap = document.createElement("label");
+      wrap.className = "lab-control";
+      var span = document.createElement("span");
+      span.textContent = label;
+      var input = document.createElement("input");
+      input.type = "range";
+      input.min = min; input.max = max; input.step = step;
+      input.value = physics[key];
+      input.dataset.key = key;
+      input.dataset.step = step;
+      var out = document.createElement("output");
+      out.textContent = formatVal(physics[key], step);
+      input.addEventListener("input", function () {
+        var v = Number(input.value);
+        physics[key] = v;
+        out.textContent = formatVal(v, step);
+        savePhysics();
+      });
+      wrap.appendChild(span);
+      wrap.appendChild(input);
+      wrap.appendChild(out);
+      labControls.appendChild(wrap);
+    });
+  }
+
+  function formatVal(value, step) {
+    return Number(value).toFixed(step < 0.01 ? 3 : step < 1 ? 1 : 0);
+  }
+
+  function syncLabControls() {
+    labControls.querySelectorAll("input").forEach(function (input) {
+      var key = input.dataset.key;
+      var step = Number(input.dataset.step);
+      input.value = physics[key];
+      input.parentElement.querySelector("output").textContent = formatVal(physics[key], step);
+    });
+  }
+
+  function toggleLab(open) {
+    var isOpen = typeof open === "boolean" ? open : physicsLab.hasAttribute("hidden");
+    if (isOpen) {
+      physicsLab.removeAttribute("hidden");
+      labTrigger.classList.add("lab-trigger-active");
+      labTrigger.setAttribute("aria-expanded", "true");
+      syncLabControls();
+    } else {
+      physicsLab.setAttribute("hidden", "");
+      labTrigger.classList.remove("lab-trigger-active");
+      labTrigger.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  // ---- wire up controls ----
+  document.querySelectorAll(".table-actions button").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var a = btn.dataset.action;
+      manosDentro(true);
+      if (a === "scatter") barajarMazo();
+      else if (a === "fan") fanDeck();
+      else if (a === "gather") gatherDeck();
+    });
+  });
+
+  oracleAvatar.addEventListener("click", tocarLaBola);
+
+  // Las dos bolas hacen lo mismo. La de arriba, entre las manos de Madame, es
+  // la que mira todo el mundo cuando el búho dice «pulsa la bola»; la de abajo
+  // es la que lleva el ritmo de la conversación. Dejar viva solo una era una
+  // trampa. Se maneja también con el teclado, porque es un control de verdad.
+  var bolaGrande = document.querySelector("#tarot-crystal-orb .orb");
+  if (bolaGrande) {
+    bolaGrande.addEventListener("click", tocarLaBola);
+    bolaGrande.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); tocarLaBola(); }
+    });
+  }
+  speechBubble.addEventListener("click", advanceDialogue);
+  buhoDialogoGlobo.addEventListener("click", advanceDialogue);
+
+  // El búho indica para qué sirve cada botón sin ocupar sitio en la mesa
+  function etiquetaBuho(boton, texto) {
+    function mostrar() {
+      var mesa = table.getBoundingClientRect();
+      var b = boton.getBoundingClientRect();
+      var t = typeof texto === "function" ? texto() : texto;
+      if (!t) return;
+      buhoLabel.innerHTML = '<span class="buho-icono">🦉</span><span class="buho-globo">' + t + '</span>';
+      buhoLabel.classList.add("buho-label-visible");
+      // Sujeta la etiqueta dentro de la mesa para que no se corte por los lados
+      var medio = buhoLabel.offsetWidth / 2;
+      var x = b.left - mesa.left + b.width / 2;
+      buhoLabel.style.left = Math.round(Math.min(Math.max(x, medio + 8), mesa.width - medio - 8)) + "px";
+      buhoLabel.style.top = Math.round(b.top - mesa.top - 34) + "px";
+    }
+    function ocultar() { buhoLabel.classList.remove("buho-label-visible"); }
+    boton.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") mostrar(); });
+    boton.addEventListener("pointerleave", ocultar);
+    boton.addEventListener("focus", mostrar);
+    boton.addEventListener("blur", ocultar);
+    boton.addEventListener("click", ocultar);
+  }
+
+  etiquetaBuho(oracleAvatar, function () {
+    return esperandoAMadame ? "Llama a Madame Cesoir" : "";
+  });
+  etiquetaBuho(soundTrigger, "Sonido de la mesa");
+  etiquetaBuho(labTrigger, "Ajustes de física");
+  etiquetaBuho(botonCompartir, "Comparte esta tirada");
+
+  soundTrigger.addEventListener("click", function () {
+    aplicarSonido(!sonidoActivo);
+    if (sonidoActivo) sonar("imantar"); // una muestra al encenderlo
+  });
+
+  botonCompartir.addEventListener("click", function () {
+    var enlace = enlaceDeLaTirada();
+    if (!enlace) return;
+    var avisar = function (texto) {
+      botonCompartir.textContent = texto;
+      setTimeout(function () { botonCompartir.textContent = "Copiar enlace"; }, 2200);
+    };
+    // Sin portapapeles —por ejemplo abriendo el archivo con doble clic— la
+    // tirada se escribe en la barra de direcciones, que también sirve.
+    var enLaBarra = function () {
+      window.location.hash = enlace.split("#")[1];
+      avisar("Enlace en la barra");
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(enlace).then(function () { avisar("Enlace copiado"); }, enLaBarra);
+    } else {
+      enLaBarra();
+    }
+  });
+  labTrigger.addEventListener("click", function () { toggleLab(); });
+  labClose.addEventListener("click", function () { toggleLab(false); });
+
+  // El laboratorio se cierra al hacer clic fuera de su ventana
+  document.addEventListener("pointerdown", function (event) {
+    if (physicsLab.hasAttribute("hidden")) return;
+    if (physicsLab.contains(event.target) || labTrigger.contains(event.target)) return;
+    toggleLab(false);
+  });
+
+  window.addEventListener("keydown", function (event) {
+    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+    if (event.key.toLowerCase() === "l") toggleLab();
+    if (event.key === "Escape") toggleLab(false);
+  });
+
+  var resizeTimer = null;
+  window.addEventListener("resize", function () {
+    if (resizeTimer !== null) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      // La carta mide distinto en móvil que en escritorio, así que al cambiar
+      // el tamaño de la ventana hay que volver a leer su medida: si no, la
+      // física seguiría calculando con la carta del otro tamaño.
+      CARD_WIDTH = medidaCSS("--card-w", 128);
+      CARD_HEIGHT = medidaCSS("--card-h", 199);
+      // re-seat any placed cards onto their slots after layout shift
+      var tableBounds = table.getBoundingClientRect();
+      cards.forEach(function (c) {
+        if (c.slot !== null && slotEls[c.slot]) {
+          var b = slotEls[c.slot].getBoundingClientRect();
+          c.x = b.left - tableBounds.left;
+          c.y = b.top - tableBounds.top;
+          applyCard(c);
+        }
+      });
+    }, 160);
+  });
+
+  // ---- init ----
+  loadPhysics();
+  buildLab();
+  resetDeck();
+
+  // El sonido arranca apagado salvo que ya lo hubieras encendido antes
+  var sonidoGuardado = null;
+  try { sonidoGuardado = window.localStorage.getItem("mesa-sonido"); } catch (e) {}
+  aplicarSonido(sonidoGuardado === "1");
+
+  cargarArcanosVistos();
+  presumirLaPregunta();  // por si Madame habla sin que la llamen (tirada compartida)
+  mostrarNotaDelBuho();  // el búho ya sabe aquí si es tu primera visita
+
+  // Si la dirección trae una tirada compartida, se recrea sobre la mesa
+  function abrirTiradaCompartida() {
+    var compartida = tiradaDelEnlace();
+    if (!compartida) return;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { restaurarTirada(compartida); });
+    });
+  }
+
+
+  // ---- las piedras se mueven ----
+  // Las cartas vuelan; las piedras pesan. La diferencia no es estética: las
+  // piedras no se lanzan (al soltarlas se quedan donde están), siguen al dedo
+  // con retraso, no giran nunca y aterrizan con un golpe seco.
+  var piedras = [];
+  var PASO = 2;                 // todo se mueve de dos en dos: es pixel art
+  var entero = function (n) { return Math.round(n / PASO) * PASO; };
+
+  (function prepararPiedras() {
+    var mesa = table.getBoundingClientRect();
+    document.querySelectorAll(".piedra").forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      var piedra = {
+        el: el,
+        x: entero(r.left - mesa.left),
+        y: entero(r.top - mesa.top),
+        destinoX: 0, destinoY: 0,   // a dónde la lleva el dedo
+        temblor: 0,                 // cuánto le queda de vibrar
+        arrastrando: false,
+      };
+      piedra.destinoX = piedra.x; piedra.destinoY = piedra.y;
+      // dejo de posicionarla con la hoja de estilos y paso a llevarla yo
+      el.style.left = "0"; el.style.top = "0";
+      el.style.right = "auto"; el.style.bottom = "auto";
+      el.style.pointerEvents = "auto";
+      el.style.cursor = "grab";
+      piedras.push(piedra);
+      pintarPiedra(piedra);
+    });
+  })();
+
+  function pintarPiedra(p) {
+    var tx = p.x, ty = p.y;
+    if (p.temblor > 0) {
+      // el temblor va en píxeles enteros y en direcciones alternas
+      tx += (Math.random() < 0.5 ? -PASO : PASO);
+      ty += (Math.random() < 0.5 ? -PASO : 0);
+    }
+    p.el.style.transform = "translate(" + tx + "px, " + ty + "px)";
+  }
+
+  // El cuarzo contra el tapete: tres capas. El filo es lo que de verdad se
+  // oye; el cuerpo da el mineral; el peso casi no se oye pero se nota. Antes
+  // esto era un golpe de 380 Hz, y en el altavoz de un portátil no llegaba
+  // nada: por eso parecía que las piedras no sonaban.
+  function sonarPiedra(fuerza) {
+    if (!sonidoActivo || !audio()) return;
+    var f = Math.max(0, Math.min(1, fuerza));
+    chasquido({ dur: 0.012, techo: pizca(7400, 0.18), suelo: 2400, vol: 0.026 + f * 0.040 });
+    chasquido({ dur: 0.055, techo: pizca(1250, 0.15), suelo: 340, vol: 0.030 + f * 0.055, retraso: 0.006 });
+    chasquido({ dur: 0.090, techo: pizca(300, 0.20), suelo: 90,  vol: 0.020 + f * 0.040, retraso: 0.011 });
+  }
+
+  // Arrastrar una piedra sobre el tapete: un roce continuo, no un golpe. Va
+  // racionado para que no se convierta en un siseo constante.
+  var ultimoRoce = 0;
+  function rozarPiedra() {
+    if (!sonidoActivo || !audio()) return;
+    var ahora = performance.now();
+    if (ahora - ultimoRoce < 150) return;
+    ultimoRoce = ahora;
+    chasquido({ dur: 0.070, techo: pizca(2400, 0.3), suelo: 620, vol: 0.011 });
+  }
+
+  // ---- el bucle: arrastre pesado, temblor y viaje de intercambio ----
+  var latidoPiedras = null;
+  function moverPiedras() {
+    var algoVivo = false;
+    piedras.forEach(function (p) {
+      if (p.viaje) {
+        algoVivo = true;
+        p.viaje.t += 16;
+        var k = Math.min(1, p.viaje.t / p.viaje.dur);
+        var e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;  // arranque y frenada lentos
+        p.x = entero(p.viaje.desdeX + (p.viaje.hastaX - p.viaje.desdeX) * e);
+        p.y = entero(p.viaje.desdeY + (p.viaje.hastaY - p.viaje.desdeY) * e - Math.sin(e * Math.PI) * 6);
+        if (k >= 1) { p.x = entero(p.viaje.hastaX); p.y = entero(p.viaje.hastaY); p.viaje = null; sonarPiedra(0.3); }
+      } else if (p.arrastrando) {
+        algoVivo = true;
+        // no salta al dedo: se arrastra detrás. Eso es el peso.
+        var antesX = p.x, antesY = p.y;
+        p.x = entero(p.x + (p.destinoX - p.x) * 0.16);
+        p.y = entero(p.y + (p.destinoY - p.y) * 0.16);
+        // si de verdad se ha movido, roza contra el tapete
+        if (Math.abs(p.x - antesX) + Math.abs(p.y - antesY) >= PASO) rozarPiedra();
+      }
+      if (p.temblor > 0) { p.temblor -= 16; algoVivo = true; }
+      pintarPiedra(p);
+    });
+    latidoPiedras = algoVivo ? requestAnimationFrame(moverPiedras) : null;
+  }
+  function despertarPiedras() { if (latidoPiedras === null) latidoPiedras = requestAnimationFrame(moverPiedras); }
+
+  // ---- arrastre ----
+  piedras.forEach(function (p) {
+    p.el.addEventListener("pointerdown", function (ev) {
+      ev.preventDefault();
+      var mesa = table.getBoundingClientRect();
+      p.arrastrando = true;
+      p.agarreX = (ev.clientX - mesa.left) - p.x;
+      p.agarreY = (ev.clientY - mesa.top) - p.y;
+      p.el.style.cursor = "grabbing";
+      try { p.el.setPointerCapture(ev.pointerId); } catch (e) {}
+      sonarPiedra(0.15);
+      despertarPiedras();
+    });
+    p.el.addEventListener("pointermove", function (ev) {
+      if (!p.arrastrando) return;
+      var mesa = table.getBoundingClientRect();
+      var maxX = mesa.width - p.el.offsetWidth, maxY = mesa.height - p.el.offsetHeight;
+      p.destinoX = Math.min(Math.max(0, (ev.clientX - mesa.left) - p.agarreX), maxX);
+      p.destinoY = Math.min(Math.max(0, (ev.clientY - mesa.top) - p.agarreY), maxY);
+      despertarPiedras();
+    });
+    function soltar() {
+      if (!p.arrastrando) return;
+      // Al soltar NO sale despedida: se queda donde está. Una piedra no vuela.
+      p.arrastrando = false;
+      p.destinoX = p.x; p.destinoY = p.y;
+      p.el.style.cursor = "grab";
+      sonarPiedra(0.5);
+      p.temblor = 90;              // un temblorcito de asentarse
+      despertarPiedras();
+    }
+    p.el.addEventListener("pointerup", soltar);
+    p.el.addEventListener("pointercancel", soltar);
+  });
+
+  // ---- las dos cosas que hacen solas ----
+  function vibrarPiedras(ms) {
+    piedras.forEach(function (p, i) { p.temblor = (ms || 700) + i * 40; });
+    if (sonidoActivo) piedras.forEach(function (p, i) { setTimeout(function () { sonarPiedra(0.12); }, i * 70); });
+    despertarPiedras();
+  }
+
+  function intercambiarPiedras() {
+    var libres = piedras.filter(function (p) { return !p.viaje && !p.arrastrando; });
+    if (libres.length < 2) return;
+    // dos al azar se cambian el sitio, despacio y sin prisa
+    var a = libres[Math.floor(Math.random() * libres.length)];
+    var b = libres[Math.floor(Math.random() * libres.length)];
+    var vueltas = 0;
+    while (b === a && vueltas++ < 20) b = libres[Math.floor(Math.random() * libres.length)];
+    if (b === a) return;
+    [[a, b], [b, a]].forEach(function (par) {
+      par[0].viaje = { t: 0, dur: 1100, desdeX: par[0].x, desdeY: par[0].y, hastaX: par[1].x, hastaY: par[1].y };
+    });
+    despertarPiedras();
+  }
+
+  // ---- botones de prueba (temporales) ----
+  var pruebas = document.querySelector(".pruebas-piedras");
+  if (pruebas) {
+    pruebas.querySelector('[data-piedras="vibrar"]').addEventListener("click", function () { vibrarPiedras(900); });
+    pruebas.querySelector('[data-piedras="intercambiar"]').addEventListener("click", intercambiarPiedras);
+    // botón de prueba: para ver las dos posturas sin tener que jugar una tirada
+    pruebas.querySelector('[data-manos="alternar"]').addEventListener("click", function () {
+      manosDentro(!manosEl.classList.contains("manos-dentro"));
+    });
+  }
+
+  // al cambiar el tamaño de la mesa, las piedras se quedarían fuera de sitio
+  window.addEventListener("resize", function () {
+    var mesa = table.getBoundingClientRect();
+    piedras.forEach(function (p) {
+      p.x = Math.min(p.x, Math.max(0, mesa.width - p.el.offsetWidth));
+      p.y = Math.min(p.y, Math.max(0, mesa.height - p.el.offsetHeight));
+      p.destinoX = p.x; p.destinoY = p.y;
+      pintarPiedra(p);
+    });
+  });
+
+
+  // ---- las manos: fuera mientras habla, dentro mientras se juega ----
+  // Al principio Madame apoya las manos enteras sobre la mesa. En cuanto se
+  // toca el mazo las retira hacia su lado y solo deja los dedos asomando, para
+  // que las cartas tengan sitio.
+  var manosEl = document.querySelector(".manos");
+  function manosDentro(dentro) {
+    if (!manosEl) return;
+    var quiero = dentro !== false;
+    // Solo suena cuando de verdad se mueven: manosDentro(true) se llama cada
+    // vez que coges una carta, y sin este freno sonaría en cada clic.
+    if (manosEl.classList.contains("manos-dentro") === quiero) return;
+    manosEl.classList.toggle("manos-dentro", quiero);
+    sonar(quiero ? "manos-dentro" : "manos-fuera");
+  }
+
+  // ---- las manos de Madame ----
+  // La animación es la que hizo Mery: recorte por dedos, sin una sola rotación
+  // y con los desplazamientos en píxeles pares. Aquí solo cambia el destino:
+  // se dibuja en un lienzo oculto y cada ventana copia su mitad.
+  (function manosDeMadame() {
+    var huecoIzq = document.querySelector(".mano-hueco-izq .mano-lienzo");
+    var huecoDer = document.querySelector(".mano-hueco-der .mano-lienzo");
+    if (!huecoIzq || !huecoDer) return;
+    var ctxIzq = huecoIzq.getContext("2d");
+    var ctxDer = huecoDer.getContext("2d");
+    ctxIzq.imageSmoothingEnabled = false;
+    ctxDer.imageSmoothingEnabled = false;
+
+    var escena = document.createElement("canvas");
+    escena.width = 670; escena.height = 588;
+    var ctx = escena.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+
+    var dedos = [
+      { x: 71, y: 95, w: 58, h: 172 },
+      { x: 122, y: 27, w: 53, h: 241 },
+      { x: 165, y: 17, w: 61, h: 250 },
+      { x: 220, y: 36, w: 56, h: 235 },
+      { x: 388, y: 35, w: 60, h: 235, mask: [[390,35],[426,35],[435,65],[435,122],[448,145],[448,246],[390,246],[388,210],[388,148],[395,120]] },
+      { x: 432, y: 17, w: 61, h: 250, mask: [[444,17],[489,17],[491,246],[444,246],[444,177],[440,160],[440,118],[446,104]] },
+      { x: 481, y: 34, w: 58, h: 237 },
+      { x: 535, y: 95, w: 61, h: 174 }
+    ];
+    var pulgar = { x: 257, y: 162, w: 61, h: 147, depth: .10, mask: [[269,162],[315,162],[318,300],[268,300],[265,265],[265,205]] };
+
+    var limpio = null, sombra = null, arranque = performance.now();
+    function par(n) { return Math.round(n / 2) * 2; }
+    function suave(v) { return v * v * (3 - 2 * v); }
+    // A diez imágenes por segundo, como los juegos de los ochenta
+    function tiempo(ms) { return Math.floor(ms / 100) * 100; }
+
+    function pulso(t, retraso, ciclo, sube, aguanta, baja) {
+      var l = ((t - retraso) % ciclo + ciclo) % ciclo;
+      if (l < sube) return suave(l / sube);
+      if (l < sube + aguanta) return 1;
+      if (l < sube + aguanta + baja) return 1 - suave((l - sube - aguanta) / baja);
+      return 0;
+    }
+    function alzadoDe(i, t) {
+      var orden = i < 4 ? i : 7 - i;
+      return pulso(t, orden * 115, 2600, 180, 90, 230);
+    }
+    function contorno(p) {
+      var pts = p.mask || [[p.x,p.y],[p.x+p.w,p.y],[p.x+p.w,p.y+p.h],[p.x,p.y+p.h]];
+      ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+      for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+      ctx.closePath();
+    }
+    function borrar(p) { ctx.save(); contorno(p); ctx.clip(); ctx.clearRect(p.x-2, p.y-2, p.w+4, p.h+4); ctx.restore(); }
+    function dibujarDedo(p, alza) {
+      var a = Math.max(0, Math.min(1, alza));
+      var alzado = par(p.h * a * (p.depth || .14));
+      var alto = p.h - alzado, arriba = p.y + alzado;
+      ctx.save(); contorno(p); ctx.clip();
+      if (a > .01) {
+        ctx.globalAlpha = .055 * a;
+        ctx.drawImage(sombra, p.x, p.y, p.w, p.h, p.x + par(a*2), p.y + par(a*4), p.w, p.h);
+        ctx.globalAlpha = 1;
+      }
+      ctx.drawImage(limpio, p.x, p.y, p.w, p.h, p.x, arriba, p.w, alto);
+      ctx.restore();
+    }
+
+    function fotograma(ahora) {
+      if (limpio) {
+        var t = tiempo(ahora - arranque);
+        ctx.clearRect(0, 0, 670, 588);
+        ctx.drawImage(limpio, 0, 0);
+        dedos.forEach(function (p, i) {
+          var alza = alzadoDe(i, t);
+          if (alza <= .002) return;
+          borrar(p); dibujarDedo(p, alza);
+        });
+        var alzaPulgar = pulso(t, 190, 3100, 220, 110, 280) * .6;
+        if (alzaPulgar > .002) { borrar(pulgar); dibujarDedo(pulgar, alzaPulgar); }
+        // Cada ventana copia su mitad, girada 180°: Madame está enfrente, así
+        // que sus manos entran por arriba con los dedos hacia quien juega.
+        // Al girar media vuelta, las mitades se cruzan de lado — por eso la
+        // ventana izquierda se queda con la mitad derecha del dibujo.
+        ctxIzq.clearRect(0, 0, 332, 588);
+        ctxIzq.save(); ctxIzq.translate(332, 588); ctxIzq.scale(-1, -1);
+        ctxIzq.drawImage(escena, 338, 0, 332, 588, 0, 0, 332, 588);
+        ctxIzq.restore();
+        ctxDer.clearRect(0, 0, 338, 588);
+        ctxDer.save(); ctxDer.translate(338, 588); ctxDer.scale(-1, -1);
+        ctxDer.drawImage(escena, 0, 0, 338, 588, 0, 0, 338, 588);
+        ctxDer.restore();
+      }
+      requestAnimationFrame(fotograma);
+    }
+
+    var imagen = new Image();
+    imagen.onload = function () {
+      limpio = document.createElement("canvas");
+      limpio.width = 670; limpio.height = 588;
+      var c = limpio.getContext("2d");
+      c.imageSmoothingEnabled = false;
+      c.drawImage(imagen, 0, 0, 670, 588);
+      sombra = document.createElement("canvas");
+      sombra.width = 670; sombra.height = 588;
+      var s = sombra.getContext("2d");
+      s.drawImage(limpio, 0, 0);
+      s.globalCompositeOperation = "source-in";
+      s.fillStyle = "rgba(var(--ink-rgb), 1)";
+      s.fillStyle = "#3d2a5c";
+      s.fillRect(0, 0, 670, 588);
+      requestAnimationFrame(fotograma);
+    };
+    imagen.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAU8AAAEmCAMAAADV6OJSAAABgFBMVEWqo9C2zuaJTzWcY0ueY01uSC1ILB+KTTebkqTt0bbcn5hqOSnNtOJzZmlyOSrayeqOY1x3UTyhXT0tJBsXExKKcZNYMyZtSjDDe2N6aobbnndnRTC7gFvy4eA1JBzMjmvir6bPjWrz3NtoVkqNUTfVn5Y2Jh6lg3ZZPkl7hpO1hnCCPC+CPS+pl5GKZ5ivo5bw4+WYdGdxUEPpxLNsU03De1w9SUaJPS89Qj6fd5ubfcWMa52uoos5QiPAfVXcu87Hvabnz78AAADmo3rhmnLclGzTimTqq4W4dVPMg1zEe1eraUvtsYuQZlBuWEvprKWSWkj6+faRVjqPeGjvt7BwSDXwxbhPNyurh3CumYrMuavt2c53ZFfZl5DJqJHx6ee3pJaXhHXVxLRWRDivemVYVE7w5NdQSkX2ysOFSjO0lHvX1NLRs5nOycqUclvJ2OmKVjg0JBqvl9M5NzRzaWWyqqZnOygxKSXS5PKReLBoS0WiXULQi4S5s64oGhSTiYYCdWd7AAAAgHRSTlP//yYkXBf6Xf///yD/+ln//f//I///nlf///+i/11WKCNaHLGOVJxS//8lLFaUhlaOnB9VZVb///9n/z0tRTIvrTYA////////////////////////////////////////////////////////////Ef///////////////////2CjW0sAAFEoSURBVHja7b2JY9PIsugdtpAAGWBmmO3M2Ze7v7u/7dsjtVZLyFZkSbbjPc4eJpAFwvavf1Vd3a2W7QQCseGdh889c+cwQ5B/qq69qhdWv3yu8rPwBcEXnl94fuH55fOF5xeeX3h++Xzh+YXnF55fPl94fuH5hecXnl8+X3h+4fmF5//an2r1r4Zntdr55Dg7na3OXwlP+Cprf/jUOJtb9bXRXwXPX8NXqW/d+LQ8tzqder35y18DzzrIZ71+89PyrDeB59a//xXw/EOT82x+UpwjzrNev/6/Ps8mfBU88J9UQJuc59pfAc8bW/RV1j4lz7+v84d4PIeH+N+C52gNH2Lt8eP6hFm88VnznHSam4+3ms2trTX7E1qkG1uP10B5PoZPNPHAzc+Y5790tsYe70bzcX0LxXN9LfhkPG/WOc+1NXttjGcV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";
+  })();
+
+  abrirTiradaCompartida();
+  // Y también si te pegan un enlace con la mesa ya abierta: cambiar el hash
+  // no recarga la página, así que hay que estar atentos.
+  window.addEventListener("hashchange", abrirTiradaCompartida);
+})();
+</script>
+<script>
+(() => {
+  const root = document.getElementById('tarot-crystal-orb');
+  const canvas = root.querySelector('.galaxy-canvas');
+  const orb = root.querySelector('.orb');
+  const edgeCanvas = root.querySelector('.edge-canvas');
+  const edgeCtx = edgeCanvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { alpha: true });
+  const size = canvas.width;
+  const center = size / 2;
+  const stars = [];
+  const palette = ['#fff2ff', '#d6c2ff', '#93dcff', '#ff9fd7', '#b88cff'];
+
+  let seed = 84921;
+  function random() {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  }
+
+  for (let i = 0; i < 230; i += 1) {
+    const arm = i % 4;
+    const radius = 7 + Math.pow(random(), .68) * 57;
+    const spread = (random() - .5) * (.28 + radius * .03);
+    stars.push({
+      radius,
+      angle: arm * Math.PI / 2 + radius * .105 + spread,
+      speed: .000045 + (58 - radius) * .0000008,
+      size: random() > .9 ? 2 : 1,
+      color: palette[Math.floor(random() * palette.length)],
+      pulse: random() * Math.PI * 2
+    });
+  }
+
+  let lastNow = performance.now();
+  let rotationTime = 0;
+  let speedFactor = 1;
+  let targetSpeed = 1;
+
+  function drawPixelCircle(context, cx, cy, radius) {
+    let x = radius;
+    let y = 0;
+    let error = 1 - x;
+    let step = 0;
+    const plot = (px, py) => {
+      context.fillStyle = step++ % 5 === 0 ? '#8a6a9a' : '#70517f';
+      context.fillRect(px, py, 1, 1);
+    };
+    while (x >= y) {
+      plot(cx + x, cy + y); plot(cx + y, cy + x);
+      plot(cx - y, cy + x); plot(cx - x, cy + y);
+      plot(cx - x, cy - y); plot(cx - y, cy - x);
+      plot(cx + y, cy - x); plot(cx + x, cy - y);
+      y += 1;
+      if (error < 0) error += 2 * y + 1;
+      else { x -= 1; error += 2 * (y - x) + 1; }
+    }
+  }
+
+  drawPixelCircle(edgeCtx, 72, 72, 70);
+
+  orb.addEventListener('pointerenter', () => {
+    targetSpeed = 3.4;
+    orb.classList.add('is-hovered');
+  });
+  orb.addEventListener('pointerleave', () => {
+    targetSpeed = 1;
+    orb.classList.remove('is-hovered');
+  });
+
+  function draw(now) {
+    const delta = Math.min(40, now - lastNow);
+    lastNow = now;
+    speedFactor += (targetSpeed - speedFactor) * .08;
+    rotationTime += delta * speedFactor;
+    ctx.clearRect(0, 0, size, size);
+    ctx.fillStyle = '#180f32';
+    ctx.fillRect(0, 0, size, size);
+
+    const core = ctx.createRadialGradient(center, center, 1, center, center, 24);
+    core.addColorStop(0, '#fff6e5');
+    core.addColorStop(.13, '#f3b6ff');
+    core.addColorStop(.42, '#8154c7');
+    core.addColorStop(1, 'rgba(31,14,67,0)');
+    ctx.fillStyle = core;
+    ctx.fillRect(34, 34, 76, 76);
+
+    stars.forEach((star, index) => {
+      const angle = star.angle + rotationTime * star.speed;
+      const squash = .58 + .1 * Math.sin(star.radius * .12);
+      const x = Math.round(center + Math.cos(angle) * star.radius);
+      const y = Math.round(center + Math.sin(angle) * star.radius * squash);
+      const twinkle = Math.sin(now * .003 + star.pulse) > .72;
+      ctx.globalAlpha = .48 + (twinkle ? .5 : 0);
+      ctx.fillStyle = star.color;
+      const px = twinkle && index % 5 === 0 ? star.size + 1 : star.size;
+      ctx.fillRect(x, y, px, px);
+    });
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = '#0b0719';
+    ctx.beginPath();
+    ctx.arc(center, center, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#b895ff';
+    ctx.fillRect(center - 1, center - 1, 2, 2);
+
+    requestAnimationFrame(draw);
+  }
+
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

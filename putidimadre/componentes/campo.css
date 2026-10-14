@@ -1,0 +1,117 @@
+/* ############################################################
+   COMPONENTE · CAMPO DE FORMULARIO
+   Vive en su propio archivo por el mismo motivo que el botón, la llama
+   y los tokens: lo leen la web Y el documento del sistema.
+
+   Y aquí ese motivo no es teórico. Hasta hoy el capítulo 07 declaraba su
+   PROPIA versión del campo dentro del <style> del documento, y enseñaba
+   un componente que no existe en ninguna parte de la web:
+
+     · escribía la etiqueta como `.campo > span`, y la web usa `.campo__eti`
+     · pintaba el anillo de foco de CORAL, y la web lo pinta de TINTA
+       —contradiciendo la regla fundacional del propio documento—
+     · enseñaba `.campo--error`, `.ayuda` y `.err`: tres clases que no
+       están declaradas en `web.css` ni usadas en `index.html`
+     · y para la casilla enseñaba `.chk`, que en esta web solo existe
+       dentro del PANEL DE DEMO. La del producto es `.tick`
+
+   Nadie mintió: el documento se escribió mirando la web, y la web siguió
+   andando. Una copia enseña el componente que había el día que se copió.
+   Por eso el componente se mueve aquí y el capítulo pasa a cargar ESTE
+   archivo. Si alguien cambia el campo, el capítulo lo enseña cambiado.
+   ############################################################ */
+
+/* ============================================================
+   EL CAMPO · dos ejes, y menos estados de los que parece
+   ------------------------------------------------------------
+   DOS EJES, y se combinan:
+     TIPO     una línea (`input`) o varias (`textarea`)
+     ANCHO    lo pone el contenedor, no el campo
+
+   Y un aviso que es el hallazgo del capítulo: este componente tiene
+   SOLO DOS ESTADOS —reposo y foco—. No hay estado de error, ni de
+   deshabilitado, ni de relleno correcto. El error de este formulario
+   se dice en un único párrafo al final (`#error-datos`), sin marcar
+   qué campo falla. Eso NO se ha tocado aquí: unificar no es rediseñar
+   a escondidas. Está medido y preguntado al final del capítulo 07.
+   ============================================================ */
+.campo {
+  display: flex; flex-direction: column;
+  gap: 4px;
+  margin: 0 0 var(--e4);
+}
+
+/* LA ETIQUETA · rótulo, no texto. Va en versalita estrecha y con
+   letra suelta, como los rótulos de sección: es la misma voz. */
+.campo__eti {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t9); letter-spacing: .08em;
+}
+
+/* LA CAJA · papel sobre papel, con línea de tinta. No hay relleno gris
+   de "campo de formulario": el campo es un hueco en la hoja, no un
+   widget pegado encima. El alto mínimo es `--toque`, que es el mismo
+   mínimo de zona pulsable del botón y la única medida no estética. */
+.campo__input {
+  font-family: var(--fuente); font-size: var(--t4);
+  font-variation-settings: var(--voz-texto);
+  padding: var(--e3) var(--e4); border: var(--linea-media);
+  background: var(--papel); color: var(--tinta); min-height: var(--toque);
+}
+
+/* EL FOCO ES DE TINTA, y esto es una decisión fundacional del sistema,
+   no una preferencia de este archivo: el coral queda libre para rellenar
+   porque el anillo de foco no lo usa. Si algún día esto se pinta de
+   `--marca`, se rompe esa regla en toda la web de una vez. */
+.campo__input:focus { outline: 3px solid var(--tinta); outline-offset: 2px; }
+
+/* VARIAS LÍNEAS · solo se estira a lo alto. A lo ancho lo manda el
+   formulario: un textarea que se puede ensanchar rompe la columna. */
+textarea.campo__input { resize: vertical; min-height: 72px; }
+
+/* ============================================================
+   LAS DOS PIEZAS QUE FALTABAN · decididas por Mery el 24/08/2026
+   ------------------------------------------------------------
+   Hasta hoy el capítulo 07 preguntaba cuatro cosas. Ya están
+   respondidas, y tres se aplican aquí:
+
+     1 · el campo que falla SÍ cambia            → abajo
+     2 · el cursor va al campo que falla         → `confirmar()` en app.js
+     3 · foco: se quedan como están              → nada que hacer, ver abajo
+     4 · el texto de ayuda SÍ entra              → abajo
+
+   El orden dentro del campo es: etiqueta · caja · error · ayuda.
+   El aviso va PEGADO a la caja, antes que la ayuda: separarlos con una
+   línea de texto gris deshace la única pista visual de a qué campo se
+   refiere. Y en `aria-describedby` va también primero, para que se oiga
+   antes lo que hay que arreglar que la explicación de por qué se pide.
+   ============================================================ */
+
+/* LA AYUDA · lo que antes vivía suelto al lado del formulario
+   (`.form-datos__nota`). Ahora es del componente, así que cualquier
+   campo puede llevarla sin que nadie la coloque a mano. Se ata al
+   campo con `aria-describedby`: quien navega por voz la oye al entrar,
+   no se la encuentra por casualidad al pasar de largo. */
+.campo__ayuda {
+  font-size: var(--t7); opacity: .6;
+  margin: 0;
+}
+
+/* EL ERROR · lo dispara `aria-invalid="true"` en el propio campo, NO
+   una clase. Es la misma decisión que el `disabled` del botón, y por
+   el mismo motivo: si el aspecto lo pintara una clase, se podría dar
+   el caso de un campo que se ve mal y no lo está —o al revés—, que es
+   exactamente el fallo que este capítulo destapó. Atando el aspecto al
+   atributo, lo que se ve y lo que se anuncia no pueden separarse. */
+.campo__input[aria-invalid="true"] { border-width: 3px; }
+
+/* Y el aviso, debajo. Sin color: el sistema no tiene rojo y no se
+   inventa uno aquí. Lo dice el GROSOR del borde de arriba y la voz de
+   rótulo de este texto, que es la voz con la que esta marca levanta
+   la voz. Se redacta como una persona: qué pasa y qué hacer. */
+.campo__error {
+  font-variation-settings: var(--voz-rotulo);
+  font-size: var(--t7); line-height: var(--lh-caja);
+  margin: 0;
+}
+.campo__error[hidden] { display: none; }

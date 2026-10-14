@@ -1,0 +1,120 @@
+/* ############################################################
+   LA BARRA DE LA DEMO — NO FORMA PARTE DEL PRODUCTO
+   ------------------------------------------------------------
+   Puti Di Madre son DOS pantallas del mismo sitio: la web que ve
+   el cliente y el panel con el que el local gobierna su horno. Lo
+   interesante del proyecto está en que se hablan —cambias un
+   precio en una y la otra obedece—, y eso no se puede contar: hay
+   que poder saltar de una a otra y verlo.
+
+   Esta barra existe solo para eso. Como el panel de demo que lleva
+   debajo, se declara a sí misma fuera del producto: un local de
+   verdad no enseña a sus clientes un botón que lleva a su cocina.
+
+   NO VA PEGADA ARRIBA, y es a propósito: las dos páginas ya tienen
+   su propia cabecera pegajosa, y meter una segunda obligaría a que
+   una supiera la altura de la otra. Vive en lo más alto de la
+   página y se va con el scroll, como el panel de demo.
+
+   Usa los tokens de verdad, así que `panel.html` carga `tokens.css`
+   aunque el panel no lleve marca: son variables, no estilos. Lo
+   único que pinta son estas cuatro reglas.
+   ############################################################ */
+.demo-barra {
+  display: flex; align-items: center; flex-wrap: wrap; gap: var(--e2);
+  background: var(--tinta); color: var(--papel);
+  padding: var(--e2) var(--e3);
+  font-family: var(--fuente, system-ui, sans-serif);
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t9); letter-spacing: .06em;
+}
+
+/* Los dos destinos. 44 px de alto: es un botón, se pulsa con el dedo. */
+.demo-barra__ir {
+  display: inline-flex; align-items: center; min-height: 44px;
+  padding: 0 var(--e3);
+  color: var(--papel); text-decoration: none;
+  border: 2px solid var(--papel);
+}
+.demo-barra__ir:hover { background: var(--papel); color: var(--tinta); }
+.demo-barra__ir:focus-visible { outline: 3px solid var(--marca); outline-offset: 2px; }
+
+/* En la que estás. Coral de fondo y tinta encima, nunca al revés:
+   el coral rellena y no escribe. */
+.demo-barra__ir[aria-current="page"] {
+  background: var(--marca); color: var(--tinta); border-color: var(--marca);
+}
+.demo-barra__ir[aria-current="page"]:hover { background: var(--marca); color: var(--tinta); }
+
+.demo-barra__nota {
+  font-variation-settings: var(--voz-texto);
+  text-transform: none; letter-spacing: 0; font-size: var(--t8);
+  opacity: .75; flex: 1 1 14em; min-width: 12em;
+}
+
+@media (max-width: 560px) {
+  .demo-barra__nota { flex-basis: 100%; }
+}
+
+
+/* ############################################################
+   EL PANEL DE DEMO
+   ------------------------------------------------------------
+   Vive aquí, y no en web.css ni en panel.css, porque ES EL MISMO
+   PANEL en las dos pantallas desde el 13/10/2026. Antes cada hoja
+   lo pintaba por su cuenta y, sin que nadie lo decidiera, acabaron
+   siendo dos cosas con el mismo título.
+
+   Va con tokens de marca y no con negro plano: lo decidió Mery el
+   26/08 para la web —«lo que lo separa del producto no es el color:
+   es su borde doble, su título y que se declara fuera»— y ahora
+   vale para las dos. `panel.html` ya carga `tokens.css` por la
+   barra, así que no cuesta nada; y si algún día faltara, los
+   respaldos dejan el panel legible en blanco y negro.
+   ############################################################ */
+.demo {
+  border: 3px double var(--tinta, #000);
+  background: var(--papel-2, #f4f4f4);
+  color: var(--tinta, #000);
+  font-family: var(--fuente, Helvetica, Arial, sans-serif);
+  font-size: var(--t8, 14px); line-height: 1.5;
+  padding: var(--e2, 8px) var(--e3, 12px);
+  margin: 0 auto var(--e2, 8px);
+}
+.demo summary {
+  cursor: pointer; font-weight: bold; text-transform: uppercase;
+  font-size: var(--t8, 12px); letter-spacing: .06em;
+}
+/* `min-width: 0` en la rejilla y en cada fila: una celda de rejilla no
+   se encoge por debajo de su contenido salvo que se le diga, y el
+   deslizador y el `<output>` traen un ancho mínimo propio. Por debajo
+   de 340 px eso sacaba el panel de la pantalla. */
+.demo__grid { display: grid; gap: 8px; margin-top: 8px; min-width: 0; }
+.demo__grid > * { min-width: 0; }
+.demo__grid > label { display: grid; gap: 2px; min-width: 0;
+                      font-size: var(--t9, 12px); text-transform: uppercase;
+                      letter-spacing: .05em; }
+.demo__botones { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.demo__estado { font-size: var(--t9, 12px); font-family: monospace; margin: 4px 0 0; }
+
+/* Lo que solo existe a un lado: el titular del hero, agotar algo del
+   carrito, forzar un error de red. Separado por una línea y dicho como
+   lo que es, para que no parezca que la cocina también lo tiene. */
+.demo__extra { border-top: 1px dotted var(--tinta, #000); padding-top: 8px;
+               margin-top: 4px; display: grid; gap: 8px; min-width: 0; }
+.demo__extra > *, .demo__extra label { min-width: 0; }
+.demo__extra-tit { font-size: var(--t9, 11px); text-transform: uppercase;
+                   letter-spacing: .06em; margin: 0; opacity: .7; }
+
+.demo input, .demo select, .demo button, .demo textarea { font: inherit; max-width: 100%; min-width: 0; }
+/* El deslizador, de tinta en las dos pantallas. Sin esto salía azul de
+   sistema en el panel y oscuro en la web: el mismo mando con dos
+   colores, que es exactamente lo que veníamos a quitar. */
+.demo input[type="range"] { accent-color: var(--tinta, #000); width: 100%; }
+.demo input[type="text"], .demo input[type="number"], .demo select, .demo textarea {
+  padding: 4px; border: 1px solid var(--tinta, #000); background: var(--papel, #fff);
+}
+.demo button { padding: 6px 10px; border: 1px solid var(--tinta, #000);
+               background: var(--papel, #fff); cursor: pointer; }
+.demo .chk { display: inline-flex; gap: 6px; align-items: center;
+             font-size: var(--t9, 12px); text-transform: none; letter-spacing: 0; }

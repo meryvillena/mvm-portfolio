@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Puti Di Madre — los estados de la llama</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Oooh+Baby&display=swap" rel="stylesheet">
+<!-- Las hojas de la WEB DE VERDAD, sin copiar una línea. Si mañana
+     cambia el color de un nivel en web.css, este muestrario lo enseña
+     cambiado. Un muestrario que copia estilos enseña los de otro día. -->
+<script>
+  (function () { var v = '?v=' + Date.now();
+    ['tokens.css', 'componentes/llama.css', 'web.css'].forEach(function (f) {
+      document.write('<link rel="stylesheet" href="./' + f + v + '">'); });
+  }());
+</script>
+<style>
+  body { margin: 0; padding: 0 0 var(--e9); background: var(--papel); color: var(--tinta);
+         font-family: var(--fuente); font-variation-settings: var(--voz-texto);
+         line-height: var(--lh-texto); }
+  .m-wrap { max-width: 1040px; margin: 0 auto; padding: 0 var(--e5); }
+  .m-cab { background: var(--tinta); color: var(--papel); padding: var(--e7) 0 var(--e6);
+           margin-bottom: var(--e6); }
+  .m-cab h1 { font-variation-settings: var(--voz-cartel); text-transform: uppercase;
+              font-size: clamp(32px, 7vw, 56px); line-height: var(--lh-cartel); margin: 0; }
+  .m-cab p { max-width: var(--lectura); margin: var(--e4) 0 0; font-size: var(--t5); opacity: .85; }
+  h2.m-sec { font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+             font-size: var(--t2); line-height: var(--lh-caja); margin: var(--e8) 0 var(--e3);
+             padding-bottom: var(--e2); border-bottom: var(--linea-gorda); }
+  .m-nota { font-size: var(--t5); max-width: var(--lectura); margin: 0 0 var(--e5); }
+
+  /* Una fila por nivel: las DOS llamas del mismo nivel, lado a lado.
+     Lado a lado y no en dos galerías separadas a propósito: la pregunta
+     que hay que poder contestar de un vistazo es "¿estas dos dicen lo
+     mismo?", y eso solo se ve comparando. */
+  .m-fila { display: grid; grid-template-columns: 200px 1fr 1fr; gap: var(--e5);
+            align-items: start; border: var(--linea-gorda); background: var(--papel-2);
+            padding: var(--e5); margin-bottom: var(--e4); }
+  .m-ficha__id { font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+                 font-size: var(--t7); letter-spacing: .07em; margin: 0; }
+  .m-ficha__frase { font-variation-settings: var(--voz-comanda); font-size: var(--t2);
+                    line-height: var(--lh-tit); margin: var(--e2) 0 var(--e3); }
+  .m-ficha__dato { font-size: var(--t8); margin: 2px 0; opacity: .8;
+                   font-variant-numeric: tabular-nums; }
+  .m-caja { background: var(--papel); border: var(--linea-media); padding: var(--e4);
+            text-align: center; }
+  .m-caja__et { font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+                font-size: var(--t10); letter-spacing: .08em; margin: 0 0 var(--e3); opacity: .6; }
+  .m-caja__col { font-size: var(--t9); margin: var(--e3) 0 0; opacity: .75;
+                 font-variant-numeric: tabular-nums; }
+  /* El sello de "aquí este nivel no sale nunca": es el dato importante
+     de toda la página, así que se dice con trama —el idioma del sistema
+     para lo bloqueado— y no bajando la opacidad y ya. */
+  .m-caja[data-sale="no"] { background-image: var(--trama); }
+  .m-caja[data-sale="no"] .m-sello { display: block; }
+  .m-sello { display: none; margin: var(--e3) 0 0; font-variation-settings: var(--voz-rotulo);
+             text-transform: uppercase; font-size: var(--t10); letter-spacing: .06em;
+             border: var(--linea-media); padding: 4px 8px; }
+  .m-aviso { border-left: 6px solid var(--marca); padding: var(--e3) 0 var(--e3) var(--e4);
+             margin: var(--e5) 0; max-width: var(--lectura); font-size: var(--t5); }
+  .m-aviso b { font-variation-settings: 'wdth' 85, 'wght' 800; }
+  .m-aviso ol { margin: var(--e3) 0; padding-left: var(--e5); }
+  .m-aviso li { margin: 4px 0; }
+  .m-tabla { border-collapse: collapse; width: 100%; margin: 0 0 var(--e5); font-size: var(--t7); }
+  .m-tabla th, .m-tabla td { border: var(--linea); padding: var(--e2) var(--e3); text-align: left; }
+  .m-tabla th { font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+                font-size: var(--t10); letter-spacing: .06em; background: var(--papel-2); }
+  /* Las filas a las que les falta un nivel se marcan con trama, que es como
+     este sistema dice "aquí falta algo", no con rojo. */
+  .m-tabla tr[data-falta] td { background-image: var(--trama); }
+  @media (max-width: 820px) { .m-fila { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="m-cab">
+  <div class="m-wrap">
+    <h1>Los cinco estados<br>de la llama</h1>
+    <p>Los cinco niveles que declara <code>contenido.js</code>, pintados con el
+       componente de verdad y las hojas de verdad. Cada fila enseña el mismo
+       nivel en los dos sitios donde hay llama.</p>
+  </div>
+</header>
+
+<div class="m-wrap">
+  <h2 class="m-sec">Nivel a nivel</h2>
+  <p class="m-nota">De más frío a más caliente. El orden lo da
+     <code>Llama.ORDEN</code>, y las frases salen de <code>contenido.js</code>:
+     aquí no hay copy escrito a mano.</p>
+  <div id="m-lista"></div>
+
+  <h2 class="m-sec">Cuándo se ve cada uno</h2>
+  <p class="m-nota">El nivel que ves <b>depende del tamaño de tu pedido</b>, no solo
+     del horno, y eso no es un capricho: una franja medio llena es "hay sitio" para
+     una pizza y "no cabes" para tres. Medido sobre 3 días × 60 semillas × 16 horas.</p>
+
+  <table class="m-tabla">
+    <thead><tr><th>Tu pedido ocupa</th><th>Escenarios con llama roja</th><th>Con «se va animando»</th><th>Con los cuatro</th></tr></thead>
+    <tbody>
+      <tr><td>¼ · ½ bandeja</td><td>53 %</td><td>89 %</td><td>11 %</td></tr>
+      <tr><td>1 bandeja</td><td>74 %</td><td>68 %</td><td>37 %</td></tr>
+      <tr><td>bandeja y media</td><td>64 %</td><td>8 %</td><td>4 %</td></tr>
+      <tr><td>2 bandejas</td><td>8 %</td><td>0 %</td><td>0 %</td></tr>
+      <tr data-falta="1"><td>2½ · 3 bandejas</td><td>0 %</td><td>0 %</td><td>0 %</td></tr>
+    </tbody>
+  </table>
+
+  <div class="m-aviso">
+    <b>Ese 0 % de abajo es correcto, no un fallo.</b> Un pedido de dos bandejas y media
+    solo cabe en un horno casi vacío — y llamar «quedan pocos huecos» a un horno casi
+    vacío sería justo la mentira que este indicador evita. El aviso habla del HORNO.
+  </div>
+
+  <h2 class="m-sec">El agujero que tenía la regla</h2>
+  <p class="m-nota">Queda escrito porque es el tipo de fallo que no da error y no se ve
+     hasta que alguien pregunta «¿por qué no veo la llama roja?».</p>
+
+  <div class="m-aviso">
+    <b>Hasta el 23/08/2026, con un pedido de más de una bandeja la llama roja no era
+    rara: era imposible.</b> Cero, en los nueve escenarios probados. Sale del orden en
+    que <code>estadoFranja()</code> hace sus preguntas:
+    <ol>
+      <li><code>libres &lt;= 0</code> → <b>completa</b></li>
+      <li><code>coste &gt; libres</code> → <b>no cabe tu pedido</b></li>
+      <li>← aquí iba <b>quedan pocas plazas</b>, con <code>libres &lt;= 1</code></li>
+      <li>si no → disponible</li>
+    </ol>
+    El umbral de «pocas plazas» era <b>fijo en 1 unidad</b> y el de «no cabe»
+    <b>crece con tu pedido</b>. Con bandeja y media harían falta a la vez
+    <code>libres &gt;= 1,5</code> y <code>libres &lt;= 1</code>: la pregunta 3 no llegaba
+    a hacerse nunca. Y como «pocas plazas» es el <b>único</b> disparador de la llama roja
+    en esta pantalla, el nivel entero desaparecía.
+  </div>
+
+  <div class="m-aviso">
+    <b>La regla nueva mide el hueco que queda cuando ya estás dentro</b>, y lleva tope:
+    <ol>
+      <li><code>libres − coste &lt;= 0,25</code> — después de ti no cabe casi nada.
+        Un cuarto de bandeja es lo que ocupa una bebida: <b>cabes tú y como mucho una caña</b>.</li>
+      <li><code>ocupadas / cuota &gt;= 0,40</code> — y la franja ya venía cargada de antes.</li>
+    </ol>
+    La segunda es la que impide que el aviso hable de tu carrito en vez de del horno:
+    sin ella, un pedido de tres bandejas dejaba el <b>100 %</b> de las franjas en rojo,
+    incluido un horno vacío.
+  </div>
+
+  <div class="m-aviso">
+    <b>Y el 0,25 está barrido, no elegido a ojo.</b> Se probaron 4 valores de ese umbral
+    × 5 del tope. Con el valor obvio —<code>1</code>— la regla se traga entero el nivel
+    de al lado: «se va animando» pasa del 14 % de las franjas al <b>0 %</b>.
+    <b>Un arreglo que borra el nivel vecino no es un arreglo</b>, y esa es la parte que
+    casi se cuela: el primer intento estuvo escrito y probado antes de que la medición
+    lo tumbara.
+  </div>
+</div>
+
+<script src="./contenido.js"></script>
+<script src="./componentes/llama.js"></script>
+<script>
+(function () {
+  'use strict';
+  var H = window.CONTENIDO.horno;
+
+  /* La frase de cada nivel, buscada donde vive. Los tres de carga están en
+     un array y los otros tres son propiedades sueltas, porque no salen de
+     un porcentaje sino de un hecho. */
+  var FRASES = {};
+  H.niveles.forEach(function (n) { FRASES[n.id] = n.frase; });
+  [H.apagado, H.noDaMas].forEach(function (n) { FRASES[n.id] = n.frase; });
+
+  /* DÓNDE PUEDE SALIR CADA NIVEL DE VERDAD.
+     Esto no es decoración de la tabla: es el hallazgo. Sale de leer las dos
+     funciones que reparten niveles en app.js —`nivelDelHorno()` para el
+     indicador del hero y `nivelDeFranja()` para cada chip de hora— y de
+     comprobar qué devuelve cada una. */
+  var SALE = {
+    'apagado':           { hero: true, franja: true,
+                           porque: 'Local cerrado o en pausa. Las dos funciones lo devuelven.' },
+    'rescoldo':          { hero: true, franja: true, porque: 'Carga por debajo del 40 %.' },
+    'brasa':             { hero: true, franja: true, porque: 'Carga entre el 40 % y el 72 %.' },
+    'llama-viva':        { hero: true, franja: true,
+                           porque: 'Carga por encima del 72 %, o el estado "quedan pocas plazas". OJO: en los chips solo aparece si tu pedido cabe en una bandeja — ver el aviso de abajo.' },
+    'no-da-mas':         { hero: true, franja: true,
+                           porque: 'Franja completa o que no admite tu pedido.' },
+  };
+
+  var COLOR = { hero: 'horno-cal__svg', franja: 'fj__svg' };
+
+  var lista = document.getElementById('m-lista');
+  window.Llama.ORDEN.forEach(function (id) {
+    var s = SALE[id];
+    var fila = document.createElement('div');
+    fila.className = 'm-fila';
+    fila.innerHTML =
+      '<div>' +
+        '<p class="m-ficha__id">' + id + '</p>' +
+        '<p class="m-ficha__frase">' + (FRASES[id] || '—') + '</p>' +
+        '<p class="m-ficha__dato">escala ' + window.Llama.ESCALA[id].replace('scale', '') + '</p>' +
+        '<p class="m-ficha__dato">' + s.porque + '</p>' +
+      '</div>' +
+      caja('En el hero', COLOR.hero, id, s.hero) +
+      caja('En «elegir hora»', COLOR.franja, id, s.franja);
+    lista.appendChild(fila);
+  });
+
+  function caja(etiqueta, clase, id, sale) {
+    return '<div class="m-caja" data-sale="' + (sale ? 'si' : 'no') + '">' +
+      '<p class="m-caja__et">' + etiqueta + '</p>' +
+      window.Llama.svg(id, clase) +
+      '<p class="m-caja__col" data-col="' + clase + '|' + id + '">—</p>' +
+      '<p class="m-sello">Aquí no sale nunca</p>' +
+      '</div>';
+  }
+
+  /* Los colores no se escriben: se LEEN del navegador ya resueltos. Si se
+     escribieran a mano, esta página podría decir "coral" mientras web.css
+     pinta otra cosa, que es exactamente el fallo del que venimos. */
+  requestAnimationFrame(function () {
+    document.querySelectorAll('[data-col]').forEach(function (p) {
+      var svg = p.parentNode.querySelector('svg');
+      var lee = function (sel) {
+        return getComputedStyle(svg.querySelector(sel)).fill;
+      };
+      p.textContent = 'fuera ' + nombre(lee('.fuego__ext')) +
+                      ' · medio ' + nombre(lee('.fuego__med')) +
+                      ' · dentro ' + nombre(lee('.fuego__int'));
+    });
+  });
+
+  /* Del rgb() del navegador al nombre del token. Si sale un color sin
+     nombre, es que alguien ha pintado la llama con algo que no está en
+     el sistema — y entonces queremos verlo escrito en crudo. */
+  var TOKENS = {
+    'rgb(240, 96, 80)':  'marca',   'rgb(240, 194, 43)': 'promo',
+    'rgb(244, 233, 215)': 'papel',  'rgb(231, 216, 190)': 'papel-2',
+    'rgb(20, 24, 56)':   'tinta',   'rgb(44, 100, 72)':  'libre',
+    'rgb(226, 87, 30)':  'horno-2', 'rgb(185, 36, 26)':  'horno-3',
+  };
+  function nombre(rgb) { return TOKENS[rgb] || rgb; }
+}());
+</script>
+</body>
+</html>

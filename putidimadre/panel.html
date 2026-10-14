@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+  <!-- Abrir el prototipo como archivo suelto (file://) hace que Chrome se
+       guarde app.js y web.css y siga sirviéndolos viejos aunque cambien en
+       disco: se ven fallos que ya no existen. Servido por http, estas dos
+       líneas obligan a pedirlo todo de nuevo en cada carga.
+       Para abrirlo bien: cd putidimadre && npm run web -->
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Puti Di Madre — Panel del turno</title>
+  <!-- La hoja va con versión y va AQUÍ, en la cabeza. Cargarla al final
+       hace que la página aparezca un instante sin estilo. -->
+  <script>
+    (function () { var v = '?v=' + Date.now();
+      ["tokens.css","demo.css","panel.css"].forEach(function (f) { document.write('<link rel="stylesheet" href="./' + f + v + '">'); });
+    }());
+  </script>
+</head>
+<body class="panel-body">
+
+<!-- ============================================================
+     LA BARRA DE LA DEMO — no forma parte del producto.
+     Sirve para saltar entre las dos pantallas y ver que se hablan.
+     El porqué está en demo.css.
+     ============================================================ -->
+<nav class="demo-barra" aria-label="Demo de Puti Di Madre">
+  <a class="demo-barra__ir" href="./index.html">La web del cliente</a>
+  <a class="demo-barra__ir" href="./panel.html" aria-current="page">El panel del local</a>
+  <span class="demo-barra__nota">Dos pantallas del mismo sitio. Cambia un precio,
+    quita un producto o mueve un descuento en el panel, recarga la web y lo verás.</span>
+</nav>
+
+<details class="demo">
+  <summary>Panel de demo — no forma parte del producto</summary>
+  <!-- Mismo panel que el de la web del cliente, pintado por `demo.js`.
+       Aquí no hay extras: lo que la cocina simula es el mundo, no el
+       carrito de nadie. -->
+  <div id="demo-caja"></div>
+</details>
+
+<header class="cab">
+  <div class="cab__marca">PANEL<br>DEL<br>TURNO</div>
+  <p class="cab__estado" id="p-estado"></p>
+</header>
+
+<main class="panel">
+
+  <!-- 1 · EL HORNO AHORA
+       Lo primero, porque es lo que se mira de reojo desde el horno. -->
+  <section class="seccion" id="s-horno">
+    <h2>El horno ahora</h2>
+    <div id="p-carga"></div>
+  </section>
+
+  <!-- 2 · TABLERO DEL TURNO -->
+  <section class="seccion" id="s-tablero">
+    <h2>Pedidos</h2>
+    <p class="nota">Tú dices cuándo empiezas; <strong>lo demás lo dice el reloj</strong>.
+      Un pedido tarda <strong id="p-prep"></strong>. El aviso de WhatsApp se abre relleno.</p>
+    <div class="tablero" id="p-tablero"></div>
+  </section>
+
+  <!-- 3 · CONTROLES DE SERVICIO
+       La pausa y los agotados que el sistema del cliente da por hechos
+       tienen que vivir en algún sitio. Este es ese sitio. -->
+  <section class="seccion" id="s-controles">
+    <h2>Controles del servicio</h2>
+    <div id="p-controles"></div>
+  </section>
+
+  <!-- 3-bis · EL HORARIO
+       Lo último del negocio que el local no podía tocar. Lo que se
+       cambia aquí manda sobre el horario de fábrica de horno.js, y
+       arrastra con él las franjas, la tabla del local, la pregunta
+       frecuente y la ficha que leen las IA. -->
+  <section class="seccion" id="s-horario">
+    <h2>Horario</h2>
+    <p class="nota">Cambia la hora de abrir y la de cerrar. Se guarda al momento, y con ello
+      cambian los huecos que ofrece la web, la tabla del local y lo que contestan los
+      buscadores cuando les preguntan a qué hora abres.</p>
+    <div id="p-horario"></div>
+  </section>
+
+  <!-- 4 · CUÁNTO HORNO LE DAMOS A LA WEB
+       La palanca estratégica del caso, convertida en algo que toca una
+       persona. Subirla llena la web; bajarla protege al que entra por
+       la puerta. -->
+  <section class="seccion" id="s-cuota">
+    <h2>Cuánto horno le damos a la web</h2>
+    <p class="nota">De <span id="p-fisico"></span> bandejas por franja, esto es lo que puede reservar
+      la web. El resto queda para quien entra por la puerta.</p>
+    <div id="p-cuotas"></div>
+  </section>
+
+  <!-- 4-bis · PRECIOS
+       Lo que hasta ahora era una promesa ("Nino cambia un precio
+       desde el móvil"). Escribe en localStorage; la web lo lee. -->
+  <section class="seccion" id="s-precios">
+    <h2>La carta</h2>
+    <p class="nota">Cambia nombres y precios, quita lo que hoy no hay y añade lo que falte.
+      Se guarda al momento: abre la web en otra pestaña y recárgala para verlo.</p>
+    <p class="nota"><strong>Quitar no borra.</strong> El producto sale de la carta y vuelve
+      con un clic, con su foto y sus alérgenos intactos. Solo se borra de verdad lo que
+      hayas añadido tú.</p>
+    <div id="p-precios"></div>
+  </section>
+
+  <!-- 4-ter · PROMOS
+       Con condición siempre: una promo sin condición es vender
+       más barato. Ver el aviso de criterio en promos.js. -->
+  <section class="seccion" id="s-promos">
+    <h2>Promos</h2>
+    <p class="nota">El horno es el límite, no la demanda. Estas promos mueven demanda de hora
+      o suben el ticket; no sirven para vender más barato sin más.</p>
+    <div id="p-promos"></div>
+  </section>
+
+  <!-- 5 · EL CONTADOR
+       Donde Nino ve en euros que la web sirve para algo. Cierra el
+       bucle del brief: el proyecto se justificaba en margen, no en
+       volumen, y aquí es donde eso se mira. -->
+  <section class="seccion" id="s-canal">
+    <h2>Lo que te has ahorrado</h2>
+    <div id="p-canal"></div>
+  </section>
+
+</main>
+
+<footer class="pie">
+  <p><strong>Panel del turno · Puti Di Madre</strong><br>
+     Esqueleto funcional sin diseño. Caso conceptual de portfolio.</p>
+</footer>
+
+<!-- LOS SCRIPTS, TAMBIÉN CON VERSIÓN, y esto no es adorno de prototipo.
+     Chrome se guardaba app.js y seguía sirviéndolo viejo aunque cambiara en
+     disco. Consecuencia real: se veían fallos ya arreglados y no se veían
+     arreglos ya puestos, y se perdía media tarde persiguiendo fantasmas.
+     Las metas `Cache-Control` NO valen para esto: solo afectan al documento,
+     no a sus hojas ni a sus scripts. Cambiar la URL en cada carga sí.
+     Es un prototipo: no cachear nada no cuesta nada.
+     `document.write` aquí es deliberado — conserva el orden de carga, que
+     importa: app.js necesita a los demás ya definidos. -->
+<script>
+  (function () { var v = '?v=' + Date.now();
+    ["horno.js", "carta.js", "negocio.js", "promos.js", "contenido.js", "demo.js", "panel.js"].forEach(function (f) { document.write('<scr' + 'ipt src="./' + f + v + '"></scr' + 'ipt>'); });
+  }());
+</script>
+</body>
+</html>

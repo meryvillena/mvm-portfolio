@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Antes y después · escala tipográfica</title>
+<link rel="stylesheet" href="tokens.css?v=9">
+<style>
+  @font-face{font-family:"PT Sans Narrow";src:url("assets/fonts/PTSansNarrow-Regular-latin.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"Libre Baskerville";src:url("assets/fonts/LibreBaskerville-Regular.woff2") format("woff2");font-weight:400;font-display:swap}
+  @font-face{font-family:"Libre Baskerville";src:url("assets/fonts/LibreBaskerville-Bold.woff2") format("woff2");font-weight:700;font-display:swap}
+  @font-face{font-family:"Libre Baskerville";src:url("assets/fonts/LibreBaskerville-ItalicVariable.woff2") format("woff2");font-style:italic;font-weight:400 700;font-display:swap}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--color-cal);color:var(--color-carbon);
+       font-family:var(--font-functional);font-weight:400}
+  header{padding:28px 32px;border-bottom:1px solid var(--color-linea)}
+  header h1{margin:0 0 8px;font:700 22px/1.2 var(--font-editorial)}
+  header p{margin:0;max-width:78ch;font-size:14px;line-height:1.55;color:var(--color-mortero)}
+  main{padding:0 32px 90px}
+
+  .caso{padding:36px 0;border-bottom:1px solid var(--color-linea)}
+  .cab{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .cab b{font:700 15px/1 var(--font-editorial)}
+  .cab code{font:400 11px/1 ui-monospace,Menlo,monospace;color:var(--color-pizarra)}
+  .cab .delta{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+              padding:3px 8px;border:1px solid currentColor;border-radius:20px}
+  .sube{color:#7a5a2e}.baja{color:var(--color-pizarra)}.igual{color:var(--color-mortero)}
+  .cab .porque{font-size:12px;color:var(--color-mortero);flex-basis:100%;margin-top:2px}
+
+  .par{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:22px;
+       background:var(--color-linea);border:1px solid var(--color-linea)}
+  @media(max-width:820px){.par{grid-template-columns:1fr}}
+  .lado{background:var(--color-cal);padding:24px}
+  .lado.nuevo{background:var(--color-lamina)}
+  .lado>small{display:block;margin-bottom:16px;font-size:10px;letter-spacing:.14em;
+              text-transform:uppercase;color:var(--color-mortero)}
+  .lado.nuevo>small{color:var(--color-pizarra)}
+  .lado .px{float:right;font:400 11px/1 ui-monospace,Menlo,monospace;letter-spacing:0;text-transform:none}
+
+  /* --- las piezas reales, con su tamaño de antes y el de ahora --- */
+  .m-marca{font:700 19px/1 var(--font-editorial);letter-spacing:.06em;text-transform:uppercase}
+  .n-marca{font:700 var(--type-lead)/1 var(--font-editorial);letter-spacing:.06em;text-transform:uppercase}
+
+  .m-fichah2{margin:0;font:700 clamp(36px,3vw,52px)/.96 var(--font-editorial);letter-spacing:-.03em}
+  .n-fichah2{margin:0;font:700 var(--type-heading-m)/.96 var(--font-editorial);letter-spacing:-.03em}
+  .m-fichah2 em,.n-fichah2 em{color:var(--color-pizarra)}
+
+  .m-tarjeta{margin:0;font:700 clamp(24px,1.8vw,30px)/1.1 var(--font-editorial);letter-spacing:-.025em}
+  .n-tarjeta{margin:0;font:700 var(--type-heading-s)/var(--leading-heading-s) var(--font-editorial);letter-spacing:-.025em}
+
+  .m-panelh3{margin:0;font:700 clamp(26px,2.4vw,36px)/1.1 var(--font-editorial);letter-spacing:-.025em}
+  .n-panelh3{margin:0;font:700 var(--type-heading-m)/1.1 var(--font-editorial);letter-spacing:-.025em}
+  .m-panelh3 em,.n-panelh3 em{color:var(--color-pizarra)}
+
+  .m-citah2{margin:0;font:700 clamp(40px,5vw,52px)/.96 var(--font-editorial);letter-spacing:-.03em}
+  .n-citah2{margin:0;font:700 var(--type-heading-l)/.96 var(--font-editorial);letter-spacing:-.03em}
+  .m-citah2 em,.n-citah2 em{color:var(--color-pizarra)}
+
+  .movil{width:390px;max-width:100%;padding:18px;border:1px dashed var(--color-mortero)}
+  .m-movilh2{margin:0;font:700 clamp(52px,16vw,76px)/.88 var(--font-editorial);letter-spacing:-.065em}
+  .n-movilh2{margin:0;font:700 clamp(58px,17vw,84px)/.88 var(--font-editorial);letter-spacing:-.065em}
+  .m-movilh2 em,.n-movilh2 em{color:var(--color-pizarra)}
+  .aviso{margin:14px 0 0;font-size:12px;color:var(--color-mortero)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Antes y después · los cinco tamaños que cambian</h1>
+  <p>Izquierda: como estaba. Derecha, sobre papel: como está ahora, usando el token. Todo lo demás de la web no se ha movido ni un píxel. Si alguno no te convence, se revierte solo ése.</p>
+</header>
+<main>
+
+  <section class="caso">
+    <div class="cab"><b>La marca de la cabecera</b><code>19 px → --type-lead</code><span class="delta baja">−5 %</span>
+      <span class="porque">Tenía un tamaño propio que no estaba en ninguna escala. Es el cambio más pequeño de los cinco.</span></div>
+    <div class="par">
+      <div class="lado"><small>Antes <span class="px">19 px</span></small><div class="m-marca">Eme Pérez</div></div>
+      <div class="lado nuevo"><small>Ahora <span class="px">18 px</span></small><div class="n-marca">Eme Pérez</div></div>
+    </div>
+  </section>
+
+  <section class="caso">
+    <div class="cab"><b>Titular de ficha del orientador</b><code>clamp(36,3vw,52) → --type-heading-m</code><span class="delta baja">−7 %</span>
+      <span class="porque">Se inventaba su propio clamp. Ahora usa el peldaño medio, que ya usaban otros titulares del mismo rango.</span></div>
+    <div class="par">
+      <div class="lado"><small>Antes <span class="px">43,2 px</span></small><h2 class="m-fichah2">Donde el cuerpo<br><em>se agarra.</em></h2></div>
+      <div class="lado nuevo"><small>Ahora <span class="px">40,3 px</span></small><h2 class="n-fichah2">Donde el cuerpo<br><em>se agarra.</em></h2></div>
+    </div>
+  </section>
+
+  <section class="caso">
+    <div class="cab"><b>Titular de tarjeta del carrusel</b><code>clamp(24,1.8vw,30) → --type-heading-s</code><span class="delta sube">+11 %</span>
+      <span class="porque">Éste y otros cuatro sitios hacían el mismo papel con cinco tamaños distintos. Ahora comparten peldaño.</span></div>
+    <div class="par">
+      <div class="lado"><small>Antes <span class="px">25,9 px</span></small><h3 class="m-tarjeta">Shiatsu corporal</h3></div>
+      <div class="lado nuevo"><small>Ahora <span class="px">28,8 px</span></small><h3 class="n-tarjeta">Shiatsu corporal</h3></div>
+    </div>
+  </section>
+
+  <section class="caso">
+    <div class="cab"><b>Titular del panel «Conocer la técnica»</b><code>clamp(26,2.4vw,36) → --type-heading-m</code><span class="delta sube">+17 %</span>
+      <span class="porque">Es el titular de una capa que ocupa la pantalla entera: le corresponde el peldaño medio, no uno de tarjeta.</span></div>
+    <div class="par">
+      <div class="lado"><small>Antes <span class="px">34,6 px</span></small><h3 class="m-panelh3">Cuando sabes <em>dónde te duele.</em></h3></div>
+      <div class="lado nuevo"><small>Ahora <span class="px">40,3 px</span></small><h3 class="n-panelh3">Cuando sabes <em>dónde te duele.</em></h3></div>
+    </div>
+  </section>
+
+  <section class="caso">
+    <div class="cab"><b>Titular de la sección de reserva</b><code>clamp(40,5vw,52) → --type-heading-l</code><span class="delta sube">+22 %</span>
+      <span class="porque">Es el cambio más grande. Pasa a medir lo mismo que «Eme Pérez» y que el titular del orientador.</span></div>
+    <div class="par">
+      <div class="lado"><small>Antes <span class="px">52 px</span></small><h2 class="m-citah2">Cuéntanos cuándo<br><em>te viene bien.</em></h2></div>
+      <div class="lado nuevo"><small>Ahora <span class="px">63,4 px</span></small><h2 class="n-citah2">Cuéntanos cuándo<br><em>te viene bien.</em></h2></div>
+    </div>
+  </section>
+
+  <section class="caso">
+    <div class="cab"><b>Titulares de sección · sólo en móvil</b><code>clamp(52,16vw,76) → --type-display-xl</code><span class="delta baja">−13 %</span>
+      <span class="porque">Cuatro secciones repetían el mismo clamp a mano en sus media queries. Ahora usan el token, que ya trae su propia versión móvil.</span></div>
+    <div class="par">
+      <div class="lado"><small>Antes <span class="px">76 px a 390 de ancho</span></small>
+        <div class="movil"><h2 class="m-movilh2">Vienes<br><em>como estás.</em></h2></div></div>
+      <div class="lado nuevo"><small>Ahora <span class="px">66,3 px a 390 de ancho</span></small>
+        <div class="movil"><h2 class="n-movilh2">Vienes<br><em>como estás.</em></h2></div></div>
+    </div>
+    <p class="aviso">El marco de puntos simula un móvil de 390 px. En esta página el tamaño se calcula sobre la ventana real, así que para verlo exacto estrecha el navegador a 390.</p>
+  </section>
+
+</main>
+</body>
+</html>
