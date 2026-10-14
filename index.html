@@ -428,7 +428,23 @@ function buildThumb(card) {
   return '<div class="thumb build' + (pausa ? " pause" : "") + '"><span>' + "En construcción" + "</span></div>";
 }
 
+// Una carpeta cuyo contenido es todo "en construcción" (sin proyecto abrible) no se abre: así nadie navega en vano.
+function isEmptyCard(c) { return c.kind === "folder" ? isEmptyFolder(c.ref) : !c.href && !c.caseStudy; }
+function isEmptyFolder(ref) {
+  const f = NESTED[ref] || DESKTOP.find((d) => d.id === ref);
+  return !!(f && f.cards && f.cards.length && f.cards.every(isEmptyCard));
+}
+
 function cardHtml(card) {
+  if (card.kind === "folder" && isEmptyFolder(card.ref)) {
+    return '<article class="case-card">' +
+      '<div class="thumb build pause"><span>En construcción</span></div>' +
+      '<div class="cbody">' +
+        '<span class="type-tag" style="background:#f6f0dc;border-color:#a9791a;color:#a9791a">carpeta</span>' +
+        "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" +
+        '<span class="btn disabled">En construcción</span>' +
+      "</div></article>";
+  }
   if (card.kind === "folder") {
     return '<article class="case-card">' +
       '<div class="thumb folder">📁</div>' +
