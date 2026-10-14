@@ -377,7 +377,7 @@ const DESKTOP = [
     intro: "Conceptos de UI y producto que exploro por mi cuenta.",
     cards: [
       { kind: "project", title: "MVM MAISON", tag: "concepto", desc: "Marketplace de relojes de lujo.", href: null },
-      { kind: "project", title: "Spotify Now Playing", tag: "concepto", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify" },
+      { kind: "project", title: "Spotify Now Playing", tag: "concepto", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" alt="Clubs cerca de ti en Spotify Now Playing">' },
       { kind: "project", title: "Luna Bag", tag: "aparcado", desc: "Concepto aparcado: un bolso inteligente que dejé en pausa, por si vuelve.", href: null, disabledLabel: "En pausa" },
     ],
   },
@@ -715,7 +715,7 @@ function caseSpotifyHtml() {
       <h1>Spotify Now Playing</h1>
       <p class="cs-sub">Descubre clubs por su música en tiempo real</p>
       <div class="cs-meta">Exploración de producto&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;Figma · Spotify API · Prototipo interactivo</div>
-      <div class="cs-cover">portada del proyecto — captura pendiente</div>
+      <figure class="cs-fig"><img src="spotify/capturas/00-portada.jpg" alt="Tres pantallas de la demo: clubs cerca de ti, ficha de Sala Bardot y cola compartida" loading="lazy"><figcaption>Clubs cerca de ti con su % Match, la ficha del club y la cola compartida dentro de la sala.</figcaption></figure>
 
       <h2>El insight</h2>
       <p>Cuando entras a un bar nuevo, lo primero que percibes —antes que la carta, la decoración o la gente— es la música. En tres segundos decides si ese sitio va contigo. Ninguna plataforma de descubrimiento captura eso: Google Maps, Instagram y Foursquare muestran datos fríos. <strong>La música es el indicador más honesto del ambiente de un local, y nadie lo está aprovechando digitalmente.</strong></p>
@@ -728,10 +728,11 @@ function caseSpotifyHtml() {
 
       <h2>La solución</h2>
       <p>Una pestaña nativa en Spotify con un mapa en tiempo real de los locales cercanos y lo que suena en cada uno. Dos modos del mismo producto:</p>
-      <div class="cs-shot">pantallas del proyecto — capturas pendientes</div>
+      <div class="cs-pair"><figure class="cs-fig"><img src="spotify/capturas/01-inicio.jpg" alt="Pantalla de inicio de Spotify con la entrada a Clubs" loading="lazy"><figcaption>Entrada desde Inicio: «Clubs» es una pestaña más, no una app aparte.</figcaption></figure><figure class="cs-fig"><img src="spotify/capturas/04-unirse-jam.jpg" alt="Pantalla para unirse a la Jam del club" loading="lazy"><figcaption>Dentro del local: escaneas el QR y te unes a la Jam.</figcaption></figure></div>
       <p><strong>Descubrimiento (antes de entrar).</strong> Cada local muestra la canción exacta que suena ahora, el historial de las últimas 2 horas y un <strong>% Match</strong> calculado cruzando tu historial de escucha con el hilo musical del bar. Eliges el club por su ambiente antes de cruzar la puerta.</p>
       <p><strong>Participación (ya dentro).</strong> Escaneas el QR del local y entras en la cola compartida: ves qué suena, qué viene después y quién lo pincha, y puedes añadir hasta 5 canciones tuyas — siempre dentro del ADN musical que el local permite.</p>
       <p><strong>Panel B2B (el local).</strong> El hostelero mantiene el control editorial: define los géneros permitidos, elimina o veta canciones de la cola y configura cada cuánto puede repetirse un tema. A cambio ve el ROI en directo: personas viendo su ficha, pulsaciones de «cómo llegar», match medio de quien está dentro y los temas que más han conectado esa noche.</p>
+      <figure class="cs-fig"><img src="spotify/capturas/06-panel-local.jpg" alt="Panel del local: género permitido, cola de la sala y repetición de temas" loading="lazy"><figcaption>El panel del local: ADN musical permitido, cola moderable, temas que más conectan y control de repetición.</figcaption></figure>
 
       <h2>Decisiones de diseño clave</h2>
       <p><strong>Historial de 2 horas, no más.</strong> Suficiente para validar la línea editorial del local sin contaminar con el contexto de la tarde. Además demuestra consistencia: valida que el Match es estructural, no casual.</p>
