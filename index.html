@@ -1183,7 +1183,7 @@ desktop.addEventListener("mousedown", (e) => {
   const close = () => { w.classList.remove("show"); back.classList.remove("show"); };
   const okBtn = document.getElementById("welcome-ok");
   window.showWelcome = () => { w.classList.add("show"); back.classList.add("show"); okBtn.focus(); };
-  window.showWelcome();
+  if (!/[?&]quitar=/.test(location.search)) window.showWelcome();
   okBtn.addEventListener("click", close);
   w.querySelectorAll(".w-feat button").forEach((b) => b.addEventListener("click", () => {
     close();
@@ -1339,6 +1339,26 @@ desktop.addEventListener("mousedown", (e) => {
     else { openWindow("muro"); setTimeout(() => abrirEditor(document.getElementById("muro-grid"), null), 150); }
   };
   let tmr; window.addEventListener("resize", () => { clearTimeout(tmr); tmr = setTimeout(() => { if (!editor) pintarEscritorio(); }, 250); });
+  // ---- Enlace secreto del correo: ?quitar=<código> abre una ventana para quitar ese post-it
+  (function quitarPorEnlace() {
+    const m = location.search.match(/[?&]quitar=([0-9a-f-]{36})/i);
+    if (!m) return;
+    const token = m[1];
+    const q = makeWindow("quitar", "Quitar un post-it", ICON, '<p id="q-txt">Has llegado desde el enlace de tu correo. ¿Quitas ese post-it del muro para todo el mundo?</p><p><button class="btn" type="button" id="q-si">Quitar este post-it</button> <button class="btn" type="button" id="q-no">No, dejarlo</button></p>', 120, 90, 380);
+    openWindow("quitar");
+    const limpiar = () => { try { history.replaceState(null, "", location.pathname); } catch (e) {} };
+    document.getElementById("q-no").addEventListener("click", () => { limpiar(); q.querySelector(".close").click(); });
+    document.getElementById("q-si").addEventListener("click", async () => {
+      const t = document.getElementById("q-txt");
+      try {
+        const r = await fetch(API + "/rpc/quitar_postit", { method: "POST", headers: { ...HDR, "Content-Type": "application/json" }, body: JSON.stringify({ p_token: token }) });
+        const ok = r.ok && (await r.json()) === true;
+        t.textContent = ok ? "Hecho: el post-it ya no está en el muro." : "No he encontrado ese post-it: ya estaba quitado o el enlace no es válido.";
+        if (ok) { pintarEscritorio(); pintarMuro(); }
+      } catch (e) { t.textContent = "No he podido conectar. Prueba otra vez."; }
+      document.getElementById("q-si").remove(); limpiar();
+    });
+  })();
   const reordenar = () => { try { localStorage.removeItem(LS_POS); } catch (e) {} pintarEscritorio(); };
   window.__postits = { pintarEscritorio, pintarMuro, nueva, reordenar };
   pintarEscritorio();
