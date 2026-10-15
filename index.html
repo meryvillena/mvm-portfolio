@@ -372,7 +372,7 @@
   <div style="padding:24px;max-width:640px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;">
     <h1>MVM Maison — Mery Villena</h1>
     <p>Diseño digital, no-code y operaciones para negocios pequeños.</p>
-    <p>Este portfolio es interactivo y necesita JavaScript. Escríbeme a <a href="mailto:hola@mvmmaison.com">hola@mvmmaison.com</a>.</p>
+    <p>Este portfolio es interactivo y necesita JavaScript. Escríbeme a <a href="mailto:meryvillena@gmail.com">meryvillena@gmail.com</a>.</p>
   </div>
 </noscript>
 
@@ -569,7 +569,7 @@ function contactHtml(idSuffix) {
         '<button class="btn" type="submit">Enviar →</button>' +
       "</form>" +
     "</div>" +
-    '<p class="small">o escríbeme directamente a <a href="mailto:hola@mvmmaison.com">hola@mvmmaison.com</a></p>';
+    '<p class="small">o escríbeme directamente a <a href="mailto:meryvillena@gmail.com">meryvillena@gmail.com</a></p>';
 }
 
 /* ============================================================
@@ -1155,7 +1155,10 @@ function attachContact(s) {
     e.preventDefault();
     const email = document.getElementById("contact-email" + s).value;
     if (email && email.includes("@")) {
-      document.getElementById("contact-body" + s).innerHTML = '<p class="thanks">¡Gracias! Te escribo en breve. ✦</p>';
+      const msg = (document.getElementById("contact-msg" + s) || {}).value || "";
+      const cuerpo = (msg ? msg + "\n\n" : "") + "Mi correo: " + email;
+      window.location.href = "mailto:meryvillena@gmail.com?subject=" + encodeURIComponent("Contacto desde el portfolio") + "&body=" + encodeURIComponent(cuerpo);
+      document.getElementById("contact-body" + s).innerHTML = '<p class="thanks">Se ha abierto tu programa de correo con el mensaje listo: pulsa Enviar allí. Si no se abre, escríbeme a <a href="mailto:meryvillena@gmail.com">meryvillena@gmail.com</a>. ✦</p>';
     }
   });
 }
@@ -1432,8 +1435,8 @@ desktop.addEventListener("mousedown", (e) => {
       { l: "Cerrar todas las ventanas", f: () => document.querySelectorAll(".window.open").forEach((w) => { if (w.id !== "welcome") closeWin(w); }) },
     ],
     edicion: [
-      { l: "Copiar mi email", f: () => { try { navigator.clipboard.writeText("hola@mvmmaison.com"); } catch (e) {} } },
-      { l: "Escribirme un correo…", f: () => { window.location.href = "mailto:hola@mvmmaison.com"; } },
+      { l: "Copiar mi email", f: () => { try { navigator.clipboard.writeText("meryvillena@gmail.com"); } catch (e) {} } },
+      { l: "Escribirme un correo…", f: () => { window.location.href = "mailto:meryvillena@gmail.com"; } },
     ],
     ver: [
       { l: "Ordenar iconos y post-its", f: () => { tidy(); window.__postits.reordenar(); } },
