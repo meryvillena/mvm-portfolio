@@ -366,11 +366,11 @@ const DESKTOP = [
     id: "leeme", kind: "file", icon: ICONS.favorites, title: "Léeme primero",
     win: { title: "Léeme primero", type: "text", html:
       '<span class="tag" style="background:#ffe08a">Empieza por aquí</span>' +
-      "<h2>Hola, soy Mery ✦</h2>" +
-      "<p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar o Lancôme. Desde 2018 trabajo en la gestión de varios restaurantes McDonald’s, coordinando proveedores, procesos internos, administración y acciones de marketing local.</p>" +
-      "<p>Ahora diseño y desarrollo productos digitales con IA. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas que sean útiles, fáciles de usar y visualmente atractivas.</p>" +
-      "<p>Estás en mi escritorio, inspirado en el sistema operativo de los Mac OS de los años 90. Las carpetas organizan mis proyectos por categorías. Puedes abrirlas, explorar su contenido y moverlas libremente por la pantalla. Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em>.</p>" +
-      "<p class=\"small\">Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.</p>"
+      "<p>Soy una apasionada de los sistemas de diseño: esa disciplina de construir interfaces coherentes, pieza a pieza, con reglas claras. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —un sistema de diseño antes de que existiera esa palabra.</p>" +
+      "<p>Las carpetas organizan mis proyectos por categorías: ábrelas, mira dentro, y muévelas por la pantalla si quieres reordenar.</p>" +
+      "<p>Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em> —ahí está lo que más cuenta.</p>" +
+      "<p class=\"small\">Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.</p>" +
+      "<p>Si quieres saber quién hay detrás de todo esto, abre <em>Sobre mí</em>.</p>"
     },
   },
   {
@@ -477,10 +477,9 @@ function folderHtml(entry) {
 }
 
 function aboutHtml() {
-  return '<div class="photo logo"><img src="sobre-mi/logo-mvm-maison.jpg" alt="Logo de MVM Maison"></div>' +
-    "<h2>Detrás de MVM Maison</h2>" +
-    "<p>Diseño, monto y opero. Ocho años en operaciones (McDonald's incluido) me enseñaron que la estética sin sistema no aguanta —así que ahora junto las dos cosas.</p>" +
-    "<p>Mi ventaja: entiendo el negocio <em>por dentro</em>, no solo la pantalla.</p>" +
+  return "<h2>Sobre mí</h2>" +
+    "<p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar o Lancôme. Desde 2018 trabajo en la gestión de varios restaurantes McDonald’s, coordinando proveedores, procesos internos, administración y acciones de marketing local.</p>" +
+    "<p>Ahora diseño y desarrollo productos digitales con IA. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas que sean útiles, fáciles de usar y visualmente atractivas.</p>" +
     '<div class="chips"><span>8 años en operaciones</span><span>no-code</span><span>diseño</span></div>' +
     '<div class="cards">' + cardHtml({ kind: "project", title: "Este escritorio", tag: "showcase", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" alt="El escritorio de este portfolio">' }) + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>";
 }
@@ -1082,13 +1081,13 @@ desktop.addEventListener("mousedown", (e) => {
       });
       h += "</section>";
     } else if (item.id === "sobremi") {
-      h += "<section><h2>Sobre mí</h2><p>Diseño, monto y opero. Ocho años en operaciones (McDonald's incluido) me enseñaron que la estética sin sistema no aguanta.</p>";
+      h += "<section><h2>Sobre mí</h2><p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño y desarrollo productos digitales con IA.</p>";
       const n = NESTED["trabajo-grafico"];
       h += '<div class="m-sub">' + n.title + "</div>";
       n.cards.forEach((cc) => { h += mCard(cc); });
       h += "</section>";
     } else if (item.id === "leeme") {
-      h += "<section><h2>Léeme primero</h2><p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño y desarrollo productos digitales con IA. Te recomiendo empezar por Soluciones de negocio o Herramientas.</p></section>";
+      h += "<section><h2>Léeme primero</h2><p>Soy una apasionada de los sistemas de diseño. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —un sistema de diseño antes de que existiera esa palabra. Te recomiendo empezar por Soluciones de negocio o Herramientas.</p></section>";
     } else if (item.id === "contacto") {
       h += "<section><h2>Contacto</h2>" + contactHtml("-m") + "</section>";
     }
