@@ -566,10 +566,12 @@ function contactHtml(idSuffix) {
       '<form class="contact-form" id="contact-form' + s + '">' +
         '<input type="email" id="contact-email' + s + '" placeholder="tu@correo.com" aria-label="Tu correo" required>' +
         '<textarea id="contact-msg' + s + '" rows="4" placeholder="Cuéntame de tu proyecto…" aria-label="Tu mensaje"></textarea>' +
-        '<button class="btn" type="submit">Enviar →</button>' +
+        '<div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true"><input type="text" id="contact-web' + s + '" tabindex="-1" autocomplete="off"></div>' +
+        '<button class="btn" type="submit" id="contact-send' + s + '">Enviar →</button>' +
+        '<div class="small" id="contact-err' + s + '" role="status" style="color:#b3261e;min-height:14px"></div>' +
       "</form>" +
     "</div>" +
-    '<p class="small">o escríbeme directamente a <a href="mailto:meryvillena@gmail.com">meryvillena@gmail.com</a></p>';
+    '<p class="small">Tu mensaje me llega por correo; no lo guardo en ninguna base de datos. O escríbeme directamente a <a href="mailto:meryvillena@gmail.com">meryvillena@gmail.com</a></p>';
 }
 
 /* ============================================================
@@ -1151,15 +1153,31 @@ attachContact("");
 function attachContact(s) {
   const form = document.getElementById("contact-form" + s);
   if (!form) return;
-  form.addEventListener("submit", (e) => {
+  const API = "https://uisroyoyjfevmrplaqyk.supabase.co/rest/v1";
+  const KEY = "sb_publishable_dvbsiyx_AbASse779owKag_C90Mx13i"; // clave pública
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email = document.getElementById("contact-email" + s).value;
-    if (email && email.includes("@")) {
-      const msg = (document.getElementById("contact-msg" + s) || {}).value || "";
-      const cuerpo = (msg ? msg + "\n\n" : "") + "Mi correo: " + email;
-      window.open("mailto:meryvillena@gmail.com?subject=" + encodeURIComponent("Contacto desde el portfolio") + "&body=" + encodeURIComponent(cuerpo), "_blank");
-      document.getElementById("contact-body" + s).innerHTML = '<p class="thanks">He abierto tu correo en otra pestaña con el mensaje ya escrito: pulsa Enviar allí y me llegará. Si no se abre, escríbeme a <a href="mailto:meryvillena@gmail.com">meryvillena@gmail.com</a>. ✦</p>';
-    }
+    const email = document.getElementById("contact-email" + s).value.trim();
+    const msg = ((document.getElementById("contact-msg" + s) || {}).value || "").trim();
+    const err = document.getElementById("contact-err" + s), btn = document.getElementById("contact-send" + s);
+    const cuerpo = document.getElementById("contact-body" + s);
+    if (document.getElementById("contact-web" + s).value) { cuerpo.innerHTML = '<p class="thanks">Enviado ✓</p>'; return; } // robots
+    if (!email.includes("@")) { err.textContent = "Escribe tu correo para que pueda responderte."; return; }
+    if (!msg) { err.textContent = "Cuéntame algo en el mensaje."; return; }
+    err.textContent = ""; btn.disabled = true;
+    const planB = () => {
+      window.open("mailto:meryvillena@gmail.com?subject=" + encodeURIComponent("Contacto desde el portfolio") + "&body=" + encodeURIComponent(msg + "\n\nMi correo: " + email), "_blank");
+      cuerpo.innerHTML = '<p class="thanks">He abierto tu correo en otra pestaña con el mensaje ya escrito: pulsa Enviar allí y me llegará. Si no se abre, escríbeme a <a href="mailto:meryvillena@gmail.com">meryvillena@gmail.com</a>. ✦</p>';
+    };
+    try {
+      const r = await fetch(API + "/rpc/enviar_contacto", { method: "POST", headers: { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json" }, body: JSON.stringify({ p_email: email, p_mensaje: msg }) });
+      if (r.ok) { cuerpo.innerHTML = '<p class="thanks">Enviado ✓ Te respondo en cuanto pueda. ✦</p>'; return; }
+      const t = await r.text();
+      if (/demasiados/.test(t)) { err.textContent = "Ahora mismo hay mucho movimiento. Prueba en un rato o escríbeme a meryvillena@gmail.com."; btn.disabled = false; return; }
+      if (/correo_invalido/.test(t)) { err.textContent = "Revisa tu correo: no parece válido."; btn.disabled = false; return; }
+      if (/mensaje_invalido/.test(t)) { err.textContent = "El mensaje debe tener entre 1 y 1.000 caracteres."; btn.disabled = false; return; }
+      planB();                                  // la función aún no existe o falla: abre el correo
+    } catch (x) { planB(); }
   });
 }
 
