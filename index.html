@@ -39,6 +39,20 @@
   #menubar img { height: 15px; margin-right: 10px; }
   #menubar .spacer { flex: 1; }
   #menubar .item { margin-left: 14px; display: flex; align-items: center; gap: 5px; }
+  #menubar .mtitle { all: unset; box-sizing: border-box; height: 22px; padding: 0 9px; display: flex; align-items: center; font-size: 13px; font-weight: bold; cursor: default; color: #000; }
+  #menubar .mtitle.mcat { padding: 0 10px 0 4px; }
+  #menubar .mtitle.open, #menubar .mtitle:focus-visible { background: #000; color: #fff; }
+  #menubar .mtitle.open .cat path, #menubar .mtitle:focus-visible .cat path { fill: #fff; }
+  #menubar .cat { display: block; }
+  .mdrop { position: absolute; top: 22px; min-width: 220px; max-width: 86vw; background: #ECECEC; border: 1px solid #000; border-top: 0; box-shadow: 3px 3px 0 rgba(0,0,0,0.45); padding: 2px 0; z-index: 10001; display: none; }
+  .mdrop.show { display: block; }
+  .mdrop .mi { all: unset; box-sizing: border-box; display: flex; justify-content: space-between; gap: 18px; width: 100%; padding: 3px 16px; font-size: 13px; font-weight: normal; color: #000; cursor: default; white-space: nowrap; }
+  .mdrop .mi:hover:not([aria-disabled="true"]), .mdrop .mi:focus-visible { background: #000; color: #fff; }
+  .mdrop .mi[aria-disabled="true"] { color: rgba(0,0,0,0.35); }
+  .mdrop .msep { height: 1px; background: #000; margin: 3px 0; opacity: 0.35; }
+  .mdrop .mhead { padding: 4px 16px 2px; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(0,0,0,0.5); }
+  @media (max-width: 520px) { #menubar .m-opt { display: none; } #menubar .mtitle { padding: 0 6px; } }
+  @media (max-width: 400px) { #menubar #clock { display: none; } }
 
   .icon {
     position: absolute;
@@ -266,9 +280,16 @@
 
 <!-- ===== ESCRITORIO (pantallas grandes) ===== -->
 <div id="desktop">
-  <div id="menubar">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAGKWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDMgNzkuOTY5MGE4N2ZjLCAyMDI1LzAzLzA2LTIwOjUwOjE2ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHRpZmY6Q29tcHJlc3Npb249IjEiIHRpZmY6UGhvdG9tZXRyaWNJbnRlcnByZXRhdGlvbj0iMiIgdGlmZjpSZXNvbHV0aW9uVW5pdD0iMiIgeG1wOkNyZWF0ZURhdGU9IjIwMjUtMDctMTZUMTk6NTg6MDAtMDU6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI1LTA3LTE3VDA5OjE2OjUyLTA1OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI1LTA3LTE3VDA5OjE2OjUyLTA1OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo1MTE4ZjQxMS0yZjEwLTRlMTAtYWEwMS01ZjEzZDAwMGI0YTMiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDo0YjYxYTlhOC05ZWY3LWZiNGUtOTg2OS00NWNlNmFhNWQ2OWIiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxNTdhNDRkNy02MjNjLTRjMjUtOGMyMy05ZWY0OWNkY2Y5NmYiPiA8eG1wTU06SGlzdG9yeT4gPHJkZjpTZXE+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDoxNTdhNDRkNy02MjNjLTRjMjUtOGMyMy05ZWY0OWNkY2Y5NmYiIHN0RXZ0OndoZW49IjIwMjUtMDctMTdUMDk6MTY6NTItMDU6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyNi44IChNYWNpbnRvc2gpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJzYXZlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDo1MTE4ZjQxMS0yZjEwLTRlMTAtYWEwMS01ZjEzZDAwMGI0YTMiIHN0RXZ0OndoZW49IjIwMjUtMDctMTdUMDk6MTY6NTItMDU6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyNi44IChNYWNpbnRvc2gpIiBzdEV2dDpjaGFuZ2VkPSIvIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PtI6heUAAAW7SURBVFiFrZdbbBxVGcd/58xl117fkl3HSgDnQohJoEBKYittapJClSCIRAtSFKEWIkQrcQkEEKJCqorahhdoREV56AtCEESFEJcqIFEocgi3BAmcOG7cOIlN7Jg62I6Nd3Zmzsw5fTC7WWPHuxv1L83DnP3O9/3nu68wxvC750eoFG4ixfuvPMahj17ETdYALAGeAXbGcXTi7NgI2+9+hB0P/RHPy864v/bKFACyYstFWLj0WoQQeT0vGGOu87KTOpms5jf3Ps7W2+/B9/05ddgXajyOQhZd2kqqbgFBbuLRUIXtQsgNN2z+Rd+vtu9kRcsqfD8giqKyCLiAqIhArKhPN3PJivWrOj96+Q8rf9C6+65fP7rvRz/ZlDBaMzk50+1FMEBYTGA/UF8JASEExmiy2bOZ5ZddYe9+9tUt8+alb/I8D2NMqevjQGsxgVVAqhICjlvNsc63OXH4XZ58+mXmzU8vz8791cUoCOaTMDifpBAin2hFZxKlfD5++xna1m1kffsmvKxXkLcsqxSBgr2SVRCqCKXiaWe2W0Vf9wecGTjEtl8+gJRyyu1CoFTI5OREKbUFzEnAti3e+edh9n3yHxw7Hy2B0TFfdLzANavXsfraH+P7OQCqqqro+NdeHrl/G0GQK8cTpT2Q9UJyuZB8FCzb5ZuhHk71fsKWn9+B4zqFpBNC4HlZzgwPlZOI5RGIY43WuvBu2S7HD71LuqGeNW0bCIJz6SMEaB2jwpCpSiuNORuR1oaW5U0kk84UCSGIlU9v1/usXttOJtM0rc0qFbF0WQs3btmKZTlleaEEAc261uVgDFGssSyHibFBRod6WHvH9hmtK/B9frhmPa3rNuLnctM8d0EEAKLoXAVIy+Gb0z3YUtOy8hqUmt5mhRBEkSKKVEnDBZ1lSwJCWgyfOkI63ciCpkXEJfp8OahoGBmjGR0+wcJFzdQ3NBAGqlBqBkOkyv/yCyOgY7LfnmHhRXUMDQ7g+17Rr4J0pgnbtssuwYoICCHQscIoj/0dH/L5wQ+ZKjWBNoJll67kqb/8/bsh9X8gIAQU6zEGjIlp2/wguewoxpybER1vPEnz4mXU1tbNsv0I5uoJsxLIDyDHkURRjNamoGTJFT9FCokBpLQIvHE63thFy+VXUTyzhBC4bgIhJKEK0HE8m6mZVWDbFgODI+x5ZR9Huk+hVEzCtXFdG9u20FFAFHpEoUccBYyPfIUKJmhevAJpQTJZRaomheO4HP33l/z+8bvp6jyIm0iU6QEDjmOhteb1tz6jrq6aZUsW0NzcSCZdR6o6geNYSCkRFmQnx7AExDqmv+8kpwf6Odr9JZ9+/B6dX3xKprGJG7dsO++6Jb7bikeA+flDy5IYAwODIxztGeBk/zDjEx5GT5FzXRvHtkC6xN92I04/h2U7KKVQSpFK1dKy8mqu/9kttG+8iZqaOoLAL94rRtdemUrP7gGmBpAQsLg5w9LFjfhBxPhElrGxScYncuRyAaGKkTJBbmyUvkG45dY7uazlKtLpJi66eAnpTBOWbRH4PmEYzFhqzh+CfCQMhUVESkF6fi2NmXqEoKDMthN8/ZXg+H5Y376ZNW1teFlNFCnCMMAEpcuxrFZsjCGONUpFhGFEECiCQJHzA+xEA0K69PcdI/AhCHLEcVTxPpAsS/r7xHRMMtVAdW2GvhM9yNILUB4Fe/kQfE6FazlMzYZkdQONiy6/pOvwgdpI6SOO4wqlwlJXx79PYEOlxgEsJ8Hof3sZ/br73rHh/j/vemLHzfftfOJ0fUOa3Cz/B2dDPgSm0kcIYQCz/81d5uzwyX8kktXO3rf2bH7wnttMV+cBU1ObMlLKuXRMI1AxHDfF0QOv0XvoHdxkTT/Qkaqpe6z3WJf78I6tvPT8s2itEXJuExdEQEqbyfEhDr73VyyrUMm7gePJZHWVUiG7n/otf3vuTyTc2VtwHv8Dh3+Idmy8usMAAAAASUVORK5CYII=" alt="Menú Apple">
+  <div id="menubar" role="menubar" aria-label="Menú del escritorio">
+    <button type="button" class="mtitle mcat" data-menu="gato" aria-haspopup="true" aria-expanded="false" aria-label="Menú del gato"><svg class="cat" viewBox="0 0 15 12" width="19" height="15" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h7v1h-7zM8 7h7v1h-7zM0 8h5v1h-5zM6 8h1v1h-1zM8 8h1v1h-1zM10 8h5v1h-5zM0 9h15v1h-15zM1 10h13v1h-13zM2 11h11v1h-11z" fill="#000"/></svg></button>
+    <button type="button" class="mtitle" data-menu="archivo" aria-haspopup="true" aria-expanded="false">Archivo</button>
+    <button type="button" class="mtitle m-opt" data-menu="edicion" aria-haspopup="true" aria-expanded="false">Edición</button>
+    <button type="button" class="mtitle" data-menu="ver" aria-haspopup="true" aria-expanded="false">Ver</button>
+    <button type="button" class="mtitle" data-menu="proyectos" aria-haspopup="true" aria-expanded="false">Proyectos</button>
+    <button type="button" class="mtitle" data-menu="ayuda" aria-haspopup="true" aria-expanded="false">Ayuda</button>
     <div class="spacer"></div>
+    <div class="item" id="clock"></div>
+  </div>
     <div class="item" id="clock"></div>
   </div>
 </div>
@@ -1110,9 +1131,9 @@ desktop.addEventListener("mousedown", (e) => {
   const w = document.getElementById("welcome");
   const back = document.getElementById("welcome-backdrop");
   const close = () => { w.classList.remove("show"); back.classList.remove("show"); };
-  w.classList.add("show"); back.classList.add("show");
   const okBtn = document.getElementById("welcome-ok");
-  okBtn.focus();
+  window.showWelcome = () => { w.classList.add("show"); back.classList.add("show"); okBtn.focus(); };
+  window.showWelcome();
   okBtn.addEventListener("click", close);
   w.querySelectorAll(".w-feat button").forEach((b) => b.addEventListener("click", () => {
     close();
@@ -1120,6 +1141,93 @@ desktop.addEventListener("mousedown", (e) => {
   }));
   document.getElementById("welcome-close").addEventListener("click", close);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+})();
+
+/* ============================================================
+   BARRA DE MENÚS (desplegables)
+   ============================================================ */
+(function menus() {
+  const bar = document.getElementById("menubar");
+  const titles = [...bar.querySelectorAll(".mtitle")];
+  const drops = {};
+  const frontWindow = () => [...document.querySelectorAll(".window.open")].filter((w) => w.id !== "welcome").sort((a, b) => (+b.style.zIndex || 0) - (+a.style.zIndex || 0))[0];
+  const closeWin = (w) => { const c = w && w.querySelector(".close"); if (c) c.click(); };
+  const projects = [];
+  DESKTOP.forEach((d) => { if (d.kind === "folder" && d.cards) d.cards.forEach((c) => { if (c.kind === "project" && (c.caseStudy || c.href)) projects.push({ folder: d.title, c }); }); });
+  const openProject = (c) => { if (c.caseStudy) openWindow(c.caseStudy); else window.location.href = c.href; };
+  const tidy = () => document.querySelectorAll(".icon").forEach((el) => {
+    const pos = originalPos[el.dataset.id]; if (!pos || el.style.display === "none") return;
+    el.style.transition = "left .25s, top .25s"; el.style.left = pos.x + "px"; el.style.top = pos.y + "px";
+    setTimeout(() => { el.style.transition = ""; }, 300);
+  });
+  const folders = DESKTOP.filter((d) => d.kind === "folder");
+  const defs = {
+    gato: [
+      { l: "Acerca de este escritorio…", f: () => openWindow("case-portfolio") },
+      { l: "Léeme primero", f: () => openWindow("leeme") },
+      "-",
+      { l: "Ver la bienvenida otra vez", f: () => window.showWelcome() },
+    ],
+    archivo: [
+      { h: "Abrir" },
+      ...folders.map((d) => ({ l: d.title, f: () => openWindow(d.id) })),
+      { l: "Contacto", f: () => openWindow("contacto") },
+      "-",
+      { l: "Cerrar ventana", f: () => closeWin(frontWindow()) },
+      { l: "Cerrar todas las ventanas", f: () => document.querySelectorAll(".window.open").forEach((w) => { if (w.id !== "welcome") closeWin(w); }) },
+    ],
+    edicion: [
+      { l: "Copiar mi email", f: () => { try { navigator.clipboard.writeText("hola@mvmmaison.com"); } catch (e) {} } },
+      { l: "Escribirme un correo…", f: () => { window.location.href = "mailto:hola@mvmmaison.com"; } },
+    ],
+    ver: [
+      { l: "Ordenar iconos", f: tidy },
+      { l: "Restaurar el escritorio", f: () => { restoreAll(); tidy(); } },
+    ],
+    proyectos: (() => { const o = []; let last = ""; projects.forEach((p) => { if (p.folder !== last) { o.push({ h: p.folder }); last = p.folder; } o.push({ l: p.c.title, f: () => openProject(p.c) }); }); return o; })(),
+    ayuda: [
+      { l: "Cómo se usa este escritorio", f: () => window.showWelcome() },
+      { l: "Sistema de diseño", f: () => window.open("sistema-diseno-board.html", "_blank", "noopener") },
+    ],
+  };
+  Object.keys(defs).forEach((k) => {
+    const d = document.createElement("div"); d.className = "mdrop"; d.setAttribute("role", "menu"); d.dataset.for = k;
+    defs[k].forEach((it) => {
+      if (it === "-") { const x = document.createElement("div"); x.className = "msep"; x.setAttribute("role", "separator"); d.appendChild(x); return; }
+      if (it.h) { const x = document.createElement("div"); x.className = "mhead"; x.textContent = it.h; d.appendChild(x); return; }
+      const b = document.createElement("button"); b.type = "button"; b.className = "mi"; b.setAttribute("role", "menuitem"); b.textContent = it.l;
+      b.addEventListener("click", (e) => { e.stopPropagation(); closeAll(); it.f(); });
+      d.appendChild(b);
+    });
+    bar.appendChild(d); drops[k] = d;
+  });
+  let current = null;
+  function closeAll() { current = null; titles.forEach((t) => { t.classList.remove("open"); t.setAttribute("aria-expanded", "false"); }); Object.values(drops).forEach((d) => d.classList.remove("show")); }
+  function openMenu(t, focusFirst) {
+    closeAll(); current = t.dataset.menu;
+    t.classList.add("open"); t.setAttribute("aria-expanded", "true");
+    const d = drops[current]; d.style.left = Math.max(0, Math.min(t.offsetLeft, window.innerWidth - d.offsetWidth - 4)) + "px"; d.classList.add("show");
+    d.style.left = Math.max(0, Math.min(t.offsetLeft, window.innerWidth - d.offsetWidth - 6)) + "px";
+    if (focusFirst) { const f = d.querySelector(".mi"); if (f) f.focus(); }
+  }
+  titles.forEach((t) => {
+    t.addEventListener("click", (e) => { e.stopPropagation(); if (current === t.dataset.menu) closeAll(); else openMenu(t, e.detail === 0); });
+    t.addEventListener("mouseenter", () => { if (current && current !== t.dataset.menu) openMenu(t, false); });
+    t.addEventListener("keydown", (e) => { if (e.key === "ArrowDown") { e.preventDefault(); openMenu(t, true); } });
+  });
+  document.addEventListener("click", (e) => { if (!bar.contains(e.target)) closeAll(); });
+  desktop.addEventListener("mousedown", (e) => { if (!bar.contains(e.target)) closeAll(); });
+  document.addEventListener("keydown", (e) => {
+    if (!current) return;
+    const items = [...drops[current].querySelectorAll(".mi")], i = items.indexOf(document.activeElement);
+    const ti = titles.findIndex((t) => t.dataset.menu === current);
+    const visible = titles.filter((t) => t.offsetParent);
+    if (e.key === "Escape") { const t = titles[ti]; closeAll(); t.focus(); }
+    else if (e.key === "ArrowDown") { e.preventDefault(); (items[i + 1] || items[0]).focus(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); (items[i - 1] || items[items.length - 1]).focus(); }
+    else if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); const vi = visible.indexOf(titles[ti]); const n = visible[(vi + (e.key === "ArrowRight" ? 1 : visible.length - 1)) % visible.length]; openMenu(n, true); }
+  });
+  window.addEventListener("resize", closeAll);
 })();
 
 /* ============================================================
