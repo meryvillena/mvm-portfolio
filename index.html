@@ -1391,7 +1391,7 @@ desktop.addEventListener("mousedown", (e) => {
     rows.map((r, i) => '<div class="bolsa-row ' + r.cls + '"><span class="sym">' + r.sym + '</span><span>' + r.name + '</span><span class="val">' + r.val + '</span><span class="chg"><span>' + r.chg + '</span></span>' + spark(i * 977 + 31, r.dir) + '</div>').join("") +
     '<div class="bolsa-tape"><span>RESPIRA ▲ YA EN EL MERCADO &nbsp;·&nbsp; PRESUPUESTOS ▼ 1 H → 10 MIN &nbsp;·&nbsp; GATO ▲ MENÚ PRINCIPAL &nbsp;·&nbsp; PAPELERA ▬ SE RESTAURA SIEMPRE &nbsp;·&nbsp; CAFÉS ▲▲ SIN LÍMITE &nbsp;·&nbsp;</span></div>' +
     '<div class="bolsa-foot">Las cifras se cuentan solas a partir de este escritorio. Los gráficos son decorativos y los cafés, una exageración.</div>';
-  const w = makeWindow("bolsa", "La Bolsa", null, html, Math.max(210, window.innerWidth - 250 - 360), 62, 340);
+  const w = makeWindow("bolsa", "La Bolsa", null, html, 105, Math.max(40, Math.min(173, window.innerHeight - 400)), 340);
   if (w) w.classList.add("bolsa");
   if (window.innerWidth > 760) openWindow("bolsa");
   window.__bolsaCuadre = { proyectos: proyectos.map((c) => c.title), cases: cases.map((c) => c.title), baja };
