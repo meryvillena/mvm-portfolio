@@ -366,7 +366,7 @@ const DESKTOP = [
     id: "leeme", kind: "file", icon: ICONS.favorites, title: "Léeme primero",
     win: { title: "Léeme primero", type: "text", html:
       '<span class="tag" style="background:#ffe08a">Empieza por aquí</span>' +
-      "<p>Soy una apasionada de los sistemas de diseño: esa disciplina de construir interfaces coherentes, pieza a pieza, con reglas claras. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —un sistema de diseño antes de que existiera esa palabra.</p>" +
+      "<p>Soy una apasionada de los sistemas de diseño: esa disciplina de construir interfaces coherentes, pieza a pieza, con reglas claras. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —<a href=\"#\" onclick=\"openWindow('case-portfolio');return false\">un sistema de diseño antes de que existiera esa palabra</a>.</p>" +
       "<p>Las carpetas organizan mis proyectos por categorías: ábrelas, mira dentro, y muévelas por la pantalla si quieres reordenar.</p>" +
       "<p>Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em> —ahí está lo que más cuenta.</p>" +
       "<p class=\"small\">Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.</p>" +
@@ -404,6 +404,7 @@ const DESKTOP = [
     cards: [
       { kind: "project", title: "Evolución del depredador", tag: "showcase", desc: "Scrollytelling true-crime.", caseStudy: "case-depredador", thumb: '<img src="depredador/case/miniatura.jpg" alt="Portada de Evolución del depredador">' },
       { kind: "project", title: "Mesa de lectura", tag: "concepto", desc: "Prototipo de gesto: barajar cartas con física, antes que la imagen.", href: "mesa-de-lectura/index.html", thumb: '<img src="mesa-de-lectura/case/miniatura.jpg" alt="Mesa de lectura, tarot con física">' },
+      { kind: "project", title: "Este escritorio", tag: "showcase", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" alt="El escritorio de este portfolio">' },
       { kind: "folder", ref: "personal-arte", title: "Personal · Arte", desc: "Collages, calendario y experimentos." },
     ],
   },
@@ -481,7 +482,7 @@ function aboutHtml() {
     "<p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar o Lancôme. Desde 2018 trabajo en la gestión de varios restaurantes McDonald’s, coordinando proveedores, procesos internos, administración y acciones de marketing local.</p>" +
     "<p>Ahora diseño y desarrollo productos digitales con IA. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas que sean útiles, fáciles de usar y visualmente atractivas.</p>" +
     '<div class="chips"><span>8 años en operaciones</span><span>no-code</span><span>diseño</span></div>' +
-    '<div class="cards">' + cardHtml({ kind: "project", title: "Este escritorio", tag: "showcase", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" alt="El escritorio de este portfolio">' }) + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>";
+    '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>";
 }
 
 function contactHtml(idSuffix) {
