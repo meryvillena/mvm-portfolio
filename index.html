@@ -367,8 +367,9 @@ const DESKTOP = [
     win: { title: "Léeme primero", type: "text", html:
       '<span class="tag" style="background:#ffe08a">Empieza por aquí</span>' +
       "<h2>Hola, soy Mery ✦</h2>" +
-      "<p><em>[Manifiesto — copy final pendiente.]</em> Diseño, monto y opero. Hago que los negocios pequeños se vean bien <strong>y</strong> funcionen por dentro.</p>" +
-      "<p><strong>¿Por dónde empezar?</strong> Abre <em>Soluciones de negocio</em> y <em>Herramientas y operaciones</em>: es lo que hago para clientes de verdad.</p>" +
+      "<p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar o Lancôme. Desde 2018 trabajo en la gestión de varios restaurantes McDonald’s, coordinando proveedores, procesos internos, administración y acciones de marketing local.</p>" +
+      "<p>Ahora diseño y desarrollo productos digitales con IA. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas que sean útiles, fáciles de usar y visualmente atractivas.</p>" +
+      "<p>Estás en mi escritorio, inspirado en el sistema operativo de los Mac OS de los años 90. Las carpetas organizan mis proyectos por categorías. Puedes abrirlas, explorar su contenido y moverlas libremente por la pantalla. Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em>.</p>" +
       "<p class=\"small\">Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.</p>"
     },
   },
@@ -1087,7 +1088,7 @@ desktop.addEventListener("mousedown", (e) => {
       n.cards.forEach((cc) => { h += mCard(cc); });
       h += "</section>";
     } else if (item.id === "leeme") {
-      h += "<section><h2>Léeme primero</h2><p>Hago que los negocios pequeños se vean bien y funcionen por dentro. Empieza por Soluciones de negocio y Herramientas y operaciones.</p></section>";
+      h += "<section><h2>Léeme primero</h2><p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño y desarrollo productos digitales con IA. Te recomiendo empezar por Soluciones de negocio o Herramientas.</p></section>";
     } else if (item.id === "contacto") {
       h += "<section><h2>Contacto</h2>" + contactHtml("-m") + "</section>";
     }
