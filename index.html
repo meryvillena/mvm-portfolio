@@ -47,6 +47,8 @@
   .postit .pi-x:hover, .postit .pi-x:focus-visible { opacity: 1; background: #000; color: #fff; }
   .postit.in { position: relative; transform: rotate(var(--pr, 0deg)); z-index: auto; width: auto; }
   .muro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; padding: 6px 4px 10px; }
+  .postit:not(.nuevo):not(.in):not(.ghost) { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .postit.arrastrando { cursor: grabbing !important; box-shadow: 5px 5px 0 rgba(0,0,0,0.3); }
   .postit.ghost { all: unset; box-sizing: border-box; position: absolute; width: 150px; min-height: 100px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: rgba(255,243,163,0.6); border: 2px dashed rgba(0,0,0,0.5); transform: rotate(-2deg); z-index: 50; cursor: pointer; text-align: center; font-size: 12px; font-weight: bold; color: rgba(0,0,0,0.7); }
   .postit.ghost:hover, .postit.ghost:focus-visible { background: #fff3a3; border-style: solid; color: #000; }
   .postit.ghost .plus { font-size: 44px; line-height: 1; font-weight: normal; }
@@ -1200,7 +1202,8 @@ desktop.addEventListener("mousedown", (e) => {
   const KEY = "sb_publishable_dvbsiyx_AbASse779owKag_C90Mx13i"; // clave pública: solo puede crear y leer
   const HDR = { apikey: KEY, Authorization: "Bearer " + KEY };
   const COLORES = { amarillo: "#fff3a3", rosa: "#ffc4d6", azul: "#bfe0ff", verde: "#c7f0c0" };
-  const LS_OCULTOS = "mvm_postits_ocultos", LS_ULTIMO = "mvm_postit_ultimo";
+  const LS_OCULTOS = "mvm_postits_ocultos", LS_ULTIMO = "mvm_postit_ultimo", LS_POS = "mvm_postits_pos";
+  let zNota = 50;
   const LINK = /(https?:|www\.|[a-z0-9-]+\.(com|es|net|org|io|app|dev|co|eu|me|ly|xyz)\b)/i;
   const leer = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
   const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
@@ -1301,6 +1304,17 @@ desktop.addEventListener("mousedown", (e) => {
     const ocultos = leer(LS_OCULTOS, []);
     filas.filter((r) => !ocultos.includes(r.id)).slice(0, cs.length - 1).forEach((r, i) => {
       const n = nota(r, false); colocar(n, cs[i + 1], r.id);
+      const gp = leer(LS_POS, {})[r.id];
+      if (gp) { n.style.left = Math.max(0, Math.min(gp[0], window.innerWidth - 160)) + "px"; n.style.top = Math.max(24, Math.min(gp[1], window.innerHeight - 110)) + "px"; }
+      n.addEventListener("pointerdown", (e) => {
+        if (e.target.closest(".pi-x") || e.button > 0) return;
+        const sx = e.clientX, sy = e.clientY, l0 = n.offsetLeft, t0 = n.offsetTop; let movido = false;
+        n.setPointerCapture(e.pointerId); n.style.zIndex = Math.min(++zNota, 95); n.classList.add("arrastrando");
+        const mv = (ev) => { movido = true; n.style.left = Math.max(0, Math.min(l0 + ev.clientX - sx, window.innerWidth - 60)) + "px"; n.style.top = Math.max(24, Math.min(t0 + ev.clientY - sy, window.innerHeight - 40)) + "px"; };
+        const up = () => { n.removeEventListener("pointermove", mv); n.removeEventListener("pointerup", up); n.removeEventListener("pointercancel", up); n.classList.remove("arrastrando");
+          if (movido) { const g = leer(LS_POS, {}); g[r.id] = [n.offsetLeft, n.offsetTop]; guardar(LS_POS, g); } };
+        n.addEventListener("pointermove", mv); n.addEventListener("pointerup", up); n.addEventListener("pointercancel", up);
+      });
       const x = document.createElement("button"); x.type = "button"; x.className = "pi-x"; x.textContent = "×"; x.setAttribute("aria-label", "Ocultar este post-it");
       x.addEventListener("click", (e) => { e.stopPropagation(); const o = leer(LS_OCULTOS, []); o.push(r.id); guardar(LS_OCULTOS, o); pintarEscritorio(); });
       n.appendChild(x); desktop.appendChild(n); pegados.push(n);
@@ -1325,7 +1339,8 @@ desktop.addEventListener("mousedown", (e) => {
     else { openWindow("muro"); setTimeout(() => abrirEditor(document.getElementById("muro-grid"), null), 150); }
   };
   let tmr; window.addEventListener("resize", () => { clearTimeout(tmr); tmr = setTimeout(() => { if (!editor) pintarEscritorio(); }, 250); });
-  window.__postits = { pintarEscritorio, pintarMuro, nueva };
+  const reordenar = () => { try { localStorage.removeItem(LS_POS); } catch (e) {} pintarEscritorio(); };
+  window.__postits = { pintarEscritorio, pintarMuro, nueva, reordenar };
   pintarEscritorio();
 })();
 
@@ -1356,7 +1371,7 @@ desktop.addEventListener("mousedown", (e) => {
     rows.map((r, i) => '<div class="bolsa-row ' + r.cls + '"><span class="sym">' + r.sym + '</span><span>' + r.name + '</span><span class="val">' + r.val + '</span><span class="chg"><span>' + r.chg + '</span></span>' + spark(i * 977 + 31, r.dir) + '</div>').join("") +
     '<div class="bolsa-tape"><span>RESPIRA ▲ YA EN EL MERCADO &nbsp;·&nbsp; PRESUPUESTOS ▼ 1 H → 10 MIN &nbsp;·&nbsp; GATO ▲ MENÚ PRINCIPAL &nbsp;·&nbsp; PAPELERA ▬ SE RESTAURA SIEMPRE &nbsp;·&nbsp; CAFÉS ▲▲ SIN LÍMITE &nbsp;·&nbsp;</span></div>' +
     '<div class="bolsa-foot">Las cifras se cuentan solas a partir de este escritorio. Los gráficos son decorativos y los cafés, una exageración.</div>';
-  const w = makeWindow("bolsa", "La Bolsa", null, html, 70, 62, 340);
+  const w = makeWindow("bolsa", "La Bolsa", null, html, Math.max(210, window.innerWidth - 250 - 360), 62, 340);
   if (w) w.classList.add("bolsa");
   if (window.innerWidth > 760) openWindow("bolsa");
   window.__bolsaCuadre = { proyectos: proyectos.map((c) => c.title), cases: cases.map((c) => c.title), baja };
@@ -1401,10 +1416,10 @@ desktop.addEventListener("mousedown", (e) => {
       { l: "Escribirme un correo…", f: () => { window.location.href = "mailto:hola@mvmmaison.com"; } },
     ],
     ver: [
-      { l: "Ordenar iconos", f: tidy },
+      { l: "Ordenar iconos y post-its", f: () => { tidy(); window.__postits.reordenar(); } },
       { l: "Mostrar La Bolsa", f: () => openWindow("bolsa") },
       { l: "Muro de post-its", f: () => openWindow("muro") },
-      { l: "Restaurar el escritorio", f: () => { restoreAll(); tidy(); } },
+      { l: "Restaurar el escritorio", f: () => { restoreAll(); tidy(); window.__postits.reordenar(); } },
     ],
     proyectos: (() => { const o = []; let last = ""; projects.forEach((p) => { if (p.folder !== last) { o.push({ h: p.folder }); last = p.folder; } o.push({ l: p.c.title, f: () => openProject(p.c) }); }); return o; })(),
     ayuda: [
