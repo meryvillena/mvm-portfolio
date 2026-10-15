@@ -40,6 +40,28 @@
   #menubar .spacer { flex: 1; }
   #menubar .item { margin-left: 14px; display: flex; align-items: center; gap: 5px; }
 
+  /* ---------- POST-ITS (muro público) ---------- */
+  .postit { position: absolute; width: 150px; min-height: 100px; padding: 14px 12px 10px; background: var(--pc); border: 1px solid rgba(0,0,0,0.45); box-shadow: 2px 2px 0 rgba(0,0,0,0.3); transform: rotate(var(--pr, 0deg)); z-index: 50; font-size: 13px; line-height: 1.3; color: #111; overflow-wrap: anywhere; }
+  .postit .pi-alias { margin-top: 8px; font-size: 11px; color: rgba(0,0,0,0.6); }
+  .postit .pi-x { all: unset; position: absolute; top: 1px; right: 3px; padding: 0 4px; font-size: 13px; font-weight: bold; line-height: 1.2; cursor: pointer; opacity: 0.5; }
+  .postit .pi-x:hover, .postit .pi-x:focus-visible { opacity: 1; background: #000; color: #fff; }
+  .postit.in { position: relative; transform: rotate(var(--pr, 0deg)); z-index: auto; width: auto; }
+  .muro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; padding: 6px 4px 10px; }
+  .pn-form { display: flex; flex-direction: column; gap: 10px; }
+  .pn-form label { font-size: 12px; font-weight: bold; display: flex; flex-direction: column; gap: 4px; }
+  .pn-form textarea, .pn-form input[type=text] { font-family: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid #000; width: 100%; background: #fff; }
+  .pn-form textarea { min-height: 84px; resize: vertical; }
+  .pn-count { font-size: 11px; font-weight: normal; color: rgba(0,0,0,0.6); text-align: right; }
+  .pn-colors { display: flex; gap: 8px; }
+  .pn-colors input { position: absolute; opacity: 0; pointer-events: none; }
+  .pn-colors label { flex-direction: row; cursor: pointer; }
+  .pn-colors span { width: 28px; height: 28px; border: 1px solid #000; background: var(--pc); display: block; }
+  .pn-colors input:checked + span { outline: 2px solid #000; outline-offset: 2px; }
+  .pn-colors input:focus-visible + span { outline: 2px solid #2b5fd6; outline-offset: 2px; }
+  .pn-msg { font-size: 12px; min-height: 16px; }
+  .pn-msg.err { color: #b3261e; }
+  .pn-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
   /* ---------- LA BOLSA (ventana del escritorio) ---------- */
   .window.bolsa .content { padding: 0; background: #0d0d0d; max-height: none; overflow: hidden; }
   .bolsa-head { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-bottom: 1px solid #2c2c2c; font-family: Monaco,Menlo,"Courier New",monospace; font-size: 12px; color: #f0c766; letter-spacing: 0.04em; }
@@ -1161,6 +1183,114 @@ desktop.addEventListener("mousedown", (e) => {
 })();
 
 /* ============================================================
+   MURO DE POST-ITS (público, en Supabase; se publica solo)
+   ============================================================ */
+(function postits() {
+  const API = "https://uisroyoyjfevmrplaqyk.supabase.co/rest/v1";
+  const KEY = "sb_publishable_dvbsiyx_AbASse779owKag_C90Mx13i"; // clave pública: solo puede crear y leer
+  const HDR = { apikey: KEY, Authorization: "Bearer " + KEY };
+  const COLORES = { amarillo: "#fff3a3", rosa: "#ffc4d6", azul: "#bfe0ff", verde: "#c7f0c0" };
+  const LS_OCULTOS = "mvm_postits_ocultos", LS_ULTIMO = "mvm_postit_ultimo";
+  const leer = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
+  const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  const frac = (n) => n - Math.floor(n);
+  const ICON = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges"><rect x="3" y="3" width="26" height="26" fill="#fff3a3" stroke="#000" stroke-width="2"/><path d="M21 29v-8h8" fill="#e0cf6a" stroke="#000" stroke-width="2"/><rect x="8" y="9" width="14" height="2" fill="#000"/><rect x="8" y="14" width="10" height="2" fill="#000"/></svg>');
+
+  const nota = (r, enMuro) => {
+    const d = document.createElement("div");
+    d.className = "postit" + (enMuro ? " in" : "");
+    d.style.setProperty("--pc", COLORES[r.color] || COLORES.amarillo);
+    d.style.setProperty("--pr", (((r.id * 37) % 9) - 4) + "deg");
+    const m = document.createElement("div"); m.textContent = r.mensaje; d.appendChild(m);
+    if (r.alias) { const a = document.createElement("div"); a.className = "pi-alias"; a.textContent = "— " + r.alias; d.appendChild(a); }
+    return d;
+  };
+  const pedir = async (limite) => {
+    const r = await fetch(API + "/postits?select=id,mensaje,alias,color,creado&order=creado.desc&limit=" + limite, { headers: HDR });
+    if (!r.ok) throw new Error("lectura");
+    return r.json();
+  };
+
+  // ---- Post-its pegados en el escritorio (solo en pantallas grandes)
+  let pegados = [];
+  const pintarEscritorio = async () => {
+    pegados.forEach((n) => n.remove()); pegados = [];
+    if (window.innerWidth <= 760) return;
+    let filas; try { filas = await pedir(12); } catch (e) { return; }
+    const ocultos = leer(LS_OCULTOS, []);
+    const W = window.innerWidth, H = window.innerHeight;
+    filas.filter((r) => !ocultos.includes(r.id)).forEach((r) => {
+      const n = nota(r, false);
+      n.style.left = (24 + frac(r.id * 0.618034) * Math.max(60, W - 24 - 150 - 250)) + "px";
+      n.style.top = (40 + frac(r.id * 0.754877 + 0.3) * Math.max(60, H - 40 - 130 - 20)) + "px";
+      const x = document.createElement("button"); x.type = "button"; x.className = "pi-x"; x.textContent = "×"; x.setAttribute("aria-label", "Ocultar este post-it");
+      x.addEventListener("click", (e) => { e.stopPropagation(); const o = leer(LS_OCULTOS, []); o.push(r.id); guardar(LS_OCULTOS, o); n.remove(); });
+      n.appendChild(x); desktop.appendChild(n); pegados.push(n);
+    });
+  };
+
+  // ---- Ventana: dejar un post-it
+  const formHtml =
+    '<form class="pn-form" id="pn-form" novalidate>' +
+      '<label>Tu mensaje<textarea id="pn-msg" maxlength="140" required></textarea><span class="pn-count" id="pn-count">0 / 140</span></label>' +
+      '<label>Tu nombre o alias (opcional)<input type="text" id="pn-alias" maxlength="30" autocomplete="off"></label>' +
+      '<div><div style="font-size:12px;font-weight:bold;margin-bottom:6px;">Color</div><div class="pn-colors">' +
+        Object.keys(COLORES).map((c, i) => '<label><input type="radio" name="pn-color" value="' + c + '"' + (i === 0 ? " checked" : "") + '><span style="--pc:' + COLORES[c] + '" title="' + c + '"></span></label>').join("") +
+      '</div></div>' +
+      '<div class="pn-trap" aria-hidden="true"><label>No rellenar<input type="text" id="pn-web" tabindex="-1" autocomplete="off"></label></div>' +
+      '<div class="pn-msg" id="pn-estado" role="status"></div>' +
+      '<button class="btn" type="submit" id="pn-enviar">Pegar post-it</button>' +
+      '<p class="small">Tu post-it se publica al momento y lo ve todo el mundo. No guardo tu correo ni tu dirección. Sin enlaces, por favor.</p>' +
+    '</form>';
+  makeWindow("postit-nuevo", "Dejar un post-it", ICON, formHtml, 190, 90, 340);
+
+  const f = document.getElementById("pn-form"), msg = document.getElementById("pn-msg"), cnt = document.getElementById("pn-count"), est = document.getElementById("pn-estado"), bt = document.getElementById("pn-enviar");
+  const aviso = (t, err) => { est.textContent = t; est.className = "pn-msg" + (err ? " err" : ""); };
+  msg.addEventListener("input", () => { cnt.textContent = msg.value.length + " / 140"; });
+  const LINK = /(https?:|www\.|[a-z0-9-]+\.(com|es|net|org|io|app|dev|co|eu|me|ly|xyz)\b)/i;
+  f.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const texto = msg.value.trim(), alias = document.getElementById("pn-alias").value.trim();
+    const color = (f.querySelector("input[name=pn-color]:checked") || {}).value || "amarillo";
+    if (document.getElementById("pn-web").value) { aviso("Pegado ✓"); return; } // trampa para robots
+    if (!texto) return aviso("Escribe algo en el post-it.", true);
+    if (LINK.test(texto) || LINK.test(alias)) return aviso("Sin enlaces, por favor.", true);
+    if (Date.now() - (leer(LS_ULTIMO, 0)) < 30000) return aviso("Un momento: espera medio minuto para pegar otro.", true);
+    bt.disabled = true; aviso("Pegando…");
+    try {
+      const cuerpo = { mensaje: texto, color }; if (alias) cuerpo.alias = alias;
+      const r = await fetch(API + "/postits", { method: "POST", headers: { ...HDR, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify(cuerpo) });
+      if (r.ok) {
+        guardar(LS_ULTIMO, Date.now()); msg.value = ""; cnt.textContent = "0 / 140"; document.getElementById("pn-alias").value = "";
+        aviso("¡Pegado! Ya está en el escritorio."); pintarEscritorio(); pintarMuro();
+      } else {
+        const t = await r.text();
+        aviso(/Demasiados/.test(t) ? "Hay mucho movimiento ahora mismo. Prueba en un rato." : /sin_url/.test(t) ? "Sin enlaces, por favor." : /largo/.test(t) ? "El mensaje debe tener entre 1 y 140 caracteres." : "No he podido pegarlo. Prueba otra vez.", true);
+      }
+    } catch (err) { aviso("No he podido conectar. Prueba otra vez.", true); }
+    bt.disabled = false;
+  });
+
+  // ---- Ventana: Muro (todos los publicados)
+  const w = makeWindow("muro", "Muro de post-its", ICON, '<p class="intro" id="muro-intro">Cargando…</p><div class="muro-grid" id="muro-grid"></div><p><button class="btn" type="button" onclick="openWindow(\'postit-nuevo\')">Dejar un post-it</button></p>', 150, 70, 520);
+  const pintarMuro = async () => {
+    const g = document.getElementById("muro-grid"), i = document.getElementById("muro-intro");
+    let filas; try { filas = await pedir(200); } catch (e) { i.textContent = "No he podido cargar el muro ahora mismo."; return; }
+    g.textContent = "";
+    filas.forEach((r) => g.appendChild(nota(r, true)));
+    i.textContent = filas.length ? filas.length + (filas.length === 1 ? " post-it dejado por visitantes." : " post-its dejados por visitantes.") : "Todavía no hay ninguno. Deja el primero.";
+  };
+  // al abrir el muro se refresca
+  const refrescarAlAbrir = new MutationObserver(() => { if (w.classList.contains("open")) pintarMuro(); });
+  refrescarAlAbrir.observe(w, { attributes: true, attributeFilter: ["class"] });
+
+  // ---- Icono en el escritorio
+  const ic = makeIcon("postit-nuevo", "Dejar un post-it", ICON, Math.max(120, window.innerWidth - 120) - 96, 40);
+  window.__postits = { pintarEscritorio, pintarMuro };
+  pintarEscritorio();
+})();
+
+/* ============================================================
    LA BOLSA: cifras reales, contadas del propio escritorio
    ============================================================ */
 (function bolsa() {
@@ -1216,6 +1346,7 @@ desktop.addEventListener("mousedown", (e) => {
       { l: "Acerca de este escritorio…", f: () => openWindow("case-portfolio") },
       { l: "Léeme primero", f: () => openWindow("leeme") },
       "-",
+      { l: "Dejar un post-it…", f: () => openWindow("postit-nuevo") },
       { l: "Ver la bienvenida otra vez", f: () => window.showWelcome() },
     ],
     archivo: [
@@ -1233,6 +1364,7 @@ desktop.addEventListener("mousedown", (e) => {
     ver: [
       { l: "Ordenar iconos", f: tidy },
       { l: "Mostrar La Bolsa", f: () => openWindow("bolsa") },
+      { l: "Muro de post-its", f: () => openWindow("muro") },
       { l: "Restaurar el escritorio", f: () => { restoreAll(); tidy(); } },
     ],
     proyectos: (() => { const o = []; let last = ""; projects.forEach((p) => { if (p.folder !== last) { o.push({ h: p.folder }); last = p.folder; } o.push({ l: p.c.title, f: () => openProject(p.c) }); }); return o; })(),
