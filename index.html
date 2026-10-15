@@ -47,19 +47,28 @@
   .postit .pi-x:hover, .postit .pi-x:focus-visible { opacity: 1; background: #000; color: #fff; }
   .postit.in { position: relative; transform: rotate(var(--pr, 0deg)); z-index: auto; width: auto; }
   .muro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; padding: 6px 4px 10px; }
-  .pn-form { display: flex; flex-direction: column; gap: 10px; }
-  .pn-form label { font-size: 12px; font-weight: bold; display: flex; flex-direction: column; gap: 4px; }
-  .pn-form textarea, .pn-form input[type=text] { font-family: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid #000; width: 100%; background: #fff; }
-  .pn-form textarea { min-height: 84px; resize: vertical; }
-  .pn-count { font-size: 11px; font-weight: normal; color: rgba(0,0,0,0.6); text-align: right; }
-  .pn-colors { display: flex; gap: 8px; }
-  .pn-colors input { position: absolute; opacity: 0; pointer-events: none; }
-  .pn-colors label { flex-direction: row; cursor: pointer; }
-  .pn-colors span { width: 28px; height: 28px; border: 1px solid #000; background: var(--pc); display: block; }
-  .pn-colors input:checked + span { outline: 2px solid #000; outline-offset: 2px; }
-  .pn-colors input:focus-visible + span { outline: 2px solid #2b5fd6; outline-offset: 2px; }
-  .pn-msg { font-size: 12px; min-height: 16px; }
-  .pn-msg.err { color: #b3261e; }
+  .postit.ghost { all: unset; box-sizing: border-box; position: absolute; width: 150px; min-height: 100px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: rgba(255,243,163,0.6); border: 2px dashed rgba(0,0,0,0.5); transform: rotate(-2deg); z-index: 50; cursor: pointer; text-align: center; font-size: 12px; font-weight: bold; color: rgba(0,0,0,0.7); }
+  .postit.ghost:hover, .postit.ghost:focus-visible { background: #fff3a3; border-style: solid; color: #000; }
+  .postit.ghost .plus { font-size: 44px; line-height: 1; font-weight: normal; }
+  .postit.nuevo { width: 210px; min-height: 160px; padding: 12px 10px 8px; display: flex; flex-direction: column; gap: 6px; z-index: 60; transform: rotate(-1deg); }
+  .postit.nuevo.in { width: auto; }
+  .postit.nuevo textarea, .postit.nuevo input[type=text] { all: unset; box-sizing: border-box; width: 100%; font-size: 13px; line-height: 1.3; color: #111; }
+  .postit.nuevo textarea { min-height: 70px; resize: none; display: block; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .postit.nuevo textarea::placeholder, .postit.nuevo input::placeholder { color: rgba(0,0,0,0.45); }
+  .postit.nuevo input[type=text] { font-size: 11px; border-top: 1px dashed rgba(0,0,0,0.3); padding-top: 6px; }
+  .pi-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .pi-bar .dots { display: flex; gap: 5px; flex: 1 1 100%; }
+  .pi-bar .dots label { cursor: pointer; display: block; }
+  .pi-bar .dots input { position: absolute; opacity: 0; pointer-events: none; }
+  .pi-bar .dots span { display: block; width: 16px; height: 16px; border: 1px solid #000; background: var(--dc); }
+  .pi-bar .dots input:checked + span { outline: 2px solid #000; outline-offset: 1px; }
+  .pi-bar .dots input:focus-visible + span { outline: 2px solid #2b5fd6; outline-offset: 1px; }
+  .pi-bar .pi-count { font-size: 10px; color: rgba(0,0,0,0.55); white-space: nowrap; margin-right: auto; }
+  .pi-bar button { all: unset; box-sizing: border-box; border: 1px solid #000; background: #ddd; font-size: 11px; font-weight: bold; padding: 3px 9px; cursor: pointer; white-space: nowrap; }
+  .pi-bar button:hover, .pi-bar button:focus-visible { background: #000; color: #fff; }
+  .pi-bar button[disabled] { opacity: 0.5; }
+  .pi-err { font-size: 11px; min-height: 13px; color: #b3261e; }
+  .pi-nota { font-size: 9px; color: rgba(0,0,0,0.55); line-height: 1.25; }
   .pn-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
   /* ---------- LA BOLSA (ventana del escritorio) ---------- */
@@ -1184,6 +1193,7 @@ desktop.addEventListener("mousedown", (e) => {
 
 /* ============================================================
    MURO DE POST-ITS (público, en Supabase; se publica solo)
+   El escritorio se llena de post-its; el "+" abre uno en blanco donde se escribe directamente.
    ============================================================ */
 (function postits() {
   const API = "https://uisroyoyjfevmrplaqyk.supabase.co/rest/v1";
@@ -1191,9 +1201,11 @@ desktop.addEventListener("mousedown", (e) => {
   const HDR = { apikey: KEY, Authorization: "Bearer " + KEY };
   const COLORES = { amarillo: "#fff3a3", rosa: "#ffc4d6", azul: "#bfe0ff", verde: "#c7f0c0" };
   const LS_OCULTOS = "mvm_postits_ocultos", LS_ULTIMO = "mvm_postit_ultimo";
+  const LINK = /(https?:|www\.|[a-z0-9-]+\.(com|es|net|org|io|app|dev|co|eu|me|ly|xyz)\b)/i;
   const leer = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
   const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
   const frac = (n) => n - Math.floor(n);
+  const grande = () => window.innerWidth > 760;
   const ICON = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges"><rect x="3" y="3" width="26" height="26" fill="#fff3a3" stroke="#000" stroke-width="2"/><path d="M21 29v-8h8" fill="#e0cf6a" stroke="#000" stroke-width="2"/><rect x="8" y="9" width="14" height="2" fill="#000"/><rect x="8" y="14" width="10" height="2" fill="#000"/></svg>');
 
   const nota = (r, enMuro) => {
@@ -1211,82 +1223,109 @@ desktop.addEventListener("mousedown", (e) => {
     return r.json();
   };
 
-  // ---- Post-its pegados en el escritorio (solo en pantallas grandes)
-  let pegados = [];
+  // ---- Celdas repartidas por todo el escritorio (la 0 es para el "+")
+  const celdas = () => {
+    const W = window.innerWidth, H = window.innerHeight;
+    const x0 = 24, x1 = W - 250, y0 = 40, y1 = H - 24;
+    const cols = Math.max(1, Math.floor((x1 - x0) / 190)), rows = Math.max(1, Math.floor((y1 - y0) / 150));
+    const sx = (x1 - x0) / cols, sy = (y1 - y0) / rows, out = [];
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) out.push({ x: x0 + c * sx, y: y0 + r * sy });
+    const resto = out.slice(1).map((c, i) => ({ c, k: frac((i + 1) * 0.7548776662) })).sort((a, b) => a.k - b.k).map((o) => o.c);
+    return [out[0]].concat(resto);
+  };
+  const colocar = (el, c, id) => {
+    const j = id == null ? 0 : 1;
+    el.style.left = (c.x + j * (frac(id * 0.618034) * 28 - 8)) + "px";
+    el.style.top = (c.y + j * (frac(id * 0.754877 + 0.3) * 24 - 6)) + "px";
+  };
+
+  let pegados = [], ghost = null, editor = null;
+  const cerrarEditor = () => { if (editor) { editor.remove(); editor = null; } if (ghost) ghost.style.visibility = ""; };
+
+  // ---- El post-it en blanco: se escribe directamente en él
+  const abrirEditor = (host, celda) => {
+    if (editor) return;
+    const d = document.createElement("div"); d.className = "postit nuevo" + (celda ? "" : " in");
+    d.style.setProperty("--pc", COLORES.amarillo);
+    d.innerHTML =
+      '<textarea maxlength="140" placeholder="Escribe aquí…" aria-label="Tu mensaje"></textarea>' +
+      '<input type="text" maxlength="30" placeholder="tu nombre (opcional)" aria-label="Tu nombre o alias (opcional)" autocomplete="off">' +
+      '<div class="pn-trap" aria-hidden="true"><input type="text" tabindex="-1" autocomplete="off" aria-hidden="true"></div>' +
+      '<div class="pi-bar"><div class="dots">' +
+        Object.keys(COLORES).map((c, i) => '<label title="' + c + '"><input type="radio" name="pi-c" value="' + c + '"' + (i === 0 ? " checked" : "") + '><span style="--dc:' + COLORES[c] + '"></span></label>').join("") +
+      '</div><span class="pi-count">0/140</span><button type="button" class="pi-ok">Pegar</button><button type="button" class="pi-no" aria-label="Cancelar">×</button></div>' +
+      '<div class="pi-err" role="status"></div>' +
+      '<div class="pi-nota">Se publica al momento y lo ve todo el mundo. No guardo tu correo ni tu dirección. Sin enlaces.</div>';
+    const ta = d.querySelector("textarea"), al = d.querySelector('input[type=text]'), trap = d.querySelector(".pn-trap input"), err = d.querySelector(".pi-err"), ok = d.querySelector(".pi-ok"), cnt = d.querySelector(".pi-count");
+    if (celda) { colocar(d, celda, null); desktop.appendChild(d); } else host.insertBefore(d, host.firstChild);
+    editor = d; if (ghost) ghost.style.visibility = "hidden";
+    d.querySelectorAll("input[name=pi-c]").forEach((i) => i.addEventListener("change", () => d.style.setProperty("--pc", COLORES[i.value])));
+    ta.addEventListener("input", () => { cnt.textContent = ta.value.length + "/140"; });
+    d.querySelector(".pi-no").addEventListener("click", cerrarEditor);
+    d.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.stopPropagation(); cerrarEditor(); } else if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) ok.click(); });
+    d.addEventListener("mousedown", (e) => e.stopPropagation());
+    ok.addEventListener("click", async () => {
+      const texto = ta.value.trim(), alias = al.value.trim();
+      const color = (d.querySelector("input[name=pi-c]:checked") || {}).value || "amarillo";
+      if (trap.value) { cerrarEditor(); return; }                       // trampa para robots
+      if (!texto) { err.textContent = "Escribe algo en el post-it."; return; }
+      if (LINK.test(texto) || LINK.test(alias)) { err.textContent = "Sin enlaces, por favor."; return; }
+      if (Date.now() - leer(LS_ULTIMO, 0) < 30000) { err.textContent = "Espera medio minuto para pegar otro."; return; }
+      ok.disabled = true; err.textContent = "";
+      try {
+        const cuerpo = { mensaje: texto, color }; if (alias) cuerpo.alias = alias;
+        const r = await fetch(API + "/postits", { method: "POST", headers: { ...HDR, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify(cuerpo) });
+        if (r.ok) { guardar(LS_ULTIMO, Date.now()); cerrarEditor(); pintarEscritorio(); pintarMuro(); return; }
+        const t = await r.text();
+        err.textContent = /Demasiados/.test(t) ? "Hay mucho movimiento. Prueba en un rato." : /sin_url/.test(t) ? "Sin enlaces, por favor." : /largo/.test(t) ? "Entre 1 y 140 caracteres." : "No he podido pegarlo. Prueba otra vez.";
+      } catch (e) { err.textContent = "No he podido conectar. Prueba otra vez."; }
+      ok.disabled = false;
+    });
+    ta.focus();
+  };
+
+  // ---- Escritorio: "+" y post-its repartidos
   const pintarEscritorio = async () => {
     pegados.forEach((n) => n.remove()); pegados = [];
-    if (window.innerWidth <= 760) return;
-    let filas; try { filas = await pedir(12); } catch (e) { return; }
+    if (ghost) { ghost.remove(); ghost = null; }
+    if (!grande()) return;
+    const cs = celdas();
+    ghost = document.createElement("button"); ghost.type = "button"; ghost.className = "postit ghost";
+    ghost.innerHTML = '<span class="plus" aria-hidden="true">+</span><span>Deja tu post-it</span>';
+    ghost.setAttribute("aria-label", "Dejar un post-it");
+    colocar(ghost, cs[0], null);
+    ghost.addEventListener("click", (e) => { e.stopPropagation(); abrirEditor(null, cs[0]); });
+    desktop.appendChild(ghost);
+    if (editor && !editor.classList.contains("in")) ghost.style.visibility = "hidden";
+    let filas; try { filas = await pedir(80); } catch (e) { return; }
     const ocultos = leer(LS_OCULTOS, []);
-    const W = window.innerWidth, H = window.innerHeight;
-    filas.filter((r) => !ocultos.includes(r.id)).forEach((r) => {
-      const n = nota(r, false);
-      n.style.left = (24 + frac(r.id * 0.618034) * Math.max(60, W - 24 - 150 - 250)) + "px";
-      n.style.top = (40 + frac(r.id * 0.754877 + 0.3) * Math.max(60, H - 40 - 130 - 20)) + "px";
+    filas.filter((r) => !ocultos.includes(r.id)).slice(0, cs.length - 1).forEach((r, i) => {
+      const n = nota(r, false); colocar(n, cs[i + 1], r.id);
       const x = document.createElement("button"); x.type = "button"; x.className = "pi-x"; x.textContent = "×"; x.setAttribute("aria-label", "Ocultar este post-it");
-      x.addEventListener("click", (e) => { e.stopPropagation(); const o = leer(LS_OCULTOS, []); o.push(r.id); guardar(LS_OCULTOS, o); n.remove(); });
+      x.addEventListener("click", (e) => { e.stopPropagation(); const o = leer(LS_OCULTOS, []); o.push(r.id); guardar(LS_OCULTOS, o); pintarEscritorio(); });
       n.appendChild(x); desktop.appendChild(n); pegados.push(n);
     });
   };
 
-  // ---- Ventana: dejar un post-it
-  const formHtml =
-    '<form class="pn-form" id="pn-form" novalidate>' +
-      '<label>Tu mensaje<textarea id="pn-msg" maxlength="140" required></textarea><span class="pn-count" id="pn-count">0 / 140</span></label>' +
-      '<label>Tu nombre o alias (opcional)<input type="text" id="pn-alias" maxlength="30" autocomplete="off"></label>' +
-      '<div><div style="font-size:12px;font-weight:bold;margin-bottom:6px;">Color</div><div class="pn-colors">' +
-        Object.keys(COLORES).map((c, i) => '<label><input type="radio" name="pn-color" value="' + c + '"' + (i === 0 ? " checked" : "") + '><span style="--pc:' + COLORES[c] + '" title="' + c + '"></span></label>').join("") +
-      '</div></div>' +
-      '<div class="pn-trap" aria-hidden="true"><label>No rellenar<input type="text" id="pn-web" tabindex="-1" autocomplete="off"></label></div>' +
-      '<div class="pn-msg" id="pn-estado" role="status"></div>' +
-      '<button class="btn" type="submit" id="pn-enviar">Pegar post-it</button>' +
-      '<p class="small">Tu post-it se publica al momento y lo ve todo el mundo. No guardo tu correo ni tu dirección. Sin enlaces, por favor.</p>' +
-    '</form>';
-  makeWindow("postit-nuevo", "Dejar un post-it", ICON, formHtml, 190, 90, 340);
-
-  const f = document.getElementById("pn-form"), msg = document.getElementById("pn-msg"), cnt = document.getElementById("pn-count"), est = document.getElementById("pn-estado"), bt = document.getElementById("pn-enviar");
-  const aviso = (t, err) => { est.textContent = t; est.className = "pn-msg" + (err ? " err" : ""); };
-  msg.addEventListener("input", () => { cnt.textContent = msg.value.length + " / 140"; });
-  const LINK = /(https?:|www\.|[a-z0-9-]+\.(com|es|net|org|io|app|dev|co|eu|me|ly|xyz)\b)/i;
-  f.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const texto = msg.value.trim(), alias = document.getElementById("pn-alias").value.trim();
-    const color = (f.querySelector("input[name=pn-color]:checked") || {}).value || "amarillo";
-    if (document.getElementById("pn-web").value) { aviso("Pegado ✓"); return; } // trampa para robots
-    if (!texto) return aviso("Escribe algo en el post-it.", true);
-    if (LINK.test(texto) || LINK.test(alias)) return aviso("Sin enlaces, por favor.", true);
-    if (Date.now() - (leer(LS_ULTIMO, 0)) < 30000) return aviso("Un momento: espera medio minuto para pegar otro.", true);
-    bt.disabled = true; aviso("Pegando…");
-    try {
-      const cuerpo = { mensaje: texto, color }; if (alias) cuerpo.alias = alias;
-      const r = await fetch(API + "/postits", { method: "POST", headers: { ...HDR, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify(cuerpo) });
-      if (r.ok) {
-        guardar(LS_ULTIMO, Date.now()); msg.value = ""; cnt.textContent = "0 / 140"; document.getElementById("pn-alias").value = "";
-        aviso("¡Pegado! Ya está en el escritorio."); pintarEscritorio(); pintarMuro();
-      } else {
-        const t = await r.text();
-        aviso(/Demasiados/.test(t) ? "Hay mucho movimiento ahora mismo. Prueba en un rato." : /sin_url/.test(t) ? "Sin enlaces, por favor." : /largo/.test(t) ? "El mensaje debe tener entre 1 y 140 caracteres." : "No he podido pegarlo. Prueba otra vez.", true);
-      }
-    } catch (err) { aviso("No he podido conectar. Prueba otra vez.", true); }
-    bt.disabled = false;
-  });
-
-  // ---- Ventana: Muro (todos los publicados)
-  const w = makeWindow("muro", "Muro de post-its", ICON, '<p class="intro" id="muro-intro">Cargando…</p><div class="muro-grid" id="muro-grid"></div><p><button class="btn" type="button" onclick="openWindow(\'postit-nuevo\')">Dejar un post-it</button></p>', 150, 70, 520);
+  // ---- Ventana "Muro": todos los post-its (y la única forma de escribir en móvil)
+  const w = makeWindow("muro", "Muro de post-its", ICON, '<p class="intro" id="muro-intro">Cargando…</p><p><button class="btn" type="button" id="muro-nuevo">Dejar un post-it</button></p><div class="muro-grid" id="muro-grid"></div>', 150, 70, 520);
   const pintarMuro = async () => {
     const g = document.getElementById("muro-grid"), i = document.getElementById("muro-intro");
     let filas; try { filas = await pedir(200); } catch (e) { i.textContent = "No he podido cargar el muro ahora mismo."; return; }
-    g.textContent = "";
+    g.querySelectorAll(".postit:not(.nuevo)").forEach((n) => n.remove());
     filas.forEach((r) => g.appendChild(nota(r, true)));
     i.textContent = filas.length ? filas.length + (filas.length === 1 ? " post-it dejado por visitantes." : " post-its dejados por visitantes.") : "Todavía no hay ninguno. Deja el primero.";
   };
-  // al abrir el muro se refresca
-  const refrescarAlAbrir = new MutationObserver(() => { if (w.classList.contains("open")) pintarMuro(); });
-  refrescarAlAbrir.observe(w, { attributes: true, attributeFilter: ["class"] });
+  document.getElementById("muro-nuevo").addEventListener("click", () => abrirEditor(document.getElementById("muro-grid"), null));
+  new MutationObserver(() => { if (w.classList.contains("open")) pintarMuro(); }).observe(w, { attributes: true, attributeFilter: ["class"] });
 
-  // ---- Icono en el escritorio
-  const ic = makeIcon("postit-nuevo", "Dejar un post-it", ICON, Math.max(120, window.innerWidth - 120) - 96, 40);
-  window.__postits = { pintarEscritorio, pintarMuro };
+  // ---- Entrada del menú: en escritorio abre el post-it en blanco; en móvil, el Muro
+  const nueva = () => {
+    if (grande()) { if (!editor) { const cs = celdas(); abrirEditor(null, cs[0]); } if (editor) { const t = editor.querySelector("textarea"); if (t) t.focus(); } }
+    else { openWindow("muro"); setTimeout(() => abrirEditor(document.getElementById("muro-grid"), null), 150); }
+  };
+  let tmr; window.addEventListener("resize", () => { clearTimeout(tmr); tmr = setTimeout(() => { if (!editor) pintarEscritorio(); }, 250); });
+  window.__postits = { pintarEscritorio, pintarMuro, nueva };
   pintarEscritorio();
 })();
 
@@ -1346,7 +1385,7 @@ desktop.addEventListener("mousedown", (e) => {
       { l: "Acerca de este escritorio…", f: () => openWindow("case-portfolio") },
       { l: "Léeme primero", f: () => openWindow("leeme") },
       "-",
-      { l: "Dejar un post-it…", f: () => openWindow("postit-nuevo") },
+      { l: "Dejar un post-it…", f: () => window.__postits.nueva() },
       { l: "Ver la bienvenida otra vez", f: () => window.showWelcome() },
     ],
     archivo: [
