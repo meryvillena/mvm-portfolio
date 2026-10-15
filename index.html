@@ -330,6 +330,7 @@ const TAGS = {
   real:       { label: "real",       bg: "#d6f0d3", bd: "#2f7a2b" },
   spec:       { label: "spec",       bg: "#d9e6fb", bd: "#3f6fbf" },
   concepto:   { label: "concepto",   bg: "#fbeecb", bd: "#a9791a" },
+  propio:     { label: "propio",     bg: "#e6defa", bd: "#6b55b8" },
   showcase:   { label: "showcase",   bg: "#f7d9e0", bd: "#bf5a72" },
   "en uso":   { label: "en uso",     bg: "#cdeccb", bd: "#2f7a2b" },
   "en curso": { label: "en curso",   bg: "#eeeeee", bd: "#777777" },
@@ -396,6 +397,7 @@ const DESKTOP = [
     intro: "Conceptos de UI y producto que exploro por mi cuenta.",
     cards: [
       { kind: "project", title: "Spotify Now Playing", tag: "concepto", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" alt="Clubs cerca de ti en Spotify Now Playing">' },
+      { kind: "project", title: "Respira", tag: "propio", desc: "App de respiración guiada, gratuita y sin cuenta. Una luna que respira contigo.", caseStudy: "case-respira", thumb: '<img src="respira/case/miniatura.jpg" alt="La luna de Respira">' },
     ],
   },
   {
@@ -787,6 +789,68 @@ function caseSpotifyHtml() {
     </div>`;
 }
 (function(){ var w = makeWindow("case-spotify", "Spotify Now Playing.doc", ICONS.doc, caseSpotifyHtml(), 130, 55, 680); if (w) w.classList.add("docwin"); })();
+
+// ===== CASE STUDY: Respira =====
+function caseRespiraHtml() {
+  const DEMO = "https://respira.mvmmaison.com/?demo", IMG = "respira/case/";
+  const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg" alt="' + alt + '" loading="lazy"><figcaption>' + pie + "</figcaption></figure>";
+  return `<div class="cs-toolbar">
+      <div class="cs-tfont">Chicago&nbsp;▾</div>
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Alinear izquierda">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centrar">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Alinear derecha">
+    </div>
+    <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
+    <div class="cs-paper">
+      <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir Respira →</a></div>
+      <h1>Respira</h1>
+      <p class="cs-sub">Una app de respiración guiada, gratuita y sin cuenta, para parar cinco minutos en mitad del día. La diseñé y la programé yo, y la regalo.</p>
+      <div class="cs-meta">Exploración de producto · propio&nbsp;&nbsp;·&nbsp;&nbsp;Octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
+
+      ${fig("01-portada", "Pantalla de inicio de Respira: una luna de color lavanda y tres accesos", "La pantalla de inicio: una luna y tres caminos.")}
+
+      <h2>Por qué la hice</h2>
+      <p>Todo va un poco más rápido, y la IA también ha acelerado mi forma de trabajar. Quería hacer algo que fuera lo contrario: abrir, respirar cinco minutos y cerrar.</p>
+      <p>Respira no pide cuenta, ni suscripción, ni lleva anuncios. Es además la forma más directa que tengo de enseñar cómo trabajo: un producto pequeño, terminado, que cualquiera puede abrir desde el móvil.</p>
+
+      <h2>Qué hace</h2>
+      <p>Tiene tres caminos desde el inicio:</p>
+      <ul class="cs-list">
+        <li><strong>¿Qué te pide el cuerpo?</strong> Dos preguntas y la app propone una respiración.</li>
+        <li><strong>Técnicas.</strong> Diez formas de respirar, cada una explicada paso a paso, con la duración que tú elijas.</li>
+        <li><strong>Tu cielo.</strong> Cada sesión enciende una estrella.</li>
+      </ul>
+      ${fig("02-test-ficha-sesion", "Tres pantallas: el test, la ficha de la técnica Suspiro y la sesión en marcha", "Del test a la sesión: elegir lo que necesitas, ajustar la duración y empezar.")}
+
+      <h2>Una luna en lugar de un cronómetro</h2>
+      <p>Durante la sesión casi no hay texto que leer. Una luna crece al inhalar y se encoge al soltar el aire, y debajo aparece una frase corta, como «Suelta por la boca».</p>
+      <p>En las técnicas que alternan fosas nasales, la pantalla muestra dos lunas. Al final, la luna vuelve a su sitio y la app dice «Vuelve despacio».</p>
+      ${fig("03-pausa-lunas-final", "Tres momentos de una sesión: pausa, dos lunas y cierre", "Pausa, dos lunas para alternar fosas nasales y el cierre.")}
+
+      <h2>Cómo se decidió</h2>
+      <p><strong>Quité los «viajes».</strong> La primera versión tenía recorridos temáticos. No les encontraba sentido y les faltaba trabajo de UX. La app se quedó con el test y las técnicas, y mejoró.</p>
+      <p><strong>Un solo color.</strong> Lavanda por defecto. Se cambia únicamente en Ajustes, para que la pantalla de respirar no compita con nada. No hay botón de play: se empieza tocando la luna.</p>
+      <p><strong>Las técnicas avanzadas están bloqueadas.</strong> El Viaje del Chamán y El Despertar de la Kundalini se abren con 3 y 6 horas de práctica acumulada. Al desbloquearlas, la app explica qué hacen y por qué pueden marear, y pide marcar una casilla antes de empezar.</p>
+      ${fig("04-avanzadas", "Lista de técnicas con las avanzadas bloqueadas, y la ficha de El Viaje del Chamán con su aviso", "Las avanzadas, con su progreso y su aviso de seguridad.")}
+      <p><strong>Tu cielo es mi respuesta al scroll.</strong> Quería competir con Instagram con una gamificación suave. Cada respiración añade una estrella y las estrellas acaban formando constelaciones. Todo se guarda solo en el dispositivo.</p>
+      ${fig("05-tu-cielo", "Pantalla de cierre de sesión, pantalla de Tu cielo y pantalla de inicio con constelaciones", "Cada sesión enciende una estrella nueva.")}
+
+      <h2>Cómo está hecha</h2>
+      <p>Es una sola página HTML, CSS y JavaScript, sin servidor ni base de datos. La luna se dibuja en el navegador y los datos de Tu cielo se quedan en el móvil de quien la usa. Se puede compartir con un enlace y, en los móviles que lo permiten, instalar.</p>
+
+      <h2>Pruébala</h2>
+      <p>Ábrela desde el móvil si puedes. Con tres minutos te da tiempo a hacer una sesión.</p>
+      <p>Si quieres algo parecido a medida, para tu negocio o para ti, cuéntamelo.</p>
+
+      <div class="cs-cta-row bottom"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir Respira →</a></div>
+    </div>`;
+}
+(function(){ var w = makeWindow("case-respira", "Respira.doc", ICONS.doc, caseRespiraHtml(), 170, 75, 680); if (w) w.classList.add("docwin"); })();
 
 // ===== CASE STUDY: Evolución del depredador (plantilla, en construcción) =====
 function caseDepredadorHtml() {
