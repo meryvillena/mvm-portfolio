@@ -1157,8 +1157,8 @@ function attachContact(s) {
     if (email && email.includes("@")) {
       const msg = (document.getElementById("contact-msg" + s) || {}).value || "";
       const cuerpo = (msg ? msg + "\n\n" : "") + "Mi correo: " + email;
-      window.location.href = "mailto:meryvillena@gmail.com?subject=" + encodeURIComponent("Contacto desde el portfolio") + "&body=" + encodeURIComponent(cuerpo);
-      document.getElementById("contact-body" + s).innerHTML = '<p class="thanks">Se ha abierto tu programa de correo con el mensaje listo: pulsa Enviar allí. Si no se abre, escríbeme a <a href="mailto:meryvillena@gmail.com">meryvillena@gmail.com</a>. ✦</p>';
+      window.open("mailto:meryvillena@gmail.com?subject=" + encodeURIComponent("Contacto desde el portfolio") + "&body=" + encodeURIComponent(cuerpo), "_blank");
+      document.getElementById("contact-body" + s).innerHTML = '<p class="thanks">He abierto tu correo en otra pestaña con el mensaje ya escrito: pulsa Enviar allí y me llegará. Si no se abre, escríbeme a <a href="mailto:meryvillena@gmail.com">meryvillena@gmail.com</a>. ✦</p>';
     }
   });
 }
