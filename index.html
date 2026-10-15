@@ -482,6 +482,7 @@ function aboutHtml() {
     "<p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar o Lancôme. Desde 2018 trabajo en la gestión de varios restaurantes McDonald’s, coordinando proveedores, procesos internos, administración y acciones de marketing local.</p>" +
     "<p>Ahora diseño y desarrollo productos digitales con IA. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas que sean útiles, fáciles de usar y visualmente atractivas.</p>" +
     '<div class="chips"><span>8 años en operaciones</span><span>no-code</span><span>diseño</span></div>' +
+    '<p><a class="btn" href="cv/index.html" target="_blank" rel="noopener">Ver mi CV →</a></p>' +
     '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>";
 }
 
@@ -1082,7 +1083,7 @@ desktop.addEventListener("mousedown", (e) => {
       });
       h += "</section>";
     } else if (item.id === "sobremi") {
-      h += "<section><h2>Sobre mí</h2><p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño y desarrollo productos digitales con IA.</p>";
+      h += "<section><h2>Sobre mí</h2><p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño y desarrollo productos digitales con IA.</p><p><a class=\"btn\" href=\"cv/index.html\" target=\"_blank\" rel=\"noopener\">Ver mi CV →</a></p>";
       const n = NESTED["trabajo-grafico"];
       h += '<div class="m-sub">' + n.title + "</div>";
       n.cards.forEach((cc) => { h += mCard(cc); });
