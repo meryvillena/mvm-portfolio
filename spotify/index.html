@@ -704,7 +704,7 @@ body{
           <div class="panel">
             <div class="ph">Sonando ahora <span class="live-tag"><span class="live-dot"></span>EN DIRECTO</span></div>
             <div class="now-live">
-              <div class="nart art" style="background:linear-gradient(135deg,#a855f7,#4c1d95)"><img referrerpolicy="no-referrer" onerror="this.remove()" src="fotos/club-2.jpg"></div>
+              <div class="nart art" style="background:linear-gradient(135deg,#a855f7,#4c1d95)"><img referrerpolicy="no-referrer" onerror="this.remove()" src="portadas/bicep-opal.jpg"></div>
               <div>
                 <div class="eyebrow"><span class="eq"><i></i><i></i><i></i><i></i></span> SPOTIFY CONNECT</div>
                 <h3>Opal</h3>
@@ -821,6 +821,9 @@ const VENUES = [
 const NOTE = '<svg class="note" width="30" height="30" viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg>';
 /* fotos de stock reales por palabra clave (deterministas con lock); si fallan, queda el gradiente */
 // Fotos locales (Pexels, licencia libre) en spotify/fotos/: 6 por tema. El tema sale de las palabras clave y la foto de la semilla.
+// Portadas reales de las canciones (buscador oficial de Apple/iTunes, 300 px) en spotify/portadas/. Si no hay, foto de Pexels.
+const COVERS={'Bizarre Love Triangle|New Order':'new-order-bizarre-love-triangle','Chameleon|Herbie Hancock':'herbie-hancock-chameleon','Gabriel|Roy Davis Jr.':'roy-davis-jr-gabriel','Glue|Bicep':'bicep-glue','La Gozadera|Gente de Zona':'gente-de-zona-la-gozadera','Losing It|FISHER':'fisher-losing-it','One More Time|Daft Punk':'daft-punk-one-more-time','Opal|Bicep':'bicep-opal','Percolator|Cajmere':'cajmere-percolator','Song 2|Blur':'blur-song-2','This Charming Man|The Smiths':'the-smiths-this-charming-man','Your Love|Frankie Knuckles':'frankie-knuckles-your-love'};
+function cover(x){const c=COVERS[x.t+'|'+x.a];return c?`portadas/${c}.jpg`:pic(x.kw,x.seed)}
 function pic(kw,seed){const k=String(kw);const t=/portrait|musician/.test(k)?'retrato':/neon|synth|robot/.test(k)?'neon':/jazz|piano|bar/.test(k)?'jazz':/headphones|vinyl|record/.test(k)?'cascos':/nightclub|dj|dance|party/.test(k)?'club':'directo';return `fotos/${t}-${(Math.abs(Math.floor(Number(seed))||0)%6)+1}.jpg`}
 function artImg(url){return url?`<img loading="lazy" referrerpolicy="no-referrer" onerror="var m=this.dataset.t?null:(this.src.match(/lock=(\\d+)/)||[]);this.dataset.t=1;if(m&&m[1]){this.src='https://picsum.photos/seed/snp'+m[1]+'/400'}else{this.remove()}" src="${url}">`:NOTE}
 function matchColor(m){return m>=80?'var(--green)':m>=60?'var(--amber)':'var(--red)'}
@@ -1040,7 +1043,7 @@ const TOPTRACKS=[
 document.getElementById('topTracks').innerHTML=TOPTRACKS.map(function(t,i){
   return '<div class="tt-row'+(i===0?' top':'')+'">'
     +'<span class="tt-pos">'+(i+1)+'</span>'
-    +artDiv(ART.opal,'tt-art','',pic(t.kw,t.seed,120))
+    +artDiv(ART.opal,'tt-art','',cover(t))
     +'<div class="tt-meta"><h5>'+t.t+'</h5><p>'+t.a+' · pinchada por '+t.by+'</p></div>'
     +'<span class="tt-metric">'+t.n+' guardados</span></div>';
 }).join('');
@@ -1053,7 +1056,7 @@ const SALA_QUEUE=[
 ];
 function salaRowHtml(s,i,vetoed){
   return '<div class="tt-row'+(vetoed?' vetoed':'')+'" data-i="'+i+'">'
-    +artDiv(ART.opal,'tt-art','',pic(s.kw,s.seed,120))
+    +artDiv(ART.opal,'tt-art','',cover(s))
     +'<div class="tt-meta"><h5>'+s.t+'</h5><p>'+s.a+' · por '+s.by+'</p></div>'
     +(vetoed?'<span class="veto-tag">VETADA HASTA EL CIERRE</span>':'<button class="cola-x" title="Quitar de la cola" onclick="salaRemove('+i+')">✕</button>')
     +'</div>';
