@@ -596,7 +596,7 @@ body{
         <div class="tk">
           <button class="tk-back" onclick="back()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2.4"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Volver</button>
           <div class="tk-hero">
-            <div class="top" style="background:linear-gradient(120deg,rgba(123,47,247,.72),rgba(241,7,163,.72) 70%),url('https://loremflickr.com/700/400/nightclub,dj?lock=201') center/cover">
+            <div class="top" style="background:linear-gradient(120deg,rgba(123,47,247,.72),rgba(241,7,163,.72) 70%),url('fotos/club-1.jpg') center/cover">
               <svg class="note" width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,.9)"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg>
               <h2>Noche Techno<br>Sala Bardot</h2>
             </div>
@@ -704,7 +704,7 @@ body{
           <div class="panel">
             <div class="ph">Sonando ahora <span class="live-tag"><span class="live-dot"></span>EN DIRECTO</span></div>
             <div class="now-live">
-              <div class="nart art" style="background:linear-gradient(135deg,#a855f7,#4c1d95)"><img referrerpolicy="no-referrer" onerror="this.remove()" src="https://loremflickr.com/200/200/nightclub,dj?lock=101"></div>
+              <div class="nart art" style="background:linear-gradient(135deg,#a855f7,#4c1d95)"><img referrerpolicy="no-referrer" onerror="this.remove()" src="fotos/club-2.jpg"></div>
               <div>
                 <div class="eyebrow"><span class="eq"><i></i><i></i><i></i><i></i></span> SPOTIFY CONNECT</div>
                 <h3>Opal</h3>
@@ -820,7 +820,8 @@ const VENUES = [
 ];
 const NOTE = '<svg class="note" width="30" height="30" viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg>';
 /* fotos de stock reales por palabra clave (deterministas con lock); si fallan, queda el gradiente */
-function pic(kw,seed,size){size=size||500;return `https://loremflickr.com/${size}/${size}/${kw}?lock=${seed}`}
+// Fotos locales (Pexels, licencia libre) en spotify/fotos/: 6 por tema. El tema sale de las palabras clave y la foto de la semilla.
+function pic(kw,seed){const k=String(kw);const t=/portrait|musician/.test(k)?'retrato':/neon|synth|robot/.test(k)?'neon':/jazz|piano|bar/.test(k)?'jazz':/headphones|vinyl|record/.test(k)?'cascos':/nightclub|dj|dance|party/.test(k)?'club':'directo';return `fotos/${t}-${(Math.abs(Math.floor(Number(seed))||0)%6)+1}.jpg`}
 function artImg(url){return url?`<img loading="lazy" referrerpolicy="no-referrer" onerror="var m=this.dataset.t?null:(this.src.match(/lock=(\\d+)/)||[]);this.dataset.t=1;if(m&&m[1]){this.src='https://picsum.photos/seed/snp'+m[1]+'/400'}else{this.remove()}" src="${url}">`:NOTE}
 function matchColor(m){return m>=80?'var(--green)':m>=60?'var(--amber)':'var(--red)'}
 function artDiv(bg,cls,extra,url){return `<div class="art ${cls||''}" style="background:${bg};${extra||''}">${artImg(url)}</div>`}
