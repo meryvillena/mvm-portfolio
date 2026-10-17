@@ -13,6 +13,7 @@
     background: #fff;
     -webkit-font-smoothing: antialiased;
   }
+  :where(img[width][height]) { height: auto; }
   .visually-hidden {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
@@ -301,10 +302,10 @@
   .cs-mk { position: absolute; top: 4px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid #333; }
   .cs-mk.l { left: 40px; } .cs-mk.r { right: 40px; }
   .cs-paper { background: #f7f4ea; padding: 28px 44px 40px; overflow-y: auto; flex: 1; min-height: 0; max-height: 72vh; color: #1c1a17; }
-  .cs-paper h1 { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 23px; line-height: 1.25; margin: 0 0 6px; }
+  .cs-paper .cs-title { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 23px; line-height: 1.25; margin: 0 0 6px; }
   .cs-sub { font-size: 15px; font-style: italic; color: #5a534a; margin: 0 0 14px; }
   .cs-meta { font-family: "MonacoCS","Courier New",monospace; font-size: 11px; color: #6a6258; line-height: 1.7; border-top: 1px solid #d8d0c0; border-bottom: 1px solid #d8d0c0; padding: 9px 0; margin: 0 0 24px; }
-  .cs-paper h2 { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 16px; margin: 30px 0 11px; color: #17140f; padding-top: 20px; border-top: 1px solid #e3dccb; }
+  .cs-paper h3 { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 16px; margin: 30px 0 11px; color: #17140f; padding-top: 20px; border-top: 1px solid #e3dccb; }
   .cs-paper p { font-size: 14px; line-height: 1.72; margin: 0 0 14px; }
   .cs-paper strong { color: #000; }
   .cs-cover { height: 210px; margin: 0 0 24px; border: 1px solid #cbc3b2; background: repeating-linear-gradient(45deg,#efe9db,#efe9db 10px,#e7e0cf 10px,#e7e0cf 20px); display: flex; align-items: center; justify-content: center; font-family: "MonacoCS",monospace; font-size: 12px; color: #9a917f; }
@@ -354,12 +355,12 @@
   </div>
   <div class="content">
     <h2 id="welcome-title">Hola, soy Mery ✦</h2>
-    <p class="w-lead">Diseño, monto y opero: hago que los negocios pequeños se vean bien <strong>y</strong> funcionen por dentro.</p>
+    <p class="w-lead">Diseño, construyo y pongo en marcha productos digitales para negocios pequeños: desde lo que ve el cliente hasta lo que necesita el equipo para trabajar.</p>
     <p class="w-small">Este es mi escritorio, inspirado en la interfaz de los Mac de los 90. Abre las carpetas para explorar mis proyectos. Si no sabes por dónde empezar, te recomiendo estos tres:</p>
     <div class="w-feat">
-      <button type="button" data-open="case-puti"><img src="putidimadre/case/miniatura.jpg" alt=""><span>Puti Di Madre<br>Una pizzería que le gana margen a las apps</span></button>
-      <button type="button" data-open="case-presupuestos"><img src="generador-de-presupuestos/img/miniatura.jpg" alt=""><span>Presupuestar sin echar la tarde<br>De 1 hora a 10 minutos</span></button>
-      <button type="button" data-open="case-spotify"><img src="spotify/capturas/miniatura.jpg" alt=""><span>Spotify Now Playing<br>Descubre clubs por su música</span></button>
+      <button type="button" data-open="case-puti"><img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt=""><span>Puti Di Madre<br>Una pizzería que le gana margen a las apps</span></button>
+      <button type="button" data-open="case-presupuestos"><img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt=""><span>Presupuestar sin echar la tarde<br>De 1 hora a 10 minutos</span></button>
+      <button type="button" data-open="case-spotify"><img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt=""><span>Spotify Now Playing<br>Descubre clubs por su música</span></button>
     </div>
     <div class="w-actions"><button class="btn" id="welcome-ok">Explorar el escritorio →</button></div>
   </div>
@@ -447,10 +448,10 @@ const DESKTOP = [
   },
   {
     id: "soluciones", kind: "folder", icon: ICONS.directory, title: "Soluciones de negocio", color: "#7fbf7a",
-    intro: "Identidades y webs que captan clientes de verdad.",
+    intro: "Identidades y webs que captan clientes.",
     cards: [
-      { kind: "project", title: "Shiatsu ★", tag: "real", desc: "Identidad real + web spec para un servicio de shiatsu.", href: "wellness/index.html", thumb: '<img src="wellness/case/miniatura.jpg" alt="Web de Eme Pérez, shiatsu">' },
-      { kind: "project", title: "Puti Di Madre", tag: "spec", desc: "Pizzería de barrio, solo recogida: recuperar el margen que se llevan las apps de reparto.", caseStudy: "case-puti", thumb: '<img src="putidimadre/case/miniatura.jpg" alt="Portada de la web de Puti Di Madre">' },
+      { kind: "project", title: "Shiatsu ★", tag: "real", desc: "Identidad real + web spec para un servicio de shiatsu.", href: "wellness/index.html", thumb: '<img src="wellness/case/miniatura.jpg" width="640" height="400" alt="Web de Eme Pérez, shiatsu" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Puti Di Madre", tag: "spec", desc: "Pizzería de barrio, solo recogida: recuperar el margen que se llevan las apps de reparto.", caseStudy: "case-puti", thumb: '<img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt="Portada de la web de Puti Di Madre" loading="lazy" decoding="async">' },
       { kind: "project", title: "La Mezcaloteca", tag: "spec", desc: "Rediseño para convertir: web + email marketing.", href: null, pausa: true },
     ],
   },
@@ -458,7 +459,7 @@ const DESKTOP = [
     id: "herramientas", kind: "folder", icon: ICONS.directory, title: "Herramientas y operaciones", color: "#8fb4ec",
     intro: "Apps no-code que usan equipos reales cada día.",
     cards: [
-      { kind: "project", title: "Presupuestar sin echar la tarde", tag: "en uso", desc: "Del PDF del fabricante al presupuesto del cliente, de cerca de una hora a unos 10 minutos.", caseStudy: "case-presupuestos", thumb: '<img src="generador-de-presupuestos/img/miniatura.jpg" alt="El presupuesto de Luz Norte en la herramienta">' },
+      { kind: "project", title: "Presupuestar sin echar la tarde", tag: "en uso", desc: "Del PDF del fabricante al presupuesto del cliente, de cerca de una hora a unos 10 minutos.", caseStudy: "case-presupuestos", thumb: '<img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt="El presupuesto de Luz Norte en la herramienta" loading="lazy" decoding="async">' },
       { kind: "project", title: "Gestión de grupos", tag: "en uso", desc: "Herramienta no-code para restaurantes y eventos.", href: null, pausa: true },
       { kind: "project", title: "Gestión de delivery", tag: "en curso", desc: "Control de incidencias y facturación para restaurantes.", href: null, pausa: true },
     ],
@@ -467,17 +468,17 @@ const DESKTOP = [
     id: "exploracion", kind: "folder", icon: ICONS.directory, title: "Exploración de producto", color: "#f0c766",
     intro: "Conceptos de UI y producto que exploro por mi cuenta.",
     cards: [
-      { kind: "project", title: "Spotify Now Playing", tag: "concepto", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" alt="Clubs cerca de ti en Spotify Now Playing">' },
-      { kind: "project", title: "Respira", tag: "propio", desc: "App de respiración guiada, gratuita y sin cuenta. Una luna que respira contigo.", caseStudy: "case-respira", thumb: '<img src="respira/case/miniatura.jpg" alt="La luna de Respira">' },
+      { kind: "project", title: "Spotify Now Playing", tag: "concepto", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt="Clubs cerca de ti en Spotify Now Playing" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Respira", tag: "propio", desc: "App de respiración guiada, gratuita y sin cuenta. Una luna que respira contigo.", caseStudy: "case-respira", thumb: '<img src="respira/case/miniatura.jpg" width="600" height="200" alt="La luna de Respira" loading="lazy" decoding="async">' },
     ],
   },
   {
     id: "vozvisual", kind: "folder", icon: ICONS.directory, title: "Voz visual", color: "#eba0ac",
     intro: "Lo más personal: la parte que da personalidad a todo lo demás.",
     cards: [
-      { kind: "project", title: "Evolución del depredador", tag: "showcase", desc: "Scrollytelling true-crime.", caseStudy: "case-depredador", thumb: '<img src="depredador/case/miniatura.jpg" alt="Portada de Evolución del depredador">' },
-      { kind: "project", title: "Mesa de lectura", tag: "concepto", desc: "Prototipo de gesto: barajar cartas con física, antes que la imagen.", href: "mesa-de-lectura/index.html", thumb: '<img src="mesa-de-lectura/case/miniatura.jpg" alt="Mesa de lectura, tarot con física">' },
-      { kind: "project", title: "Este escritorio", tag: "showcase", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" alt="El escritorio de este portfolio">' },
+      { kind: "project", title: "Evolución del depredador", tag: "showcase", desc: "Scrollytelling true-crime.", caseStudy: "case-depredador", thumb: '<img src="depredador/case/miniatura.jpg" width="640" height="400" alt="Portada de Evolución del depredador" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Mesa de lectura", tag: "concepto", desc: "Prototipo de gesto: barajar cartas con física, antes que la imagen.", href: "mesa-de-lectura/index.html", thumb: '<img src="mesa-de-lectura/case/miniatura.jpg" width="640" height="400" alt="Mesa de lectura, tarot con física" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Este escritorio", tag: "showcase", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" width="640" height="400" alt="El escritorio de este portfolio" loading="lazy" decoding="async">' },
       { kind: "folder", ref: "personal-arte", title: "Personal · Arte", desc: "Collages, calendario y experimentos." },
     ],
   },
@@ -513,6 +514,13 @@ function isEmptyFolder(ref) {
   return !!(f && f.cards && f.cards.length && f.cards.every(isEmptyCard));
 }
 
+// Tamaño real de las imágenes: el navegador reserva el hueco y la página no «salta» al cargar
+const IMGDIM = {"depredador/case/miniatura.jpg":[640,400],"este-escritorio/miniatura.jpg":[640,400],"este-escritorio/portada.jpg":[1400,946],"generador-de-presupuestos/img/02-antes-original-korvel.jpg":[1600,1000],"generador-de-presupuestos/img/03-despues-luz-norte.jpg":[1600,1000],"generador-de-presupuestos/img/08-pdf-generado.jpg":[1600,1000],"generador-de-presupuestos/img/09-copia-excel.jpg":[1600,1000],"generador-de-presupuestos/img/12-recorrido-margen.jpg":[1600,1000],"generador-de-presupuestos/img/miniatura.jpg":[640,400],"mesa-de-lectura/case/miniatura.jpg":[640,400],"respira/case/01-portada.jpg":[1600,1000],"respira/case/02-test-ficha-sesion.jpg":[1600,1124],"respira/case/03-pausa-lunas-final.jpg":[1600,1124],"respira/case/04-avanzadas.jpg":[1600,1124],"respira/case/05-tu-cielo.jpg":[1600,1124],"respira/case/miniatura.jpg":[600,200],"spotify/capturas/00-portada.jpg":[1600,1000],"spotify/capturas/01-inicio.jpg":[600,1298],"spotify/capturas/04-unirse-jam.jpg":[600,1298],"spotify/capturas/06-panel-local.jpg":[1300,1460],"spotify/capturas/miniatura.jpg":[390,500],"wellness/case/miniatura.jpg":[640,400],"putidimadre/case/miniatura.jpg":[480,300],"putidimadre/case/01-web.jpg":[1400,996],"putidimadre/case/02-panel.jpg":[1400,1000],"putidimadre/case/03-franjas-punta.jpg":[860,1560],"putidimadre/case/04-franjas-valle.jpg":[860,1559],"putidimadre/case/05-confirmacion.jpg":[860,1560],"putidimadre/case/06-seguimiento.jpg":[860,1560]};
+function imgDim(src) { const d = IMGDIM[src]; return d ? ' width="' + d[0] + '" height="' + d[1] + '"' : ""; }
+
+// Nombre accesible propio para cada «Abrir proyecto →» (si no, un lector oye 10 botones iguales)
+function labelAbrir(card) { return ' aria-label="Abrir proyecto ' + String(card.title).replace(/[★"<>&]/g, "").trim() + '"'; }
+
 function cardHtml(card) {
   if (card.kind === "folder" && isEmptyFolder(card.ref)) {
     return '<article class="case-card">' +
@@ -533,9 +541,9 @@ function cardHtml(card) {
       "</div></article>";
   }
   const btn = card.caseStudy
-    ? '<button class="btn" onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>'
+    ? '<button class="btn"' + labelAbrir(card) + ' onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>'
     : card.href
-    ? '<a class="btn" href="' + card.href + '">Abrir proyecto →</a>'
+    ? '<a class="btn"' + labelAbrir(card) + ' href="' + card.href + '">Abrir proyecto →</a>'
     : '<span class="btn disabled">' + (card.disabledLabel || (card.pausa ? "En construcción" : "Próximamente")) + "</span>";
   return '<article class="case-card">' +
     (card.thumb ? '<div class="thumb">' + card.thumb + "</div>" : buildThumb(card)) +
@@ -603,10 +611,10 @@ function makeIcon(id, label, iconSrc, x, y) {
   el.innerHTML = '<img src="' + iconSrc + '" alt=""><span>' + label + "</span>";
   desktop.appendChild(el);
 
-  let dragging = false, moved = false, offX = 0, offY = 0;
+  let dragging = false, moved = false, offX = 0, offY = 0, downX = 0, downY = 0;
   el.addEventListener("mousedown", (e) => {
     e.stopPropagation();
-    dragging = true; moved = false;
+    dragging = true; moved = false; downX = e.clientX; downY = e.clientY;
     const r = el.getBoundingClientRect();
     offX = e.clientX - r.left; offY = e.clientY - r.top;
     el.classList.add("selected");
@@ -614,6 +622,8 @@ function makeIcon(id, label, iconSrc, x, y) {
   });
   document.addEventListener("mousemove", (e) => {
     if (!dragging) return;
+    // Un temblor de ratón de pocos píxeles sigue siendo un clic, no un arrastre
+    if (!moved && Math.abs(e.clientX - downX) < 5 && Math.abs(e.clientY - downY) < 5) return;
     moved = true; el.classList.add("dragging");
     el.style.left = (e.clientX - offX) + "px";
     el.style.top = (e.clientY - offY - 22) + "px";
@@ -638,10 +648,13 @@ function makeIcon(id, label, iconSrc, x, y) {
       }
     }
   });
-  el.addEventListener("dblclick", (e) => { e.stopPropagation(); openWindow(id); });
-  // Accesibilidad: Enter/Espacio abren el elemento
-  el.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openWindow(id); }
+  // Un clic abre (y el doble clic también, porque abrir es idempotente).
+  // Enter y Espacio disparan "click" en un <button>. Si el clic viene de soltar
+  // un arrastre, no abre nada.
+  el.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (moved) { moved = false; return; }
+    openWindow(id, el);
   });
 
   // ---- Soporte táctil (móvil): tocar abre; arrastrar rebota (comeback);
@@ -664,7 +677,7 @@ function makeIcon(id, label, iconSrc, x, y) {
   el.addEventListener("touchend", (e) => {
     if (!tDragging) return;
     tDragging = false; el.classList.remove("dragging");
-    if (!tMoved) { el.style.transform = ""; el.style.transition = ""; openWindow(id); return; }
+    if (!tMoved) { el.style.transform = ""; el.style.transition = ""; openWindow(id, el); return; }
     const t = e.changedTouches[0];
     const trIcon = document.querySelector('.icon[data-id="trash"]');
     let thrown = false;
@@ -728,11 +741,11 @@ function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
   const el = document.createElement("div");
   el.className = "window"; el.id = "win-" + id;
   el.style.left = x + "px"; el.style.top = y + "px"; el.style.width = (w || 380) + "px";
-  el.setAttribute("role", "dialog"); el.setAttribute("aria-label", title);
+  el.setAttribute("role", "dialog"); el.setAttribute("aria-labelledby", "wt-" + id);
   el.innerHTML =
     '<div class="titlebar">' +
-      '<div class="box close" role="button" tabindex="0" aria-label="Cerrar">×</div>' +
-      '<div class="title">' + (iconSrc ? '<img src="' + iconSrc + '" style="height:12px;vertical-align:-2px;margin-right:4px;" alt="">' : "") + title + "</div>" +
+      '<div class="box close" role="button" tabindex="0" aria-label="Cerrar ' + title.replace(/"/g, "&quot;") + '">×</div>' +
+      '<div class="title" id="wt-' + id + '">' + (iconSrc ? '<img src="' + iconSrc + '" style="height:12px;vertical-align:-2px;margin-right:4px;" alt="">' : "") + title + "</div>" +
       '<div class="box zoom" aria-hidden="true"></div>' +
     "</div>" +
     '<div class="content">' + contentHtml + "</div>";
@@ -743,7 +756,13 @@ function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
     if (e) e.stopPropagation();
     el.classList.add("closing");
     setTimeout(() => { if (el.classList.contains("closing")) el.classList.remove("open", "closing"); }, 150);
+    // Devolver el foco a quien abrió la ventana (si sigue ahí y se ve)
+    const op = openers[id];
+    if (op && document.body.contains(op) && op.offsetParent !== null) op.focus();
+    delete openers[id];
   };
+  el._close = doClose;
+  el.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.stopPropagation(); doClose(e); } });
   closeBtn.addEventListener("click", doClose);
   closeBtn.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); doClose(e); } });
 
@@ -767,17 +786,39 @@ function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
   return el;
 }
 
+// Escape cierra la ventana que está al frente (salvo que haya un menú o la bienvenida abiertos: ellos cierran lo suyo primero)
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape" || e.defaultPrevented) return;
+  if (document.querySelector("#welcome.show") || document.querySelector('#menubar [aria-expanded="true"]')) return;
+  const w = document.querySelector(".window.open.focused:not(.closing)");
+  if (w && w._close) w._close(e);
+});
+
 function focusWindow(id) {
   const el = document.getElementById("win-" + id); if (!el) return;
   document.querySelectorAll(".window").forEach((w) => w.classList.remove("focused"));
   el.classList.add("focused"); el.style.zIndex = ++zTop;
 }
 
-function openWindow(id) {
+const openers = {};
+// ¿La última interacción fue con el teclado? Solo entonces movemos el foco dentro de la ventana
+// (con ratón o dedo no hace falta y se vería un aro azul de foco sin motivo).
+let usandoTeclado = false;
+document.addEventListener("keydown", () => { usandoTeclado = true; }, true);
+["mousedown", "touchstart", "pointerdown"].forEach((ev) => document.addEventListener(ev, () => { usandoTeclado = false; }, true));
+function openWindow(id, opener) {
   const el = document.getElementById("win-" + id);
   if (!el) return;
+  const yaAbierta = el.classList.contains("open") && !el.classList.contains("closing");
   el.classList.remove("closing");
   el.classList.add("open"); focusWindow(id);
+  if (!yaAbierta) {
+    const from = opener || document.activeElement;
+    if (from && from !== document.body) openers[id] = from;
+  }
+  // Llevar el foco al botón de cerrar de la ventana (solo si el teclado está en juego)
+  const cb = el.querySelector(".close");
+  if (cb && usandoTeclado) cb.focus({ preventScroll: true });
 }
 
 /* ============================================================
@@ -827,35 +868,35 @@ function caseSpotifyHtml() {
     <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
     <div class="cs-paper">
       <div class="cs-cta-row"><a class="btn" href="spotify/index.html" target="_blank" rel="noopener">Ver la maqueta en vivo →</a></div>
-      <h1>Spotify Now Playing</h1>
+      <h2 class="cs-title">Spotify Now Playing</h2>
       <p class="cs-sub">Descubre clubs por su música en tiempo real</p>
       <div class="cs-meta">Exploración de producto&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;Figma · Spotify API · Prototipo interactivo</div>
-      <figure class="cs-fig"><img src="spotify/capturas/00-portada.jpg" alt="Tres pantallas de la demo: clubs cerca de ti, ficha de Sala Bardot y cola compartida" loading="lazy"><figcaption>Clubs cerca de ti con su % Match, la ficha del club y la cola compartida dentro de la sala.</figcaption></figure>
+      <figure class="cs-fig"><img src="spotify/capturas/00-portada.jpg" width="1600" height="1000" alt="Tres pantallas de la demo: clubs cerca de ti, ficha de Sala Bardot y cola compartida" loading="lazy"><figcaption>Clubs cerca de ti con su % Match, la ficha del club y la cola compartida dentro de la sala.</figcaption></figure>
 
-      <h2>El insight</h2>
+      <h3>El insight</h3>
       <p>Cuando entras a un bar nuevo, lo primero que percibes —antes que la carta, la decoración o la gente— es la música. En tres segundos decides si ese sitio va contigo. Ninguna plataforma de descubrimiento captura eso: Google Maps, Instagram y Foursquare muestran datos fríos. <strong>La música es el indicador más honesto del ambiente de un local, y nadie lo está aprovechando digitalmente.</strong></p>
       <p>Este insight no viene de una tendencia de diseño. Viene de años trabajando en hostelería y gestión de operaciones, donde aprendí algo más: un hostelero no compra tecnología porque sea bonita — la compra si entiende en cinco minutos cómo le hace ganar o retener clientes.</p>
 
-      <h2>De jukebox a mapa: el pivot</h2>
+      <h3>De jukebox a mapa: el pivot</h3>
       <p>La idea original era una jukebox social: un tótem en el bar donde los clientes ponen música de forma colectiva pagando una microtarifa. El valor era la retención — nadie se va del bar si su canción suena en 10 minutos.</p>
       <p>Antes de seguir diseñando, analicé la viabilidad y encontré tres barreras estructurales: el hardware exige una red de <em>field service</em> que Spotify no tiene ni quiere (descontinuó el Car Thing en 2022), las licencias de streaming personal no cubren la reproducción pública en locales, y una transacción de 0,10 € no soporta las comisiones de pasarela.</p>
       <p>Pero el problema de fondo era otro: <strong>la jukebox resuelve el problema del bar, no el del usuario. El usuario no quiere poner una canción — quiere encontrar un sitio donde quiera estar.</strong> Ese insight fue el pivot.</p>
 
-      <h2>La solución</h2>
+      <h3>La solución</h3>
       <p>Una pestaña nativa en Spotify con un mapa en tiempo real de los locales cercanos y lo que suena en cada uno. Dos modos del mismo producto:</p>
-      <div class="cs-pair"><figure class="cs-fig"><img src="spotify/capturas/01-inicio.jpg" alt="Pantalla de inicio de Spotify con la entrada a Clubs" loading="lazy"><figcaption>Entrada desde Inicio: «Clubs» es una pestaña más, no una app aparte.</figcaption></figure><figure class="cs-fig"><img src="spotify/capturas/04-unirse-jam.jpg" alt="Pantalla para unirse a la Jam del club" loading="lazy"><figcaption>Dentro del local: escaneas el QR y te unes a la Jam.</figcaption></figure></div>
+      <div class="cs-pair"><figure class="cs-fig"><img src="spotify/capturas/01-inicio.jpg" width="600" height="1298" alt="Pantalla de inicio de Spotify con la entrada a Clubs" loading="lazy"><figcaption>Entrada desde Inicio: «Clubs» es una pestaña más, no una app aparte.</figcaption></figure><figure class="cs-fig"><img src="spotify/capturas/04-unirse-jam.jpg" width="600" height="1298" alt="Pantalla para unirse a la Jam del club" loading="lazy"><figcaption>Dentro del local: escaneas el QR y te unes a la Jam.</figcaption></figure></div>
       <p><strong>Descubrimiento (antes de entrar).</strong> Cada local muestra la canción exacta que suena ahora, el historial de las últimas 2 horas y un <strong>% Match</strong> calculado cruzando tu historial de escucha con el hilo musical del bar. Eliges el club por su ambiente antes de cruzar la puerta.</p>
       <p><strong>Participación (ya dentro).</strong> Escaneas el QR del local y entras en la cola compartida: ves qué suena, qué viene después y quién lo pincha, y puedes añadir hasta 5 canciones tuyas — siempre dentro del ADN musical que el local permite.</p>
       <p><strong>Panel B2B (el local).</strong> El hostelero mantiene el control editorial: define los géneros permitidos, elimina o veta canciones de la cola y configura cada cuánto puede repetirse un tema. A cambio ve el ROI en directo: personas viendo su ficha, pulsaciones de «cómo llegar», match medio de quien está dentro y los temas que más han conectado esa noche.</p>
-      <figure class="cs-fig"><img src="spotify/capturas/06-panel-local.jpg" alt="Panel del local: género permitido, cola de la sala y repetición de temas" loading="lazy"><figcaption>El panel del local: ADN musical permitido, cola moderable, temas que más conectan y control de repetición.</figcaption></figure>
+      <figure class="cs-fig"><img src="spotify/capturas/06-panel-local.jpg" width="1300" height="1460" alt="Panel del local: género permitido, cola de la sala y repetición de temas" loading="lazy"><figcaption>El panel del local: ADN musical permitido, cola moderable, temas que más conectan y control de repetición.</figcaption></figure>
 
-      <h2>Decisiones de diseño clave</h2>
+      <h3>Decisiones de diseño clave</h3>
       <p><strong>Historial de 2 horas, no más.</strong> Suficiente para validar la línea editorial del local sin contaminar con el contexto de la tarde. Además demuestra consistencia: valida que el Match es estructural, no casual.</p>
       <p><strong>El pin del mapa codifica género, no distancia.</strong> El género es la variable de decisión; la distancia se infiere del propio mapa. Y el % Match va en el pin, no solo en la ficha: el usuario decide sin tener que abrir 14 locales.</p>
       <p><strong>El CTA principal es «guardar canción», no «comprar entrada».</strong> La conversión nocturna de tickets de 50 € es baja; el guardado es instantáneo, emocional y sin fricción. La entrada existe, pero como paso secundario.</p>
       <p><strong>No inventar infraestructura que ya existe.</strong> Spotify Connect para la reproducción, la cuenta de Spotify como autenticación, Apple Pay para pagos. No diseñé un producto nuevo: diseñé el tejido conectivo entre ecosistemas que ya tienen masa crítica.</p>
 
-      <h2>Modelo de negocio</h2>
+      <h3>Modelo de negocio</h3>
       <p>Tres fases: gratuito para locales con cuenta comercial (construir el efecto red), suscripción SaaS con perfil verificado y panel de analítica (el ROI visible justifica la cuota), y promoción premium segmentada por % Match (una sala puede destacar su sesión de house en el feed de usuarios cercanos que escuchan house). El activo real del modelo son <strong>los datos</strong>: qué se escucha en qué barrios, a qué hora y con qué correlación con asistencia a eventos — un <em>data layer</em> entre el ocio nocturno y la industria musical.</p>
 
       <div class="cs-cta-row bottom"><a class="btn" href="spotify/index.html" target="_blank" rel="noopener">Ver la maqueta en vivo →</a></div>
@@ -866,7 +907,7 @@ function caseSpotifyHtml() {
 // ===== CASE STUDY: Respira =====
 function caseRespiraHtml() {
   const DEMO = "https://respira.mvmmaison.com/?demo", IMG = "respira/case/";
-  const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg" alt="' + alt + '" loading="lazy"><figcaption>' + pie + "</figcaption></figure>";
+  const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg"' + imgDim(IMG + n + '.jpg') + ' alt="' + alt + '" loading="lazy" decoding="async"><figcaption>' + pie + "</figcaption></figure>";
   return `<div class="cs-toolbar">
       <div class="cs-tfont">Chicago&nbsp;▾</div>
       <div class="cs-sep"></div>
@@ -881,17 +922,17 @@ function caseRespiraHtml() {
     <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
     <div class="cs-paper">
       <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir Respira →</a></div>
-      <h1>Respira</h1>
+      <h2 class="cs-title">Respira</h2>
       <p class="cs-sub">Una app de respiración guiada, gratuita y sin cuenta, para parar cinco minutos en mitad del día. La diseñé y la programé yo, y la regalo.</p>
       <div class="cs-meta">Exploración de producto · propio&nbsp;&nbsp;·&nbsp;&nbsp;Octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
 
       ${fig("01-portada", "Pantalla de inicio de Respira: una luna de color lavanda y tres accesos", "La pantalla de inicio: una luna y tres caminos.")}
 
-      <h2>Por qué la hice</h2>
+      <h3>Por qué la hice</h3>
       <p>Todo va un poco más rápido, y la IA también ha acelerado mi forma de trabajar. Quería hacer algo que fuera lo contrario: abrir, respirar cinco minutos y cerrar.</p>
       <p>Respira no pide cuenta, ni suscripción, ni lleva anuncios. Es además la forma más directa que tengo de enseñar cómo trabajo: un producto pequeño, terminado, que cualquiera puede abrir desde el móvil.</p>
 
-      <h2>Qué hace</h2>
+      <h3>Qué hace</h3>
       <p>Tiene tres caminos desde el inicio:</p>
       <ul class="cs-list">
         <li><strong>¿Qué te pide el cuerpo?</strong> Dos preguntas y la app propone una respiración.</li>
@@ -900,12 +941,12 @@ function caseRespiraHtml() {
       </ul>
       ${fig("02-test-ficha-sesion", "Tres pantallas: el test, la ficha de la técnica Suspiro y la sesión en marcha", "Del test a la sesión: elegir lo que necesitas, ajustar la duración y empezar.")}
 
-      <h2>Una luna en lugar de un cronómetro</h2>
+      <h3>Una luna en lugar de un cronómetro</h3>
       <p>Durante la sesión casi no hay texto que leer. Una luna crece al inhalar y se encoge al soltar el aire, y debajo aparece una frase corta, como «Suelta por la boca».</p>
       <p>En las técnicas que alternan fosas nasales, la pantalla muestra dos lunas. Al final, la luna vuelve a su sitio y la app dice «Vuelve despacio».</p>
       ${fig("03-pausa-lunas-final", "Tres momentos de una sesión: pausa, dos lunas y cierre", "Pausa, dos lunas para alternar fosas nasales y el cierre.")}
 
-      <h2>Cómo se decidió</h2>
+      <h3>Cómo se decidió</h3>
       <p><strong>Quité los «viajes».</strong> La primera versión tenía recorridos temáticos. No les encontraba sentido y les faltaba trabajo de UX. La app se quedó con el test y las técnicas, y mejoró.</p>
       <p><strong>Un solo color.</strong> Lavanda por defecto. Se cambia únicamente en Ajustes, para que la pantalla de respirar no compita con nada. No hay botón de play: se empieza tocando la luna.</p>
       <p><strong>Las técnicas avanzadas están bloqueadas.</strong> El Viaje del Chamán y El Despertar de la Kundalini se abren con 3 y 6 horas de práctica acumulada. Al desbloquearlas, la app explica qué hacen y por qué pueden marear, y pide marcar una casilla antes de empezar.</p>
@@ -913,10 +954,10 @@ function caseRespiraHtml() {
       <p><strong>Tu cielo es mi respuesta al scroll.</strong> Quería competir con Instagram con una gamificación suave. Cada respiración añade una estrella y las estrellas acaban formando constelaciones. Todo se guarda solo en el dispositivo.</p>
       ${fig("05-tu-cielo", "Pantalla de cierre de sesión, pantalla de Tu cielo y pantalla de inicio con constelaciones", "Cada sesión enciende una estrella nueva.")}
 
-      <h2>Cómo está hecha</h2>
+      <h3>Cómo está hecha</h3>
       <p>Es una sola página HTML, CSS y JavaScript, sin servidor ni base de datos. La luna se dibuja en el navegador y los datos de Tu cielo se quedan en el móvil de quien la usa. Se puede compartir con un enlace y, en los móviles que lo permiten, instalar.</p>
 
-      <h2>Pruébala</h2>
+      <h3>Pruébala</h3>
       <p>Ábrela desde el móvil si puedes. Con tres minutos te da tiempo a hacer una sesión.</p>
       <p>Si quieres algo parecido a medida, para tu negocio o para ti, cuéntamelo.</p>
 
@@ -944,17 +985,17 @@ function caseDepredadorHtml() {
         <a class="btn" href="depredador/index.html" target="_blank" rel="noopener">Ver el proyecto →</a>
         <a class="btn" href="depredador/sistema-diseno.html" target="_blank" rel="noopener" style="margin-left:10px">Ver el sistema de diseño →</a>
       </div>
-      <h1>Evolución del depredador</h1>
+      <h2 class="cs-title">Evolución del depredador</h2>
       <p class="cs-sub">Scrollytelling true-crime · showcase de voz visual</p>
       <div class="cs-meta">Voz visual · showcase&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;case study en construcción</div>
       <div class="cs-cover">portada del proyecto — captura pendiente</div>
 
       <p><em>Case study en construcción.</em> Aquí irá el proceso completo del proyecto. De momento puedes explorar las dos piezas con los botones de arriba: el <strong>scrollytelling en vivo</strong> y el <strong>sistema de diseño</strong>.</p>
 
-      <h2>El proyecto</h2>
+      <h3>El proyecto</h3>
       <p>(Próximamente: el contexto, el reto narrativo y el enfoque de voz visual del scrollytelling.)</p>
 
-      <h2>El sistema de diseño</h2>
+      <h3>El sistema de diseño</h3>
       <p>(Próximamente: paleta por acto, tipografías, tratamiento de imágenes y componentes.)</p>
 
       <div class="cs-cta-row bottom">
@@ -971,7 +1012,7 @@ function caseDepredadorHtml() {
 // empresa y un fabricante inventados; solo se copia aquí tras pasar la prueba anti-filtración.
 function casePresupuestosHtml() {
   const DEMO = "generador-de-presupuestos/index.html", IMG = "generador-de-presupuestos/img/";
-  const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg" alt="' + alt + '" loading="lazy"><figcaption>' + pie + "</figcaption></figure>";
+  const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg"' + imgDim(IMG + n + '.jpg') + ' alt="' + alt + '" loading="lazy" decoding="async"><figcaption>' + pie + "</figcaption></figure>";
   return `<div class="cs-toolbar">
       <div class="cs-tfont">Chicago&nbsp;▾</div>
       <div class="cs-sep"></div>
@@ -986,25 +1027,25 @@ function casePresupuestosHtml() {
     <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
     <div class="cs-paper">
       <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
-      <h1>Presupuestar sin echar la tarde</h1>
+      <h2 class="cs-title">Presupuestar sin echar la tarde</h2>
       <p class="cs-sub">Diseñé y construí una herramienta para que un instalador de ventanas de Madrid prepare en unos 10 minutos lo que antes le llevaba cerca de una hora. Con su marca, su margen y sin que el PDF salga de su dispositivo.</p>
       <div class="cs-meta">Herramientas y operaciones · en uso&nbsp;&nbsp;·&nbsp;&nbsp;Septiembre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
 
-      <h2>El problema</h2>
+      <h3>El problema</h3>
       <p>Cada presupuesto empezaba con otro: el PDF de su fabricante, con ventanas, medidas, planos y precios de coste. Para enviárselo al cliente, borraba el logo y cambiaba los precios uno a uno, sentado al ordenador. A veces quedaba algún dato que revelaba quién fabricaba las ventanas.</p>
       <div class="cs-pair">
         ${fig("02-antes-original-korvel", "Presupuesto del fabricante, con sus datos y sus precios de coste", "Antes: el presupuesto del fabricante.")}
         ${fig("03-despues-luz-norte", "El mismo presupuesto convertido, con la marca y el margen del instalador", "Después: las mismas ventanas, con su marca y sus precios.")}
       </div>
 
-      <h2>Qué hace</h2>
+      <h3>Qué hace</h3>
       <p>Abre el PDF y la herramienta extrae las ventanas, sus medidas, descripciones y planos. Aplica un margen general o por ventana y permite corregir textos, precios y medidas sobre el propio documento, también desde el móvil, en la obra.</p>
       <p>De ese trabajo salen dos archivos:</p>
       ${fig("08-pdf-generado", "El PDF que recibe el cliente", "El PDF para el cliente: marca propia, precios de venta y planos, sin datos del fabricante.")}
       ${fig("09-copia-excel", "La copia en Excel con costes y márgenes", "El Excel del instalador: costes, márgenes y lo que gana.")}
       <p>El Excel, junto con el PDF original, permite recuperar el presupuesto otro día y seguir donde lo dejó.</p>
 
-      <h2>Cómo se decidió</h2>
+      <h3>Cómo se decidió</h3>
       <p>No le prometí que leyera bien todos los PDF del mundo. Le prometí que <strong>nunca le daría un presupuesto mal sin avisarle</strong>.</p>
       <p>La herramienta suma los importes extraídos y los compara con la base imponible del fabricante. Si coinciden, muestra «Cuentas comprobadas». Si no, señala la diferencia y, cuando puede, qué revisar: una ventana sin precio o un salto en la numeración. Permite corregir y continuar; cuando las cuentas cuadran, el aviso pasa a verde.</p>
       <p>Esta comprobación detectó dos errores de dinero que las pruebas anteriores no habían encontrado.</p>
@@ -1014,12 +1055,12 @@ function casePresupuestosHtml() {
         <li><strong>Detectar automáticamente todas las medidas de los planos.</strong> El prototipo encontraba un tercio de los números e interpretaba algunos incorrectamente. Lo sustituí por una corrección manual: tocar la medida y escribir la buena.</li>
       </ul>
 
-      <h2>En uso</h2>
+      <h3>En uso</h3>
       <p>El instalador la utiliza desde septiembre de 2026 para todos sus presupuestos: diez o más por semana.</p>
       <p>Según sus estimaciones, ha pasado de cerca de una hora a unos 10 minutos por presupuesto. Con diez semanales, son unas ocho horas recuperadas: <strong>una jornada entera cada semana</strong>.</p>
       <p>Siete presupuestos reales de tres fabricantes y más de 370 comprobaciones automáticas ayudan a revisar cada cambio. La demo tiene además una comprobación para evitar que se publiquen datos reales.</p>
 
-      <h2>Pruébala</h2>
+      <h3>Pruébala</h3>
       <p>Recorre la herramienta en dos minutos con un presupuesto de ejemplo. Luz Norte y Korvel Systems son nombres inventados para esta demo. No se sube ni se descarga nada: los documentos se muestran en pantalla.</p>
       ${fig("12-recorrido-margen", "El recorrido guiado señalando el margen", "Ajusta el margen y mira cuánto queda para el instalador.")}
 
@@ -1031,7 +1072,7 @@ function casePresupuestosHtml() {
 // ===== CASE STUDY: Puti Di Madre =====
 function casePutiHtml() {
   const DEMO = "putidimadre/index.html", IMG = "putidimadre/case/";
-  const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg" alt="' + alt + '" loading="lazy"><figcaption>' + pie + "</figcaption></figure>";
+  const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg"' + imgDim(IMG + n + '.jpg') + ' alt="' + alt + '" loading="lazy" decoding="async"><figcaption>' + pie + "</figcaption></figure>";
   return `<div class="cs-toolbar">
       <div class="cs-tfont">Chicago&nbsp;▾</div>
       <div class="cs-sep"></div>
@@ -1046,23 +1087,23 @@ function casePutiHtml() {
     <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
     <div class="cs-paper">
       <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
-      <h1>Una pizzería que le gana margen a las apps de reparto</h1>
+      <h2 class="cs-title">Una pizzería que le gana margen a las apps de reparto</h2>
       <p class="cs-sub">Diseñé y construí el canal de pedido directo de una pizzería de barrio: una web solo para recoger y el panel del turno. El objetivo, que el local se quede con más de cada pizza en vez de regalarle el 30 % a las apps de reparto. El negocio es inventado; el problema, no.</p>
       <div class="cs-meta">Soluciones de negocio · spec&nbsp;&nbsp;·&nbsp;&nbsp;Agosto–octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Estrategia, UX, copy, identidad y prototipo · HTML/JS</div>
 
-      <h2>El problema</h2>
+      <h3>El problema</h3>
       <p>Partí de una pizzería pequeña que conozco en Lavapiés: buena reputación, cola en la puerta y dos personas dentro. No le faltan clientes. Le falta margen, porque una parte de sus pedidos llega por las apps de reparto.</p>
       <p>Con una comisión del 30 %, una pizza de 12 € deja unos 3 € de margen si se pide por la app y unos 7 € si el cliente la recoge en el local.</p>
       <p>Vender más no era la respuesta. Con un horno y dos personas, más pedidos solo alargan la espera. La pregunta era otra: <strong>cómo ganar más con los mismos pedidos sin colapsar el horno</strong>. Y la cola daba la pista: es demanda sin programar.</p>
       <p><em>Las cifras son una simulación con comisión del 30 %, coste de producto del 30 % y envase estimado. No son las cuentas de ningún local.</em></p>
 
-      <h2>Qué hace</h2>
+      <h3>Qué hace</h3>
       <p>Son dos pantallas sobre el mismo sistema. En la web, el cliente ve la carta del día, llena su caja, elige la hora de recogida y sigue el pedido hasta que está listo. Paga al recoger: la web no cobra nada.</p>
       ${fig("01-web", "La portada de la web de Puti Di Madre, con el indicador del horno", "La web: la voz de la marca y, desde la portada, cuánto aguanta el horno.")}
       <p>En el panel del turno, el local ve la carga del horno de los próximos cuartos de hora y mueve los pedidos. Desde ahí también marca agotados, pausa la web y cambia precios, descuentos y horario. Lo que se cambia en el panel aparece en la web al recargar.</p>
       ${fig("02-panel", "El panel del turno, con la carga del horno y los pedidos por estado", "El panel del turno: carga del horno y pedidos, sin la marca.")}
 
-      <h2>Cómo se decidió</h2>
+      <h3>Cómo se decidió</h3>
       <p><strong>La web solo ofrece horas que el horno puede cumplir.</strong> La capacidad del horno se reparte en franjas de quince minutos. Una pizza consume una unidad; un calzone, una y media; una bebida, un cuarto, porque alguien tiene que cogerla y meterla en la bolsa. Cada franja admite seis unidades y la web solo puede reservar una parte: tres en hora punta, para no dejar sin pizza a quien espera en la puerta.</p>
       <p>Un pedido no se parte entre franjas: si no cabe entero, se ofrece la siguiente. Por eso, además de «Horno lleno», existe «No cabe tu pedido».</p>
       <div class="cs-pair">
@@ -1074,7 +1115,7 @@ function casePutiHtml() {
       <p><strong>El panel no lleva la marca.</strong> La web tiene voz, ilustraciones y tipografía de cartel. El panel es blanco y negro, sin nada de eso: es una herramienta para un viernes a las nueve, y lo que importa es ver de un vistazo qué entra al horno. Saber cuándo no aplicar la identidad también es diseñar.</p>
       <p>Dejé fuera de esta versión el pago online, las cuentas de cliente y el reparto propio. El reparto sigue en las apps, para quien vive lejos.</p>
 
-      <h2>Hasta dónde llego</h2>
+      <h3>Hasta dónde llego</h3>
       <p>El prototipo funciona entero en el navegador y tiene más de 300 comprobaciones automáticas. Para recibir pedidos reales hace falta un servidor: base de datos, reservas de franja sin duplicados, acceso al panel con contraseña y alguien que responda si algo falla.</p>
       <p>Esa parte no la asumo sola. <strong>Hay una diferencia entre escribir código y responder de un sistema</strong> un viernes a las 21:30 con quince pedidos en marcha. La dejé documentada para un perfil de backend: entre 40 y 70 horas, unos 2.000–4.000 € orientativos.</p>
       <p>Mientras tanto, hay dos versiones que sí puedo sostener:</p>
@@ -1084,7 +1125,7 @@ function casePutiHtml() {
       </ul>
       <p>Lo sensato es empezar por una de las dos, medir unos meses y pagar el servidor con lo que se ahorre en comisiones.</p>
 
-      <h2>Pruébala</h2>
+      <h3>Pruébala</h3>
       <p>Pide una pizza y elige hora. Después abre el panel desde la barra de arriba, cambia un precio o marca algo agotado, y recarga la web. La demo empieza un viernes por la noche; el panel de demo permite cambiar el día y la hora.</p>
       <div class="cs-pair">
         ${fig("05-confirmacion", "Pantalla de pedido confirmado con hora y dirección de recogida", "La confirmación: a qué hora y dónde.")}
@@ -1113,24 +1154,24 @@ function casePortfolioHtml() {
     <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
     <div class="cs-paper">
       <div class="cs-cta-row"><a class="btn" href="sistema-diseno-board.html" target="_blank" rel="noopener">Ver el sistema de diseño →</a></div>
-      <h1>Este escritorio</h1>
+      <h2 class="cs-title">Este escritorio</h2>
       <p class="cs-sub">Un portfolio con forma de Mac de los 90.</p>
       <div class="cs-meta">Meta · sobre el propio portfolio&nbsp;&nbsp;·&nbsp;&nbsp;sistema de diseño</div>
-      <figure class="cs-fig"><img src="este-escritorio/portada.jpg" alt="Fotografía antigua en blanco y negro de una niña sentada en una terraza" loading="lazy"></figure>
+      <figure class="cs-fig"><img src="este-escritorio/portada.jpg" width="1400" height="946" alt="Fotografía antigua en blanco y negro de una niña sentada en una terraza" loading="lazy"></figure>
 
-      <h2>Empezó en el Mac de mi tía Elvira</h2>
+      <h3>Empezó en el Mac de mi tía Elvira</h3>
       <p>Antes de saber qué era un “sistema de diseño”, ya usaba uno sin enterarme. De pequeña, mi tía Elvira me sentaba delante de su Macintosh y me enseñaba a mover el ratón: clic, arrastrar, soltar. Carpetas que se abrían, una papelera que devolvía lo que tirabas, iconos que hacían justo lo que prometían. Me parecía magia, pero en realidad era orden. Creo que ahí, sin darme cuenta, empecé a querer el diseño.</p>
 
-      <h2>Una conexión que me hizo ilusión</h2>
+      <h3>Una conexión que me hizo ilusión</h3>
       <p>Leyendo sobre sistemas de diseño me topé con algo bonito: aunque el término es reciente, su raíz es antigua — las <em>Human Interface Guidelines</em> de Apple (1987), hechas para el Mac. Consistencia, componentes que se repiten, cuidar a quien lo usa. Me hizo ilusión pensar que aquello que me enseñaba mi tía y lo que intento hacer ahora vienen del mismo sitio. Así que, cuando tocó montar mi portfolio, tiré de ahí.</p>
 
-      <h2>Por qué un escritorio</h2>
+      <h3>Por qué un escritorio</h3>
       <p>Podía hacer otra cuadrícula de proyectos, como todo el mundo. Pero me apetecía algo que se pareciera a mí y que me hiciera ilusión abrir. Un sitio para curiosear: carpetas por categoría, ventanas que abres, una papelera para tirar lo que no te guste (y recuperarlo). No sé si es lo más práctico del mundo, pero es honesto: si sabes usar un Mac, sabes usar esto.</p>
 
-      <h2>Lo que hay por debajo</h2>
+      <h3>Lo que hay por debajo</h3>
       <p>Aunque parezca un juego, intenté que por dentro fuera un sistema de verdad, no un adorno. Poco a poco fui atando lo básico: unos colores (el gris Platinum, uno por categoría), tres tipografías con su función —Chicago para titulares, Geneva para leer, Monaco para lo técnico— y piezas que se repiten (ventanas, tarjetas, botones) para que lo nuevo encaje con lo de antes.</p>
 
-      <h2>Cositas que cuidé</h2>
+      <h3>Cositas que cuidé</h3>
       <ul>
         <li>Los case studies <strong>se abren como documentos</strong>, con su regla y su tipo de editor: leer sobre un proyecto también tenía que sentirse Mac.</li>
         <li>En móvil <strong>no quise rendirme a una lista sosa</strong>: mantuve el escritorio como pude.</li>
@@ -1138,7 +1179,7 @@ function casePortfolioHtml() {
         <li>La papelera no borra nada — es un guiño, no un susto.</li>
       </ul>
 
-      <h2>Por qué lo cuento</h2>
+      <h3>Por qué lo cuento</h3>
       <p>No es el portfolio más impresionante del mundo, pero es el más mío. Y si dice algo de cómo trabajo, es esto: me gusta partir de algo con raíz, cuidar los detalles y no perder mi voz por el camino. Empezó con mi tía enseñándome a mover un ratón. Supongo que sigo en las mismas — intentando que la tecnología se sienta un poco más cercana.</p>
       <p style="font-style:italic;color:#5a534a;">Gracias, tía Elvira.</p>
 
@@ -1517,7 +1558,7 @@ desktop.addEventListener("mousedown", (e) => {
 
   const mCard = (card) => {
     if (card.kind === "folder") return ""; // las anidadas se expanden aparte
-    const link = card.caseStudy ? '<button class="btn" onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>' : card.href ? '<a class="btn" href="' + card.href + '">Abrir proyecto →</a>' : '<span class="btn disabled">' + (card.disabledLabel || "Próximamente") + "</span>";
+    const link = card.caseStudy ? '<button class="btn"' + labelAbrir(card) + ' onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>' : card.href ? '<a class="btn"' + labelAbrir(card) + ' href="' + card.href + '">Abrir proyecto →</a>' : '<span class="btn disabled">' + (card.disabledLabel || "Próximamente") + "</span>";
     return '<div class="m-card">' + tagHtml(card.tag) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + link + "</div>";
   };
 
