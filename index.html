@@ -197,10 +197,16 @@
   .case-card .cbody { padding: 10px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
   .case-card h3 { margin: 0; font-size: 13px; }
   .case-card p { margin: 0 0 6px; font-size: 12px; color: rgba(0,0,0,0.6); flex: 1; }
+  /* Tipografía de código (la del sistema: SF Mono / Menlo en Mac): da un aire tech sin salir del universo Mac */
+  :root { --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
   .type-tag {
-    align-self: flex-start; font-size: 9px; font-weight: bold; letter-spacing: 0.04em;
-    text-transform: uppercase; padding: 2px 6px; border: 1px solid; border-radius: 3px;
+    align-self: flex-start; font-family: var(--mono); font-size: 8.5px; font-weight: normal; letter-spacing: 0.02em;
+    text-transform: uppercase; padding: 2px 5px; border: 1px solid; border-radius: 3px;
   }
+  .tags-row { display: flex; flex-wrap: wrap; gap: 4px; }
+  /* El estado se lee como un comentario de código: // en uso */
+  .type-tag.estado-tag { border: 0; background: none; padding: 2px 0; text-transform: none; color: rgba(0,0,0,0.6); }
+  .type-tag.estado-tag::before { content: "// "; content: "// " / ""; }
   .btn {
     align-self: flex-start; font-family: inherit; font-size: 12px; font-weight: bold;
     padding: 5px 12px; border: 1px solid #000; background: #ddd; color: #111;
@@ -316,7 +322,7 @@
   .cs-paper { background: #f7f4ea; padding: 28px 44px 40px; overflow-y: auto; flex: 1; min-height: 0; max-height: 72vh; color: #1c1a17; }
   .cs-paper .cs-title { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 23px; line-height: 1.25; margin: 0 0 6px; }
   .cs-sub { font-size: 15px; font-style: italic; color: #5a534a; margin: 0 0 14px; }
-  .cs-meta { font-family: "MonacoCS","Courier New",monospace; font-size: 11px; color: #6a6258; line-height: 1.7; border-top: 1px solid #d8d0c0; border-bottom: 1px solid #d8d0c0; padding: 9px 0; margin: 0 0 24px; }
+  .cs-meta { font-family: var(--mono); font-size: 10px; color: #6a6258; line-height: 1.7; border-top: 1px solid #d8d0c0; border-bottom: 1px solid #d8d0c0; padding: 9px 0; margin: 0 0 24px; }
   .cs-paper h3 { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 16px; margin: 30px 0 11px; color: #17140f; padding-top: 20px; border-top: 1px solid #e3dccb; }
   .cs-paper p { font-size: 14px; line-height: 1.72; margin: 0 0 14px; }
   .cs-paper strong { color: #000; }
@@ -411,15 +417,12 @@ ICONS.trashFull = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAAB
 /* ============================================================
    ETIQUETAS DE TIPO
    ============================================================ */
-const TAGS = {
-  real:       { label: "real",       bg: "#d6f0d3", bd: "#2f7a2b" },
-  spec:       { label: "spec",       bg: "#d9e6fb", bd: "#3f6fbf" },
-  concepto:   { label: "concepto",   bg: "#fbeecb", bd: "#a9791a" },
-  propio:     { label: "propio",     bg: "#e6defa", bd: "#6b55b8" },
-  showcase:   { label: "showcase",   bg: "#f7d9e0", bd: "#bf5a72" },
-  "en uso":   { label: "en uso",     bg: "#cdeccb", bd: "#2f7a2b" },
-  "en curso": { label: "en curso",   bg: "#eeeeee", bd: "#777777" },
-  aparcado:   { label: "aparcado",   bg: "#e6e6e6", bd: "#777777" },
+// TIPO: qué clase de proyecto es. ESTADO: qué se puede abrir ahora.
+const TIPOS = {
+  real:     { label: "Proyecto real",   bg: "#d6f0d3", bd: "#2f7a2b" },
+  concepto: { label: "Concepto",        bg: "#fbeecb", bd: "#a9791a" },
+  propio:   { label: "Producto propio", bg: "#e6defa", bd: "#6b55b8" },
+  visual:   { label: "Trabajo visual",  bg: "#f7d9e0", bd: "#bf5a72" },
 };
 
 /* ============================================================
@@ -431,17 +434,17 @@ const NESTED = {
     id: "personal-arte", title: "Personal · Arte", color: "#eba0ac",
     intro: "Lo que hago cuando nadie me lo pide. Collages, calendario y experimentos.",
     cards: [
-      { kind: "project", title: "Collages", tag: "showcase", desc: "Serie de collages personales.", href: null, pausa: true },
-      { kind: "project", title: "Calendario", tag: "showcase", desc: "Proyecto de calendario ilustrado.", href: null, pausa: true },
+      { kind: "project", title: "Collages", tipo: "visual", estado: "Próximamente", desc: "Serie de collages personales.", href: null, pausa: true },
+      { kind: "project", title: "Calendario", tipo: "visual", estado: "Próximamente", desc: "Proyecto de calendario ilustrado.", href: null, pausa: true },
     ],
   },
   "trabajo-grafico": {
     id: "trabajo-grafico", title: "Trabajo gráfico", color: "#f0c766",
     intro: "Piezas gráficas de encargo a lo largo de los años.",
     cards: [
-      { kind: "project", title: "Piezas de diseño", tag: "showcase", desc: "Diseños para McDonald's sobre todo, y algunas piezas más.", href: null, pausa: true },
-      { kind: "project", title: "Talavera", tag: "showcase", desc: "Proyecto gráfico Talavera.", href: null, pausa: true },
-      { kind: "project", title: "Promos", tag: "showcase", desc: "Material promocional.", href: null, pausa: true },
+      { kind: "project", title: "Piezas de diseño", tipo: "visual", estado: "Próximamente", desc: "Diseños para McDonald's sobre todo, y algunas piezas más.", href: null, pausa: true },
+      { kind: "project", title: "Talavera", tipo: "visual", estado: "Próximamente", desc: "Proyecto gráfico Talavera.", href: null, pausa: true },
+      { kind: "project", title: "Promos", tipo: "visual", estado: "Próximamente", desc: "Material promocional.", href: null, pausa: true },
     ],
   },
 };
@@ -463,35 +466,35 @@ const DESKTOP = [
     id: "soluciones", kind: "folder", icon: ICONS.directory, title: "Soluciones de negocio", color: "#7fbf7a",
     intro: "Identidades y webs que captan clientes.",
     cards: [
-      { kind: "project", title: "Shiatsu ★", tag: "real", desc: "Identidad real + web spec para un servicio de shiatsu.", href: "wellness/index.html", thumb: '<img src="wellness/case/miniatura.jpg" width="640" height="400" alt="Web de Eme Pérez, shiatsu" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Puti Di Madre", tag: "spec", desc: "Pizzería de barrio, solo recogida: recuperar el margen que se llevan las apps de reparto.", caseStudy: "case-puti", thumb: '<img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt="Portada de la web de Puti Di Madre" loading="lazy" decoding="async">' },
-      { kind: "project", title: "La Mezcaloteca", tag: "spec", desc: "Rediseño para convertir: web + email marketing.", href: null, pausa: true },
+      { kind: "project", title: "Shiatsu", tipo: "concepto", estado: "Prototipo navegable", desc: "Identidad y web para un servicio de shiatsu y facial japonés.", href: "wellness/index.html", thumb: '<img src="wellness/case/miniatura.jpg" width="640" height="400" alt="Web de Eme Pérez, shiatsu" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Puti Di Madre", tipo: "concepto", estado: "Prototipo navegable", desc: "Pizzería de barrio, solo recogida: recuperar el margen que se llevan las apps de reparto.", caseStudy: "case-puti", thumb: '<img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt="Portada de la web de Puti Di Madre" loading="lazy" decoding="async">' },
+      { kind: "project", title: "La Mezcaloteca", tipo: "concepto", estado: "Próximamente", desc: "Rediseño para convertir: web + email marketing.", href: null, pausa: true },
     ],
   },
   {
     id: "herramientas", kind: "folder", icon: ICONS.directory, title: "Herramientas y operaciones", color: "#8fb4ec",
     intro: "Apps no-code que usan equipos reales cada día.",
     cards: [
-      { kind: "project", title: "Presupuestar sin echar la tarde", tag: "en uso", desc: "Del PDF del fabricante al presupuesto del cliente, de cerca de una hora a unos 10 minutos.", caseStudy: "case-presupuestos", thumb: '<img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt="El presupuesto de Luz Norte en la herramienta" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Gestión de grupos", tag: "en uso", desc: "Herramienta no-code para restaurantes y eventos.", href: null, pausa: true },
-      { kind: "project", title: "Gestión de delivery", tag: "en curso", desc: "Control de incidencias y facturación para restaurantes.", href: null, pausa: true },
+      { kind: "project", title: "Presupuestar sin echar la tarde", tipo: "real", estado: "En uso", desc: "Del PDF del fabricante al presupuesto del cliente, de cerca de una hora a unos 10 minutos.", caseStudy: "case-presupuestos", thumb: '<img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt="El presupuesto de Luz Norte en la herramienta" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Gestión de grupos", tipo: "real", estado: "En uso", desc: "Herramienta no-code para restaurantes y eventos.", href: null, pausa: true, mostrar: true, disabledLabel: "Caso próximamente" },
+      { kind: "project", title: "Gestión de delivery", tipo: "real", estado: "En desarrollo", desc: "Control de incidencias y facturación para restaurantes.", href: null, pausa: true, mostrar: true, disabledLabel: "Caso próximamente" },
     ],
   },
   {
     id: "exploracion", kind: "folder", icon: ICONS.directory, title: "Exploración de producto", color: "#f0c766",
     intro: "Conceptos de UI y producto que exploro por mi cuenta.",
     cards: [
-      { kind: "project", title: "Spotify Now Playing", tag: "concepto", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt="Clubs cerca de ti en Spotify Now Playing" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Respira", tag: "propio", desc: "App de respiración guiada, gratuita y sin cuenta. Una luna que respira contigo.", caseStudy: "case-respira", thumb: '<img src="respira/case/miniatura.jpg" width="600" height="200" alt="La luna de Respira" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Spotify Now Playing", tipo: "concepto", estado: "Prototipo navegable", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt="Clubs cerca de ti en Spotify Now Playing" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Respira", tipo: "propio", estado: "En uso", desc: "App de respiración guiada, gratuita y sin cuenta. Una luna que respira contigo.", caseStudy: "case-respira", thumb: '<img src="respira/case/miniatura.jpg" width="600" height="200" alt="La luna de Respira" loading="lazy" decoding="async">' },
     ],
   },
   {
     id: "vozvisual", kind: "folder", icon: ICONS.directory, title: "Voz visual", color: "#eba0ac",
     intro: "Lo más personal: la parte que da personalidad a todo lo demás.",
     cards: [
-      { kind: "project", title: "Evolución del depredador", tag: "showcase", desc: "Scrollytelling true-crime.", caseStudy: "case-depredador", thumb: '<img src="depredador/case/miniatura.jpg" width="640" height="400" alt="Portada de Evolución del depredador" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Mesa de lectura", tag: "concepto", desc: "Prototipo de gesto: barajar cartas con física, antes que la imagen.", href: "mesa-de-lectura/index.html", thumb: '<img src="mesa-de-lectura/case/miniatura.jpg" width="640" height="400" alt="Mesa de lectura, tarot con física" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Este escritorio", tag: "showcase", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" width="640" height="400" alt="El escritorio de este portfolio" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Evolución del depredador", tipo: "visual", estado: "Caso disponible", desc: "Scrollytelling true-crime.", caseStudy: "case-depredador", thumb: '<img src="depredador/case/miniatura.jpg" width="640" height="400" alt="Portada de Evolución del depredador" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Mesa de lectura", tipo: "concepto", estado: "Prototipo navegable", desc: "Prototipo de gesto: barajar cartas con física, antes que la imagen.", href: "mesa-de-lectura/index.html", thumb: '<img src="mesa-de-lectura/case/miniatura.jpg" width="640" height="400" alt="Mesa de lectura, tarot con física" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Este escritorio", tipo: "propio", estado: "Caso disponible", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" width="640" height="400" alt="El escritorio de este portfolio" loading="lazy" decoding="async">' },
       { kind: "folder", ref: "personal-arte", title: "Personal · Arte", desc: "Collages, calendario y experimentos." },
     ],
   },
@@ -509,14 +512,20 @@ const DESKTOP = [
 /* ============================================================
    PLANTILLAS HTML
    ============================================================ */
-function tagHtml(t) {
-  const c = TAGS[t]; if (!c) return "";
-  return '<span class="type-tag" style="background:' + c.bg + ';border-color:' + c.bd + ';color:' + c.bd + '">' + c.label + "</span>";
+function tagsHtml(card) {
+  const c = TIPOS[card.tipo]; if (!c) return "";
+  return '<div class="tags-row"><span class="type-tag" style="background:' + c.bg + ';border-color:' + c.bd + ';color:' + c.bd + '">' + c.label + "</span>" +
+    (card.estado ? '<span class="type-tag estado-tag">' + card.estado + "</span>" : "") + "</div>";
+}
+// ¿Se enseña esta tarjeta? Las que aún no tienen nada que abrir se ocultan, salvo las marcadas con «mostrar»
+function visible(c) {
+  if (c.kind === "folder") return !isEmptyFolder(c.ref);
+  return !!(c.href || c.caseStudy || c.mostrar);
 }
 
 function buildThumb(card) {
   if (card.href || card.caseStudy) return '<div class="thumb">captura pendiente</div>'; // proyecto real sin imagen aún: nunca "en construcción"
-  const pausa = card.pausa || card.tag === "aparcado";
+  const pausa = card.pausa;
   return '<div class="thumb build' + (pausa ? " pause" : "") + '"><span>' + "En construcción" + "</span></div>";
 }
 
@@ -560,7 +569,7 @@ function cardHtml(card) {
     : '<span class="btn disabled">' + (card.disabledLabel || (card.pausa ? "En construcción" : "Próximamente")) + "</span>";
   return '<article class="case-card">' +
     (card.thumb ? '<div class="thumb">' + card.thumb + "</div>" : buildThumb(card)) +
-    '<div class="cbody">' + tagHtml(card.tag) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + btn + "</div>" +
+    '<div class="cbody">' + tagsHtml(card) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + btn + "</div>" +
     "</article>";
 }
 
@@ -568,7 +577,7 @@ function folderHtml(entry) {
   const colorTag = entry.color ? '<span class="tag" style="background:' + entry.color + '">' + entry.title + "</span>" : "";
   return colorTag + "<h2>" + entry.title + "</h2>" +
     (entry.intro ? '<p class="intro">' + entry.intro + "</p>" : "") +
-    '<div class="cards">' + entry.cards.map(cardHtml).join("") + "</div>";
+    '<div class="cards">' + entry.cards.filter(visible).map(cardHtml).join("") + "</div>";
 }
 
 function aboutHtml() {
@@ -577,7 +586,7 @@ function aboutHtml() {
     "<p>Ahora diseño y desarrollo productos digitales con IA. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas que sean útiles, fáciles de usar y visualmente atractivas.</p>" +
     '<div class="chips"><span>8 años en operaciones</span><span>no-code</span><span>diseño</span></div>' +
     '<p><a class="btn" href="cv/index.html" target="_blank" rel="noopener">Ver mi CV →</a></p>' +
-    '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>";
+    (visible({ kind: "folder", ref: "trabajo-grafico" }) ? '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>" : "");
 }
 
 function contactHtml(idSuffix) {
@@ -883,7 +892,7 @@ function caseSpotifyHtml() {
       <div class="cs-cta-row"><a class="btn" href="spotify/index.html" target="_blank" rel="noopener">Ver la maqueta en vivo →</a></div>
       <h2 class="cs-title">Spotify Now Playing</h2>
       <p class="cs-sub">Descubre clubs por su música en tiempo real</p>
-      <div class="cs-meta">Exploración de producto&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;Figma · Spotify API · Prototipo interactivo</div>
+      <div class="cs-meta">Exploración de producto · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;Figma · Spotify API · Prototipo interactivo</div>
       <figure class="cs-fig"><img src="spotify/capturas/00-portada.jpg" width="1600" height="1000" alt="Tres pantallas de la demo: clubs cerca de ti, ficha de Sala Bardot y cola compartida" loading="lazy"><figcaption>Clubs cerca de ti con su % Match, la ficha del club y la cola compartida dentro de la sala.</figcaption></figure>
 
       <h3>El insight</h3>
@@ -937,7 +946,7 @@ function caseRespiraHtml() {
       <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir Respira →</a></div>
       <h2 class="cs-title">Respira</h2>
       <p class="cs-sub">Una app de respiración guiada, gratuita y sin cuenta, para parar cinco minutos en mitad del día. La diseñé y la programé yo, y la regalo.</p>
-      <div class="cs-meta">Exploración de producto · propio&nbsp;&nbsp;·&nbsp;&nbsp;Octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
+      <div class="cs-meta">Exploración de producto · producto propio&nbsp;&nbsp;·&nbsp;&nbsp;Octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
 
       ${fig("01-portada", "Pantalla de inicio de Respira: una luna de color lavanda y tres accesos", "La pantalla de inicio: una luna y tres caminos.")}
 
@@ -999,8 +1008,8 @@ function caseDepredadorHtml() {
         <a class="btn" href="depredador/sistema-diseno.html" target="_blank" rel="noopener" style="margin-left:10px">Ver el sistema de diseño →</a>
       </div>
       <h2 class="cs-title">Evolución del depredador</h2>
-      <p class="cs-sub">Scrollytelling true-crime · showcase de voz visual</p>
-      <div class="cs-meta">Voz visual · showcase&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;case study en construcción</div>
+      <p class="cs-sub">Scrollytelling true-crime · trabajo visual</p>
+      <div class="cs-meta">Voz visual · trabajo visual&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;case study en construcción</div>
       <div class="cs-cover">portada del proyecto — captura pendiente</div>
 
       <p><em>Case study en construcción.</em> Aquí irá el proceso completo del proyecto. De momento puedes explorar las dos piezas con los botones de arriba: el <strong>scrollytelling en vivo</strong> y el <strong>sistema de diseño</strong>.</p>
@@ -1042,7 +1051,7 @@ function casePresupuestosHtml() {
       <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
       <h2 class="cs-title">Presupuestar sin echar la tarde</h2>
       <p class="cs-sub">Diseñé y construí una herramienta para que un instalador de ventanas de Madrid prepare en unos 10 minutos lo que antes le llevaba cerca de una hora. Con su marca, su margen y sin que el PDF salga de su dispositivo.</p>
-      <div class="cs-meta">Herramientas y operaciones · en uso&nbsp;&nbsp;·&nbsp;&nbsp;Septiembre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
+      <div class="cs-meta">Herramientas y operaciones · proyecto real · en uso&nbsp;&nbsp;·&nbsp;&nbsp;Septiembre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
 
       <h3>El problema</h3>
       <p>Cada presupuesto empezaba con otro: el PDF de su fabricante, con ventanas, medidas, planos y precios de coste. Para enviárselo al cliente, borraba el logo y cambiaba los precios uno a uno, sentado al ordenador. A veces quedaba algún dato que revelaba quién fabricaba las ventanas.</p>
@@ -1102,7 +1111,7 @@ function casePutiHtml() {
       <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
       <h2 class="cs-title">Una pizzería que le gana margen a las apps de reparto</h2>
       <p class="cs-sub">Diseñé y construí el canal de pedido directo de una pizzería de barrio: una web solo para recoger y el panel del turno. El objetivo, que el local se quede con más de cada pizza en vez de regalarle el 30 % a las apps de reparto. El negocio es inventado; el problema, no.</p>
-      <div class="cs-meta">Soluciones de negocio · spec&nbsp;&nbsp;·&nbsp;&nbsp;Agosto–octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Estrategia, UX, copy, identidad y prototipo · HTML/JS</div>
+      <div class="cs-meta">Soluciones de negocio · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Agosto–octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Estrategia, UX, copy, identidad y prototipo · HTML/JS</div>
 
       <h3>El problema</h3>
       <p>Partí de una pizzería pequeña que conozco en Lavapiés: buena reputación, cola en la puerta y dos personas dentro. No le faltan clientes. Le falta margen, porque una parte de sus pedidos llega por las apps de reparto.</p>
@@ -1576,8 +1585,9 @@ desktop.addEventListener("mousedown", (e) => {
 
   const mCard = (card) => {
     if (card.kind === "folder") return ""; // las anidadas se expanden aparte
+    if (!visible(card)) return "";
     const link = card.caseStudy ? '<button class="btn"' + labelAbrir(card) + ' onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>' : card.href ? '<a class="btn"' + labelAbrir(card) + ' href="' + card.href + '">Abrir proyecto →</a>' : '<span class="btn disabled">' + (card.disabledLabel || "Próximamente") + "</span>";
-    return '<div class="m-card">' + tagHtml(card.tag) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + link + "</div>";
+    return '<div class="m-card">' + tagsHtml(card) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + link + "</div>";
   };
 
   DESKTOP.forEach((item) => {
@@ -1585,7 +1595,7 @@ desktop.addEventListener("mousedown", (e) => {
       h += "<section><h2>" + item.title + "</h2>";
       if (item.intro) h += '<p class="intro">' + item.intro + "</p>";
       item.cards.forEach((c) => { h += mCard(c); });
-      item.cards.filter((c) => c.kind === "folder" && NESTED[c.ref]).forEach((c) => {
+      item.cards.filter((c) => c.kind === "folder" && NESTED[c.ref] && visible(c)).forEach((c) => {
         const n = NESTED[c.ref];
         h += '<div class="m-sub">' + n.title + "</div>";
         n.cards.forEach((cc) => { h += mCard(cc); });
@@ -1594,8 +1604,10 @@ desktop.addEventListener("mousedown", (e) => {
     } else if (item.id === "sobremi") {
       h += "<section><h2>Sobre mí</h2><p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño y desarrollo productos digitales con IA.</p><p><a class=\"btn\" href=\"cv/index.html\" target=\"_blank\" rel=\"noopener\">Ver mi CV →</a></p>";
       const n = NESTED["trabajo-grafico"];
-      h += '<div class="m-sub">' + n.title + "</div>";
-      n.cards.forEach((cc) => { h += mCard(cc); });
+      if (visible({ kind: "folder", ref: "trabajo-grafico" })) {
+        h += '<div class="m-sub">' + n.title + "</div>";
+        n.cards.forEach((cc) => { h += mCard(cc); });
+      }
       h += "</section>";
     } else if (item.id === "leeme") {
       h += "<section><h2>Léeme primero</h2><p>Soy una apasionada de los sistemas de diseño. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —un sistema de diseño antes de que existiera esa palabra. Te recomiendo empezar por Soluciones de negocio o Herramientas.</p></section>";
