@@ -3,8 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MVM Maison — Diseño, no-code y operaciones para negocios pequeños</title>
-<meta name="description" content="Portfolio de Mery Villena (MVM Maison): diseño digital, no-code y operaciones para negocios pequeños. Un escritorio Mac de los 90 con mis proyectos.">
+<title>Mery Villena — Diseño de producto digital, no-code y operaciones</title>
+<meta name="description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños.">
+<link rel="canonical" href="https://meryvillena.com/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="Mery Villena">
+<meta property="og:url" content="https://meryvillena.com/">
+<meta property="og:title" content="Mery Villena — Diseño de producto digital, no-code y operaciones">
+<meta property="og:description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mery Villena — Diseño de producto digital, no-code y operaciones">
+<meta name="twitter:description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños.">
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; height: 100%; }
@@ -39,6 +49,8 @@
   }
   #menubar img { height: 15px; margin-right: 10px; }
   #menubar .spacer { flex: 1; }
+  #menubar .m-owner { font-weight: normal; color: rgba(0,0,0,0.6); }
+  @media (max-width: 900px) { #menubar .item.m-owner { display: none; } }
   #menubar .item { margin-left: 14px; display: flex; align-items: center; gap: 5px; }
 
   /* ---------- POST-ITS (muro público) ---------- */
@@ -339,6 +351,7 @@
     <button type="button" class="mtitle" data-menu="proyectos" aria-haspopup="true" aria-expanded="false">Proyectos</button>
     <button type="button" class="mtitle" data-menu="ayuda" aria-haspopup="true" aria-expanded="false">Ayuda</button>
     <div class="spacer"></div>
+    <div class="item m-owner">Escritorio de Mery Villena</div>
     <div class="item" id="clock"></div>
   </div>
     <div class="item" id="clock"></div>
@@ -356,13 +369,13 @@
   <div class="content">
     <h2 id="welcome-title">Hola, soy Mery ✦</h2>
     <p class="w-lead">Diseño, construyo y pongo en marcha productos digitales para negocios pequeños: desde lo que ve el cliente hasta lo que necesita el equipo para trabajar.</p>
-    <p class="w-small">Este es mi escritorio, inspirado en la interfaz de los Mac de los 90. Abre las carpetas para explorar mis proyectos. Si no sabes por dónde empezar, te recomiendo estos tres:</p>
+    <p class="w-small">Este es mi escritorio. Abre una carpeta o empieza por uno de estos proyectos:</p>
     <div class="w-feat">
-      <button type="button" data-open="case-puti"><img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt=""><span>Puti Di Madre<br>Una pizzería que le gana margen a las apps</span></button>
-      <button type="button" data-open="case-presupuestos"><img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt=""><span>Presupuestar sin echar la tarde<br>De 1 hora a 10 minutos</span></button>
-      <button type="button" data-open="case-spotify"><img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt=""><span>Spotify Now Playing<br>Descubre clubs por su música</span></button>
+      <button type="button" data-open="case-puti"><img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt=""><span>Puti Di Madre<br>Negocio y operaciones</span></button>
+      <button type="button" data-open="case-presupuestos"><img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt=""><span>Presupuestar sin echar la tarde<br>Herramienta en uso</span></button>
+      <button type="button" data-open="case-spotify"><img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt=""><span>Spotify Now Playing<br>Exploración de producto</span></button>
     </div>
-    <div class="w-actions"><button class="btn" id="welcome-ok">Explorar el escritorio →</button></div>
+    <div class="w-actions"><button class="btn" id="welcome-ok">Entrar al escritorio</button></div>
   </div>
 </div>
 
@@ -371,8 +384,8 @@
 
 <noscript>
   <div style="padding:24px;max-width:640px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;">
-    <h1>MVM Maison — Mery Villena</h1>
-    <p>Diseño digital, no-code y operaciones para negocios pequeños.</p>
+    <h1>Mery Villena</h1>
+    <p>Diseño de producto digital, no-code y operaciones para negocios pequeños.</p>
     <p>Este portfolio es interactivo y necesita JavaScript. Escríbeme a <a href="mailto:meryvillena@gmail.com">meryvillena@gmail.com</a>.</p>
   </div>
 </noscript>
@@ -1242,17 +1255,22 @@ desktop.addEventListener("mousedown", (e) => {
 (function welcome() {
   const w = document.getElementById("welcome");
   const back = document.getElementById("welcome-backdrop");
-  const close = () => { w.classList.remove("show"); back.classList.remove("show"); };
+  const KEY = "mery-bienvenida-vista";
+  const marcarVista = () => { try { localStorage.setItem(KEY, "1"); } catch (e) {} };
+  const yaVista = () => { try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; } };
+  // cerrar con la ×, con el botón, con Escape o eligiendo un proyecto: todo lleva al mismo sitio
+  const close = () => { w.classList.remove("show"); back.classList.remove("show"); marcarVista(); };
   const okBtn = document.getElementById("welcome-ok");
   window.showWelcome = () => { w.classList.add("show"); back.classList.add("show"); okBtn.focus(); };
-  if (!/[?&]quitar=/.test(location.search)) window.showWelcome();
+  // Primera visita: bienvenida. Después, directo al escritorio (se puede volver a ver desde el menú del gato)
+  if (!/[?&]quitar=/.test(location.search) && !yaVista()) window.showWelcome();
   okBtn.addEventListener("click", close);
   w.querySelectorAll(".w-feat button").forEach((b) => b.addEventListener("click", () => {
     close();
     if (b.dataset.open) openWindow(b.dataset.open); else window.location.href = b.dataset.href;
   }));
   document.getElementById("welcome-close").addEventListener("click", close);
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && w.classList.contains("show")) close(); });
 })();
 
 /* ============================================================
@@ -1554,7 +1572,7 @@ desktop.addEventListener("mousedown", (e) => {
    ============================================================ */
 (function buildMobile() {
   const m = document.getElementById("mobile-view");
-  let h = '<div class="m-head"><h1>MVM Maison</h1><p>Diseño · no-code · operaciones · Mery Villena</p></div>';
+  let h = '<div class="m-head"><h1>Mery Villena</h1><p>Diseño de producto digital · no-code · operaciones</p></div>';
 
   const mCard = (card) => {
     if (card.kind === "folder") return ""; // las anidadas se expanden aparte
