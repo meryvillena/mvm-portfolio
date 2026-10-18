@@ -457,7 +457,7 @@ const DESKTOP = [
     win: { title: "Léeme primero", type: "text", html:
       '<span class="tag" style="background:#ffe08a">Empieza por aquí</span>' +
       "<p>Soy una apasionada de los sistemas de diseño: esa disciplina de construir interfaces coherentes, pieza a pieza, con reglas claras. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —<a href=\"#\" onclick=\"openWindow('case-portfolio');return false\">un sistema de diseño antes de que existiera esa palabra</a>.</p>" +
-      "<p>Las carpetas organizan mis proyectos por categorías: ábrelas, mira dentro, y muévelas por la pantalla si quieres reordenar.</p>" +
+      "<p>Las carpetas organizan mis proyectos por categorías: haz clic para abrirlas y mira dentro. Puedes mover las carpetas por la pantalla si quieres reordenarlas.</p>" +
       "<p>Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em> —ahí está lo que más cuenta.</p>" +
       "<p class=\"small\">Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.</p>" +
       "<p>Si quieres saber quién hay detrás de todo esto, abre <em>Sobre mí</em>.</p>"
@@ -584,7 +584,7 @@ function folderHtml(entry) {
 function aboutHtml() {
   return "<h2>Sobre mí</h2>" +
     "<p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar o Lancôme. Desde 2018 trabajo en la gestión de varios restaurantes McDonald’s, coordinando proveedores, procesos internos, administración y acciones de marketing local.</p>" +
-    "<p>Ahora diseño y desarrollo productos digitales con IA. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas que sean útiles, fáciles de usar y visualmente atractivas.</p>" +
+    "<p>Ahora diseño, construyo y pongo en marcha productos digitales para negocios pequeños, desde lo que ve el cliente hasta lo que necesita el equipo para trabajar. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas útiles, fáciles de usar y visualmente cuidadas.</p>" +
     '<div class="chips"><span>8 años en operaciones</span><span>no-code</span><span>diseño</span></div>' +
     '<p><a class="btn" href="cv/index.html" target="_blank" rel="noopener">Ver mi CV →</a></p>' +
     (visible({ kind: "folder", ref: "trabajo-grafico" }) ? '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>" : "");
@@ -1603,7 +1603,7 @@ desktop.addEventListener("mousedown", (e) => {
       });
       h += "</section>";
     } else if (item.id === "sobremi") {
-      h += "<section><h2>Sobre mí</h2><p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño y desarrollo productos digitales con IA.</p><p><a class=\"btn\" href=\"cv/index.html\" target=\"_blank\" rel=\"noopener\">Ver mi CV →</a></p>";
+      h += "<section><h2>Sobre mí</h2><p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño, construyo y pongo en marcha productos digitales para negocios pequeños, desde lo que ve el cliente hasta lo que necesita el equipo para trabajar.</p><p><a class=\"btn\" href=\"cv/index.html\" target=\"_blank\" rel=\"noopener\">Ver mi CV →</a></p>";
       const n = NESTED["trabajo-grafico"];
       if (visible({ kind: "folder", ref: "trabajo-grafico" })) {
         h += '<div class="m-sub">' + n.title + "</div>";
