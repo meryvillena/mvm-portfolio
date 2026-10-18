@@ -1,0 +1,1625 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mery Villena — Diseño de producto digital, no-code y operaciones</title>
+<meta name="description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños.">
+<link rel="canonical" href="https://meryvillena.com/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 15 12%22 shape-rendering=%22crispEdges%22 fill=%22%23111%22%3E%3Cpath d=%22M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z%22/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="Mery Villena">
+<meta property="og:url" content="https://meryvillena.com/">
+<meta property="og:title" content="Mery Villena — Diseño de producto digital, no-code y operaciones">
+<meta property="og:description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mery Villena — Diseño de producto digital, no-code y operaciones">
+<meta name="twitter:description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños.">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: "Geneva", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  :where(img[width][height]) { height: auto; }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* ---------- ESCRITORIO ---------- */
+  #desktop {
+    position: relative;
+    width: 100%; height: 100%;
+    background: #b8b8b8;
+    overflow: hidden;
+    user-select: none;
+  }
+  #menubar {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 22px;
+    background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #ddd 2px);
+    border-bottom: 1px solid #000;
+    display: flex; align-items: center;
+    padding: 0 8px;
+    font-size: 13px; font-weight: bold;
+    z-index: 10000;
+  }
+  #menubar img { height: 15px; margin-right: 10px; }
+  #menubar .spacer { flex: 1; }
+  #menubar .m-owner { font-weight: normal; color: rgba(0,0,0,0.6); }
+  @media (max-width: 900px) { #menubar .item.m-owner { display: none; } }
+  #menubar .item { margin-left: 14px; display: flex; align-items: center; gap: 5px; }
+
+  /* ---------- POST-ITS (muro público) ---------- */
+  .postit { position: absolute; width: 150px; min-height: 100px; padding: 14px 12px 10px; background: var(--pc); border: 1px solid rgba(0,0,0,0.45); box-shadow: 2px 2px 0 rgba(0,0,0,0.3); transform: rotate(var(--pr, 0deg)); z-index: 50; font-size: 13px; line-height: 1.3; color: #111; overflow-wrap: anywhere; }
+  .postit .pi-alias { margin-top: 8px; font-size: 11px; color: rgba(0,0,0,0.6); }
+  .postit .pi-x { all: unset; position: absolute; top: 1px; right: 3px; padding: 0 4px; font-size: 13px; font-weight: bold; line-height: 1.2; cursor: pointer; opacity: 0.5; }
+  .postit .pi-x:hover, .postit .pi-x:focus-visible { opacity: 1; background: #000; color: #fff; }
+  .postit.in { position: relative; transform: rotate(var(--pr, 0deg)); z-index: auto; width: auto; }
+  .muro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; padding: 6px 4px 10px; }
+  .postit:not(.nuevo):not(.in):not(.ghost) { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .postit.arrastrando { cursor: grabbing !important; box-shadow: 5px 5px 0 rgba(0,0,0,0.3); }
+  .postit.ghost { all: unset; box-sizing: border-box; position: absolute; width: 150px; min-height: 100px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: rgba(255,243,163,0.6); border: 2px dashed rgba(0,0,0,0.5); transform: rotate(-2deg); z-index: 50; cursor: pointer; text-align: center; font-size: 12px; font-weight: bold; color: rgba(0,0,0,0.7); }
+  .postit.ghost:hover, .postit.ghost:focus-visible { background: #fff3a3; border-style: solid; color: #000; }
+  .postit.ghost .plus { font-size: 44px; line-height: 1; font-weight: normal; }
+  .postit.nuevo { width: 210px; min-height: 160px; padding: 12px 10px 8px; display: flex; flex-direction: column; gap: 6px; z-index: 60; transform: rotate(-1deg); }
+  .postit.nuevo.in { width: auto; }
+  .postit.nuevo textarea, .postit.nuevo input[type=text] { all: unset; box-sizing: border-box; width: 100%; font-size: 13px; line-height: 1.3; color: #111; }
+  .postit.nuevo textarea { min-height: 70px; resize: none; display: block; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .postit.nuevo textarea::placeholder, .postit.nuevo input::placeholder { color: rgba(0,0,0,0.45); }
+  .postit.nuevo input[type=text] { font-size: 11px; border-top: 1px dashed rgba(0,0,0,0.3); padding-top: 6px; }
+  .pi-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .pi-bar .dots { display: flex; gap: 5px; flex: 1 1 100%; }
+  .pi-bar .dots label { cursor: pointer; display: block; }
+  .pi-bar .dots input { position: absolute; opacity: 0; pointer-events: none; }
+  .pi-bar .dots span { display: block; width: 16px; height: 16px; border: 1px solid #000; background: var(--dc); }
+  .pi-bar .dots input:checked + span { outline: 2px solid #000; outline-offset: 1px; }
+  .pi-bar .dots input:focus-visible + span { outline: 2px solid #2b5fd6; outline-offset: 1px; }
+  .pi-bar .pi-count { font-size: 10px; color: rgba(0,0,0,0.55); white-space: nowrap; margin-right: auto; }
+  .pi-bar button { all: unset; box-sizing: border-box; border: 1px solid #000; background: #ddd; font-size: 11px; font-weight: bold; padding: 3px 9px; cursor: pointer; white-space: nowrap; }
+  .pi-bar button:hover, .pi-bar button:focus-visible { background: #000; color: #fff; }
+  .pi-bar button[disabled] { opacity: 0.5; }
+  .pi-err { font-size: 11px; min-height: 13px; color: #b3261e; }
+  .pi-nota { font-size: 9px; color: rgba(0,0,0,0.55); line-height: 1.25; }
+  .pn-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  /* ---------- LA BOLSA (ventana del escritorio) ---------- */
+  .window.bolsa .content { padding: 0; background: #0d0d0d; max-height: none; overflow: hidden; }
+  .bolsa-head { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-bottom: 1px solid #2c2c2c; font-family: Monaco,Menlo,"Courier New",monospace; font-size: 12px; color: #f0c766; letter-spacing: 0.04em; }
+  .bolsa-row { display: grid; grid-template-columns: 44px 1fr auto 58px; align-items: center; gap: 8px; padding: 7px 12px; border-bottom: 1px solid #1d1d1d; font-family: Monaco,Menlo,"Courier New",monospace; font-size: 12px; color: #cfcfcf; }
+  .bolsa-row .sym { color: #8a8a8a; }
+  .bolsa-row .val { font-size: 15px; color: #fff; text-align: right; }
+  .bolsa-row .chg { text-align: right; font-size: 11px; }
+  .bolsa-row.up .chg { color: #4be37a; } .bolsa-row.down .chg { color: #4be37a; } .bolsa-row.joke .chg { color: #f0c766; }
+  .bolsa-row .spark { grid-column: 2; height: 14px; width: 100%; }
+  .bolsa-row .chg span { animation: bolsaBlink 1.6s steps(2, end) infinite; }
+  @keyframes bolsaBlink { 50% { opacity: 0.25; } }
+  .bolsa-tape { overflow: hidden; white-space: nowrap; padding: 6px 0; background: #1a1a1a; border-top: 1px solid #333; font-family: Monaco,Menlo,"Courier New",monospace; font-size: 11px; color: #f0c766; }
+  .bolsa-tape span { display: inline-block; padding-left: 100%; animation: bolsaTape 38s linear infinite; }
+  @keyframes bolsaTape { to { transform: translateX(-100%); } }
+  .bolsa-foot { padding: 6px 12px 8px; font-family: Monaco,Menlo,"Courier New",monospace; font-size: 10px; color: #7a7a7a; line-height: 1.4; }
+  @media (prefers-reduced-motion: reduce) { .bolsa-row .chg span, .bolsa-tape span { animation: none; } .bolsa-tape span { padding-left: 12px; } }
+  #menubar .mtitle { all: unset; box-sizing: border-box; height: 22px; padding: 0 9px; display: flex; align-items: center; font-size: 13px; font-weight: bold; cursor: default; color: #000; }
+  #menubar .mtitle.mcat { padding: 0 10px 0 4px; }
+  #menubar .mtitle.open, #menubar .mtitle:focus-visible { background: #000; color: #fff; }
+  #menubar .mtitle.open .cat path, #menubar .mtitle:focus-visible .cat path { fill: #fff; }
+  #menubar .cat { display: block; }
+  .mdrop { position: absolute; top: 22px; min-width: 220px; max-width: 86vw; background: #ECECEC; border: 1px solid #000; border-top: 0; box-shadow: 3px 3px 0 rgba(0,0,0,0.45); padding: 2px 0; z-index: 10001; display: none; }
+  .mdrop.show { display: block; }
+  .mdrop .mi { all: unset; box-sizing: border-box; display: flex; justify-content: space-between; gap: 18px; width: 100%; padding: 3px 16px; font-size: 13px; font-weight: normal; color: #000; cursor: default; white-space: nowrap; }
+  .mdrop .mi:hover:not([aria-disabled="true"]), .mdrop .mi:focus-visible { background: #000; color: #fff; }
+  .mdrop .mi[aria-disabled="true"] { color: rgba(0,0,0,0.35); }
+  .mdrop .msep { height: 1px; background: #000; margin: 3px 0; opacity: 0.35; }
+  .mdrop .mhead { padding: 4px 16px 2px; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(0,0,0,0.5); }
+  @media (max-width: 520px) { #menubar .m-opt { display: none; } #menubar .mtitle { padding: 0 6px; } }
+  @media (max-width: 400px) { #menubar #clock { display: none; } }
+
+  .icon {
+    position: absolute;
+    width: 82px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: default;
+    padding: 4px 2px;
+    background: transparent; border: 0;
+    font-family: inherit;
+  }
+  .icon img { width: 32px; height: 32px; image-rendering: pixelated; pointer-events: none; }
+  .icon span {
+    font-size: 11px; text-align: center; line-height: 1.2; color: #000;
+    padding: 1px 3px; pointer-events: none;
+  }
+  .icon.selected span { background: #000; color: #fff; }
+  .icon.dragging { opacity: 0.85; z-index: 9999; }
+  @keyframes trashWobble { 0%,100%{transform:rotate(0)} 20%{transform:rotate(-9deg)} 40%{transform:rotate(7deg)} 60%{transform:rotate(-5deg)} 80%{transform:rotate(3deg)} }
+  .icon.wobble img { animation: trashWobble 0.46s ease; transform-origin: 50% 70%; }
+  .icon:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }
+
+  /* ---------- VENTANAS ---------- */
+  .window {
+    position: absolute; display: none; flex-direction: column;
+    min-width: 300px; max-width: 92vw;
+    background: #ECECEC; border: 1px solid #000;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    z-index: 100;
+  }
+  .window.open { display: flex; animation: winOpen 0.16s ease-out; }
+  @keyframes winOpen { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+  @keyframes winClose { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.96); } }
+  .window.closing { animation: winClose 0.14s ease-in forwards; }
+  .window .titlebar {
+    height: 20px;
+    background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #ccc 2px);
+    border-bottom: 1px solid #000;
+    display: flex; align-items: center; padding: 0 4px; cursor: default; gap: 6px;
+  }
+  .window .titlebar .box {
+    width: 13px; height: 13px; border: 1px solid #000; background: #fff;
+    flex-shrink: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; line-height: 1; font-weight: bold; color: #000;
+  }
+  .window .titlebar .title {
+    flex: 1; text-align: center; font-size: 12px; font-weight: bold;
+    background: #ECECEC; padding: 0 6px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .window .content {
+    padding: 16px; overflow: auto; font-size: 13px; line-height: 1.5; color: #111;
+    max-height: 70vh;
+  }
+  .window.focused { box-shadow: 3px 3px 0 rgba(0,0,0,0.45); }
+  .window.focused .titlebar { background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #99b8e8 2px); }
+
+  h2 { margin: 0 0 4px; font-size: 18px; }
+  .intro { margin: 0 0 14px; color: rgba(0,0,0,0.7); }
+  .tag {
+    display: inline-block; font-size: 10px; font-weight: bold; letter-spacing: 0.05em;
+    text-transform: uppercase; padding: 3px 8px; border: 1px solid #000; border-radius: 3px;
+    margin-bottom: 10px;
+  }
+
+  /* ---------- TARJETAS DE CASO ---------- */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+  @media (max-width: 520px) { .cards { grid-template-columns: 1fr; } }
+  .case-card {
+    display: flex; flex-direction: column; background: #fff; border: 1px solid #000;
+  }
+  .case-card .thumb {
+    height: 92px; display: flex; align-items: center; justify-content: center;
+    border-bottom: 1px solid #000;
+    background: repeating-linear-gradient(45deg,#f2f2f2,#f2f2f2 8px,#e8e8e8 8px,#e8e8e8 16px);
+    font-size: 11px; color: rgba(0,0,0,0.45); text-align: center;
+  }
+  .case-card .thumb.folder { font-size: 30px; background: #f6f0dc; }
+  .case-card .cbody { padding: 10px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .case-card h3 { margin: 0; font-size: 13px; }
+  .case-card p { margin: 0 0 6px; font-size: 12px; color: rgba(0,0,0,0.6); flex: 1; }
+  /* Tipografía de código (la del sistema: SF Mono / Menlo en Mac): da un aire tech sin salir del universo Mac */
+  :root { --mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
+  .type-tag {
+    align-self: flex-start; font-family: var(--mono); font-size: 8.5px; font-weight: normal; letter-spacing: 0.02em;
+    text-transform: uppercase; padding: 2px 5px; border: 1px solid; border-radius: 3px;
+  }
+  .tags-row { display: flex; flex-wrap: wrap; gap: 4px; }
+  /* El estado se lee como un comentario de código: // en uso */
+  .type-tag.estado-tag { border: 0; background: none; padding: 2px 0; text-transform: none; color: rgba(0,0,0,0.6); }
+  .type-tag.estado-tag::before { content: "// "; content: "// " / ""; }
+  .btn {
+    align-self: flex-start; font-family: inherit; font-size: 12px; font-weight: bold;
+    padding: 5px 12px; border: 1px solid #000; background: #ddd; color: #111;
+    text-decoration: none; cursor: pointer; display: inline-block;
+  }
+  .btn:hover { background: #cfcfcf; }
+  .btn:active { background: #bbb; }
+  .btn.disabled { background: #eee; color: rgba(0,0,0,0.4); border-color: rgba(0,0,0,0.3); cursor: default; }
+  .btn:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }
+
+  .photo.logo { background: #fff; border-style: solid; padding: 0; }
+  .photo.logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .photo {
+    height: 140px; display: flex; align-items: center; justify-content: center;
+    border: 1px dashed rgba(0,0,0,0.4); background: rgba(0,0,0,0.05);
+    font-size: 11px; color: rgba(0,0,0,0.5); margin-bottom: 12px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .chips span { font-size: 11px; border: 1px solid rgba(0,0,0,0.4); border-radius: 999px; padding: 2px 9px; }
+  .contact-form { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .contact-form input, .contact-form textarea { width: 100%; font-family: inherit; font-size: 12px; padding: 6px 8px; border: 1px solid #000; }
+  .contact-form textarea { resize: vertical; min-height: 64px; }
+  .contact-form .btn { align-self: flex-start; }
+  .small { font-size: 11px; color: rgba(0,0,0,0.6); }
+  .thanks { font-size: 14px; }
+
+  /* ---------- GLOBO ---------- */
+  .balloon {
+    position: absolute; width: 220px; background: #FFFBD6; border: 1px solid #000;
+    border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.45;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3); z-index: 20000;
+    opacity: 0; transform: translateY(6px);
+    transition: opacity 0.25s ease, transform 0.25s ease; pointer-events: none;
+  }
+  .balloon.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .balloon .balloon-close { float: right; margin-left: 6px; cursor: pointer; font-weight: bold; opacity: 0.55; }
+  .balloon .balloon-close:hover { opacity: 1; }
+  .balloon:after { content: ""; position: absolute; bottom: -9px; right: 26px; width: 0; height: 0;
+    border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 9px solid #000; }
+  .balloon:before { content: ""; position: absolute; bottom: -7px; right: 27px; width: 0; height: 0;
+    border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid #FFFBD6; z-index: 1; }
+
+  /* ---------- POPUP DE BIENVENIDA ---------- */
+  #welcome-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.25); z-index: 30000; display: none;
+  }
+  #welcome-backdrop.show { display: block; }
+  #welcome {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 560px; max-width: 92vw; z-index: 30001; display: none;
+  }
+  #welcome.show { display: flex; }
+  #welcome .w-feat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 12px; }
+  #welcome .w-feat button { all: unset; box-sizing: border-box; cursor: pointer; border: 1px solid #000; background: #fff; display: flex; flex-direction: column; }
+  #welcome .w-feat button:hover, #welcome .w-feat button:focus-visible { outline: 2px solid #000; outline-offset: 1px; }
+  #welcome .w-feat img { width: 100%; aspect-ratio: 16/10; object-fit: cover; object-position: top left; display: block; border-bottom: 1px solid #000; }
+  #welcome .w-feat span { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 11px; padding: 5px 7px 6px; line-height: 1.3; }
+  #welcome .w-lead { font-size: 15px; line-height: 1.4; margin: 0 0 4px; }
+  #welcome .w-small { font-size: 11px; color: rgba(0,0,0,0.6); margin: 0 0 12px; }
+  #welcome .w-actions { display: flex; justify-content: flex-end; }
+  @media (max-width: 520px) { #welcome .w-feat { grid-template-columns: 1fr; } #welcome .w-feat button { flex-direction: row; } #welcome .w-feat img { width: 40%; aspect-ratio: auto; border-bottom: 0; border-right: 1px solid #000; } #welcome .w-feat span { align-self: center; } }
+
+  /* ---------- CAPA SEO / LECTORES DE PANTALLA (oculta, siempre en el DOM) ---------- */
+  #mobile-view { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ---------- MÓVIL: el MISMO escritorio, adaptado al dedo ---------- */
+  @media (max-width: 760px) {
+    #desktop {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px 4px;
+      align-content: start;
+      padding: 34px 8px 16px;
+      height: 100%;
+      overflow: hidden;
+    }
+    #desktop .icon { position: static !important; width: auto; left: auto !important; top: auto !important; }
+    /* ventanas Finder a pantalla completa (NO el popup de bienvenida) */
+    .window[id^="win-"] {
+      position: fixed !important;
+      top: 22px !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+      width: 100% !important; max-width: 100% !important;
+      z-index: 500;
+    }
+    .window[id^="win-"] .content { max-height: none; flex: 1; }
+    /* popup de bienvenida: centrado y legible en móvil */
+    #welcome { width: 92vw !important; }
+    .cards { grid-template-columns: 1fr; }
+  }
+  #mobile-view .m-head { padding: 28px 0 8px; }
+  #mobile-view .m-head h1 { font-size: 26px; margin: 0 0 4px; }
+  #mobile-view .m-head p { margin: 0; color: rgba(0,0,0,0.6); }
+  #mobile-view section { border-top: 1px solid #ccc; padding: 20px 0; }
+  #mobile-view section > h2 { font-size: 18px; margin: 0 0 4px; }
+  #mobile-view .m-sub { font-size: 14px; margin: 18px 0 6px; font-weight: bold; }
+  #mobile-view .m-card { border: 1px solid #000; background: #fff; padding: 12px; margin: 10px 0; }
+  #mobile-view .m-card h3 { margin: 4px 0; font-size: 15px; }
+  #mobile-view .m-card p { margin: 0 0 8px; font-size: 13px; color: rgba(0,0,0,0.6); }
+
+  /* ===== CASE STUDY (ventana tipo documento) ===== */
+  @font-face { font-family: "ChicagoCS"; src: url("data:font/woff2;base64,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") format("woff2"); font-display: swap; }
+  @font-face { font-family: "MonacoCS"; src: url("data:font/woff2;base64,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") format("woff2"); font-display: swap; }
+  .window.docwin .content { padding: 0; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+  .cs-toolbar { display: flex; align-items: center; gap: 5px; padding: 5px 8px; background: #cccccc; border-bottom: 1px solid #808080; border-top: 1px solid #f0f0f0; flex-shrink: 0; }
+  .cs-tfont { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 11px; color: #333; padding: 3px 8px 1px; background: #dcdcdc; border: 1px solid #808080; box-shadow: inset 0 1px 0 #fff; }
+  .cs-tibtn { height: 21px; image-rendering: pixelated; }
+  .cs-sep { width: 1px; height: 16px; background: #999; margin: 0 3px; }
+  .cs-ruler { position: relative; height: 24px; border-bottom: 1px solid #808080; overflow: hidden; flex-shrink: 0;
+              background: repeating-linear-gradient(90deg,#5f5f5f 0 1px, transparent 1px 66px) 44px bottom / calc(100% - 44px) 12px no-repeat,
+                          repeating-linear-gradient(90deg,#8f8f8f 0 1px, transparent 1px 11px) 44px bottom / calc(100% - 44px) 6px no-repeat, #d2d2d2; }
+  .cs-mk { position: absolute; top: 4px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid #333; }
+  .cs-mk.l { left: 40px; } .cs-mk.r { right: 40px; }
+  .cs-paper { background: #f7f4ea; padding: 28px 44px 40px; overflow-y: auto; flex: 1; min-height: 0; max-height: 72vh; color: #1c1a17; }
+  .cs-paper .cs-title { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 23px; line-height: 1.25; margin: 0 0 6px; }
+  .cs-sub { font-size: 15px; font-style: italic; color: #5a534a; margin: 0 0 14px; }
+  .cs-meta { font-family: var(--mono); font-size: 10px; color: #6a6258; line-height: 1.7; border-top: 1px solid #d8d0c0; border-bottom: 1px solid #d8d0c0; padding: 9px 0; margin: 0 0 24px; }
+  .cs-paper h3 { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 16px; margin: 30px 0 11px; color: #17140f; padding-top: 20px; border-top: 1px solid #e3dccb; }
+  .cs-paper p { font-size: 14px; line-height: 1.72; margin: 0 0 14px; }
+  .cs-paper strong { color: #000; }
+  .cs-cover { height: 210px; margin: 0 0 24px; border: 1px solid #cbc3b2; background: repeating-linear-gradient(45deg,#efe9db,#efe9db 10px,#e7e0cf 10px,#e7e0cf 20px); display: flex; align-items: center; justify-content: center; font-family: "MonacoCS",monospace; font-size: 12px; color: #9a917f; }
+  .cs-shot { height: 160px; margin: 8px 0 18px; border: 1px solid #cbc3b2; background: repeating-linear-gradient(45deg,#efe9db,#efe9db 9px,#e7e0cf 9px,#e7e0cf 18px); display: flex; align-items: center; justify-content: center; font-family: "MonacoCS",monospace; font-size: 11px; color: #a89e88; }
+  .cs-cta-row { margin: 2px 0 22px; } .cs-cta-row.bottom { margin: 30px 0 2px; text-align: center; }
+  @media (max-width: 760px) { .cs-paper { max-height: none; } }
+  /* imágenes reales dentro de un case study (Generador de presupuestos) */
+  .cs-fig { margin: 8px 0 20px; }
+  .cs-fig img { display: block; width: 100%; height: auto; border: 1px solid #cbc3b2; background: #fff; }
+  .cs-fig figcaption { font-size: 12px; font-style: italic; color: #6a6258; margin-top: 6px; line-height: 1.5; }
+  .cs-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0 20px; }
+  .cs-pair .cs-fig { margin: 0; }
+  @media (max-width: 760px) { .cs-pair { grid-template-columns: 1fr; } }
+  .cs-paper ul.cs-list { font-size: 14px; line-height: 1.72; margin: 0 0 14px; padding-left: 20px; }
+  .cs-paper ul.cs-list li { margin-bottom: 8px; }
+  .case-card .thumb.build { background: repeating-linear-gradient(-45deg,#f4d03f 0 10px,#1c1c1c 10px 20px); }
+  .case-card .thumb.build.pause { background: repeating-linear-gradient(-45deg,#e4e4e4 0 10px,#b5b5b5 10px 20px); }
+  .case-card .thumb.build span { background: #fff; border: 1px solid #000; box-shadow: 2px 2px 0 #000; padding: 5px 12px; font-family: "ChicagoCS",Geneva,sans-serif; font-size: 11px; color: #000; }
+  .case-card .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+</style>
+</head>
+<body>
+
+<!-- ===== ESCRITORIO (pantallas grandes) ===== -->
+<div id="desktop">
+  <div id="menubar" role="menubar" aria-label="Menú del escritorio">
+    <button type="button" role="menuitem" class="mtitle mcat" data-menu="gato" aria-haspopup="true" aria-expanded="false" aria-label="Menú del gato"><svg class="cat" viewBox="0 0 15 12" width="19" height="15" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z" fill="#000"/></svg></button>
+    <button type="button" role="menuitem" class="mtitle" data-menu="archivo" aria-haspopup="true" aria-expanded="false">Archivo</button>
+    <button type="button" role="menuitem" class="mtitle m-opt" data-menu="edicion" aria-haspopup="true" aria-expanded="false">Edición</button>
+    <button type="button" role="menuitem" class="mtitle" data-menu="ver" aria-haspopup="true" aria-expanded="false">Ver</button>
+    <button type="button" role="menuitem" class="mtitle" data-menu="proyectos" aria-haspopup="true" aria-expanded="false">Proyectos</button>
+    <button type="button" role="menuitem" class="mtitle" data-menu="ayuda" aria-haspopup="true" aria-expanded="false">Ayuda</button>
+    <div class="spacer"></div>
+    <div class="item m-owner">Escritorio de Mery Villena</div>
+    <div class="item" id="clock"></div>
+  </div>
+    <div class="item" id="clock"></div>
+  </div>
+</div>
+
+<!-- ===== POPUP DE BIENVENIDA ===== -->
+<div id="welcome-backdrop"></div>
+<div id="welcome" class="window focused" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+  <div class="titlebar">
+    <div class="box" id="welcome-close" role="button" tabindex="0" aria-label="Cerrar">×</div>
+    <div class="title">Bienvenida</div>
+    <div class="box" aria-hidden="true"></div>
+  </div>
+  <div class="content">
+    <h2 id="welcome-title">Hola, soy Mery ✦</h2>
+    <p class="w-lead">Diseño, construyo y pongo en marcha productos digitales para negocios pequeños: desde lo que ve el cliente hasta lo que necesita el equipo para trabajar.</p>
+    <p class="w-small">Este es mi escritorio. Abre una carpeta o empieza por uno de estos proyectos:</p>
+    <div class="w-feat">
+      <button type="button" data-open="case-puti"><img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt=""><span>Puti Di Madre<br>Negocio y operaciones</span></button>
+      <button type="button" data-open="case-presupuestos"><img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt=""><span>Presupuestar sin echar la tarde<br>Herramienta en uso</span></button>
+      <button type="button" data-open="case-spotify"><img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt=""><span>Spotify Now Playing<br>Exploración de producto</span></button>
+    </div>
+    <div class="w-actions"><button class="btn" id="welcome-ok">Entrar al escritorio</button></div>
+  </div>
+</div>
+
+<!-- ===== VERSIÓN MÓVIL / SEO (lista) ===== -->
+<main id="mobile-view"></main>
+
+<noscript>
+  <div style="padding:24px;max-width:640px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;">
+    <h1>Mery Villena</h1>
+    <p>Diseño de producto digital, no-code y operaciones para negocios pequeños.</p>
+    <p>Este portfolio es interactivo y necesita JavaScript. Escríbeme a <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a>.</p>
+  </div>
+</noscript>
+
+<script>
+/* ============================================================
+   ICONOS (base64). El diseño fino de iconos se refina aparte.
+   ============================================================ */
+const ICONS = {
+  directory: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAASXSURBVHgBvZddTBxVFMf/d2Y2LLCtlAoVoXwsKYbuYghKrIA82Bdj27SmmpgYTaxp9KXWtE8aH0wM0Rh9NBqjqUlJn1UIJpo0TYob/EpJU4oUC4Vu0zWpSsoWFti5t3fOvTM7S3bZhdIeGGbunTvn/O75moFBy7Fjw4szM+PB69dHUF5eBcsKlp4790EK91mYe7F//1eL+54/Epy48iumpi7jQYGwV14+s3j7znwwHv8N3d2vIRLpgcEMjP8VeyAgBHDi5EvBoR9v4fc/BsngWiDDwx8zbKIQwPGTL5aYpsEsafCHgX/WBJmdjWF09BTr6XlXOAqSyQRCoUck2EcbAiOAt08cDlqWCS5VCvmnRF7nA3HkdP97qKhoRDgcwfbKMP79b0rCjSEeHyG4DQJYQgpsWzAhf7k8l5WaGFgF0hbtzakokbhJIJOTo/L6z8SFC6dqigZwQmAYBuNy945xBQHQmANbQxYGBhWIE4Le3jcQ2d2dU+HS0gJ++rmfmAYH3ywIYT4ePfz+nqd3W2BMGwWdBUVYekKOF1McdfWl2Pfck3LZUxgbG8bZs5+jrOxhVFfVZym0rACaw21IpW6HbNt6K5EY/awgQOee1oDUDM+wPksPaBhB4zsLHLV1ZTh4oLMACIOdNjE/nwxt2bJjTQiVVdzZKxMugDIoCETh+O8BN24u44nOSvR9eBQvHOqjBPziyyMYu/yLUsfT+H9uBsWIpYCZ2rjP9VKYUxVcnrMBhLdmNr6M9o5KHDp4lH33/QGZIwMYGTmDrq5Xsa2iQa65VBDAUMTCSUAyBKpEkckDru5rKA9S0DNOkgBXry2LSHQbeWTv3uOIxU4X7QEVAq2YDJFyPesa5CoQAkzvniDh/FCe6FyZmFwSHR31qU8/6SNPFB0C1//aGLkhk4DK3TbntFu6RySMmpY/dM4zKyt2cGhoGsWKCgEpyFRB1gGVB2RgdZISq84PaBjFX7SoJPQZJNf6YbjILk/u7xFeospJproY5UvxYkBTZxKMeUZBm83tGQqRepgOJyyccmVdDtAATny1Yuaq8BqS8JWmbg3umLseU56iQKzPvgrBwkIagRILpiE8N3NlBJlKyHRF7o4JxrdGFVEuqfBdz2UBpNMp2U4voa42il0tBgwzwExD7ZDb3K1/5u8BGQ9ozyE7PH6x7ZWQPL2jh0l5fO0Hsa5cPX9t4u/zwV3hrsb4jSiBNDUb0hsBZhiZChBZO9U9w+mg1Ae0Z7gLl1dcGA/Eku/tVtoPw/jkVCwLZGcDc0DkPZ6pDO6Wo/C9Ob2Xhg5dQfFALHcmF0iDBqmpZbAMi1JWQGSVbcY7EOstQfLA6omcIGEFUr1DMkgQGRrKC2ed/oiBO75ngEIgO+vaULmdy/wIQOiXBqiSsbkA+UBamp9prG+KSJAItj7EoUE2+ql+qyDAahAp07Jy4AcpK7dhmk6yCvqyA4ryRlwe3xYN4Ir87G5aC0RmSbHGVRlig5IP5NGaxwo96hm/J4B8IK0tzzZWVdfRhG0vOcdcPuOObOr/eY60t78+7V5zvpK8eLH/Gz30t2FP7gISRY9Z2GafRQAAAABJRU5ErkJggg==",
+  favorites: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARXSURBVHgBvZddbBRVFMf/s52ljdSoJVWUFOtoqhY/Nm4sobGmD/ShKdVojG9qBKlPPsOLCbGpSZ9MDY3Jmuq7CeEBq1KwGkzUNA6u8YOWtROgCf2iQNmw7M6w93DvnTvT2e52Z7oJnN3tfN2553fPOf8zUw3K3nvnOK1mbyCTGUc8vrWQTn/dgHtgurcjnPf2voudLQYuzVn1/BTx310H0Qc++IEKhVs4//8vWLmyjF3PvYIXE3vwV/regOiMGIY+fR1jY7vx62/HsbIyg/59h/FseyfantmN89N3F0RnrIiFRQ19+x7FgQMHOciCBDkxP4CU+Sfy+A8vfNxdMTWJxPsUmKsmOAmg1zEQERaXOEjfw+g7kgQG+HeAb1NJpAZNLFQAebVrPx5vTeDihXTNUdKJiuBZABNHHIJ/oYl9U40QICYHMUtBurredJedv4Xm5qfQsvP5mgo4xop89eJDGhhJhlJLKRgZlKT8LQz+jJmZGTiO7Q/L5W6iqekJdLzci/ZdbyGq8SIsgjHIFBC52zLjAKZpSg7xdyrxO+r4QUNDHtsfaSsZmi/keSTakLvZLSKRD4tCjBiTjplyzkhDmL3Wf5j/+mFZ/+K77z/D8pXZsjEiHdzqeaHmqwKIIiTfOVySCLancxtGRg6iZ+9HEuTUqaO4eu2CvBaPb8F9W7ejtbU7dJ6Y6ANe+EXpMEQzMT6TcdDRUQoyOfkFVlfn5BgRhWx2XqsOwFMgwy+UwAgULQCSVILzz7lzDl5KNvkgZ8+O86JcxO3bdug0MSFDMM1NAxcgRQyB1I6Ehi/ff/62eRt/CKNHh3DmzBhy+Xg4QJHXAPMUICaMGAJirmxl2gIKEttjxzJyjG1nQ+fRyStCUOU+sBGAe5O6R0SOfDV5xopO6Dw6UzIkNVFUFTD/nrWVu910bUyhEDUCqhX7aohgcsVQALKGyhuZ4+RC59GL3LsoKARWEwkA8NWDgIyjFrEPIFVAaxJkkWtApQxMdk+/mWFzJmtg8icLO3Y8jScNuySH1cyTn+9cpaScgHKGYRwRe5qmFWdnZwdLAJaWpgsTE3PU2PhYQ2fnGxIkiXBbX4B+SqjaPVQnYIIgejr9lXxaJRL78xMToxIkiR6EWmDVbv+AeqxHuFWBSADvZBAE6KkPm0Q2n6Bzrx9E7uWuxdaf8EDCjBhKitZNxSaeJcp01Gjkh1zzZUg1yDBW7WIqZVa+oBHmF7kC1EMs2BU36Z9tCJCSr2Cm3K63kydH8e2JzzE9fYm/Dan+oZ6MUSPAleBYlvVJxRR4736njWHntDhhfRMPSnN5eZz3+e6Cpxoh36ZtLbi/MVoBCOdchkNivyLAHzDpR2M4xwkbxfGw8bZ9iEMEhtiV5Nve3oUHH2iO7HxDgC/xYQzW2jEH2SIg9lqHyt4wgiBTU5cliGEE+4h2fSPn8hw2Ybx5EIcQqbE5VMVe4f27ls1eFpvrRJkR5bysDQu7A4BiC99TOhwgAAAAAElFTkSuQmCC",
+  internet: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAVaSURBVHgBvZdfbBRVFMa/qbtQbLVsLVowIPSBP0VjwzQghBLQkkDA6Et9USAQ2Y0aA48+GhNMfEIIxHQT9EGfWAkxBDXSEIOJkrBDahAplK4FYltaYFsK7W63M9dz7p17Z7ZVtyXA2d6ZuXfu3PM753x3dmvBtx3bjouh4bvo7DyJaLQi317+VTkeg0X0BTvfvHk7Fsyvw/UbmZk0JKg9cpBI/N0fRT4/iitXf8HtWwNY/uJavNywGr+3Px6QiCc87Pv0DRw5sgq//nYct29fxutbP8Ky+jVYvHQVrnQ8WhBr184T4v0PtspO7XOCQPpwLn0Cg4Pd2LRpD6qqYhBC4GrnOQZBd/fP0CANDTtFaK0Hgot4novIE550crPfwpYtz+Kdbbvxzdd9OHv2OwOyZOkreGFhQ5FG1jXtkmPXutsfOEvWju3HxN49b8LjZ+nP8+gkVKuZUyZBdEZefe09VD0dA0PfuH5BOs/nRuG6LspnzZJjE7NUCiDiueyaPsKSWdDOufXfdNG8cY7JSBhk/oKXUCiMmYVGRu6junoRamuX4MmKGvx58VtMxUiErh+1di7gEQwdKCvUp0PP3y42bKiZBLJixRbSzeKiBXP5HJVpMUbur+eS5EploUx4nnTshZyrs3KuwFT/+rVxNK2rwYEDu7Gx+UNkMhfx/Q/7MXCra9LCrBWymSTU3P8CcD2DyKFItA7gg5gmJNRfmXGsXvNMEcipU4dwJ9stF41GZ1AZarFw4XqUsjJ+D+j0Q/k2TrUgjTBhmYxwv7OzgJUri0FOn/4CQ0M3TBaGh3utEhnwTLo9L9CBgfLgi9Sf48NBl4c+ly4VsMKuNiDnz58kUd7E+PhY6QwIEiE8K4hQLqzPvkO+z6IUwVaVe8dT1/Bh/7gwRq/xGA4f2oczZ45gJBctCRBxSQNeaPtJJ7Rox5Uo2treQiqVMpNbWlowd+4ebN7UKCENkAhtY5p37FinnD82NlwaQGgR+oLr6Agc261A+mjwtk0kLaQSKfT2tqC5+Sien5f3S6IypDOmzXMLJQGkBnR92XkiYSETSyGeBuI2kExSc5SOWuNCjvN9nvfTqXRIM0rACAHk86UzUCYz4IuLF7XjUM22+UDXjSZ6ZTTRFnLOwYNr0dc3U2nEiDQgKBRGSgO49BQL6vDht2nhtHFO7uEk02YiR+84PKj6jqMguFzhbSw8TMsivAsuX44qsdlHi25y9A55jdsqKk6KMXIepxolrJQUZlOTrV5mmJ5JDXAUHL0Mz4+wMZGWGeBsOCbq4odtqHL19h4wIpxM4Obq6uo+9tveSQD9/R15tdXU6klyylErloS8dkLOHXNgcTqSgp/v6VO7KLwL/sVmTwSJtLd/yd9WQsWj4kpS9PFWi2B4tValB33bCSCSpANKE3US9PV7CbPKbVRWlhaeBpEAwZgDBeHIYjvkPB63jCDZElqURaWISwC20dwIKiowLSvjA9GEINSJs8sZMCVgVyRKG1Ywk+7FMtWh5/3viekCkBXgJEIQTkAhT47SBZtMR6MRRTabRSzWHABMcxtIgEwmMyMcRTjHLMqARwPF9V0ZfSy2yMyfpn+vLNQJZUFDKBDfr9RbMtlqnPMAR19XtxH1y5fJ0almwLKsOxT4JwbAz8IECA0CP/LWYIyc2/QSCEf/VKWQvymm4ryrq+sgX0fCN3yIMWQ/4+uofMtolzLtJDqOmstFLZttowb61dND8+ehvr4Js6vmTNn5JAANwWcF0sb9iNKbrPc4irSibGDgJDXg3r0et7JyXjmXJGSD/+VcjuEhm/53jbNCGrsrRNd+DULBfD5x/j9fT6LG+WJvXgAAAABJRU5ErkJggg==",
+  trash: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFTGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDIgNzkuZGJhM2RhM2I1LCAyMDIzLzEyLzE1LTEwOjQyOjM3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHRpZmY6Q29tcHJlc3Npb249IjEiIHRpZmY6UGhvdG9tZXRyaWNJbnRlcnByZXRhdGlvbj0iMiIgdGlmZjpSZXNvbHV0aW9uVW5pdD0iMiIgeG1wOkNyZWF0ZURhdGU9IjIwMjQtMDMtMjVUMTU6MzQ6NDAtMDU6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI0LTA0LTA0VDIwOjA3OjA3LTA1OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI0LTA0LTA0VDIwOjA3OjA3LTA1OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo4MGZiNGRjMi0yYjdmLTQ2MTUtOGNkZS1iZWUxY2U5YzM5MDIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6ODBmYjRkYzItMmI3Zi00NjE1LThjZGUtYmVlMWNlOWMzOTAyIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6ODBmYjRkYzItMmI3Zi00NjE1LThjZGUtYmVlMWNlOWMzOTAyIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ODBmYjRkYzItMmI3Zi00NjE1LThjZGUtYmVlMWNlOWMzOTAyIiBzdEV2dDp3aGVuPSIyMDI0LTA0LTA0VDIwOjA3OjA3LTA1OjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgMjUuNiAoTWFjaW50b3NoKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7sQGJ4AAACV0lEQVRYhe1W0ZWjMAwc70sDbkEugRagBFpIC1AClBBKgBJwC5RgteASdB+38pqEJMDd7f3svMcLMbZmJFmyISJ49RCRABAAQkTybv7R5wMvYIwRZkbXdQghgIhgjBHnnLxadwRGZG3LOSdEtBpjZhARyrJE0zQwxgAAyrIEMyOEYM4KSBFwzklVVaJEt9stkaiIYRjQti1CCCsBVVWJc+5UZC7qMRGhaRqo9/o7DEP61vc9rLUYhiHN6boOAOC9h/cezjk5EpELEeF6vcJaCxWimOcZzAxmTmMxRvR9DyLCsiwoigLMjLIsYa1FjPFQBAwAmef5gXwLVVXBe4+yLFEUBQAk4cycxInI7gh8AL/D9w7qZdd1iXxrzlFc9GWaJtR1vRkFNVzXdXrXUGuK9jjxVIC1NhlXgq2U5B4yM5ZlSf/P5B8ALlpmSpoT5N5ueZ6vORN+ADCfrRZElGr/3qhusHws91ajoQ3rUBmGEIwxRuq6Rtu2KR3vKkKJlfxsVzQiAmOMjOMIay0ApNze9wDgy/MY46oaYozw3h8qQSCrgtx40zQPG06/b6UgF30Uq9Mw91yrQFsxEaWmox1Qn7Ml+CDgHm3boiiKlXfTNCURKjrGmNL3VwV8B34EXN5POYb8UrKnJ/zTCOy5JX1LCl4J+e974EfASsCzq9Y7nF33IOCssT1H97OS/FADesDkBruuW40DwPV6BTOvxvILyxFy4PM+oCXCzBjHEXVdJ8M58kMpP5b7vl8J30ueBChyIU3TrO7+SqZCXpHuJX8QsCVkC39KmuMXp1PohnVHLgoAAAAASUVORK5CYII=",
+};
+
+// Iconos vectoriales (SVG) para disco y sobre — fáciles de ajustar luego.
+function svgIcon(s){ return "data:image/svg+xml;utf8," + encodeURIComponent(s); }
+ICONS.disk = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAE9GlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDIgNzkuYTZhNjM5NjhhLCAyMDI0LzAzLzA2LTExOjUyOjA1ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjUuOSAoTWFjaW50b3NoKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjQtMDQtMjZUMTQ6MjE6NDAtMDU6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI0LTA1LTIyVDIxOjIzOjUxLTA1OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI0LTA1LTIyVDIxOjIzOjUxLTA1OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowMTJhMzQ4My02ZjBkLTQ3ZjAtOTNiOS1kMzlhNzUxZTNmM2IiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MDEyYTM0ODMtNmYwZC00N2YwLTkzYjktZDM5YTc1MWUzZjNiIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MDEyYTM0ODMtNmYwZC00N2YwLTkzYjktZDM5YTc1MWUzZjNiIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowMTJhMzQ4My02ZjBkLTQ3ZjAtOTNiOS1kMzlhNzUxZTNmM2IiIHN0RXZ0OndoZW49IjIwMjQtMDQtMjZUMTQ6MjE6NDAtMDU6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyNS45IChNYWNpbnRvc2gpIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PiL4Ff8AAAM0SURBVFiF7ZY9b11FEIafvbqhhSAkinTeypKRECljOtOSNhShcBMaS/cH+C/EboKEfw2RQkVEmlu4sA7CUWIpCEKX5O58Ueyej2sHQ4Ubr7Ta2Zndmfednd1zUkRwlW12pdGvAVwDuAZwDQCYv0+Zc97avrO9VFVMFTVF1Krc5qaGmaJma/Joc8z0y67rfroMQDr/FOect3Z2dpYHDx/y2+lpDSiCmKKiiEodrY6qihRFtCCiqNSxiPD9o0e4+6UgZueDf3337vLo6IgXL88GfZBGxAPyRIoEUVeMxkQkSCl48N0DZrPZk5zz9r8CyDlv7e3tLQ8PDvi160anzXEfOIDUZpFiNJAgotqjgQ7Y3d29FMRsGnyxWPD8+fPGoGfUgERqQFINPKQnBvKJfl+QYlTe//b+P4KYTYOfnZ1dYNBTDGJMSu+8j5CqPUgMJZXWa+veN/feCyIdHh7GYrEAwNxxM8ydaKO54ea4O2pGeF/hhrtjpm2d42qYW7WZ1xthjrny7u07Xv/5mv39fU5OToaDmwO8+v0VUgqlCFIKq16WgoiwKitUhFKEIkJZVb1qQZpOpl2l3hwRpNR5KYqqXKiB+fHxMc9+eTZslCKIaA3Q6ybO+2BaCkW1giwyAC6lgiulNDJNL4KsVszn60/PfHNzk9u3v2gOZM1BL0/1F0CIIKpomYBdm1fmUgRV4cfHj8k53+y67q/hFnhE7e5EBB51hCCidmKUI4LwwGtpQlRpWOtebW3uEc0+EL+Vc7451EB4W0yw+WITgKcfPSWcAZAzyngA3oA4Fd8UIANgGpmIoHoB4DOAnHMD0DP0oPuqrvjj57rBB8ZOeL2KEYF7tMDng/cZbIFhLWutfb52C2Ky4c1yiYgQUlpmRgZBS2eMrMHb0Y3rINaAMclwa58CnwAf1xpwcI+BrXuMxxIB7SjCJ+eLV3lI9zST47G6j/UxKYK3wIfArbSxsbG9fWf7iXtl0vcIx6w5cMMicHMiDPNo6/pHKqrcP0itTx8xN8M9KLL6AXgJdMBy+BznnDNwo/U58MEl8nndjf/Y3wCnwAlw3HVdd+F/4P9uV/5Ldg3gygH8DVo6w+6UUjCbAAAAAElFTkSuQmCC";
+ICONS.mail = svgIcon("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><ellipse cx='16' cy='26' rx='12' ry='2' fill='rgba(0,0,0,0.15)'/><rect x='4' y='8' width='24' height='16' rx='1' fill='#fbfbf7' stroke='#000'/><path d='M4 9 L16 18 L28 9' fill='none' stroke='#000'/><path d='M5 22 L12 16 M27 22 L20 16' stroke='#bbb' fill='none'/></svg>");
+ICONS.trashEmpty = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFTGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDIgNzkuZGJhM2RhM2I1LCAyMDIzLzEyLzE1LTEwOjQyOjM3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHRpZmY6Q29tcHJlc3Npb249IjEiIHRpZmY6UGhvdG9tZXRyaWNJbnRlcnByZXRhdGlvbj0iMiIgdGlmZjpSZXNvbHV0aW9uVW5pdD0iMiIgeG1wOkNyZWF0ZURhdGU9IjIwMjQtMDMtMjVUMTU6MzQ6NDAtMDU6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI0LTA0LTA0VDIwOjA3OjA3LTA1OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI0LTA0LTA0VDIwOjA3OjA3LTA1OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo4MGZiNGRjMi0yYjdmLTQ2MTUtOGNkZS1iZWUxY2U5YzM5MDIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6ODBmYjRkYzItMmI3Zi00NjE1LThjZGUtYmVlMWNlOWMzOTAyIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6ODBmYjRkYzItMmI3Zi00NjE1LThjZGUtYmVlMWNlOWMzOTAyIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ODBmYjRkYzItMmI3Zi00NjE1LThjZGUtYmVlMWNlOWMzOTAyIiBzdEV2dDp3aGVuPSIyMDI0LTA0LTA0VDIwOjA3OjA3LTA1OjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgMjUuNiAoTWFjaW50b3NoKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7sQGJ4AAACV0lEQVRYhe1W0ZWjMAwc70sDbkEugRagBFpIC1AClBBKgBJwC5RgteASdB+38pqEJMDd7f3svMcLMbZmJFmyISJ49RCRABAAQkTybv7R5wMvYIwRZkbXdQghgIhgjBHnnLxadwRGZG3LOSdEtBpjZhARyrJE0zQwxgAAyrIEMyOEYM4KSBFwzklVVaJEt9stkaiIYRjQti1CCCsBVVWJc+5UZC7qMRGhaRqo9/o7DEP61vc9rLUYhiHN6boOAOC9h/cezjk5EpELEeF6vcJaCxWimOcZzAxmTmMxRvR9DyLCsiwoigLMjLIsYa1FjPFQBAwAmef5gXwLVVXBe4+yLFEUBQAk4cycxInI7gh8AL/D9w7qZdd1iXxrzlFc9GWaJtR1vRkFNVzXdXrXUGuK9jjxVIC1NhlXgq2U5B4yM5ZlSf/P5B8ALlpmSpoT5N5ueZ6vORN+ADCfrRZElGr/3qhusHws91ajoQ3rUBmGEIwxRuq6Rtu2KR3vKkKJlfxsVzQiAmOMjOMIay0ApNze9wDgy/MY46oaYozw3h8qQSCrgtx40zQPG06/b6UgF30Uq9Mw91yrQFsxEaWmox1Qn7Ml+CDgHm3boiiKlXfTNCURKjrGmNL3VwV8B34EXN5POYb8UrKnJ/zTCOy5JX1LCl4J+e974EfASsCzq9Y7nF33IOCssT1H97OS/FADesDkBruuW40DwPV6BTOvxvILyxFy4PM+oCXCzBjHEXVdJ8M58kMpP5b7vl8J30ueBChyIU3TrO7+SqZCXpHuJX8QsCVkC39KmuMXp1PohnVHLgoAAAAASUVORK5CYII=";
+ICONS.trashFull = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFTGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDIgNzkuZGJhM2RhM2I1LCAyMDIzLzEyLzE1LTEwOjQyOjM3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiIHRpZmY6Q29tcHJlc3Npb249IjEiIHRpZmY6UGhvdG9tZXRyaWNJbnRlcnByZXRhdGlvbj0iMiIgdGlmZjpSZXNvbHV0aW9uVW5pdD0iMiIgeG1wOkNyZWF0ZURhdGU9IjIwMjQtMDMtMjVUMTU6MzQ6NDAtMDU6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI0LTA0LTA0VDIwOjA2OjUzLTA1OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI0LTA0LTA0VDIwOjA2OjUzLTA1OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDplYTdkODk2ZC04MWI4LTQ3ZjQtYjhlOS03ZGQ1N2U2N2QyMDQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6ZWE3ZDg5NmQtODFiOC00N2Y0LWI4ZTktN2RkNTdlNjdkMjA0IiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6ZWE3ZDg5NmQtODFiOC00N2Y0LWI4ZTktN2RkNTdlNjdkMjA0Ij4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ZWE3ZDg5NmQtODFiOC00N2Y0LWI4ZTktN2RkNTdlNjdkMjA0IiBzdEV2dDp3aGVuPSIyMDI0LTA0LTA0VDIwOjA2OjUzLTA1OjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgMjUuNiAoTWFjaW50b3NoKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6A1nPeAAAC8UlEQVRYha1X7Y3rIBAcTteAW1hKoAUogSvBLcQlkBKSEo4STAsuAVpwCbwfySLwV5zcG8mScYCZXfaDiJwzlpBSlo8xRrGacHLOGXztbTyO44poOSfGuDvnLETtgSU5ABhjNhcy+XMdf3vbE0WAlDKnlEBELxfV5H8WQUQZQAaQY4yZiDIjxtg89W855zIexzGP45gB5Jwz3nm+UkoAWrdvwRizcvs4jsXypzEwxrwVD9/1gMUs3/fIWbgxBkQEpRS89+/wP7Lgcrk0wbZHnlJqyFNK4Ljpug5KqbfIgacHnHPouq6IkFIixljIWZAxBrfbDSklhBAwTRMAfEwOAAJAds7hcrkAAK7XK6ZpOnQlZ0rf9+XbPM9IKcF7j5zz6UwoMcBWspAQwuFCtp6J53k+y9lA5JwhpcxEhNvttjmJxTFZ/T5NUxMzDCI6VRO+mcBai2EY0HUdrLWrgrRl4TRNUEqVoLzf79BaY55n/Pz8vOIG8PSAECL//v6i67qy8dLaLSFEBOccAMB7D2st2CBOzVdeaAQwrLWbNaEWNQxDk57sMSIq6XlGRNMNObB4QyLC/X4v713XgYgwDENTOXldLeJMT1kJWGIYBiilCgGAJj1fkTjnNgP0tIAjMDkH8FIMEZWYOLovfO/9cAachlue4KqqtT6sKR974JWwlFIpakf4WACTbI05iI0xSCnBOQchRN46io8FzPNcni2w9XUsAI94qIX8KQYYbLH3vjlvIsI4jhBCrOKERXwsoHZ3jRACrLVQSjWFaw//NQjneYbWutSKvu8hpTysFx8LCCGU868LFYBSLev74ikBZ2813CvYvbUApRSICFpraK3fE3BWBDecGikl9H1fOuoZxBjFF2/IvZ3HwKOW19+Bx7lutWn2glKqWB5C2D1/7pDFA957SCkbd7JVDM57a+2q0YQQmkZ15P66Pa/+G9ab8h2B3VoH3fV6XRFxu+bL6Zb1y7tBI6AWwu97970ar+YcXUj+AYifXPukpehoAAAAAElFTkSuQmCC";
+
+/* ============================================================
+   ETIQUETAS DE TIPO
+   ============================================================ */
+// TIPO: qué clase de proyecto es. ESTADO: qué se puede abrir ahora.
+const TIPOS = {
+  real:     { label: "Proyecto real",   bg: "#d6f0d3", bd: "#2f7a2b" },
+  concepto: { label: "Concepto",        bg: "#fbeecb", bd: "#a9791a" },
+  propio:   { label: "Producto propio", bg: "#e6defa", bd: "#6b55b8" },
+  visual:   { label: "Trabajo visual",  bg: "#f7d9e0", bd: "#bf5a72" },
+};
+
+/* ============================================================
+   CONTENIDO (relleno; los copys finales y capturas los aporta Mery)
+   ============================================================ */
+// Carpetas anidadas (sub-colecciones que se abren desde otra ventana)
+const NESTED = {
+  "personal-arte": {
+    id: "personal-arte", title: "Personal · Arte", color: "#eba0ac",
+    intro: "Lo que hago cuando nadie me lo pide. Collages, calendario y experimentos.",
+    cards: [
+      { kind: "project", title: "Collages", tipo: "visual", estado: "Próximamente", desc: "Serie de collages personales.", href: null, pausa: true },
+      { kind: "project", title: "Calendario", tipo: "visual", estado: "Próximamente", desc: "Proyecto de calendario ilustrado.", href: null, pausa: true },
+    ],
+  },
+  "trabajo-grafico": {
+    id: "trabajo-grafico", title: "Trabajo gráfico", color: "#f0c766",
+    intro: "Piezas gráficas de encargo a lo largo de los años.",
+    cards: [
+      { kind: "project", title: "Piezas de diseño", tipo: "visual", estado: "Próximamente", desc: "Diseños para McDonald's sobre todo, y algunas piezas más.", href: null, pausa: true },
+      { kind: "project", title: "Talavera", tipo: "visual", estado: "Próximamente", desc: "Proyecto gráfico Talavera.", href: null, pausa: true },
+      { kind: "project", title: "Promos", tipo: "visual", estado: "Próximamente", desc: "Material promocional.", href: null, pausa: true },
+    ],
+  },
+};
+
+// Elementos del escritorio, en orden (los 2 comerciales arriba del todo)
+const DESKTOP = [
+  {
+    id: "leeme", kind: "file", icon: ICONS.favorites, title: "Léeme primero",
+    win: { title: "Léeme primero", type: "text", html:
+      '<span class="tag" style="background:#ffe08a">Empieza por aquí</span>' +
+      "<p>Soy una apasionada de los sistemas de diseño: esa disciplina de construir interfaces coherentes, pieza a pieza, con reglas claras. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —<a href=\"#\" onclick=\"openWindow('case-portfolio');return false\">un sistema de diseño antes de que existiera esa palabra</a>.</p>" +
+      "<p>Las carpetas organizan mis proyectos por categorías: ábrelas, mira dentro, y muévelas por la pantalla si quieres reordenar.</p>" +
+      "<p>Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em> —ahí está lo que más cuenta.</p>" +
+      "<p class=\"small\">Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.</p>" +
+      "<p>Si quieres saber quién hay detrás de todo esto, abre <em>Sobre mí</em>.</p>"
+    },
+  },
+  {
+    id: "soluciones", kind: "folder", icon: ICONS.directory, title: "Soluciones de negocio", color: "#7fbf7a",
+    intro: "Identidades y webs que captan clientes.",
+    cards: [
+      { kind: "project", title: "Shiatsu", tipo: "concepto", estado: "Prototipo navegable", desc: "Identidad y web para un servicio de shiatsu y facial japonés.", href: "wellness/index.html", thumb: '<img src="wellness/case/miniatura.jpg" width="640" height="400" alt="Web de Eme Pérez, shiatsu" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Puti Di Madre", tipo: "concepto", estado: "Prototipo navegable", desc: "Pizzería de barrio, solo recogida: recuperar el margen que se llevan las apps de reparto.", caseStudy: "case-puti", thumb: '<img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt="Portada de la web de Puti Di Madre" loading="lazy" decoding="async">' },
+      { kind: "project", title: "La Mezcaloteca", tipo: "concepto", estado: "Próximamente", desc: "Rediseño para convertir: web + email marketing.", href: null, pausa: true },
+    ],
+  },
+  {
+    id: "herramientas", kind: "folder", icon: ICONS.directory, title: "Herramientas y operaciones", color: "#8fb4ec",
+    intro: "Apps no-code que usan equipos reales cada día.",
+    cards: [
+      { kind: "project", title: "Presupuestar sin echar la tarde", tipo: "real", estado: "En uso", desc: "Del PDF del fabricante al presupuesto del cliente, de cerca de una hora a unos 10 minutos.", caseStudy: "case-presupuestos", thumb: '<img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt="El presupuesto de Luz Norte en la herramienta" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Gestión de grupos", tipo: "real", estado: "En uso", desc: "Herramienta no-code para restaurantes y eventos.", href: null, pausa: true, mostrar: true, disabledLabel: "Caso próximamente" },
+      { kind: "project", title: "Gestión de delivery", tipo: "real", estado: "En desarrollo", desc: "Control de incidencias y facturación para restaurantes.", href: null, pausa: true, mostrar: true, disabledLabel: "Caso próximamente" },
+    ],
+  },
+  {
+    id: "exploracion", kind: "folder", icon: ICONS.directory, title: "Exploración de producto", color: "#f0c766",
+    intro: "Conceptos de UI y producto que exploro por mi cuenta.",
+    cards: [
+      { kind: "project", title: "Spotify Now Playing", tipo: "concepto", estado: "Prototipo navegable", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt="Clubs cerca de ti en Spotify Now Playing" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Respira", tipo: "propio", estado: "En uso", desc: "App de respiración guiada, gratuita y sin cuenta. Una luna que respira contigo.", caseStudy: "case-respira", thumb: '<img src="respira/case/miniatura.jpg" width="600" height="200" alt="La luna de Respira" loading="lazy" decoding="async">' },
+    ],
+  },
+  {
+    id: "vozvisual", kind: "folder", icon: ICONS.directory, title: "Voz visual", color: "#eba0ac",
+    intro: "Lo más personal: la parte que da personalidad a todo lo demás.",
+    cards: [
+      { kind: "project", title: "Evolución del depredador", tipo: "visual", estado: "Caso disponible", desc: "Scrollytelling true-crime.", caseStudy: "case-depredador", thumb: '<img src="depredador/case/miniatura.jpg" width="640" height="400" alt="Portada de Evolución del depredador" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Mesa de lectura", tipo: "concepto", estado: "Prototipo navegable", desc: "Prototipo de gesto: barajar cartas con física, antes que la imagen.", href: "mesa-de-lectura/index.html", thumb: '<img src="mesa-de-lectura/case/miniatura.jpg" width="640" height="400" alt="Mesa de lectura, tarot con física" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Este escritorio", tipo: "propio", estado: "Caso disponible", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" width="640" height="400" alt="El escritorio de este portfolio" loading="lazy" decoding="async">' },
+      { kind: "folder", ref: "personal-arte", title: "Personal · Arte", desc: "Collages, calendario y experimentos." },
+    ],
+  },
+  {
+    id: "sobremi", kind: "folder", icon: ICONS.disk, title: "Sobre mí",
+    win: { type: "about" },
+  },
+  {
+    id: "contacto", kind: "file", icon: ICONS.mail, title: "Contacto",
+    win: { title: "Hablemos", type: "contact" },
+  },
+  { id: "trash", kind: "trash", icon: ICONS.trashEmpty, title: "Papelera" },
+];
+
+/* ============================================================
+   PLANTILLAS HTML
+   ============================================================ */
+function tagsHtml(card) {
+  const c = TIPOS[card.tipo]; if (!c) return "";
+  return '<div class="tags-row"><span class="type-tag" style="background:' + c.bg + ';border-color:' + c.bd + ';color:' + c.bd + '">' + c.label + "</span>" +
+    (card.estado ? '<span class="type-tag estado-tag">' + card.estado + "</span>" : "") + "</div>";
+}
+// ¿Se enseña esta tarjeta? Las que aún no tienen nada que abrir se ocultan, salvo las marcadas con «mostrar»
+function visible(c) {
+  if (c.kind === "folder") return !isEmptyFolder(c.ref);
+  return !!(c.href || c.caseStudy || c.mostrar);
+}
+
+function buildThumb(card) {
+  if (card.href || card.caseStudy) return '<div class="thumb">captura pendiente</div>'; // proyecto real sin imagen aún: nunca "en construcción"
+  const pausa = card.pausa;
+  return '<div class="thumb build' + (pausa ? " pause" : "") + '"><span>' + "En construcción" + "</span></div>";
+}
+
+// Una carpeta cuyo contenido es todo "en construcción" (sin proyecto abrible) no se abre: así nadie navega en vano.
+function isEmptyCard(c) { return c.kind === "folder" ? isEmptyFolder(c.ref) : !c.href && !c.caseStudy; }
+function isEmptyFolder(ref) {
+  const f = NESTED[ref] || DESKTOP.find((d) => d.id === ref);
+  return !!(f && f.cards && f.cards.length && f.cards.every(isEmptyCard));
+}
+
+// Tamaño real de las imágenes: el navegador reserva el hueco y la página no «salta» al cargar
+const IMGDIM = {"depredador/case/miniatura.jpg":[640,400],"este-escritorio/miniatura.jpg":[640,400],"este-escritorio/portada.jpg":[1400,946],"generador-de-presupuestos/img/02-antes-original-korvel.jpg":[1600,1000],"generador-de-presupuestos/img/03-despues-luz-norte.jpg":[1600,1000],"generador-de-presupuestos/img/08-pdf-generado.jpg":[1600,1000],"generador-de-presupuestos/img/09-copia-excel.jpg":[1600,1000],"generador-de-presupuestos/img/12-recorrido-margen.jpg":[1600,1000],"generador-de-presupuestos/img/miniatura.jpg":[640,400],"mesa-de-lectura/case/miniatura.jpg":[640,400],"respira/case/01-portada.jpg":[1600,1000],"respira/case/02-test-ficha-sesion.jpg":[1600,1124],"respira/case/03-pausa-lunas-final.jpg":[1600,1124],"respira/case/04-avanzadas.jpg":[1600,1124],"respira/case/05-tu-cielo.jpg":[1600,1124],"respira/case/miniatura.jpg":[600,200],"spotify/capturas/00-portada.jpg":[1600,1000],"spotify/capturas/01-inicio.jpg":[600,1298],"spotify/capturas/04-unirse-jam.jpg":[600,1298],"spotify/capturas/06-panel-local.jpg":[1300,1460],"spotify/capturas/miniatura.jpg":[390,500],"wellness/case/miniatura.jpg":[640,400],"putidimadre/case/miniatura.jpg":[480,300],"putidimadre/case/01-web.jpg":[1400,996],"putidimadre/case/02-panel.jpg":[1400,1000],"putidimadre/case/03-franjas-punta.jpg":[860,1560],"putidimadre/case/04-franjas-valle.jpg":[860,1559],"putidimadre/case/05-confirmacion.jpg":[860,1560],"putidimadre/case/06-seguimiento.jpg":[860,1560]};
+function imgDim(src) { const d = IMGDIM[src]; return d ? ' width="' + d[0] + '" height="' + d[1] + '"' : ""; }
+
+// Nombre accesible propio para cada «Abrir proyecto →» (si no, un lector oye 10 botones iguales)
+function labelAbrir(card) { return ' aria-label="Abrir proyecto ' + String(card.title).replace(/[★"<>&]/g, "").trim() + '"'; }
+
+function cardHtml(card) {
+  if (card.kind === "folder" && isEmptyFolder(card.ref)) {
+    return '<article class="case-card">' +
+      '<div class="thumb build pause"><span>En construcción</span></div>' +
+      '<div class="cbody">' +
+        '<span class="type-tag" style="background:#f6f0dc;border-color:#a9791a;color:#a9791a">carpeta</span>' +
+        "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" +
+        '<span class="btn disabled">En construcción</span>' +
+      "</div></article>";
+  }
+  if (card.kind === "folder") {
+    return '<article class="case-card">' +
+      '<div class="thumb folder">📁</div>' +
+      '<div class="cbody">' +
+        '<span class="type-tag" style="background:#f6f0dc;border-color:#a9791a;color:#a9791a">carpeta</span>' +
+        "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" +
+        '<button class="btn" onclick="openWindow(\'' + card.ref + '\')">Abrir carpeta →</button>' +
+      "</div></article>";
+  }
+  const btn = card.caseStudy
+    ? '<button class="btn"' + labelAbrir(card) + ' onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>'
+    : card.href
+    ? '<a class="btn"' + labelAbrir(card) + ' href="' + card.href + '">Abrir proyecto →</a>'
+    : '<span class="btn disabled">' + (card.disabledLabel || (card.pausa ? "En construcción" : "Próximamente")) + "</span>";
+  return '<article class="case-card">' +
+    (card.thumb ? '<div class="thumb">' + card.thumb + "</div>" : buildThumb(card)) +
+    '<div class="cbody">' + tagsHtml(card) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + btn + "</div>" +
+    "</article>";
+}
+
+function folderHtml(entry) {
+  const colorTag = entry.color ? '<span class="tag" style="background:' + entry.color + '">' + entry.title + "</span>" : "";
+  return colorTag + "<h2>" + entry.title + "</h2>" +
+    (entry.intro ? '<p class="intro">' + entry.intro + "</p>" : "") +
+    '<div class="cards">' + entry.cards.filter(visible).map(cardHtml).join("") + "</div>";
+}
+
+function aboutHtml() {
+  return "<h2>Sobre mí</h2>" +
+    "<p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar o Lancôme. Desde 2018 trabajo en la gestión de varios restaurantes McDonald’s, coordinando proveedores, procesos internos, administración y acciones de marketing local.</p>" +
+    "<p>Ahora diseño y desarrollo productos digitales con IA. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas que sean útiles, fáciles de usar y visualmente atractivas.</p>" +
+    '<div class="chips"><span>8 años en operaciones</span><span>no-code</span><span>diseño</span></div>' +
+    '<p><a class="btn" href="cv/index.html" target="_blank" rel="noopener">Ver mi CV →</a></p>' +
+    (visible({ kind: "folder", ref: "trabajo-grafico" }) ? '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>" : "");
+}
+
+function contactHtml(idSuffix) {
+  const s = idSuffix || "";
+  return "<h2>¿Tienes un negocio que merece verse mejor?</h2>" +
+    '<div id="contact-body' + s + '">' +
+      '<form class="contact-form" id="contact-form' + s + '">' +
+        '<input type="email" id="contact-email' + s + '" placeholder="tu@correo.com" aria-label="Tu correo" required>' +
+        '<textarea id="contact-msg' + s + '" rows="4" placeholder="Cuéntame de tu proyecto…" aria-label="Tu mensaje"></textarea>' +
+        '<div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true"><input type="text" id="contact-web' + s + '" tabindex="-1" autocomplete="off"></div>' +
+        '<button class="btn" type="submit" id="contact-send' + s + '">Enviar →</button>' +
+        '<div class="small" id="contact-err' + s + '" role="status" style="color:#b3261e;min-height:14px"></div>' +
+      "</form>" +
+    "</div>" +
+    '<p class="small">Tu mensaje me llega por correo; no lo guardo en ninguna base de datos. O escríbeme directamente a <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a></p>';
+}
+
+/* ============================================================
+   MOTOR DEL ESCRITORIO
+   ============================================================ */
+const desktop = document.getElementById("desktop");
+let zTop = 100;
+let trashEl = null;
+const originalPos = {};
+let trashedIds = [];
+
+function clockTick() {
+  const d = new Date();
+  const days = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+  let h = d.getHours(), ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12; if (h === 0) h = 12;
+  const m = String(d.getMinutes()).padStart(2, "0");
+  document.getElementById("clock").textContent = days[d.getDay()] + " " + h + ":" + m + " " + ampm;
+}
+clockTick(); setInterval(clockTick, 1000);
+
+function makeIcon(id, label, iconSrc, x, y) {
+  originalPos[id] = { x, y };
+  const el = document.createElement("button");
+  el.className = "icon";
+  el.style.left = x + "px"; el.style.top = y + "px";
+  el.dataset.id = id;
+  el.setAttribute("aria-label", label + " — abrir");
+  el.innerHTML = '<img src="' + iconSrc + '" alt=""><span>' + label + "</span>";
+  desktop.appendChild(el);
+
+  let dragging = false, moved = false, offX = 0, offY = 0, downX = 0, downY = 0;
+  el.addEventListener("mousedown", (e) => {
+    e.stopPropagation();
+    dragging = true; moved = false; downX = e.clientX; downY = e.clientY;
+    const r = el.getBoundingClientRect();
+    offX = e.clientX - r.left; offY = e.clientY - r.top;
+    el.classList.add("selected");
+    document.querySelectorAll(".icon").forEach((i) => { if (i !== el) i.classList.remove("selected"); });
+  });
+  document.addEventListener("mousemove", (e) => {
+    if (!dragging) return;
+    // Un temblor de ratón de pocos píxeles sigue siendo un clic, no un arrastre
+    if (!moved && Math.abs(e.clientX - downX) < 5 && Math.abs(e.clientY - downY) < 5) return;
+    moved = true; el.classList.add("dragging");
+    el.style.left = (e.clientX - offX) + "px";
+    el.style.top = (e.clientY - offY - 22) + "px";
+  });
+  document.addEventListener("mouseup", () => {
+    if (!dragging) return;
+    dragging = false; el.classList.remove("dragging");
+    if (id !== "trash" && moved && trashEl) {
+      const r = el.getBoundingClientRect();
+      const tr = trashEl.getBoundingClientRect();
+      const overlap = !(r.right < tr.left || r.left > tr.right || r.bottom < tr.top || r.top > tr.bottom);
+      if (overlap) {
+        el.style.display = "none";
+        el.classList.remove("selected");
+        if (!trashedIds.includes(id)) trashedIds.push(id);
+        updateTrashIcon();
+        // Micro-acción: la Papelera hace un meneíto al recibir algo.
+        trashEl.classList.remove("wobble");
+        void trashEl.offsetWidth;
+        trashEl.classList.add("wobble");
+        setTimeout(function () { trashEl.classList.remove("wobble"); }, 460);
+      }
+    }
+  });
+  // Un clic abre (y el doble clic también, porque abrir es idempotente).
+  // Enter y Espacio disparan "click" en un <button>. Si el clic viene de soltar
+  // un arrastre, no abre nada.
+  el.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (moved) { moved = false; return; }
+    openWindow(id, el);
+  });
+
+  // ---- Soporte táctil (móvil): tocar abre; arrastrar rebota (comeback);
+  //      soltar sobre la Papelera lo tira. La Papelera no se arrastra.
+  let tStartX = 0, tStartY = 0, tMoved = false, tDragging = false;
+  el.addEventListener("touchstart", (e) => {
+    if (id === "trash") return;
+    const t = e.touches[0];
+    tStartX = t.clientX; tStartY = t.clientY; tMoved = false; tDragging = true;
+    el.style.transition = "none"; el.style.zIndex = ++zTop;
+  }, { passive: true });
+  el.addEventListener("touchmove", (e) => {
+    if (!tDragging) return;
+    const t = e.touches[0];
+    const dx = t.clientX - tStartX, dy = t.clientY - tStartY;
+    if (Math.abs(dx) > 6 || Math.abs(dy) > 6) { tMoved = true; el.classList.add("dragging"); }
+    el.style.transform = "translate(" + dx + "px," + dy + "px)";
+    if (tMoved) e.preventDefault();
+  }, { passive: false });
+  el.addEventListener("touchend", (e) => {
+    if (!tDragging) return;
+    tDragging = false; el.classList.remove("dragging");
+    if (!tMoved) { el.style.transform = ""; el.style.transition = ""; openWindow(id, el); return; }
+    const t = e.changedTouches[0];
+    const trIcon = document.querySelector('.icon[data-id="trash"]');
+    let thrown = false;
+    if (trIcon) {
+      const tr = trIcon.getBoundingClientRect();
+      thrown = t.clientX >= tr.left && t.clientX <= tr.right && t.clientY >= tr.top && t.clientY <= tr.bottom;
+    }
+    if (thrown) {
+      el.style.transition = "transform .18s ease, opacity .18s ease";
+      el.style.transform = "scale(0.25)"; el.style.opacity = "0";
+      setTimeout(() => {
+        el.style.display = "none"; el.style.transform = ""; el.style.opacity = ""; el.style.transition = "";
+        if (!trashedIds.includes(id)) trashedIds.push(id);
+        updateTrashIcon();
+      }, 180);
+      trIcon.classList.remove("wobble"); void trIcon.offsetWidth; trIcon.classList.add("wobble");
+      setTimeout(() => trIcon.classList.remove("wobble"), 460);
+    } else {
+      // COMEBACK: rebote elástico a su sitio
+      el.style.transition = "transform .3s cubic-bezier(.34,1.56,.64,1)";
+      el.style.transform = "translate(0,0)";
+      setTimeout(() => { el.style.transition = ""; el.style.transform = ""; }, 320);
+    }
+  }, { passive: false });
+
+  return el;
+}
+
+// Cambia el icono de la Papelera entre vacía y llena según lo que contenga.
+function updateTrashIcon() {
+  const img = document.querySelector('.icon[data-id="trash"] img');
+  if (img) img.src = trashedIds.length ? ICONS.trashFull : ICONS.trashEmpty;
+}
+
+function restoreAll() {
+  trashedIds.forEach((id) => {
+    const el = document.querySelector('.icon[data-id="' + id + '"]');
+    const pos = originalPos[id];
+    if (el && pos) { el.style.display = "flex"; el.style.left = pos.x + "px"; el.style.top = pos.y + "px"; }
+  });
+  trashedIds = [];
+  updateTrashIcon();
+}
+
+function showTrashBalloon(tx, ty) {
+  // En móvil el popup de bienvenida ya explica la Papelera → no mostramos el globo.
+  if (window.innerWidth <= 760) return;
+  const b = document.createElement("div");
+  b.className = "balloon";
+  b.style.left = Math.max(8, tx - 190) + "px";
+  b.style.top = (ty - 92) + "px";
+  b.innerHTML = '<span class="balloon-close" role="button" tabindex="0">✕</span>Si un proyecto no te gusta, arrástralo aquí. Clic en la Papelera y todo vuelve a su lugar.';
+  desktop.appendChild(b);
+  requestAnimationFrame(() => b.classList.add("show"));
+  const remove = () => { b.classList.remove("show"); setTimeout(() => b.remove(), 300); };
+  b.querySelector(".balloon-close").addEventListener("click", (e) => { e.stopPropagation(); remove(); });
+  setTimeout(remove, 9000);
+}
+
+function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
+  const el = document.createElement("div");
+  el.className = "window"; el.id = "win-" + id;
+  el.style.left = x + "px"; el.style.top = y + "px"; el.style.width = (w || 380) + "px";
+  el.setAttribute("role", "dialog"); el.setAttribute("aria-labelledby", "wt-" + id);
+  el.innerHTML =
+    '<div class="titlebar">' +
+      '<div class="box close" role="button" tabindex="0" aria-label="Cerrar ' + title.replace(/"/g, "&quot;") + '">×</div>' +
+      '<div class="title" id="wt-' + id + '">' + (iconSrc ? '<img src="' + iconSrc + '" style="height:12px;vertical-align:-2px;margin-right:4px;" alt="">' : "") + title + "</div>" +
+      '<div class="box zoom" aria-hidden="true"></div>' +
+    "</div>" +
+    '<div class="content">' + contentHtml + "</div>";
+  desktop.appendChild(el);
+
+  const closeBtn = el.querySelector(".close");
+  const doClose = (e) => {
+    if (e) e.stopPropagation();
+    el.classList.add("closing");
+    setTimeout(() => { if (el.classList.contains("closing")) el.classList.remove("open", "closing"); }, 150);
+    // Devolver el foco a quien abrió la ventana (si sigue ahí y se ve)
+    const op = openers[id];
+    if (op && document.body.contains(op) && op.offsetParent !== null) op.focus();
+    delete openers[id];
+  };
+  el._close = doClose;
+  el.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.stopPropagation(); doClose(e); } });
+  closeBtn.addEventListener("click", doClose);
+  closeBtn.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); doClose(e); } });
+
+  el.addEventListener("mousedown", () => focusWindow(id));
+
+  const titlebar = el.querySelector(".titlebar");
+  let dragging = false, offX = 0, offY = 0;
+  titlebar.addEventListener("mousedown", (e) => {
+    if (e.target.classList.contains("box")) return;
+    dragging = true;
+    const r = el.getBoundingClientRect();
+    offX = e.clientX - r.left; offY = e.clientY - r.top;
+    focusWindow(id);
+  });
+  document.addEventListener("mousemove", (e) => {
+    if (!dragging) return;
+    el.style.left = (e.clientX - offX) + "px";
+    el.style.top = Math.max(24, e.clientY - offY) + "px";
+  });
+  document.addEventListener("mouseup", () => { dragging = false; });
+  return el;
+}
+
+// Escape cierra la ventana que está al frente (salvo que haya un menú o la bienvenida abiertos: ellos cierran lo suyo primero)
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape" || e.defaultPrevented) return;
+  if (document.querySelector("#welcome.show") || document.querySelector('#menubar [aria-expanded="true"]')) return;
+  const w = document.querySelector(".window.open.focused:not(.closing)");
+  if (w && w._close) w._close(e);
+});
+
+function focusWindow(id) {
+  const el = document.getElementById("win-" + id); if (!el) return;
+  document.querySelectorAll(".window").forEach((w) => w.classList.remove("focused"));
+  el.classList.add("focused"); el.style.zIndex = ++zTop;
+}
+
+const openers = {};
+// ¿La última interacción fue con el teclado? Solo entonces movemos el foco dentro de la ventana
+// (con ratón o dedo no hace falta y se vería un aro azul de foco sin motivo).
+let usandoTeclado = false;
+document.addEventListener("keydown", () => { usandoTeclado = true; }, true);
+["mousedown", "touchstart", "pointerdown"].forEach((ev) => document.addEventListener(ev, () => { usandoTeclado = false; }, true));
+function openWindow(id, opener) {
+  const el = document.getElementById("win-" + id);
+  if (!el) return;
+  const yaAbierta = el.classList.contains("open") && !el.classList.contains("closing");
+  el.classList.remove("closing");
+  el.classList.add("open"); focusWindow(id);
+  if (!yaAbierta) {
+    const from = opener || document.activeElement;
+    if (from && from !== document.body) openers[id] = from;
+  }
+  // Llevar el foco al botón de cerrar de la ventana (solo si el teclado está en juego)
+  const cb = el.querySelector(".close");
+  if (cb && usandoTeclado) cb.focus({ preventScroll: true });
+}
+
+/* ============================================================
+   CONSTRUCCIÓN DEL ESCRITORIO
+   ============================================================ */
+let iy = 40;
+const colX = () => Math.max(120, window.innerWidth - 120);
+
+DESKTOP.forEach((item) => {
+  makeIcon(item.id, item.title, item.icon, colX(), iy);
+  if (item.kind === "folder") {
+    const html = item.win && item.win.type === "about" ? aboutHtml() : folderHtml(item);
+    makeWindow(item.id, item.title, item.icon, html, 120 + Math.random() * 80, 80 + Math.random() * 70, 430);
+  } else if (item.kind === "file" && item.win) {
+    let html = "";
+    if (item.win.type === "text") html = item.win.html;
+    else if (item.win.type === "contact") html = contactHtml("");
+    makeWindow(item.id, item.win.title || item.title, item.icon, html, 160 + Math.random() * 80, 110 + Math.random() * 60, 360);
+  } else if (item.kind === "trash") {
+    trashEl = document.querySelector('.icon[data-id="trash"]');
+    // Clic en la Papelera = devolver todo a su sitio (no es borrado real).
+    trashEl.addEventListener("click", function (e) { e.stopPropagation(); restoreAll(); });
+  }
+  iy += 88;
+});
+
+// Ventanas de carpetas anidadas
+Object.values(NESTED).forEach((n) => {
+  makeWindow(n.id, n.title, ICONS.directory, folderHtml(n), 240, 160, 430);
+});
+
+// ===== CASE STUDY: Spotify Now Playing (ventana tipo documento) =====
+ICONS.doc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABBUlEQVR42u2WDQ7CIAyFudPu1DtxJ+5UAQfpavkbFDWZCalERz9eXxkGEQ0d/oOrBl9bGkYCcM6Fh6diL4QIMJsc3wtlkFsAdLE78wTQglBXoAWh6gEKUIJQVaCnO9Q8UJp3A6woQ0mZLR6oeWNIgdZpp6IAr5n136VB/8tPQAo35QEOAAzgQ97D/wI2RkmhYQ/0KJCTh8TgTggX5yKkhgcywEEhLErrqZwDFwXgqoDaObDFA7XkUKhxrUWXKBCT+x0GACjsdNk5IPVxTOxrHKI9Y6nvl74L+M557FFi2gMJIu08KjFQhv/3AO17EPp8631A7W34U/eBr9yInjvh4wHtQfO9ACYWKOeqSNRjAAAAAElFTkSuQmCC";
+const CS_ICONS = { bold:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAAo0lEQVR42u2WMQoEIQxFc0zPYGtrK9h4Bi3FTiztPIOtZ3EJjDLDsFsl08wKH9TCx+cnKowxJgCw6mDA5By11gUEVoi19g5Ci5RCyItBrbWv1SSlpHWUc76U6rklnHO8ICHEbY8c1Hvf6xgjD8gYs+fee96Mzo4QzJqR1po/I5RSih6Ega9DSykzpURfDL8aNoTwv+seBK1HikMbxAnZoKc+Jx/9t2xPdtO0kAAAAABJRU5ErkJggg==", italic:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAApklEQVR42u3WoQ0EIRAFUCwSTR3UQB3UQA0kdAESi8ahkVhq4TKTW8TdyfurlmQcPy+QmV3EWmsLIaD1NsRGrtbaBQooEmP8huiI/yxCHmj/6s6cMwaacx5kjIE7UUqJQ8YY7NU55zjkvcdCWmsOlVJwUO+dA0opbNeFEDhgrcVCBNBeAmEQtbKUkgO1VgxEQ/k5qDRPz7fufuj6SSHqQEjkQHc9Tl6P2K3CgYM/dQAAAABJRU5ErkJggg==", underline:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAAYklEQVR42mO4e/fufwYGBppiqB0M/2kJdu/eDbOQgaaWdHR0YFoE8iI1MciSwWcRtohFF6eaj3AZiM+SUYtGLRq1iHDGJWTJ0CmCSPHZ4PQR1S2CVVK0wHCLaGkJ3CJ6NU4AKj962nkffOYAAAAASUVORK5CYII=", alignL:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAAV0lEQVR42mO4e/fufwYGBppiqB0M/2kJdu/eDbOQgaaWdHR0YFoE8iI1MciSEWgRJSlsNOhIDqrRVIc36EYzLNUz7GjQ0d4iWCVFCwy3iJaWwC2iV+MEANsRgp8FTjYJAAAAAElFTkSuQmCC", alignC:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAAWUlEQVR42mO4e/fufwYGBppiqB0M/2kJdu/eDbOQgaaWdHR0YFoE8iI1MciSEWgRJSlshAcdqUE4mupwYlKCbDToKMqso6mO+hbBKilaYLhFtLQEbhG9GicAH16Cn1PdZBcAAAAASUVORK5CYII=", alignR:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAAVklEQVR42mO4e/fufwYGBppiqB0M/2kJdu/eDbOQgaaWdHR0YFoE8iI1MciSEWgRJSlshAcdOh4NOqpZNBp0BC0azbCDxyJYJUULDLeIlpbALaJX4wQAY5yCn8YJeGoAAAAASUVORK5CYII=" };
+function caseSpotifyHtml() {
+  return `<div class="cs-toolbar">
+      <div class="cs-tfont">Chicago&nbsp;▾</div>
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Alinear izquierda">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centrar">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Alinear derecha">
+    </div>
+    <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
+    <div class="cs-paper">
+      <div class="cs-cta-row"><a class="btn" href="spotify/index.html" target="_blank" rel="noopener">Ver la maqueta en vivo →</a></div>
+      <h2 class="cs-title">Spotify Now Playing</h2>
+      <p class="cs-sub">Descubre clubs por su música en tiempo real</p>
+      <div class="cs-meta">Exploración de producto · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;Figma · Spotify API · Prototipo interactivo</div>
+      <figure class="cs-fig"><img src="spotify/capturas/00-portada.jpg" width="1600" height="1000" alt="Tres pantallas de la demo: clubs cerca de ti, ficha de Sala Bardot y cola compartida" loading="lazy"><figcaption>Clubs cerca de ti con su % Match, la ficha del club y la cola compartida dentro de la sala.</figcaption></figure>
+
+      <h3>El insight</h3>
+      <p>Cuando entras a un bar nuevo, lo primero que percibes —antes que la carta, la decoración o la gente— es la música. En tres segundos decides si ese sitio va contigo. Ninguna plataforma de descubrimiento captura eso: Google Maps, Instagram y Foursquare muestran datos fríos. <strong>La música es el indicador más honesto del ambiente de un local, y nadie lo está aprovechando digitalmente.</strong></p>
+      <p>Este insight no viene de una tendencia de diseño. Viene de años trabajando en hostelería y gestión de operaciones, donde aprendí algo más: un hostelero no compra tecnología porque sea bonita — la compra si entiende en cinco minutos cómo le hace ganar o retener clientes.</p>
+
+      <h3>De jukebox a mapa: el pivot</h3>
+      <p>La idea original era una jukebox social: un tótem en el bar donde los clientes ponen música de forma colectiva pagando una microtarifa. El valor era la retención — nadie se va del bar si su canción suena en 10 minutos.</p>
+      <p>Antes de seguir diseñando, analicé la viabilidad y encontré tres barreras estructurales: el hardware exige una red de <em>field service</em> que Spotify no tiene ni quiere (descontinuó el Car Thing en 2022), las licencias de streaming personal no cubren la reproducción pública en locales, y una transacción de 0,10 € no soporta las comisiones de pasarela.</p>
+      <p>Pero el problema de fondo era otro: <strong>la jukebox resuelve el problema del bar, no el del usuario. El usuario no quiere poner una canción — quiere encontrar un sitio donde quiera estar.</strong> Ese insight fue el pivot.</p>
+
+      <h3>La solución</h3>
+      <p>Una pestaña nativa en Spotify con un mapa en tiempo real de los locales cercanos y lo que suena en cada uno. Dos modos del mismo producto:</p>
+      <div class="cs-pair"><figure class="cs-fig"><img src="spotify/capturas/01-inicio.jpg" width="600" height="1298" alt="Pantalla de inicio de Spotify con la entrada a Clubs" loading="lazy"><figcaption>Entrada desde Inicio: «Clubs» es una pestaña más, no una app aparte.</figcaption></figure><figure class="cs-fig"><img src="spotify/capturas/04-unirse-jam.jpg" width="600" height="1298" alt="Pantalla para unirse a la Jam del club" loading="lazy"><figcaption>Dentro del local: escaneas el QR y te unes a la Jam.</figcaption></figure></div>
+      <p><strong>Descubrimiento (antes de entrar).</strong> Cada local muestra la canción exacta que suena ahora, el historial de las últimas 2 horas y un <strong>% Match</strong> calculado cruzando tu historial de escucha con el hilo musical del bar. Eliges el club por su ambiente antes de cruzar la puerta.</p>
+      <p><strong>Participación (ya dentro).</strong> Escaneas el QR del local y entras en la cola compartida: ves qué suena, qué viene después y quién lo pincha, y puedes añadir hasta 5 canciones tuyas — siempre dentro del ADN musical que el local permite.</p>
+      <p><strong>Panel B2B (el local).</strong> El hostelero mantiene el control editorial: define los géneros permitidos, elimina o veta canciones de la cola y configura cada cuánto puede repetirse un tema. A cambio ve el ROI en directo: personas viendo su ficha, pulsaciones de «cómo llegar», match medio de quien está dentro y los temas que más han conectado esa noche.</p>
+      <figure class="cs-fig"><img src="spotify/capturas/06-panel-local.jpg" width="1300" height="1460" alt="Panel del local: género permitido, cola de la sala y repetición de temas" loading="lazy"><figcaption>El panel del local: ADN musical permitido, cola moderable, temas que más conectan y control de repetición.</figcaption></figure>
+
+      <h3>Decisiones de diseño clave</h3>
+      <p><strong>Historial de 2 horas, no más.</strong> Suficiente para validar la línea editorial del local sin contaminar con el contexto de la tarde. Además demuestra consistencia: valida que el Match es estructural, no casual.</p>
+      <p><strong>El pin del mapa codifica género, no distancia.</strong> El género es la variable de decisión; la distancia se infiere del propio mapa. Y el % Match va en el pin, no solo en la ficha: el usuario decide sin tener que abrir 14 locales.</p>
+      <p><strong>El CTA principal es «guardar canción», no «comprar entrada».</strong> La conversión nocturna de tickets de 50 € es baja; el guardado es instantáneo, emocional y sin fricción. La entrada existe, pero como paso secundario.</p>
+      <p><strong>No inventar infraestructura que ya existe.</strong> Spotify Connect para la reproducción, la cuenta de Spotify como autenticación, Apple Pay para pagos. No diseñé un producto nuevo: diseñé el tejido conectivo entre ecosistemas que ya tienen masa crítica.</p>
+
+      <h3>Modelo de negocio</h3>
+      <p>Tres fases: gratuito para locales con cuenta comercial (construir el efecto red), suscripción SaaS con perfil verificado y panel de analítica (el ROI visible justifica la cuota), y promoción premium segmentada por % Match (una sala puede destacar su sesión de house en el feed de usuarios cercanos que escuchan house). El activo real del modelo son <strong>los datos</strong>: qué se escucha en qué barrios, a qué hora y con qué correlación con asistencia a eventos — un <em>data layer</em> entre el ocio nocturno y la industria musical.</p>
+
+      <div class="cs-cta-row bottom"><a class="btn" href="spotify/index.html" target="_blank" rel="noopener">Ver la maqueta en vivo →</a></div>
+    </div>`;
+}
+(function(){ var w = makeWindow("case-spotify", "Spotify Now Playing.doc", ICONS.doc, caseSpotifyHtml(), 130, 55, 680); if (w) w.classList.add("docwin"); })();
+
+// ===== CASE STUDY: Respira =====
+function caseRespiraHtml() {
+  const DEMO = "https://respira.mvmmaison.com/?demo", IMG = "respira/case/";
+  const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg"' + imgDim(IMG + n + '.jpg') + ' alt="' + alt + '" loading="lazy" decoding="async"><figcaption>' + pie + "</figcaption></figure>";
+  return `<div class="cs-toolbar">
+      <div class="cs-tfont">Chicago&nbsp;▾</div>
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Alinear izquierda">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centrar">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Alinear derecha">
+    </div>
+    <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
+    <div class="cs-paper">
+      <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir Respira →</a></div>
+      <h2 class="cs-title">Respira</h2>
+      <p class="cs-sub">Una app de respiración guiada, gratuita y sin cuenta, para parar cinco minutos en mitad del día. La diseñé y la programé yo, y la regalo.</p>
+      <div class="cs-meta">Exploración de producto · producto propio&nbsp;&nbsp;·&nbsp;&nbsp;Octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
+
+      ${fig("01-portada", "Pantalla de inicio de Respira: una luna de color lavanda y tres accesos", "La pantalla de inicio: una luna y tres caminos.")}
+
+      <h3>Por qué la hice</h3>
+      <p>Todo va un poco más rápido, y la IA también ha acelerado mi forma de trabajar. Quería hacer algo que fuera lo contrario: abrir, respirar cinco minutos y cerrar.</p>
+      <p>Respira no pide cuenta, ni suscripción, ni lleva anuncios. Es además la forma más directa que tengo de enseñar cómo trabajo: un producto pequeño, terminado, que cualquiera puede abrir desde el móvil.</p>
+
+      <h3>Qué hace</h3>
+      <p>Tiene tres caminos desde el inicio:</p>
+      <ul class="cs-list">
+        <li><strong>¿Qué te pide el cuerpo?</strong> Dos preguntas y la app propone una respiración.</li>
+        <li><strong>Técnicas.</strong> Diez formas de respirar, cada una explicada paso a paso, con la duración que tú elijas.</li>
+        <li><strong>Tu cielo.</strong> Cada sesión enciende una estrella.</li>
+      </ul>
+      ${fig("02-test-ficha-sesion", "Tres pantallas: el test, la ficha de la técnica Suspiro y la sesión en marcha", "Del test a la sesión: elegir lo que necesitas, ajustar la duración y empezar.")}
+
+      <h3>Una luna en lugar de un cronómetro</h3>
+      <p>Durante la sesión casi no hay texto que leer. Una luna crece al inhalar y se encoge al soltar el aire, y debajo aparece una frase corta, como «Suelta por la boca».</p>
+      <p>En las técnicas que alternan fosas nasales, la pantalla muestra dos lunas. Al final, la luna vuelve a su sitio y la app dice «Vuelve despacio».</p>
+      ${fig("03-pausa-lunas-final", "Tres momentos de una sesión: pausa, dos lunas y cierre", "Pausa, dos lunas para alternar fosas nasales y el cierre.")}
+
+      <h3>Cómo se decidió</h3>
+      <p><strong>Quité los «viajes».</strong> La primera versión tenía recorridos temáticos. No les encontraba sentido y les faltaba trabajo de UX. La app se quedó con el test y las técnicas, y mejoró.</p>
+      <p><strong>Un solo color.</strong> Lavanda por defecto. Se cambia únicamente en Ajustes, para que la pantalla de respirar no compita con nada. No hay botón de play: se empieza tocando la luna.</p>
+      <p><strong>Las técnicas avanzadas están bloqueadas.</strong> El Viaje del Chamán y El Despertar de la Kundalini se abren con 3 y 6 horas de práctica acumulada. Al desbloquearlas, la app explica qué hacen y por qué pueden marear, y pide marcar una casilla antes de empezar.</p>
+      ${fig("04-avanzadas", "Lista de técnicas con las avanzadas bloqueadas, y la ficha de El Viaje del Chamán con su aviso", "Las avanzadas, con su progreso y su aviso de seguridad.")}
+      <p><strong>Tu cielo es mi respuesta al scroll.</strong> Quería competir con Instagram con una gamificación suave. Cada respiración añade una estrella y las estrellas acaban formando constelaciones. Todo se guarda solo en el dispositivo.</p>
+      ${fig("05-tu-cielo", "Pantalla de cierre de sesión, pantalla de Tu cielo y pantalla de inicio con constelaciones", "Cada sesión enciende una estrella nueva.")}
+
+      <h3>Cómo está hecha</h3>
+      <p>Es una sola página HTML, CSS y JavaScript, sin servidor ni base de datos. La luna se dibuja en el navegador y los datos de Tu cielo se quedan en el móvil de quien la usa. Se puede compartir con un enlace y, en los móviles que lo permiten, instalar.</p>
+
+      <h3>Pruébala</h3>
+      <p>Ábrela desde el móvil si puedes. Con tres minutos te da tiempo a hacer una sesión.</p>
+      <p>Si quieres algo parecido a medida, para tu negocio o para ti, cuéntamelo.</p>
+
+      <div class="cs-cta-row bottom"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir Respira →</a></div>
+    </div>`;
+}
+(function(){ var w = makeWindow("case-respira", "Respira.doc", ICONS.doc, caseRespiraHtml(), 170, 75, 680); if (w) w.classList.add("docwin"); })();
+
+// ===== CASE STUDY: Evolución del depredador (plantilla, en construcción) =====
+function caseDepredadorHtml() {
+  return `<div class="cs-toolbar">
+      <div class="cs-tfont">Chicago&nbsp;▾</div>
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Alinear izquierda">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centrar">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Alinear derecha">
+    </div>
+    <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
+    <div class="cs-paper">
+      <div class="cs-cta-row">
+        <a class="btn" href="depredador/index.html" target="_blank" rel="noopener">Ver el proyecto →</a>
+        <a class="btn" href="depredador/sistema-diseno.html" target="_blank" rel="noopener" style="margin-left:10px">Ver el sistema de diseño →</a>
+      </div>
+      <h2 class="cs-title">Evolución del depredador</h2>
+      <p class="cs-sub">Scrollytelling true-crime · trabajo visual</p>
+      <div class="cs-meta">Voz visual · trabajo visual&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;case study en construcción</div>
+      <div class="cs-cover">portada del proyecto — captura pendiente</div>
+
+      <p><em>Case study en construcción.</em> Aquí irá el proceso completo del proyecto. De momento puedes explorar las dos piezas con los botones de arriba: el <strong>scrollytelling en vivo</strong> y el <strong>sistema de diseño</strong>.</p>
+
+      <h3>El proyecto</h3>
+      <p>(Próximamente: el contexto, el reto narrativo y el enfoque de voz visual del scrollytelling.)</p>
+
+      <h3>El sistema de diseño</h3>
+      <p>(Próximamente: paleta por acto, tipografías, tratamiento de imágenes y componentes.)</p>
+
+      <div class="cs-cta-row bottom">
+        <a class="btn" href="depredador/index.html" target="_blank" rel="noopener">Ver el proyecto →</a>
+        <a class="btn" href="depredador/sistema-diseno.html" target="_blank" rel="noopener" style="margin-left:10px">Ver el sistema de diseño →</a>
+      </div>
+    </div>`;
+}
+(function(){ var w = makeWindow("case-depredador", "Evolución del depredador.doc", ICONS.doc, caseDepredadorHtml(), 165, 80, 680); if (w) w.classList.add("docwin"); })();
+
+// ===== CASE STUDY: Generador de presupuestos =====
+// Texto aprobado por Mery el 5-oct-2026 (borrador 3 de CASO.md, en el taller
+// ~/Documents/Claude/Projects/generador-de-presupuestos). La demo es la herramienta real con una
+// empresa y un fabricante inventados; solo se copia aquí tras pasar la prueba anti-filtración.
+function casePresupuestosHtml() {
+  const DEMO = "generador-de-presupuestos/index.html", IMG = "generador-de-presupuestos/img/";
+  const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg"' + imgDim(IMG + n + '.jpg') + ' alt="' + alt + '" loading="lazy" decoding="async"><figcaption>' + pie + "</figcaption></figure>";
+  return `<div class="cs-toolbar">
+      <div class="cs-tfont">Chicago&nbsp;▾</div>
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Alinear izquierda">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centrar">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Alinear derecha">
+    </div>
+    <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
+    <div class="cs-paper">
+      <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
+      <h2 class="cs-title">Presupuestar sin echar la tarde</h2>
+      <p class="cs-sub">Diseñé y construí una herramienta para que un instalador de ventanas de Madrid prepare en unos 10 minutos lo que antes le llevaba cerca de una hora. Con su marca, su margen y sin que el PDF salga de su dispositivo.</p>
+      <div class="cs-meta">Herramientas y operaciones · proyecto real · en uso&nbsp;&nbsp;·&nbsp;&nbsp;Septiembre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
+
+      <h3>El problema</h3>
+      <p>Cada presupuesto empezaba con otro: el PDF de su fabricante, con ventanas, medidas, planos y precios de coste. Para enviárselo al cliente, borraba el logo y cambiaba los precios uno a uno, sentado al ordenador. A veces quedaba algún dato que revelaba quién fabricaba las ventanas.</p>
+      <div class="cs-pair">
+        ${fig("02-antes-original-korvel", "Presupuesto del fabricante, con sus datos y sus precios de coste", "Antes: el presupuesto del fabricante.")}
+        ${fig("03-despues-luz-norte", "El mismo presupuesto convertido, con la marca y el margen del instalador", "Después: las mismas ventanas, con su marca y sus precios.")}
+      </div>
+
+      <h3>Qué hace</h3>
+      <p>Abre el PDF y la herramienta extrae las ventanas, sus medidas, descripciones y planos. Aplica un margen general o por ventana y permite corregir textos, precios y medidas sobre el propio documento, también desde el móvil, en la obra.</p>
+      <p>De ese trabajo salen dos archivos:</p>
+      ${fig("08-pdf-generado", "El PDF que recibe el cliente", "El PDF para el cliente: marca propia, precios de venta y planos, sin datos del fabricante.")}
+      ${fig("09-copia-excel", "La copia en Excel con costes y márgenes", "El Excel del instalador: costes, márgenes y lo que gana.")}
+      <p>El Excel, junto con el PDF original, permite recuperar el presupuesto otro día y seguir donde lo dejó.</p>
+
+      <h3>Cómo se decidió</h3>
+      <p>No le prometí que leyera bien todos los PDF del mundo. Le prometí que <strong>nunca le daría un presupuesto mal sin avisarle</strong>.</p>
+      <p>La herramienta suma los importes extraídos y los compara con la base imponible del fabricante. Si coinciden, muestra «Cuentas comprobadas». Si no, señala la diferencia y, cuando puede, qué revisar: una ventana sin precio o un salto en la numeración. Permite corregir y continuar; cuando las cuentas cuadran, el aviso pasa a verde.</p>
+      <p>Esta comprobación detectó dos errores de dinero que las pruebas anteriores no habían encontrado.</p>
+      <p>También descarté dos opciones:</p>
+      <ul class="cs-list">
+        <li><strong>Leer los PDF con una IA externa.</strong> Podía facilitar la lectura de más formatos, pero exigía enviar los documentos fuera. Y que no salgan es parte de lo que el instalador ofrece: los precios de su fabricante no los ve nadie más.</li>
+        <li><strong>Detectar automáticamente todas las medidas de los planos.</strong> El prototipo encontraba un tercio de los números e interpretaba algunos incorrectamente. Lo sustituí por una corrección manual: tocar la medida y escribir la buena.</li>
+      </ul>
+
+      <h3>En uso</h3>
+      <p>El instalador la utiliza desde septiembre de 2026 para todos sus presupuestos: diez o más por semana.</p>
+      <p>Según sus estimaciones, ha pasado de cerca de una hora a unos 10 minutos por presupuesto. Con diez semanales, son unas ocho horas recuperadas: <strong>una jornada entera cada semana</strong>.</p>
+      <p>Siete presupuestos reales de tres fabricantes y más de 370 comprobaciones automáticas ayudan a revisar cada cambio. La demo tiene además una comprobación para evitar que se publiquen datos reales.</p>
+
+      <h3>Pruébala</h3>
+      <p>Recorre la herramienta en dos minutos con un presupuesto de ejemplo. Luz Norte y Korvel Systems son nombres inventados para esta demo. No se sube ni se descarga nada: los documentos se muestran en pantalla.</p>
+      ${fig("12-recorrido-margen", "El recorrido guiado señalando el margen", "Ajusta el margen y mira cuánto queda para el instalador.")}
+
+      <div class="cs-cta-row bottom"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
+    </div>`;
+}
+(function(){ var w = makeWindow("case-presupuestos", "Presupuestar sin echar la tarde.doc", ICONS.doc, casePresupuestosHtml(), 150, 65, 680); if (w) w.classList.add("docwin"); })();
+
+// ===== CASE STUDY: Puti Di Madre =====
+function casePutiHtml() {
+  const DEMO = "putidimadre/index.html", IMG = "putidimadre/case/";
+  const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg"' + imgDim(IMG + n + '.jpg') + ' alt="' + alt + '" loading="lazy" decoding="async"><figcaption>' + pie + "</figcaption></figure>";
+  return `<div class="cs-toolbar">
+      <div class="cs-tfont">Chicago&nbsp;▾</div>
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Alinear izquierda">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centrar">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Alinear derecha">
+    </div>
+    <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
+    <div class="cs-paper">
+      <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
+      <h2 class="cs-title">Una pizzería que le gana margen a las apps de reparto</h2>
+      <p class="cs-sub">Diseñé y construí el canal de pedido directo de una pizzería de barrio: una web solo para recoger y el panel del turno. El objetivo, que el local se quede con más de cada pizza en vez de regalarle el 30 % a las apps de reparto. El negocio es inventado; el problema, no.</p>
+      <div class="cs-meta">Soluciones de negocio · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Agosto–octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Estrategia, UX, copy, identidad y prototipo · HTML/JS</div>
+
+      <h3>El problema</h3>
+      <p>Partí de una pizzería pequeña que conozco en Lavapiés: buena reputación, cola en la puerta y dos personas dentro. No le faltan clientes. Le falta margen, porque una parte de sus pedidos llega por las apps de reparto.</p>
+      <p>Con una comisión del 30 %, una pizza de 12 € deja unos 3 € de margen si se pide por la app y unos 7 € si el cliente la recoge en el local.</p>
+      <p>Vender más no era la respuesta. Con un horno y dos personas, más pedidos solo alargan la espera. La pregunta era otra: <strong>cómo ganar más con los mismos pedidos sin colapsar el horno</strong>. Y la cola daba la pista: es demanda sin programar.</p>
+      <p><em>Las cifras son una simulación con comisión del 30 %, coste de producto del 30 % y envase estimado. No son las cuentas de ningún local.</em></p>
+
+      <h3>Qué hace</h3>
+      <p>Son dos pantallas sobre el mismo sistema. En la web, el cliente ve la carta del día, llena su caja, elige la hora de recogida y sigue el pedido hasta que está listo. Paga al recoger: la web no cobra nada.</p>
+      ${fig("01-web", "La portada de la web de Puti Di Madre, con el indicador del horno", "La web: la voz de la marca y, desde la portada, cuánto aguanta el horno.")}
+      <p>En el panel del turno, el local ve la carga del horno de los próximos cuartos de hora y mueve los pedidos. Desde ahí también marca agotados, pausa la web y cambia precios, descuentos y horario. Lo que se cambia en el panel aparece en la web al recargar.</p>
+      ${fig("02-panel", "El panel del turno, con la carga del horno y los pedidos por estado", "El panel del turno: carga del horno y pedidos, sin la marca.")}
+
+      <h3>Cómo se decidió</h3>
+      <p><strong>La web solo ofrece horas que el horno puede cumplir.</strong> La capacidad del horno se reparte en franjas de quince minutos. Una pizza consume una unidad; un calzone, una y media; una bebida, un cuarto, porque alguien tiene que cogerla y meterla en la bolsa. Cada franja admite seis unidades y la web solo puede reservar una parte: tres en hora punta, para no dejar sin pizza a quien espera en la puerta.</p>
+      <p>Un pedido no se parte entre franjas: si no cabe entero, se ofrece la siguiente. Por eso, además de «Horno lleno», existe «No cabe tu pedido».</p>
+      <div class="cs-pair">
+        ${fig("03-franjas-punta", "Selector de hora en hora punta, con franjas casi llenas y una llena", "Un viernes a las 20:40: las 22:15 están llenas y las 21:30 y 21:45, casi.")}
+        ${fig("04-franjas-valle", "Selector de hora a las 18:30, con descuentos en las primeras franjas", "A las 18:30: las horas más vacías llevan descuento.")}
+      </div>
+      <p><strong>Las promos mueven pedidos, no bajan precios.</strong> Un descuento general llenaría el horno con menos margen, justo lo contrario de lo que busca el proyecto. Por eso toda promo lleva condición: un 10 % de 19:00 a 19:45, cuando el horno acaba de arrancar, y un 5 % hasta las 20:15. En hora punta, nada. La caja solo anuncia el descuento si queda alguna hora que lo tenga.</p>
+      <p>La fidelización va en una cartilla de cartón que se sella al recoger, sin cuentas ni datos guardados. Al séptimo pedido se regala la bolsa de tela de la casa y no una pizza: regalar pizza en hora punta es regalar justo lo que falta.</p>
+      <p><strong>El panel no lleva la marca.</strong> La web tiene voz, ilustraciones y tipografía de cartel. El panel es blanco y negro, sin nada de eso: es una herramienta para un viernes a las nueve, y lo que importa es ver de un vistazo qué entra al horno. Saber cuándo no aplicar la identidad también es diseñar.</p>
+      <p>Dejé fuera de esta versión el pago online, las cuentas de cliente y el reparto propio. El reparto sigue en las apps, para quien vive lejos.</p>
+
+      <h3>Hasta dónde llego</h3>
+      <p>El prototipo funciona entero en el navegador y tiene más de 300 comprobaciones automáticas. Para recibir pedidos reales hace falta un servidor: base de datos, reservas de franja sin duplicados, acceso al panel con contraseña y alguien que responda si algo falla.</p>
+      <p>Esa parte no la asumo sola. <strong>Hay una diferencia entre escribir código y responder de un sistema</strong> un viernes a las 21:30 con quince pedidos en marcha. La dejé documentada para un perfil de backend: entre 40 y 70 horas, unos 2.000–4.000 € orientativos.</p>
+      <p>Mientras tanto, hay dos versiones que sí puedo sostener:</p>
+      <ul class="cs-list">
+        <li><strong>Sin servidor.</strong> La misma web, con el pedido saliendo por WhatsApp con el mensaje ya escrito. No cuesta nada, pero la disponibilidad es orientativa: si en hora punta dos personas piden la misma franja, el local lo resuelve a mano.</li>
+        <li><strong>Con una plataforma de pedidos.</strong> Marca, carta y experiencia propias sobre un motor ya hecho, por algo más de un 4 % por pedido. Se pierde control sobre la lógica del horno.</li>
+      </ul>
+      <p>Lo sensato es empezar por una de las dos, medir unos meses y pagar el servidor con lo que se ahorre en comisiones.</p>
+
+      <h3>Pruébala</h3>
+      <p>Pide una pizza y elige hora. Después abre el panel desde la barra de arriba, cambia un precio o marca algo agotado, y recarga la web. La demo empieza un viernes por la noche; el panel de demo permite cambiar el día y la hora.</p>
+      <div class="cs-pair">
+        ${fig("05-confirmacion", "Pantalla de pedido confirmado con hora y dirección de recogida", "La confirmación: a qué hora y dónde.")}
+        ${fig("06-seguimiento", "Pantalla de seguimiento del pedido por pasos", "El seguimiento, hasta que está lista.")}
+      </div>
+      <p>Puti Di Madre, sus reseñas, sus fotos y las dos personas de «Quiénes somos» son inventadas. No se envía ni se guarda nada.</p>
+
+      <div class="cs-cta-row bottom"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
+    </div>`;
+}
+(function(){ var w = makeWindow("case-puti", "Puti Di Madre.doc", ICONS.doc, casePutiHtml(), 140, 60, 680); if (w) w.classList.add("docwin"); })();
+
+// ===== CASE STUDY: Este escritorio (el propio portfolio) =====
+function casePortfolioHtml() {
+  return `<div class="cs-toolbar">
+      <div class="cs-tfont">Chicago&nbsp;▾</div>
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <div class="cs-sep"></div>
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Izquierda">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centro">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Derecha">
+    </div>
+    <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
+    <div class="cs-paper">
+      <div class="cs-cta-row"><a class="btn" href="sistema-diseno-board.html" target="_blank" rel="noopener">Ver el sistema de diseño →</a></div>
+      <h2 class="cs-title">Este escritorio</h2>
+      <p class="cs-sub">Un portfolio con forma de Mac de los 90.</p>
+      <div class="cs-meta">Meta · sobre el propio portfolio&nbsp;&nbsp;·&nbsp;&nbsp;sistema de diseño</div>
+      <figure class="cs-fig"><img src="este-escritorio/portada.jpg" width="1400" height="946" alt="Fotografía antigua en blanco y negro de una niña sentada en una terraza" loading="lazy"></figure>
+
+      <h3>Empezó en el Mac de mi tía Elvira</h3>
+      <p>Antes de saber qué era un “sistema de diseño”, ya usaba uno sin enterarme. De pequeña, mi tía Elvira me sentaba delante de su Macintosh y me enseñaba a mover el ratón: clic, arrastrar, soltar. Carpetas que se abrían, una papelera que devolvía lo que tirabas, iconos que hacían justo lo que prometían. Me parecía magia, pero en realidad era orden. Creo que ahí, sin darme cuenta, empecé a querer el diseño.</p>
+
+      <h3>Una conexión que me hizo ilusión</h3>
+      <p>Leyendo sobre sistemas de diseño me topé con algo bonito: aunque el término es reciente, su raíz es antigua — las <em>Human Interface Guidelines</em> de Apple (1987), hechas para el Mac. Consistencia, componentes que se repiten, cuidar a quien lo usa. Me hizo ilusión pensar que aquello que me enseñaba mi tía y lo que intento hacer ahora vienen del mismo sitio. Así que, cuando tocó montar mi portfolio, tiré de ahí.</p>
+
+      <h3>Por qué un escritorio</h3>
+      <p>Podía hacer otra cuadrícula de proyectos, como todo el mundo. Pero me apetecía algo que se pareciera a mí y que me hiciera ilusión abrir. Un sitio para curiosear: carpetas por categoría, ventanas que abres, una papelera para tirar lo que no te guste (y recuperarlo). No sé si es lo más práctico del mundo, pero es honesto: si sabes usar un Mac, sabes usar esto.</p>
+
+      <h3>Lo que hay por debajo</h3>
+      <p>Aunque parezca un juego, intenté que por dentro fuera un sistema de verdad, no un adorno. Poco a poco fui atando lo básico: unos colores (el gris Platinum, uno por categoría), tres tipografías con su función —Chicago para titulares, Geneva para leer, Monaco para lo técnico— y piezas que se repiten (ventanas, tarjetas, botones) para que lo nuevo encaje con lo de antes.</p>
+
+      <h3>Cositas que cuidé</h3>
+      <ul>
+        <li>Los case studies <strong>se abren como documentos</strong>, con su regla y su tipo de editor: leer sobre un proyecto también tenía que sentirse Mac.</li>
+        <li>En móvil <strong>no quise rendirme a una lista sosa</strong>: mantuve el escritorio como pude.</li>
+        <li><strong>Sin frameworks ni programas raros:</strong> es un archivo que subo tal cual. Me gusta que sea sencillo y mío.</li>
+        <li>La papelera no borra nada — es un guiño, no un susto.</li>
+      </ul>
+
+      <h3>Por qué lo cuento</h3>
+      <p>No es el portfolio más impresionante del mundo, pero es el más mío. Y si dice algo de cómo trabajo, es esto: me gusta partir de algo con raíz, cuidar los detalles y no perder mi voz por el camino. Empezó con mi tía enseñándome a mover un ratón. Supongo que sigo en las mismas — intentando que la tecnología se sienta un poco más cercana.</p>
+      <p style="font-style:italic;color:#5a534a;">Gracias, tía Elvira.</p>
+
+      <div class="cs-cta-row bottom"><a class="btn" href="sistema-diseno-board.html" target="_blank" rel="noopener">Ver el sistema de diseño →</a></div>
+    </div>`;
+}
+(function(){ var w = makeWindow("case-portfolio", "Este escritorio.doc", ICONS.doc, casePortfolioHtml(), 195, 100, 680); if (w) w.classList.add("docwin"); })();
+
+// Formulario de contacto (escritorio)
+attachContact("");
+
+function attachContact(s) {
+  const form = document.getElementById("contact-form" + s);
+  if (!form) return;
+  const API = "https://uisroyoyjfevmrplaqyk.supabase.co/rest/v1";
+  const KEY = "sb_publishable_dvbsiyx_AbASse779owKag_C90Mx13i"; // clave pública
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("contact-email" + s).value.trim();
+    const msg = ((document.getElementById("contact-msg" + s) || {}).value || "").trim();
+    const err = document.getElementById("contact-err" + s), btn = document.getElementById("contact-send" + s);
+    const cuerpo = document.getElementById("contact-body" + s);
+    if (document.getElementById("contact-web" + s).value) { cuerpo.innerHTML = '<p class="thanks">Enviado ✓</p>'; return; } // robots
+    if (!email.includes("@")) { err.textContent = "Escribe tu correo para que pueda responderte."; return; }
+    if (!msg) { err.textContent = "Cuéntame algo en el mensaje."; return; }
+    err.textContent = ""; btn.disabled = true;
+    const planB = () => {
+      window.open("mailto:meryvillena@proton.me?subject=" + encodeURIComponent("Contacto desde el portfolio") + "&body=" + encodeURIComponent(msg + "\n\nMi correo: " + email), "_blank");
+      cuerpo.innerHTML = '<p class="thanks">He abierto tu correo en otra pestaña con el mensaje ya escrito: pulsa Enviar allí y me llegará. Si no se abre, escríbeme a <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a>. ✦</p>';
+    };
+    try {
+      const r = await fetch(API + "/rpc/enviar_contacto", { method: "POST", headers: { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json" }, body: JSON.stringify({ p_email: email, p_mensaje: msg }) });
+      if (r.ok) { cuerpo.innerHTML = '<p class="thanks">Enviado ✓ Te respondo en cuanto pueda. ✦</p>'; return; }
+      const t = await r.text();
+      if (/demasiados/.test(t)) { err.textContent = "Ahora mismo hay mucho movimiento. Prueba en un rato o escríbeme a meryvillena@proton.me."; btn.disabled = false; return; }
+      if (/correo_invalido/.test(t)) { err.textContent = "Revisa tu correo: no parece válido."; btn.disabled = false; return; }
+      if (/mensaje_invalido/.test(t)) { err.textContent = "El mensaje debe tener entre 1 y 1.000 caracteres."; btn.disabled = false; return; }
+      planB();                                  // la función aún no existe o falla: abre el correo
+    } catch (x) { planB(); }
+  });
+}
+
+// Aviso de la papelera a los ~4s
+const trashIcon = document.querySelector('.icon[data-id="trash"]');
+if (trashIcon) {
+  setTimeout(() => {
+    const r = trashIcon.getBoundingClientRect();
+    showTrashBalloon(r.left, r.top);
+  }, 4000);
+}
+
+// Clic en escritorio vacío deselecciona
+desktop.addEventListener("mousedown", (e) => {
+  if (e.target === desktop) document.querySelectorAll(".icon").forEach((i) => i.classList.remove("selected"));
+});
+
+/* ============================================================
+   POPUP DE BIENVENIDA
+   ============================================================ */
+(function welcome() {
+  const w = document.getElementById("welcome");
+  const back = document.getElementById("welcome-backdrop");
+  const KEY = "mery-bienvenida-vista";
+  const marcarVista = () => { try { localStorage.setItem(KEY, "1"); } catch (e) {} };
+  const yaVista = () => { try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; } };
+  // cerrar con la ×, con el botón, con Escape o eligiendo un proyecto: todo lleva al mismo sitio
+  const close = () => { w.classList.remove("show"); back.classList.remove("show"); marcarVista(); };
+  const okBtn = document.getElementById("welcome-ok");
+  window.showWelcome = () => { w.classList.add("show"); back.classList.add("show"); okBtn.focus(); };
+  // Primera visita: bienvenida. Después, directo al escritorio (se puede volver a ver desde el menú del gato)
+  if (!/[?&]quitar=/.test(location.search) && !yaVista()) window.showWelcome();
+  okBtn.addEventListener("click", close);
+  w.querySelectorAll(".w-feat button").forEach((b) => b.addEventListener("click", () => {
+    close();
+    if (b.dataset.open) openWindow(b.dataset.open); else window.location.href = b.dataset.href;
+  }));
+  document.getElementById("welcome-close").addEventListener("click", close);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && w.classList.contains("show")) close(); });
+})();
+
+/* ============================================================
+   MURO DE POST-ITS (público, en Supabase; se publica solo)
+   El escritorio se llena de post-its; el "+" abre uno en blanco donde se escribe directamente.
+   ============================================================ */
+(function postits() {
+  const API = "https://uisroyoyjfevmrplaqyk.supabase.co/rest/v1";
+  const KEY = "sb_publishable_dvbsiyx_AbASse779owKag_C90Mx13i"; // clave pública: solo puede crear y leer
+  const HDR = { apikey: KEY, Authorization: "Bearer " + KEY };
+  const COLORES = { amarillo: "#fff3a3", rosa: "#ffc4d6", azul: "#bfe0ff", verde: "#c7f0c0" };
+  const LS_OCULTOS = "mvm_postits_ocultos", LS_ULTIMO = "mvm_postit_ultimo", LS_POS = "mvm_postits_pos";
+  let zNota = 50;
+  const LINK = /(https?:|www\.|[a-z0-9-]+\.(com|es|net|org|io|app|dev|co|eu|me|ly|xyz)\b)/i;
+  const leer = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
+  const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  const frac = (n) => n - Math.floor(n);
+  const grande = () => window.innerWidth > 760;
+  const ICON = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges"><rect x="3" y="3" width="26" height="26" fill="#fff3a3" stroke="#000" stroke-width="2"/><path d="M21 29v-8h8" fill="#e0cf6a" stroke="#000" stroke-width="2"/><rect x="8" y="9" width="14" height="2" fill="#000"/><rect x="8" y="14" width="10" height="2" fill="#000"/></svg>');
+
+  const nota = (r, enMuro) => {
+    const d = document.createElement("div");
+    d.className = "postit" + (enMuro ? " in" : "");
+    d.style.setProperty("--pc", COLORES[r.color] || COLORES.amarillo);
+    d.style.setProperty("--pr", (((r.id * 37) % 9) - 4) + "deg");
+    const m = document.createElement("div"); m.textContent = r.mensaje; d.appendChild(m);
+    if (r.alias) { const a = document.createElement("div"); a.className = "pi-alias"; a.textContent = "— " + r.alias; d.appendChild(a); }
+    return d;
+  };
+  const pedir = async (limite) => {
+    const r = await fetch(API + "/postits?select=id,mensaje,alias,color,creado&order=creado.desc&limit=" + limite, { headers: HDR });
+    if (!r.ok) throw new Error("lectura");
+    return r.json();
+  };
+
+  // ---- Celdas repartidas por todo el escritorio (la 0 es para el "+")
+  const celdas = () => {
+    const W = window.innerWidth, H = window.innerHeight;
+    const x0 = 24, x1 = W - 250, y0 = 40, y1 = H - 24;
+    const cols = Math.max(1, Math.floor((x1 - x0) / 190)), rows = Math.max(1, Math.floor((y1 - y0) / 150));
+    const sx = (x1 - x0) / cols, sy = (y1 - y0) / rows, out = [];
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) out.push({ x: x0 + c * sx, y: y0 + r * sy });
+    const resto = out.slice(1).map((c, i) => ({ c, k: frac((i + 1) * 0.7548776662) })).sort((a, b) => a.k - b.k).map((o) => o.c);
+    return [out[0]].concat(resto);
+  };
+  const colocar = (el, c, id) => {
+    const j = id == null ? 0 : 1;
+    el.style.left = (c.x + j * (frac(id * 0.618034) * 28 - 8)) + "px";
+    el.style.top = (c.y + j * (frac(id * 0.754877 + 0.3) * 24 - 6)) + "px";
+  };
+
+  let pegados = [], ghost = null, editor = null;
+  const cerrarEditor = () => { if (editor) { editor.remove(); editor = null; } if (ghost) ghost.style.visibility = ""; };
+
+  // ---- El post-it en blanco: se escribe directamente en él
+  const abrirEditor = (host, celda) => {
+    if (editor) return;
+    const d = document.createElement("div"); d.className = "postit nuevo" + (celda ? "" : " in");
+    d.style.setProperty("--pc", COLORES.amarillo);
+    d.innerHTML =
+      '<textarea maxlength="140" placeholder="Escribe aquí…" aria-label="Tu mensaje"></textarea>' +
+      '<input type="text" maxlength="30" placeholder="tu nombre (opcional)" aria-label="Tu nombre o alias (opcional)" autocomplete="off">' +
+      '<div class="pn-trap" aria-hidden="true"><input type="text" tabindex="-1" autocomplete="off" aria-hidden="true"></div>' +
+      '<div class="pi-bar"><div class="dots">' +
+        Object.keys(COLORES).map((c, i) => '<label title="' + c + '"><input type="radio" name="pi-c" value="' + c + '"' + (i === 0 ? " checked" : "") + '><span style="--dc:' + COLORES[c] + '"></span></label>').join("") +
+      '</div><span class="pi-count">0/140</span><button type="button" class="pi-ok">Pegar</button><button type="button" class="pi-no" aria-label="Cancelar">×</button></div>' +
+      '<div class="pi-err" role="status"></div>' +
+      '<div class="pi-nota">Se publica al momento y lo ve todo el mundo. No guardo tu correo ni tu dirección. Sin enlaces.</div>';
+    const ta = d.querySelector("textarea"), al = d.querySelector('input[type=text]'), trap = d.querySelector(".pn-trap input"), err = d.querySelector(".pi-err"), ok = d.querySelector(".pi-ok"), cnt = d.querySelector(".pi-count");
+    if (celda) { colocar(d, celda, null); desktop.appendChild(d); } else host.insertBefore(d, host.firstChild);
+    editor = d; if (ghost) ghost.style.visibility = "hidden";
+    d.querySelectorAll("input[name=pi-c]").forEach((i) => i.addEventListener("change", () => d.style.setProperty("--pc", COLORES[i.value])));
+    ta.addEventListener("input", () => { cnt.textContent = ta.value.length + "/140"; });
+    d.querySelector(".pi-no").addEventListener("click", cerrarEditor);
+    d.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.stopPropagation(); cerrarEditor(); } else if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) ok.click(); });
+    d.addEventListener("mousedown", (e) => e.stopPropagation());
+    ok.addEventListener("click", async () => {
+      const texto = ta.value.trim(), alias = al.value.trim();
+      const color = (d.querySelector("input[name=pi-c]:checked") || {}).value || "amarillo";
+      if (trap.value) { cerrarEditor(); return; }                       // trampa para robots
+      if (!texto) { err.textContent = "Escribe algo en el post-it."; return; }
+      if (LINK.test(texto) || LINK.test(alias)) { err.textContent = "Sin enlaces, por favor."; return; }
+      if (Date.now() - leer(LS_ULTIMO, 0) < 30000) { err.textContent = "Espera medio minuto para pegar otro."; return; }
+      ok.disabled = true; err.textContent = "";
+      try {
+        const cuerpo = { mensaje: texto, color }; if (alias) cuerpo.alias = alias;
+        const r = await fetch(API + "/postits", { method: "POST", headers: { ...HDR, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify(cuerpo) });
+        if (r.ok) { guardar(LS_ULTIMO, Date.now()); cerrarEditor(); pintarEscritorio(); pintarMuro(); return; }
+        const t = await r.text();
+        err.textContent = /Demasiados/.test(t) ? "Hay mucho movimiento. Prueba en un rato." : /sin_url/.test(t) ? "Sin enlaces, por favor." : /largo/.test(t) ? "Entre 1 y 140 caracteres." : "No he podido pegarlo. Prueba otra vez.";
+      } catch (e) { err.textContent = "No he podido conectar. Prueba otra vez."; }
+      ok.disabled = false;
+    });
+    ta.focus();
+  };
+
+  // ---- Escritorio: "+" y post-its repartidos
+  const pintarEscritorio = async () => {
+    pegados.forEach((n) => n.remove()); pegados = [];
+    if (ghost) { ghost.remove(); ghost = null; }
+    if (!grande()) return;
+    const cs = celdas();
+    ghost = document.createElement("button"); ghost.type = "button"; ghost.className = "postit ghost";
+    ghost.innerHTML = '<span class="plus" aria-hidden="true">+</span><span>Deja tu post-it</span>';
+    ghost.setAttribute("aria-label", "Deja tu post-it");
+    colocar(ghost, cs[0], null);
+    ghost.addEventListener("click", (e) => { e.stopPropagation(); abrirEditor(null, cs[0]); });
+    desktop.appendChild(ghost);
+    if (editor && !editor.classList.contains("in")) ghost.style.visibility = "hidden";
+    let filas; try { filas = await pedir(80); } catch (e) { return; }
+    const ocultos = leer(LS_OCULTOS, []);
+    filas.filter((r) => !ocultos.includes(r.id)).slice(0, cs.length - 1).forEach((r, i) => {
+      const n = nota(r, false); colocar(n, cs[i + 1], r.id);
+      const gp = leer(LS_POS, {})[r.id];
+      if (gp) { n.style.left = Math.max(0, Math.min(gp[0], window.innerWidth - 160)) + "px"; n.style.top = Math.max(24, Math.min(gp[1], window.innerHeight - 110)) + "px"; }
+      n.addEventListener("pointerdown", (e) => {
+        if (e.target.closest(".pi-x") || e.button > 0) return;
+        const sx = e.clientX, sy = e.clientY, l0 = n.offsetLeft, t0 = n.offsetTop; let movido = false;
+        n.setPointerCapture(e.pointerId); n.style.zIndex = Math.min(++zNota, 95); n.classList.add("arrastrando");
+        const mv = (ev) => { movido = true; n.style.left = Math.max(0, Math.min(l0 + ev.clientX - sx, window.innerWidth - 60)) + "px"; n.style.top = Math.max(24, Math.min(t0 + ev.clientY - sy, window.innerHeight - 40)) + "px"; };
+        const up = () => { n.removeEventListener("pointermove", mv); n.removeEventListener("pointerup", up); n.removeEventListener("pointercancel", up); n.classList.remove("arrastrando");
+          if (movido) { const g = leer(LS_POS, {}); g[r.id] = [n.offsetLeft, n.offsetTop]; guardar(LS_POS, g); } };
+        n.addEventListener("pointermove", mv); n.addEventListener("pointerup", up); n.addEventListener("pointercancel", up);
+      });
+      const x = document.createElement("button"); x.type = "button"; x.className = "pi-x"; x.textContent = "×"; x.setAttribute("aria-label", "Ocultar este post-it");
+      x.addEventListener("click", (e) => { e.stopPropagation(); const o = leer(LS_OCULTOS, []); o.push(r.id); guardar(LS_OCULTOS, o); pintarEscritorio(); });
+      n.appendChild(x); desktop.appendChild(n); pegados.push(n);
+    });
+  };
+
+  // ---- Ventana "Muro": todos los post-its (y la única forma de escribir en móvil)
+  const w = makeWindow("muro", "Muro de post-its", ICON, '<p class="intro" id="muro-intro">Cargando…</p><p><button class="btn" type="button" id="muro-nuevo">Dejar un post-it</button></p><div class="muro-grid" id="muro-grid"></div>', 150, 70, 520);
+  const pintarMuro = async () => {
+    const g = document.getElementById("muro-grid"), i = document.getElementById("muro-intro");
+    let filas; try { filas = await pedir(200); } catch (e) { i.textContent = "No he podido cargar el muro ahora mismo."; return; }
+    g.querySelectorAll(".postit:not(.nuevo)").forEach((n) => n.remove());
+    filas.forEach((r) => g.appendChild(nota(r, true)));
+    i.textContent = filas.length ? filas.length + (filas.length === 1 ? " post-it dejado por visitantes." : " post-its dejados por visitantes.") : "Todavía no hay ninguno. Deja el primero.";
+  };
+  document.getElementById("muro-nuevo").addEventListener("click", () => abrirEditor(document.getElementById("muro-grid"), null));
+  new MutationObserver(() => { if (w.classList.contains("open")) pintarMuro(); }).observe(w, { attributes: true, attributeFilter: ["class"] });
+
+  // ---- Entrada del menú: en escritorio abre el post-it en blanco; en móvil, el Muro
+  const nueva = () => {
+    if (grande()) { if (!editor) { const cs = celdas(); abrirEditor(null, cs[0]); } if (editor) { const t = editor.querySelector("textarea"); if (t) t.focus(); } }
+    else { openWindow("muro"); setTimeout(() => abrirEditor(document.getElementById("muro-grid"), null), 150); }
+  };
+  let tmr; window.addEventListener("resize", () => { clearTimeout(tmr); tmr = setTimeout(() => { if (!editor) pintarEscritorio(); }, 250); });
+  // ---- Enlace secreto del correo: ?quitar=<código> abre una ventana para quitar ese post-it
+  (function quitarPorEnlace() {
+    const m = location.search.match(/[?&]quitar=([0-9a-f-]{36})/i);
+    if (!m) return;
+    const token = m[1];
+    const q = makeWindow("quitar", "Quitar un post-it", ICON, '<p id="q-txt">Has llegado desde el enlace de tu correo. ¿Quitas ese post-it del muro para todo el mundo?</p><p><button class="btn" type="button" id="q-si">Quitar este post-it</button> <button class="btn" type="button" id="q-no">No, dejarlo</button></p>', 120, 90, 380);
+    openWindow("quitar");
+    const limpiar = () => { try { history.replaceState(null, "", location.pathname); } catch (e) {} };
+    document.getElementById("q-no").addEventListener("click", () => { limpiar(); q.querySelector(".close").click(); });
+    document.getElementById("q-si").addEventListener("click", async () => {
+      const t = document.getElementById("q-txt");
+      try {
+        const r = await fetch(API + "/rpc/quitar_postit", { method: "POST", headers: { ...HDR, "Content-Type": "application/json" }, body: JSON.stringify({ p_token: token }) });
+        const ok = r.ok && (await r.json()) === true;
+        t.textContent = ok ? "Hecho: el post-it ya no está en el muro." : "No he encontrado ese post-it: ya estaba quitado o el enlace no es válido.";
+        if (ok) { pintarEscritorio(); pintarMuro(); }
+      } catch (e) { t.textContent = "No he podido conectar. Prueba otra vez."; }
+      document.getElementById("q-si").remove(); limpiar();
+    });
+  })();
+  const reordenar = () => { try { localStorage.removeItem(LS_POS); } catch (e) {} pintarEscritorio(); };
+  window.__postits = { pintarEscritorio, pintarMuro, nueva, reordenar };
+  pintarEscritorio();
+})();
+
+/* ============================================================
+   LA BOLSA: cifras reales, contadas del propio escritorio
+   ============================================================ */
+(function bolsa() {
+  const all = [];
+  DESKTOP.forEach((d) => { if (d.cards) d.cards.forEach((c) => all.push(c)); });
+  Object.values(NESTED).forEach((n) => n.cards.forEach((c) => all.push(c)));
+  const proyectos = all.filter((c) => c.kind === "project" && (c.caseStudy || c.href));
+  const cases = proyectos.filter((c) => c.caseStudy);
+  const antes = 60, ahora = 10, baja = Math.round((antes - ahora) / antes * 100);
+  const spark = (seed, dir) => {
+    let y = dir > 0 ? 11 : 3, pts = [];
+    for (let i = 0; i < 24; i++) { seed = (seed * 9301 + 49297) % 233280; const r = seed / 233280 - 0.5; y = Math.max(2, Math.min(12, y - dir * 0.35 + r * 3)); pts.push((i * 5) + "," + y.toFixed(1)); }
+    return '<svg class="spark" viewBox="0 0 115 14" preserveAspectRatio="none" aria-hidden="true"><polyline points="' + pts.join(" ") + '" fill="none" stroke="#4be37a" stroke-width="1"/></svg>';
+  };
+  const rows = [
+    { sym: "PROY", name: "Proyectos en el escritorio", val: String(proyectos.length), chg: "▲", cls: "up", dir: 1 },
+    { sym: "CASE", name: "Case studies escritos", val: String(cases.length), chg: "▲", cls: "up", dir: 1 },
+    { sym: "OFIC", name: "Años de oficio", val: "20+", chg: "▲", cls: "up", dir: 1 },
+    { sym: "PRES", name: "Presupuestar: 1 h → 10 min", val: "−" + baja + "%", chg: "▼", cls: "down", dir: -1 },
+    { sym: "CAFE", name: "Cafés", val: "∞", chg: "▲▲", cls: "joke", dir: 1 },
+  ];
+  const html =
+    '<div class="bolsa-head"><span>MVM MAISON · BOLSA</span><span>cierre de hoy</span></div>' +
+    rows.map((r, i) => '<div class="bolsa-row ' + r.cls + '"><span class="sym">' + r.sym + '</span><span>' + r.name + '</span><span class="val">' + r.val + '</span><span class="chg"><span>' + r.chg + '</span></span>' + spark(i * 977 + 31, r.dir) + '</div>').join("") +
+    '<div class="bolsa-tape"><span>RESPIRA ▲ YA EN EL MERCADO &nbsp;·&nbsp; PRESUPUESTOS ▼ 1 H → 10 MIN &nbsp;·&nbsp; GATO ▲ MENÚ PRINCIPAL &nbsp;·&nbsp; PAPELERA ▬ SE RESTAURA SIEMPRE &nbsp;·&nbsp; CAFÉS ▲▲ SIN LÍMITE &nbsp;·&nbsp;</span></div>' +
+    '<div class="bolsa-foot">Las cifras se cuentan solas a partir de este escritorio. Los gráficos son decorativos y los cafés, una exageración.</div>';
+  const w = makeWindow("bolsa", "La Bolsa", null, html, 105, Math.max(40, Math.min(173, window.innerHeight - 400)), 340);
+  if (w) w.classList.add("bolsa");
+  if (window.innerWidth > 760) openWindow("bolsa");
+  window.__bolsaCuadre = { proyectos: proyectos.map((c) => c.title), cases: cases.map((c) => c.title), baja };
+})();
+
+/* ============================================================
+   BARRA DE MENÚS (desplegables)
+   ============================================================ */
+(function menus() {
+  const bar = document.getElementById("menubar");
+  const titles = [...bar.querySelectorAll(".mtitle")];
+  const drops = {};
+  const frontWindow = () => [...document.querySelectorAll(".window.open")].filter((w) => w.id !== "welcome").sort((a, b) => (+b.style.zIndex || 0) - (+a.style.zIndex || 0))[0];
+  const closeWin = (w) => { const c = w && w.querySelector(".close"); if (c) c.click(); };
+  const projects = [];
+  DESKTOP.forEach((d) => { if (d.kind === "folder" && d.cards) d.cards.forEach((c) => { if (c.kind === "project" && (c.caseStudy || c.href)) projects.push({ folder: d.title, c }); }); });
+  const openProject = (c) => { if (c.caseStudy) openWindow(c.caseStudy); else window.location.href = c.href; };
+  const tidy = () => document.querySelectorAll(".icon").forEach((el) => {
+    const pos = originalPos[el.dataset.id]; if (!pos || el.style.display === "none") return;
+    el.style.transition = "left .25s, top .25s"; el.style.left = pos.x + "px"; el.style.top = pos.y + "px";
+    setTimeout(() => { el.style.transition = ""; }, 300);
+  });
+  const folders = DESKTOP.filter((d) => d.kind === "folder");
+  const defs = {
+    gato: [
+      { l: "Acerca de este escritorio…", f: () => openWindow("case-portfolio") },
+      { l: "Léeme primero", f: () => openWindow("leeme") },
+      "-",
+      { l: "Dejar un post-it…", f: () => window.__postits.nueva() },
+      { l: "Ver la bienvenida otra vez", f: () => window.showWelcome() },
+    ],
+    archivo: [
+      { h: "Abrir" },
+      ...folders.map((d) => ({ l: d.title, f: () => openWindow(d.id) })),
+      { l: "Contacto", f: () => openWindow("contacto") },
+      "-",
+      { l: "Cerrar ventana", f: () => closeWin(frontWindow()) },
+      { l: "Cerrar todas las ventanas", f: () => document.querySelectorAll(".window.open").forEach((w) => { if (w.id !== "welcome") closeWin(w); }) },
+    ],
+    edicion: [
+      { l: "Copiar mi email", f: () => { try { navigator.clipboard.writeText("meryvillena@proton.me"); } catch (e) {} } },
+      { l: "Escribirme un correo…", f: () => { window.location.href = "mailto:meryvillena@proton.me"; } },
+    ],
+    ver: [
+      { l: "Ordenar iconos y post-its", f: () => { tidy(); window.__postits.reordenar(); } },
+      { l: "Mostrar La Bolsa", f: () => openWindow("bolsa") },
+      { l: "Muro de post-its", f: () => openWindow("muro") },
+      { l: "Restaurar el escritorio", f: () => { restoreAll(); tidy(); window.__postits.reordenar(); } },
+    ],
+    proyectos: (() => { const o = []; let last = ""; projects.forEach((p) => { if (p.folder !== last) { o.push({ h: p.folder }); last = p.folder; } o.push({ l: p.c.title, f: () => openProject(p.c) }); }); return o; })(),
+    ayuda: [
+      { l: "Cómo se usa este escritorio", f: () => window.showWelcome() },
+      { l: "Sistema de diseño", f: () => window.open("sistema-diseno-board.html", "_blank", "noopener") },
+    ],
+  };
+  Object.keys(defs).forEach((k) => {
+    const d = document.createElement("div"); d.className = "mdrop"; d.setAttribute("role", "menu"); d.dataset.for = k;
+    defs[k].forEach((it) => {
+      if (it === "-") { const x = document.createElement("div"); x.className = "msep"; x.setAttribute("role", "separator"); d.appendChild(x); return; }
+      if (it.h) { const x = document.createElement("div"); x.className = "mhead"; x.textContent = it.h; d.appendChild(x); return; }
+      const b = document.createElement("button"); b.type = "button"; b.className = "mi"; b.setAttribute("role", "menuitem"); b.textContent = it.l;
+      b.addEventListener("click", (e) => { e.stopPropagation(); closeAll(); it.f(); });
+      d.appendChild(b);
+    });
+    bar.appendChild(d); drops[k] = d;
+  });
+  let current = null;
+  function closeAll() { current = null; titles.forEach((t) => { t.classList.remove("open"); t.setAttribute("aria-expanded", "false"); }); Object.values(drops).forEach((d) => d.classList.remove("show")); }
+  function openMenu(t, focusFirst) {
+    closeAll(); current = t.dataset.menu;
+    t.classList.add("open"); t.setAttribute("aria-expanded", "true");
+    const d = drops[current]; d.style.left = Math.max(0, Math.min(t.offsetLeft, window.innerWidth - d.offsetWidth - 4)) + "px"; d.classList.add("show");
+    d.style.left = Math.max(0, Math.min(t.offsetLeft, window.innerWidth - d.offsetWidth - 6)) + "px";
+    if (focusFirst) { const f = d.querySelector(".mi"); if (f) f.focus(); }
+  }
+  titles.forEach((t) => {
+    t.addEventListener("click", (e) => { e.stopPropagation(); if (current === t.dataset.menu) closeAll(); else openMenu(t, e.detail === 0); });
+    t.addEventListener("mouseenter", () => { if (current && current !== t.dataset.menu) openMenu(t, false); });
+    t.addEventListener("keydown", (e) => { if (e.key === "ArrowDown") { e.preventDefault(); openMenu(t, true); } });
+  });
+  document.addEventListener("click", (e) => { if (!bar.contains(e.target)) closeAll(); });
+  desktop.addEventListener("mousedown", (e) => { if (!bar.contains(e.target)) closeAll(); });
+  document.addEventListener("keydown", (e) => {
+    if (!current) return;
+    const items = [...drops[current].querySelectorAll(".mi")], i = items.indexOf(document.activeElement);
+    const ti = titles.findIndex((t) => t.dataset.menu === current);
+    const visible = titles.filter((t) => t.offsetParent);
+    if (e.key === "Escape") { const t = titles[ti]; closeAll(); t.focus(); }
+    else if (e.key === "ArrowDown") { e.preventDefault(); (items[i + 1] || items[0]).focus(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); (items[i - 1] || items[items.length - 1]).focus(); }
+    else if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); const vi = visible.indexOf(titles[ti]); const n = visible[(vi + (e.key === "ArrowRight" ? 1 : visible.length - 1)) % visible.length]; openMenu(n, true); }
+  });
+  window.addEventListener("resize", closeAll);
+})();
+
+/* ============================================================
+   VERSIÓN MÓVIL / SEO (lista accesible con el mismo contenido)
+   ============================================================ */
+(function buildMobile() {
+  const m = document.getElementById("mobile-view");
+  let h = '<div class="m-head"><h1>Mery Villena</h1><p>Diseño de producto digital · no-code · operaciones</p></div>';
+
+  const mCard = (card) => {
+    if (card.kind === "folder") return ""; // las anidadas se expanden aparte
+    if (!visible(card)) return "";
+    const link = card.caseStudy ? '<button class="btn"' + labelAbrir(card) + ' onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>' : card.href ? '<a class="btn"' + labelAbrir(card) + ' href="' + card.href + '">Abrir proyecto →</a>' : '<span class="btn disabled">' + (card.disabledLabel || "Próximamente") + "</span>";
+    return '<div class="m-card">' + tagsHtml(card) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + link + "</div>";
+  };
+
+  DESKTOP.forEach((item) => {
+    if (item.kind === "folder" && item.cards) {
+      h += "<section><h2>" + item.title + "</h2>";
+      if (item.intro) h += '<p class="intro">' + item.intro + "</p>";
+      item.cards.forEach((c) => { h += mCard(c); });
+      item.cards.filter((c) => c.kind === "folder" && NESTED[c.ref] && visible(c)).forEach((c) => {
+        const n = NESTED[c.ref];
+        h += '<div class="m-sub">' + n.title + "</div>";
+        n.cards.forEach((cc) => { h += mCard(cc); });
+      });
+      h += "</section>";
+    } else if (item.id === "sobremi") {
+      h += "<section><h2>Sobre mí</h2><p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño y desarrollo productos digitales con IA.</p><p><a class=\"btn\" href=\"cv/index.html\" target=\"_blank\" rel=\"noopener\">Ver mi CV →</a></p>";
+      const n = NESTED["trabajo-grafico"];
+      if (visible({ kind: "folder", ref: "trabajo-grafico" })) {
+        h += '<div class="m-sub">' + n.title + "</div>";
+        n.cards.forEach((cc) => { h += mCard(cc); });
+      }
+      h += "</section>";
+    } else if (item.id === "leeme") {
+      h += "<section><h2>Léeme primero</h2><p>Soy una apasionada de los sistemas de diseño. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —un sistema de diseño antes de que existiera esa palabra. Te recomiendo empezar por Soluciones de negocio o Herramientas.</p></section>";
+    } else if (item.id === "contacto") {
+      h += "<section><h2>Contacto</h2>" + contactHtml("-m") + "</section>";
+    }
+  });
+
+  m.innerHTML = h;
+  attachContact("-m");
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+/* ============================================================
+   PANEL DEL TURNO — hoja propia, a propósito.
+
+   Este archivo NO comparte nada con web.css y NO importa los
+   tokens de la marca. No es un descuido: el panel lo lee alguien
+   con harina en las manos, de reojo, a metro y medio, un viernes
+   a las nueve y media. Densidad, contraste y botones grandes.
+   La serif monumental y el coral aquí estorban.
+
+   Si algún día alguien "unifica" las dos hojas, se carga el
+   argumento entero. La duplicación de estas 30 líneas de base
+   es el precio de que las dos interfaces puedan divergir.
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 0 60px;
+  font: 15px/1.5 Helvetica, Arial, sans-serif;
+  color: #000;
+  background: #fff;
+}
+
+main, .cab, .pie, .demo { max-width: 720px; margin: 0 auto; padding: 12px; }
+
+h1 { font-size: 20px; margin: 16px 0 4px; }
+h2 { font-size: 16px; margin: 0 0 6px; }
+p  { margin: 6px 0; }
+
+button {
+  font: inherit;
+  padding: 6px 10px;
+  border: 1px solid #000;
+  background: #fff;
+  cursor: pointer;
+}
+button:disabled { color: #999; border-color: #999; cursor: not-allowed; }
+
+input, select, textarea { font: inherit; padding: 5px; border: 1px solid #000; background: #fff; }
+label { display: block; margin: 8px 0; }
+label.chk { display: flex; gap: 6px; align-items: center; }
+fieldset { border: 1px solid #000; margin: 10px 0; }
+
+/* cabecera, secciones y pie del panel */
+.cab { border-bottom: 2px solid #000; display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.cab__marca { font-weight: bold; line-height: 1.05; letter-spacing: .04em; }
+a.cab__marca { color: inherit; text-decoration: none; }
+.cab__nav { display: flex; gap: 6px; }
+.cab__estado { width: 100%; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.seccion { border-bottom: 1px solid #000; padding: 28px 0; scroll-margin-top: 12px; }
+.pie { border-top: 2px solid #000; margin-top: 24px; font-size: 12px; }
+.nota { font-size: 12px; color: #555; margin: 2px 0; }
+.bloque { border: 1px solid #000; padding: 10px; margin: 10px 0; }
+/* `.fila` se venía usando en precios, promos y cuotas como si fuera
+   una fila de dos lados, pero nunca tuvo regla: se apilaba. */
+.fila { display: flex; justify-content: space-between; align-items: flex-start;
+        gap: 10px; flex-wrap: wrap; padding: 6px 0; }
+.fila + .fila { border-top: 1px dotted #999; }
+/* Tachado solo el nombre: la etiqueta «fuera de la carta» tiene que
+   leerse, y heredaba el tachón del contenedor. */
+.fila--fuera > div:first-child { opacity: .55; }
+.fila--fuera input[type="text"] { text-decoration: line-through; }
+/* LA TIRA DE CONTROLES SE PARTE CUANDO NO CABE (12/10/2026).
+
+   Sin el `flex-wrap`, la fila de «Añadir un producto» —selector de
+   categoría + precio + € + botón— no podía partirse, y su ancho mínimo
+   le ponía al PANEL ENTERO un suelo de 451 px: por debajo de eso la
+   página se iba de lado, y cuanto más estrecha, más. A 320 px se
+   desplazaba 131 px, con el tablero y los entregados saliéndose por el
+   lado aunque ellos cupieran de sobra.
+
+   El `nowrap` se queda: está para que no se parta una etiqueta por
+   dentro —«Cerrar este día» en dos líneas queda fatal—, no para
+   obligar a la fila a salirse de la pantalla. Son dos cosas distintas
+   y estaban diciéndose con la misma propiedad. */
+.fila__acc { display: flex; flex-wrap: wrap; gap: 6px;
+             align-items: center; white-space: nowrap; }
+
+/* Y ningún campo es más ancho que su sitio. Los de «Añadir un
+   producto» llevan su ancho a mano (14em el nombre, 20em los
+   ingredientes) porque en una pantalla de barra conviene verlos de una
+   pieza; en un móvil ese ancho fijo era lo segundo que se salía.
+
+   El `min-width: 0` hace falta además del `max-width`: un campo trae
+   de fábrica un ancho mínimo propio —unos veinte caracteres— que su
+   caja flex respeta, así que la caja no podía encogerse aunque el
+   campo sí. Tres píxeles de nada a 320 px, pero tres píxeles que
+   obligaban a la página a desplazarse de lado. */
+.panel input, .panel select, .panel textarea { max-width: 100%; min-width: 0; }
+
+/* Los campos de «Añadir un producto». Estaban escritos a mano en el
+   JS —`style="width:14em"`— y eran la última cosa que se salía por el
+   lado: un ancho en `em` no sabe nada del hueco que tiene. Aquí son
+   un reparto, no una medida: el de ingredientes pide el doble que el
+   del nombre y los dos ceden cuando no hay sitio. */
+.campos { display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 14em; }
+.campos input { flex: 1 1 10em; }
+.campos .campo--largo { flex: 2 1 14em; }
+.campo--precio { width: 5.5em; }
+.enlace { border: 0; background: none; padding: 0; font: inherit; font-size: 12px;
+          color: #555; text-decoration: underline; cursor: pointer; }
+
+/* panel de demo — se elimina en producción, no forma parte del producto */
+/* El panel de demo ya no se estiliza aquí: es el mismo en las dos
+   pantallas y vive en demo.css, con la barra. */
+
+/* ============================================================
+   EL TABLERO DEL TURNO
+   ============================================================ */
+/* EL ANCHO ES UNO, Y LO LLEVAN TODOS (13/10/2026, auditoría de Mery).
+
+   Aquí solo se ensanchaba `main`, de 720 a 1100: la cabecera, el pie y
+   la barra de la demo se quedaban en 720 y el panel salía descuadrado,
+   con el título empezando casi dos centímetros por dentro del tablero.
+
+   La medida vive una vez, en la variable, y la usan los cuatro. */
+.panel-body { --ancho-panel: 1100px; }
+.panel-body main.panel,
+.panel-body .cab,
+.panel-body .pie { max-width: var(--ancho-panel); margin: 0 auto; padding: 12px; }
+.panel-body .demo { max-width: var(--ancho-panel); }
+
+.tablero { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.columna { border: 1px solid #000; padding: 8px; }
+.columna h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 8px; }
+
+.pedido { border: 2px solid #000; padding: 8px; margin-bottom: 8px; }
+.pedido--tarde { border-style: double; border-width: 4px; }
+.pedido__cab { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.pedido__items { margin: 6px 0; padding-left: 16px; font-size: 14px; }
+.pedido .fila__acc { margin-top: 6px; }
+.pedido button { padding: 8px 10px; font-weight: bold; }
+
+/* El que se está preparando. El fondo negro no es decoración: es la
+   única tarjeta del tablero en la que NO hay nada que hacer, y a metro
+   y medio tiene que distinguirse sin leerla. */
+.pedido__prep { margin: 6px 0 0; padding: 6px 8px; background: #000; color: #fff;
+                font-size: 13px; line-height: 1.4; }
+
+/* Y su botón es la excepción —decir que ya está antes de hora—, no lo
+   que toca. Pesa menos que los otros dos a propósito. */
+.pedido button.pedido__sec { font-weight: normal; border-style: dashed; padding: 6px 10px; }
+
+.barra { display: inline-block; width: 90px; height: 12px; border: 1px solid #000; position: relative; }
+.barra::after { content: ""; position: absolute; inset: 0; width: var(--pct); background: #000; }
+
+.agotados { display: flex; flex-wrap: wrap; gap: 5px; }
+.agotados button.is-off { background: #000; color: #fff; }
+
+/* Las categorías de la carta: cerradas, para que la sección quepa en
+   una pantalla y se abra solo la que se va a tocar. */
+.grupo { border: 1px solid #000; margin: 8px 0; padding: 0 10px; }
+.grupo summary { cursor: pointer; padding: 10px 0; display: flex;
+                 gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.grupo[open] summary { border-bottom: 1px solid #000; margin-bottom: 4px; }
+.grupo .fila:last-child { padding-bottom: 10px; }
+
+/* Los entregados: cerrado por defecto, y separado del tablero por una
+   línea doble para que se lea como «esto ya no es el turno».
+
+   CRUZA EL TABLERO ENTERO (12/10/2026). Este bloque vive dentro de la
+   rejilla de tres columnas —se añade detrás de ellas en el mismo
+   contenedor—, así que la rejilla lo trataba como una cuarta celda y
+   lo metía debajo de «Nuevos»: en escritorio, dieciséis filas
+   apretadas en un tercio del ancho, setecientos píxeles vacíos al lado
+   y la línea doble cortada a un tercio, como una regla rota. */
+.entregados { grid-column: 1 / -1;
+              border-top: 3px double #000; margin-top: 14px; padding-top: 10px; }
+.entregados summary { cursor: pointer; font-weight: bold; padding: 8px 0; }
+
+/* Y ya a lo ancho, las filas se reparten en columnas en vez de hacer
+   una tira de dieciséis con un desierto de setecientos píxeles en
+   medio de cada una. Se leen de izquierda a derecha y luego hacia
+   abajo, como una tabla, que es el orden en el que están: de lo último
+   de la noche a lo primero.
+
+   Los 320 px no son redondos, son el ancho mínimo en el que la fila
+   cabe de una línea: ~190 del texto + ~115 del botón + el hueco. Con
+   290 entraban tres columnas a 950 px de ventana, pero cada fila se
+   partía en dos y el bloque crecía de 307 a 502 px: tres columnas
+   peores que dos. Por debajo salen dos y luego una, sin media query. */
+/* El `min(320px, 100%)` y no `320px` a secas: un minmax con un mínimo
+   fijo es un SUELO RÍGIDO, y en una pantalla de 320 px le exigía a la
+   columna 320 cuando solo había 296 de hueco. Se salía por el lado.
+   Con el `min()`, el mínimo deja de serlo cuando no cabe. */
+.entregados__lista { display: grid; gap: 0 20px;
+                     grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); }
+/* La línea la llevan TODAS, incluida la primera de cada columna: si se
+   le quita a la primera del documento, la fila de arriba sale con una
+   celda sin raya y dos con ella, que es peor que ponerlas todas. */
+.entregados .fila { padding: 6px 0; border-top: 1px dotted #999; }
+/* El botón es una corrección que se usa de uvas a peras, y hay uno por
+   fila: a tamaño de los demás, dieciséis seguidos son un muro. */
+.entregados .fila button { font-size: 13px; padding: 4px 8px; }
+
+.badge { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; padding: 2px 5px; border: 1px solid #000; }
+.badge--promo { background: #000; color: #fff; border-style: double; border-width: 3px; }
+
+@media (max-width: 780px) { .tablero { grid-template-columns: 1fr; } }

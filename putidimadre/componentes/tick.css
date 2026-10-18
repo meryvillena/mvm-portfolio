@@ -1,0 +1,100 @@
+/* ############################################################
+   COMPONENTE · EL TICK
+   La casilla cuadrada. Vale para los extras de la pizza, para los
+   "sin", para las tallas de la camiseta y para el consentimiento de
+   las promos: cuatro cosas que no se parecen en nada, una sola pieza.
+
+   Vive en su propio archivo por el mismo motivo que el botón, el campo,
+   la llama y los tokens: lo leen la web Y el documento del sistema.
+
+   ------------------------------------------------------------
+   LA REGLA QUE NO SE TOCA, Y POR QUÉ
+   ------------------------------------------------------------
+   **El tick ES el `<input>`.** No es un `<span>` dibujado al lado de un
+   input escondido, que es como se hace en medio internet.
+
+   Se intentó así primero, el 18 de agosto de 2026, y se veía perfecto.
+   Playwright no pudo pulsarlo: `element is not visible`. Y ahí está la
+   lección entera — **si una prueba automática no puede pulsarlo, un
+   teclado y un lector de pantalla tampoco**. La prueba encontró un fallo
+   de accesibilidad que a ojo no se ve.
+
+   Por eso aquí se estiliza el input de verdad con `appearance: none` en
+   vez de taparlo. Si algún día alguien vuelve a esconderlo para poder
+   dibujar algo más bonito encima, está rompiendo esto.
+   ############################################################ */
+
+/* ============================================================
+   UN COMPONENTE, UN EJE
+   ------------------------------------------------------------
+   TAMAÑO   normal (48 de alto) y pequeño (40)
+
+   El eje se declara aquí porque antes NO estaba declarado: el tamaño
+   pequeño se conseguía con `.pzp .tick`, o sea, la pieza cambiaba de
+   aspecto según dónde cayera. Es el mismo problema que tuvo el botón
+   con sus siete clases, en pequeño: un componente cuyo aspecto lo
+   decide el sitio donde aterriza no se puede enseñar en un muestrario,
+   porque fuera de su sitio no es él.
+
+   Lo que NO es un eje y conviene decirlo: el tick vale igual para
+   `type="checkbox"` (elige las que quieras) y `type="radio"` (elige
+   una). Se ven idénticos. Está preguntado en el capítulo.
+   ============================================================ */
+.tick {
+  display: flex; align-items: center; gap: var(--e2); cursor: pointer;
+  border: var(--linea-media); padding: var(--e2) var(--e3);
+  min-height: var(--toque); background: var(--papel); margin: 0;
+}
+
+/* LA CASILLA · el input de verdad, desnudo y vuelto a vestir. */
+.tick input {
+  appearance: none; -webkit-appearance: none;
+  width: 22px; height: 22px; flex: none; margin: 0; cursor: pointer;
+  border: var(--linea-media); background: var(--papel);
+  /* El `color` no se ve —el check es una imagen de fondo— pero si no se
+     declara, el navegador le pone el negro del sistema. Era el último
+     valor fuera de la paleta que le quedaba a la web: invisible, y ahí
+     estaba. Lo encontró la auditoría del §00, que mide el CSS y no lo que
+     se ve. (26/08) */
+  color: var(--tinta);
+  background-repeat: no-repeat; background-position: center; background-size: 14px 14px;
+}
+
+/* MARCADO · el coral RELLENA y la marca va en tinta encima, que es la
+   regla del sistema. El check es un SVG incrustado, no una fuente de
+   iconos ni un carácter: así hereda el trazo del cartel —punta cuadrada,
+   3 de grosor— en vez de la redondez de una tipografía cualquiera. */
+.tick input:checked {
+  background-color: var(--marca);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 8.5 L6.5 12.5 L13.5 3.5' fill='none' stroke='%23141838' stroke-width='3' stroke-linecap='square'/%3E%3C/svg%3E");
+}
+
+/* EL FOCO ES DE TINTA, como en el campo y por el mismo motivo: el coral
+   queda libre para rellenar porque el anillo no lo usa. Aquí va a
+   `:focus-visible` —no a `:focus`— porque a un tick se llega también con
+   el ratón, y entonces no hace falta anillo: ya lo has pulsado tú. */
+.tick input:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+
+/* Y LA FILA ENTERA ACUSA · no solo la casilla. Se tiñe de papel sucio y
+   le sale la sombra dura del sistema. Es lo que permite leer de un
+   vistazo cuántas llevas puestas sin ir mirando cuadrado por cuadrado. */
+.tick:has(input:checked) { background: var(--papel-2); box-shadow: 3px 3px 0 var(--tinta); }
+
+.tick__txt {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t8); letter-spacing: .04em; display: flex; gap: var(--e2);
+}
+/* El precio del extra, en voz de comanda y con cifras de ancho fijo:
+   puestos en columna, los precios cuadran unos debajo de otros. */
+.tick__txt b { font-variation-settings: var(--voz-comanda); font-variant-numeric: tabular-nums; }
+
+/* PEQUEÑO · dentro de un panel desplegado, donde hay dos columnas y
+   muchos seguidos: con el borde de 2 se apelmazaban. Es la misma regla
+   que el botón (§06) — por debajo del mínimo de toque solo se baja
+   dentro de algo ya abierto, nunca suelto en la página.
+
+   Antes esto se escribía `.pzp .tick`, y por eso el muestrario no podía
+   enseñarlo: fuera del panel no existía. */
+.tick--peq { border: var(--linea); padding: var(--e2); min-height: 40px; }
+.tick--peq input { width: 18px; height: 18px; background-size: 12px 12px; }
+.tick--peq .tick__txt { font-size: var(--t7); }

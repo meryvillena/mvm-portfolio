@@ -1,0 +1,172 @@
+/* ############################################################
+   PUTI DI MADRE · TOKENS
+   La única fuente de verdad del sistema de diseño.
+
+   POR QUÉ EXISTE ESTE ARCHIVO
+   Los tokens estaban escritos DOS VECES: una en `web.css` y otra en la
+   cabecera de `SISTEMA-DE-DISENO.html`. Y ya habían derivado: el documento
+   declaraba `--sombra-alta` y `--sombra-baja` y no las usaba nadie,
+   mientras el código inventaba `--s-alto` y `--s-hondo` con los mismos
+   valores y otro nombre, porque quien lo escribió no sabía que ya
+   existían.
+
+   Un sistema de diseño en el que el documento y el código declaran las
+   mismas cosas por separado no es un sistema: son dos sistemas que se
+   parecen hasta que dejan de parecerse. Ahora se declaran aquí y los dos
+   leen de aquí, así que el documento no puede mentir sobre el producto.
+
+   QUIÉN LO LEE
+   · `web.css`               — la web del cliente
+   · `SISTEMA-DE-DISENO.html`— el documento vivo
+   · `panel.css` NO, y es a propósito. El panel del turno se construye con
+     criterio opuesto —denso, sin marca— y compartir tokens con la web
+     invitaría a "unificarlos" y se cargaría el argumento del case study.
+   ############################################################ */
+
+:root {
+
+  /* ---------- COLOR · seis, ninguno rojo, uno reservado ---------- */
+  --papel:    #F4E9D7;   /* fondo */
+  --papel-2:  #E7D8BE;   /* segundo plano, cajas, "quedan pocas" */
+  --tinta:    #141838;   /* texto, líneas, sombras Y anillo de foco */
+  --marca:    #F06050;   /* coral. SOLO RELLENA, NUNCA ESCRIBE */
+  --libre:    #2C6448;   /* verde. La franja va holgada */
+  --promo:    #F0C22B;   /* la pegatina de promo, y el corazón de la llama */
+
+  /* ---------- SEMÁFORO DEL HORNO · la única excepción del rojo ----------
+     Decisión de Mery, 20/08/2026. Verde, naranja y rojo para decir cómo de
+     lleno está el horno a cada hora. Es la única parte de la web donde
+     entra el rojo, y entra porque aquí SÍ significa lo que la gente espera:
+     "date prisa, queda poco".
+
+     Cambia una regla fundacional —"no hay rojo de alarma"—, así que el
+     límite va escrito: el semáforo mide OCUPACIÓN, que es una escala. El
+     BLOQUEO es un sí o un no, y eso sigue sin ser un color: lo agotado, lo
+     cerrado y lo lleno se dicen con trama y tachado. Una franja roja se
+     puede pedir; una tramada, no. */
+  --horno-1:  #2C6448;   /* verde   · entra cuando quieras */
+  --horno-2:  #E2571E;   /* naranja · se va animando */
+  --horno-3:  #B9241A;   /* rojo    · quedan pocos huecos */
+
+  /* ---------- LAS VOCES · cuatro, más una de símbolos ----------
+     Estaban escritas a mano 101 veces, en 24 combinaciones distintas para
+     las CUATRO que declara el sistema (§02). Junto al ancho 80 convivían
+     78, 82, 85, 76 y 74, que nadie decidió: se escribieron a ojo. Cambiar
+     la voz de rótulo obligaba a editar 31 sitios y a fallar en cinco. */
+  --voz-cartel:  'wdth' 62, 'wght' 900;    /* titulares */
+  --voz-rotulo:  'wdth' 80, 'wght' 900;    /* etiquetas, botones, estados */
+  --voz-comanda: 'wdth' 72, 'wght' 900;    /* cifras, horas, precios */
+  --voz-texto:   'wdth' 100, 'wght' 400;   /* párrafos */
+
+  /* LA QUINTA, que el documento no declara y la interfaz necesita: el "+",
+     la "×" y las flechas no son texto, son símbolos, y en un símbolo el eje
+     de ancho no dice lo mismo —aplastar un "+" a 80 lo estrecha en vez de
+     darle voz—. Hallazgo de la auditoría, no excepción improvisada. */
+  --voz-signo:   'wdth' 100, 'wght' 900;
+
+  --fuente: 'Archivo', system-ui, -apple-system, sans-serif;
+  --mano:   'Oooh Baby', cursive;   /* acento. Nunca por debajo de 28 px */
+
+  /* ---------- TAMAÑOS DE LETRA ----------
+     Había 29 medidas sueltas para 189 usos: 10, 10'5, 11, 11'5, 12, 12'5,
+     13, 13'5, 14, 14'5, 15, 15'5, 16, 17… Nadie eligió esos medios píxeles;
+     se escribieron a ojo, uno detrás de otro.
+
+     La escala son catorce pasos y se diseñó al revés de lo habitual: en vez
+     de imponer una progresión bonita, se conservan EXACTAS las medidas que
+     ya se usaban mucho y solo se ajustan las raras. Así 138 usos no se
+     mueven y los 36 que sí lo hacen cambian 2 px como mucho. Un sistema que
+     obliga a rehacer la web para entrar no es un sistema, es una mudanza. */
+  --t10: 10px;   --t9:  11px;   --t8:  12px;   --t7:  13px;
+  --t6:  14px;   --t5:  15px;   --t4:  16px;   --t3:  18px;
+  --t2:  22px;   --t1:  26px;
+
+  /* Y los de cartel, que no son escala de interfaz. Se usan para lo grande
+     que NO crece: la manuscrita, las comillas gigantes, los números de la
+     historia, las flechas de la ficha. Diez usos, los diez en la escala. */
+  --d4: 24px;   --d3: 30px;   --d2: 34px;   --d1: 40px;   --d0: 52px;   --d00: 84px;
+
+  /* ---------- LOS TITULARES, QUE SÍ CRECEN ----------
+     Decisión de Mery del 25/08/2026: los titulares siguen siendo fluidos
+     —un cartel que no crece con la ventana se ve enano en un monitor— pero
+     dejan de decidirse uno a uno. Antes eran CATORCE rangos escritos a
+     mano, con veinte medidas distintas y un 23,5 px que nadie eligió: se
+     escribió a ojo, como los medios píxeles que la escala de interfaz ya
+     había desterrado. La interfaz se arregló en agosto y los titulares se
+     habían quedado como estaban.
+
+     Ahora son TRES, y sus extremos salen de la escala de arriba: lo que se
+     tokeniza son los extremos, no el comportamiento.
+
+       GRANDE  la frase ES la pantalla — hero, manifiesto, cierre
+       MEDIO   encabeza un bloque      — titulares, carta, ficha
+       PEQUEÑO acompaña                — pantallas de paso, banda que corre  */
+  --cartel-g: clamp(var(--d1), 7vw,   var(--d00));   /* 40 → 84 */
+  --cartel-m: clamp(var(--d3), 5vw,   var(--d0));    /* 30 → 52 */
+  --cartel-p: clamp(var(--d4), 4vw,   var(--d1));    /* 24 → 40 */
+
+  /* ---------- INTERLINEADOS ----------
+     Dieciocho valores distintos para 60 usos, con tres casi iguales
+     conviviendo: 0'88, 0'9 y 0'95. Cuatro bastan. */
+  --lh-caja:     1;   /* caja exacta: botones, cifras, chips. NO es un
+                         interlineado de lectura, es "la altura es la letra".
+                         Estuvo un rato redondeado a 0,95 al tokenizar y era
+                         un error: el 1 exacto ahí es deliberado. */
+  --lh-cartel: .95;   /* titulares grandes: las líneas se tocan */
+  --lh-tit:   1.15;   /* títulos de bloque */
+  --lh-medio: 1.3;    /* frases sueltas, pies */
+  --lh-texto: 1.55;   /* párrafos */
+
+  /* ---------- MOVIMIENTO ----------
+     Once duraciones distintas para 22 transiciones: .15, .18, .24, .25,
+     .3, .32… Tres bastan, y tenerlas con nombre hace que el movimiento se
+     pueda ajustar entero desde aquí. */
+  --mov-corto: .15s;   /* color, opacidad: acuse de recibo */
+  --mov-medio: .25s;   /* desplazamientos, giros */
+  --mov-largo: .35s;   /* desplegar, crecer */
+
+  /* OJO: el parpadeo de la llama NO usa esta escala, y no es un olvido. Ahí
+     la duración no es una preferencia de movimiento: ES EL DATO. Va de 2,4 s
+     con el horno apagado a 0,24 s cuando no da más, y esa gradación es la
+     que dice el nivel aunque no compares tamaños. Tokenizarla la aplastaría
+     a tres valores y el indicador dejaría de informar. Se probó, y por eso
+     queda escrito. */
+
+  /* ---------- ESPACIO ---------- */
+  --e1:  4px;  --e2:  8px;  --e3: 12px;  --e4: 16px;
+  --e5: 24px;  --e6: 32px;  --e7: 48px;  --e8: 64px;  --e9: 96px;
+
+  /* ---------- LÍNEAS Y TRAMA ---------- */
+  --linea:       1px solid var(--tinta);
+  --linea-media: 2px solid var(--tinta);
+  --linea-gorda: 3px solid var(--tinta);
+  --trama: repeating-linear-gradient(45deg,transparent 0 7px,rgba(20,24,56,.11) 7px 14px);
+
+  /* ---------- SOMBRAS · la escala del gesto de botón ----------
+     Son LONGITUDES y no sombras completas, porque el botón las usa como
+     escala: los grandes descansan a 5 y los pequeños a 3, y el gesto de
+     levantarse y hundirse se calcula sobre ellas. Los nombres son los del
+     documento, que los declaró primero aunque nunca llegara a usarlos. */
+  --sombra-suelo: 5px;   /* en reposo */
+  --sombra-alta:  8px;   /* levantado, al acercarse */
+  --sombra-baja:  1px;   /* hundido, al pulsar */
+  --sombra-peq:   3px;   /* la misma escala en botones pequeños */
+  --sombra: var(--sombra-suelo) var(--sombra-suelo) 0 var(--tinta);
+
+  /* Y el RECORRIDO del gesto, que es la otra mitad de la escala: la sombra
+     crece hacia fuera y el botón se mueve hacia dentro la misma cantidad.
+     Estas cuatro las llevaba usando `boton.css` SIN QUE EXISTIERAN en ningún
+     archivo del proyecto. Una variable que no existe no da error: el
+     navegador tira la declaración entera en silencio, así que el botón
+     dejó de moverse y nadie vio nada roto. Por eso van aquí, junto a las
+     sombras con las que tienen que cuadrar. */
+  --alza-x:  1px;   /* al acercarse se aparta un pelo, y sube 3 */
+  --alza-y:  3px;
+  --hunde-x: 3px;   /* al pulsar cae hacia su propia sombra */
+  --hunde-y: 4px;
+
+  /* ---------- MEDIDAS ---------- */
+  --toque:   48px;    /* mínimo de zona pulsable */
+  --ancho:   980px;   /* ancho de página */
+  --lectura: 68ch;    /* medida máxima de párrafo */
+}

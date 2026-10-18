@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1014 1545" width="1014" height="1545" role="img" aria-labelledby="title desc">
+  <title id="title">Ilustración vintage de una porción de pizza</title>
+  <desc id="desc">Reconstrucción vectorial limpia en capas negra, coral y azul.</desc>
+
+  <g id="fondos">
+    <rect id="bloque-negro" x="12" y="12" width="990" height="1024" fill="#000000"/>
+    <rect id="bloque-coral" x="135" y="12" width="728" height="918" fill="#f26356"/>
+    <rect id="bloque-azul" x="12" y="1036" width="990" height="497" fill="#2d329f"/>
+  </g>
+
+  <g id="pizza" fill="none" stroke="#2d329f" stroke-linecap="round" stroke-linejoin="round">
+    <path id="contorno-principal" stroke-width="27" d="M187 1036 469 360C479 335 489 328 507 328 527 328 538 338 548 361L838 1036"/>
+    <path id="borde-interior" stroke-width="18" d="M524 378 231 1036"/>
+
+    <path id="queso-corazon" stroke-width="16" d="M451 590C466 614 478 622 489 600 500 578 512 565 528 568 551 573 563 596 556 616 548 642 518 657 489 669 468 678 448 681 427 677"/>
+    <path id="onda-superior" stroke-width="14" d="M524 670C540 652 550 652 557 672 565 696 572 719 587 720 597 721 603 710 610 696"/>
+    <path id="onda-central" stroke-width="14" d="M405 789C429 786 435 799 437 826 440 857 444 871 459 872 475 873 471 848 483 837 493 827 506 835 520 835 536 836 547 827 546 810"/>
+
+    <path id="marca-lateral" stroke-width="13" d="M303 784C289 795 283 807 284 820"/>
+    <circle id="rodaja-izquierda" cx="396" cy="967" r="29" stroke-width="15"/>
+    <circle id="rodaja-derecha" cx="661" cy="786" r="22" stroke-width="14"/>
+
+    <path id="champinon" stroke-width="16" d="M654 875C678 876 703 891 708 906 711 916 702 916 691 912L663 946C682 937 702 940 706 954 711 974 694 996 669 1005 644 1014 621 1003 600 989L574 971C548 953 553 923 570 908 581 898 592 898 606 901 611 913 613 929 620 932 628 933 642 912 654 894 644 885 642 878 654 875Z"/>
+  </g>
+</svg>

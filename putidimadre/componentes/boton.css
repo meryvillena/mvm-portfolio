@@ -1,0 +1,191 @@
+/* ############################################################
+   COMPONENTE · BOTÓN
+   Vive en su propio archivo por el mismo motivo que los tokens: lo leen la
+   web Y el documento del sistema. Antes el documento tenía su propia copia,
+   así que enseñaba `.btn--2` mientras el código ya usaba `.btn--secundario`.
+   Un documento que copia el componente enseña un componente que no existe.
+
+   Ahora los ejemplos vivos del capítulo 06 SON este archivo. Si alguien
+   cambia el botón aquí, el documento lo enseña cambiado.
+   ############################################################ */
+
+/* ============================================================
+   EL BOTÓN · un componente, tres ejes
+   ------------------------------------------------------------
+   Antes eran SIETE clases distintas haciendo lo mismo: .btn,
+   .btn--2, .btn--peligro, .btn-primario, .cierre__cta, .mas,
+   .pz__btn, .ci__btn y .fr__btn. El síntoma se vio el 21 de
+   agosto: para que todos los botones hicieran el gesto nuevo de
+   levantarse y hundirse hubo que escribir las siete clases a mano
+   en una lista de selectores. En un componente de verdad se
+   cambia una vez.
+
+   TRES EJES, y se combinan:
+     JERARQUÍA  qué relleno lleva · qué importancia tiene
+     TAMAÑO     alto y aire
+     FORMA      texto o signo (cuadrado)
+
+   Al unificar aparecieron tres incoherencias que NO se han tocado
+   —unificar no es rediseñar a escondidas— y que están para decidir:
+     · tres pesos de borde para el mismo componente: 0, 2 y 3 px
+     · tres tamaños de botón cuadrado: 34, 36 y 44
+     · una jerarquía de relleno TINTA que el sistema no declara
+       (§06 declara primario, secundario y terciario; el relleno
+       de tinta lo usan el cierre de la home y reservar franja)
+   ============================================================ */
+.btn {
+  font-family: var(--fuente);
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-size: var(--t6);
+  line-height: var(--lh-caja);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--e2);
+  /* el alto y el relleno los pone el eje de TAMAÑO; el color, el de
+     JERARQUÍA. Aquí solo va lo que comparten todos. */
+  padding: var(--e3) var(--e5);
+  min-height: var(--toque);
+  border: var(--linea-gorda);
+  background: var(--marca);
+  color: var(--tinta);
+
+  /* EL REPOSO DEL GESTO. El botón descansa sobre una sombra dura, sin
+     difuminar: un cartel de bar, no una tarjeta de app. Las tres alturas
+     van como variables locales para que el eje de TAMAÑO pueda bajarlas
+     de golpe sin reescribir el gesto tres veces más abajo. */
+  --suelo: var(--sombra-suelo);   /* 5 · apoyado */
+  --alta:  var(--sombra-alta);    /* 8 · levantado */
+  --baja:  var(--sombra-baja);    /* 1 · hundido */
+  box-shadow: var(--suelo) var(--suelo) 0 var(--tinta);
+  transition:
+    transform  var(--mov-corto) ease-out,
+    box-shadow var(--mov-corto) ease-out;
+}
+
+/* ---------- eje 1 · JERARQUÍA ---------- */
+.btn--primario   { background: var(--marca); color: var(--tinta); }
+.btn--secundario { background: var(--papel); color: var(--tinta); }
+/* Terciario: declarado en §06 del sistema y nunca construido hasta hoy.
+   "Salidas, volver, seguir mirando. Sin sombra ni relleno." */
+.btn--terciario  {
+  background: none; border-color: transparent;
+  color: var(--tinta); text-decoration: underline;
+  text-underline-offset: 4px; box-shadow: none;
+}
+/* Y no se levanta ni se hunde: no tiene grosor que enseñar. Va aquí y no
+   abajo porque la regla del gesto tiene más peso que esta y le ganaría. */
+.btn--terciario:hover, .btn--terciario:focus-visible, .btn--terciario:active {
+  transform: none; box-shadow: none;
+}
+/* Oscuro: la jerarquía que el sistema NO declara. Se conserva porque es
+   como se ve hoy el cierre de la home y el botón de reservar franja. */
+.btn--oscuro     { background: var(--tinta); color: var(--papel); }
+/* Destructivo: ni coral ni relleno. Trama, y solo se llena al confirmar.
+   Pintar de marca el botón que borra tu pedido sería invitarlo (§06). */
+.btn--peligro    {
+  background: var(--papel); color: var(--tinta);
+  background-image: var(--trama);
+}
+.btn--peligro[data-seguro="1"] {
+  background: var(--tinta); color: var(--papel); background-image: none;
+}
+
+/* ---------- eje 2 · TAMAÑO ---------- */
+.btn--ancho { padding: var(--e4) var(--e7); }
+.btn--medio { padding: var(--e4) var(--e6); }
+.btn--peq   { padding: var(--e2) var(--e3); min-height: 38px; border-width: 2px; }
+.btn--mini  { padding: 6px 14px; min-height: 36px; font-size: var(--t9);
+              letter-spacing: .06em; }
+
+/* ---------- eje 3 · FORMA ---------- */
+/* Un signo no es una palabra: va cuadrado, a ancho completo de la fuente
+   (--voz-signo) y sin relleno lateral. Tres tamaños, que son los tres que
+   había: el de la carta, el del carrito y el de la ficha. */
+.btn--signo {
+  padding: 0; width: 44px; height: 44px; min-height: 0;
+  font-variation-settings: var(--voz-signo);
+  font-size: var(--t2); letter-spacing: 0;
+  border-width: 2px;
+}
+.btn--signo.btn--peq  { width: 36px; height: 36px; font-size: var(--t3); }
+.btn--signo.btn--mini { width: 34px; height: 34px; font-size: var(--t3); }
+
+/* ---------- sin borde: lo usan el cierre y el primario del flujo ---------- */
+.btn--liso { border: 0; }
+
+/* ============================================================
+   EL GESTO · el botón tiene grosor
+   ------------------------------------------------------------
+   Es el de `movimiento.html`, que es donde se decidió: se LEVANTA al
+   acercarte —la sombra crece de 5 a 8 mientras el botón se aparta— y
+   SE HUNDE al pulsar, con la sombra encogiendo a 1 a la vez que el
+   botón cae. Que las dos cosas pasen a la vez es todo el truco: si
+   solo se moviera el botón, sería un rectángulo resbalando; si solo
+   cambiara la sombra, una mancha parpadeando.
+
+   POR QUÉ ESTUVO ROTO (23/08/2026)
+   Dos fallos independientes, y por eso no se vio venir ninguno:
+     1. Las cuatro variables del recorrido no estaban declaradas en
+        ningún archivo. Una variable inexistente no da error: tira la
+        declaración en silencio. Ya viven en `tokens.css`.
+     2. La lista de selectores del `:hover` se escribió con las SIETE
+        clases viejas —`.cierre__cta`, `.btn-primario`, `.mas`,
+        `.pz__btn`, `.ci__btn`, `.fr__btn`— y sin `.btn`, que es
+        justo la clase que las había sustituido a todas. El gesto
+        seguía escrito, pero apuntando a botones que ya no existen.
+
+   La moraleja va escrita porque es la del capítulo entero: unificar
+   siete clases en un componente y NO actualizar la lista de estados
+   deja el componente sin estados. Ahora aquí solo se nombra `.btn`.
+   Si mañana hace falta escribir un selector de botón que no empiece
+   por `.btn`, es que el botón se ha vuelto a romper.
+   ============================================================ */
+.btn:hover:not(:disabled),
+.btn:focus-visible:not(:disabled) {
+  transform: translate(calc(var(--alza-x) * -1), calc(var(--alza-y) * -1));
+  box-shadow: var(--alta) var(--alta) 0 var(--tinta);
+  /* rebota al soltar: un botón físico no vuelve a su sitio frenando */
+  transition-timing-function: cubic-bezier(.34, 1.56, .64, 1);
+}
+
+/* El teclado hace lo mismo que el ratón. `:focus-visible` va en la misma
+   regla que `:hover` a propósito: si el foco solo pintase un anillo,
+   quien navega con tabulador vería una web sin gesto y quien navega con
+   ratón otra distinta. Es la misma interfaz. */
+.btn:active:not(:disabled) {
+  transform: translate(var(--hunde-x), var(--hunde-y));
+  box-shadow: var(--baja) var(--baja) 0 var(--tinta);
+  transition-duration: var(--mov-corto);
+  transition-timing-function: ease-out;
+}
+
+/* Los pequeños hacen el MISMO gesto en su escala: descansan a 3, se
+   levantan a 5 y se hunden a 1. Cambiar las tres variables locales basta
+   —el gesto de arriba no se entera— y así el «+» de la carta no lleva la
+   sombra de un botón de 48 px. */
+.btn--peq, .btn--mini, .btn--signo { --suelo: var(--sombra-peq); --alta: var(--sombra-suelo); }
+
+/* Deshabilitado: quieto y con la sombra apagada. Si conservara la sombra
+   entera parecería pulsable y solo se le habría bajado el color. */
+.btn:disabled {
+  opacity: .4; cursor: not-allowed; transform: none;
+  box-shadow: var(--suelo) var(--suelo) 0 rgba(20, 24, 56, .35);
+}
+.btn:focus-visible { outline: 3px solid var(--tinta); outline-offset: 4px; }
+
+/* Sin movimiento, el botón se queda quieto: conserva su grosor —la sombra
+   de reposo no es una animación, es cómo es el botón— y no hace el
+   recorrido. El foco sigue marcándose con el anillo de tinta, que es lo
+   que hace falta de verdad para orientarse. */
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+  .btn:hover, .btn:focus-visible, .btn:active {
+    transform: none;
+    box-shadow: var(--suelo) var(--suelo) 0 var(--tinta);
+  }
+  .btn--terciario:hover, .btn--terciario:focus-visible, .btn--terciario:active {
+    box-shadow: none;
+  }
+}

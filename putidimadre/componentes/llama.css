@@ -1,0 +1,149 @@
+/* ############################################################
+   COMPONENTE · LA LLAMA
+   La pareja de `componentes/llama.js`: allí el dibujo, aquí el color y
+   el pulso. Vive fuera de `web.css` por el mismo motivo que el botón:
+   la llama sale en DOS sitios —el indicador del hero y el selector de
+   hora— y mientras cada sitio tuvo su propio bloque de reglas, los dos
+   bloques derivaron.
+
+   QUÉ PASÓ, porque merece quedar escrito (23/08/2026)
+   `web.css` tenía los dos juegos de reglas, y encima de uno de ellos un
+   comentario que decía: «Los mismos colores por nivel que el indicador
+   del hero. Si las dos llamas no dijeran lo mismo, la web se
+   contradiría a sí misma». Pues no eran los mismos. El hero pintaba en
+   CORAL (--marca) y las franjas en el SEMÁFORO (--horno-2 / --horno-3),
+   así que "quedan pocos huecos" era una llama coral arriba y una llama
+   ROJA abajo. El mismo nivel, la misma frase, dos dibujos distintos, y
+   un comentario jurando que eran iguales.
+
+   No se vio hasta que se pusieron los seis niveles uno al lado del otro
+   en `estados-llama.html`. Dos bloques de CSS a 1.400 líneas de
+   distancia no se comparan leyendo: se comparan mirándolos juntos.
+
+   QUÉ SE DECIDIÓ
+   Manda el SEMÁFORO, que es la paleta de las franjas. El coral es el
+   relleno de marca y está en toda la página; el semáforo mide una sola
+   cosa —cómo de lleno está el horno— y por eso puede decirlo sin
+   competir con nada. La llama del hero pasa a hablar ese idioma.
+
+   QUIÉN LO LEE
+   · `web.css`               — a través de index.html
+   · `estados-llama.html`    — el muestrario de los seis niveles
+   · `SISTEMA-DE-DISENO.html`— el documento vivo
+   Los tres cargan ESTE archivo. Ya no hay dos paletas que puedan
+   separarse sin que nadie se entere.
+   ############################################################ */
+
+/* ============================================================
+   EL GRUPO · escala desde la boca del horno, no desde su centro
+   ============================================================ */
+.fuego {
+  transform-box: view-box;
+  transform-origin: 100px 214px;
+  transform: scale(.55, .30);   /* reposo antes de que JS diga el nivel */
+  transition: transform var(--mov-largo) cubic-bezier(.2, .8, .3, 1.2);
+}
+.boca { fill: var(--tinta); }
+
+/* ============================================================
+   LOS SEIS NIVELES
+   El vocabulario y los cortes viven en `contenido.js` → horno; el
+   tamaño de cada uno, en `componentes/llama.js`. Aquí solo el color.
+
+   LA ESCALADA NO ES "MÁS ROJO CADA VEZ". Los tres trazos van saltando
+   un puesto hacia fuera, que es lo que hace que el nivel se lea sin
+   comparar con nada:
+
+     apagado      todo papel-2, al 35 %  — ni está encendido
+     rescoldo     naranja · amarillo · crema      ← el reposo
+     brasa        igual, más grande y más rápida
+     llama-viva   TODO SALTA UN PASO: rojo fuera, naranja en medio, y la
+                  llama más grande que todavía se puede pedir
+     no-da-mas    tinta fuera, coral dentro — se apaga por fuera
+
+   Fueron SEIS hasta el 23/08/2026. Había uno más entre los dos últimos,
+   `siguiente-hornada` («Entras en la siguiente hornada»), y se retiró
+   porque con el horno a tope esa frase cuenta lo que el cliente acaba de
+   deducir solo. Su llama —más grande y más nerviosa— no se tiró: es la
+   que lleva ahora `llama-viva`.
+
+   El salto al rojo se adelanta un nivel a propósito: el rojo avisa
+   mientras todavía puedes hacer algo, que es cuando sirve de algo.
+
+   Y el bloqueo no estrena color, se APAGA: la llama de tinta es el
+   mismo idioma que el tachado de "agotado". De paso, el único nivel
+   donde el color desaparece es el único donde no puedes pulsar.
+   ============================================================ */
+.fuego__ext { fill: var(--horno-2); }
+.fuego__med { fill: var(--promo); }
+.fuego__int { fill: var(--papel); }
+
+.fuego[data-nivel="apagado"] { opacity: .35; }
+.fuego[data-nivel="apagado"] .fuego__ext,
+.fuego[data-nivel="apagado"] .fuego__med,
+.fuego[data-nivel="apagado"] .fuego__int { fill: var(--papel-2); }
+
+.fuego[data-nivel="llama-viva"] .fuego__ext { fill: var(--horno-3); }
+.fuego[data-nivel="llama-viva"] .fuego__med { fill: var(--horno-2); }
+
+.fuego[data-nivel="no-da-mas"] .fuego__ext { fill: var(--tinta); }
+.fuego[data-nivel="no-da-mas"] .fuego__med { fill: var(--marca); }
+.fuego[data-nivel="no-da-mas"] .fuego__int { fill: var(--promo); }
+
+/* Se conserva por compatibilidad: `data-lleno` sigue marcando el bloqueo
+   en el hero, y lo pone `pintarLlama()`. `data-nivel` lo afina, no lo
+   sustituye. Va DESPUÉS para que gane cuando los dos digan bloqueado. */
+.fuego[data-lleno="1"] .fuego__ext { fill: var(--tinta); }
+.fuego[data-lleno="1"] .fuego__med { fill: var(--marca); }
+
+/* ============================================================
+   EL PULSO · dos capas a tiempos distintos para que no sea mecánico
+   ============================================================ */
+@keyframes fuego-parpadeo-med {
+  0%, 100% { transform: scaleY(1)    scaleX(1); }
+  50%      { transform: scaleY(1.12) scaleX(0.94); }
+}
+@keyframes fuego-parpadeo-int {
+  0%, 100% { transform: scaleY(1)    scaleX(1); }
+  50%      { transform: scaleY(1.18) scaleX(0.90); }
+}
+.fuego__med, .fuego__int {
+  transform-box: view-box;
+  transform-origin: 100px 214px;
+  animation: fuego-parpadeo-med 1.6s ease-in-out infinite;
+}
+.fuego__int { animation-name: fuego-parpadeo-int; }
+
+/* Cuanto más lleno, más nervioso el fuego. La velocidad refuerza lo que
+   dice el tamaño, para que el nivel se lea también de reojo.
+
+   ESTAS DURACIONES NO USAN LA ESCALA DE `--mov-*`, y no es un olvido:
+   aquí la duración no es una preferencia de movimiento, ES EL DATO. Va
+   de 2,4 s con el horno apagado a 0,24 s cuando no da más, y esa
+   gradación dice el nivel aunque no compares tamaños. Tokenizarla la
+   aplastaría a tres valores y el indicador dejaría de informar. */
+.fuego[data-nivel="apagado"]    .fuego__med { animation-duration: 2.4s; }
+.fuego[data-nivel="apagado"]    .fuego__int { animation-duration: 2.0s; }
+.fuego[data-nivel="brasa"]      .fuego__med { animation-duration: .70s; }
+.fuego[data-nivel="brasa"]      .fuego__int { animation-duration: .46s; }
+.fuego[data-nivel="llama-viva"] .fuego__med { animation-duration: .48s; }
+.fuego[data-nivel="llama-viva"] .fuego__int { animation-duration: .32s; }
+/* Bloqueado, pero ENCENDIDO. Se probó parándola y estaba mal por dos
+   razones: un horno lleno es el que más quema, no el que se apaga; y la
+   llama es lo único que se mueve en una página muy quieta, así que
+   pararla justo en el momento más dramático la deja muerta. Quien dice
+   "bloqueado" es el color tinta, no la quietud. */
+.fuego[data-nivel="no-da-mas"]  .fuego__med { animation-duration: .34s; }
+.fuego[data-nivel="no-da-mas"]  .fuego__int { animation-duration: .24s; }
+
+/* El cambio de nivel se funde, no salta */
+.fuego, .fuego__ext, .fuego__med, .fuego__int {
+  transition: fill var(--mov-largo) ease, opacity var(--mov-largo) ease;
+}
+
+/* Sin movimiento la llama se queda quieta EN SU TAMAÑO: el tamaño es el
+   dato y no se puede renunciar a él. Lo que se va es el parpadeo. */
+@media (prefers-reduced-motion: reduce) {
+  .fuego__med, .fuego__int { animation: none; }
+  .fuego { transition: none; }
+}

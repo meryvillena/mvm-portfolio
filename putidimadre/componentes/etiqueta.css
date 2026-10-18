@@ -1,0 +1,26 @@
+/* ############################################################
+   COMPONENTE · LA ETIQUETA
+   El sellito que va debajo del nombre de un producto: «vegetariana»,
+   «pica de verdad», «favorita del barrio». Es la pieza más pequeña del
+   sistema y la última que quedaba por sacar.
+
+   ------------------------------------------------------------
+   NO TIENE VARIANTES, Y ES UNA DECISIÓN
+   ------------------------------------------------------------
+   Una etiqueta no dice si algo es bueno o malo: dice QUÉ ES. «Pica de
+   verdad» no es un aviso, es un dato — hay quien la pide justamente por
+   eso. Por eso no hay `.tag--bueno` ni `.tag--peligro`: **todas pesan
+   igual y todas van en tinta sobre papel.**
+
+   Si algún día una etiqueta necesita destacar sobre las otras, lo que
+   hace falta no es un modificador: es preguntarse por qué esa frase
+   estaba metida entre etiquetas y no en otro sitio.
+
+   Lo único que la distingue de una palabra suelta es el marco. Sin él
+   son tres palabras seguidas; con él son tres datos.
+   ############################################################ */
+.tag {
+  font-variation-settings: var(--voz-rotulo);
+  font-size: var(--t10); text-transform: uppercase; letter-spacing: .06em;
+  border: 1px solid var(--tinta); padding: 1px 5px; margin: 0;
+}

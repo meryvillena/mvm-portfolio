@@ -1,0 +1,1471 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spotify Now Playing — Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#000000;
+  --base:#121212;
+  --elev1:#181818;
+  --elev2:#242424;
+  --elev3:#2a2a2a;
+  --green:#1ED760;
+  --green-press:#1ab54e;
+  --white:#ffffff;
+  --sub:#b3b3b3;
+  --sub2:#a7a7a7;
+  --line:rgba(255,255,255,.09);
+  --amber:#f5b942;
+  --red:#f0555c;
+  --disp:'Montserrat',system-ui,sans-serif;
+  --body:'Figtree','Montserrat',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--body);
+  background:
+    radial-gradient(900px 600px at 20% -10%, #1a3a26 0%, rgba(20,20,20,0) 55%),
+    radial-gradient(800px 700px at 110% 20%, #241a34 0%, rgba(0,0,0,0) 55%),
+    #0a0a0a;
+  color:var(--white);
+  min-height:100%;
+  display:flex;flex-direction:column;align-items:center;
+  padding:26px 16px 60px;
+  -webkit-font-smoothing:antialiased;
+}
+/* ---------- page chrome ---------- */
+.page-head{width:100%;max-width:960px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .glyph{width:34px;height:34px;border-radius:50%;background:var(--green);display:grid;place-items:center;flex:none}
+.brand .glyph svg{width:22px;height:22px}
+.brand h1{font-family:var(--disp);font-weight:800;font-size:19px;letter-spacing:-.02em;line-height:1}
+.brand p{color:var(--sub);font-size:12.5px;margin-top:3px;letter-spacing:.01em}
+.view-toggle{display:flex;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:999px;padding:4px}
+.view-toggle button{font-family:var(--disp);font-weight:700;font-size:12.5px;color:var(--sub);background:none;border:0;padding:9px 16px;border-radius:999px;cursor:pointer;transition:.18s;letter-spacing:.01em}
+.view-toggle button.on{background:var(--white);color:#000}
+
+/* ---------- device frame ---------- */
+.stage{width:100%;display:flex;justify-content:center}
+.device{
+  width:390px;height:844px;flex:none;position:relative;
+  background:var(--black);border-radius:52px;
+  box-shadow:0 0 0 12px #0c0c0c,0 0 0 13px #2a2a2a,0 40px 90px rgba(0,0,0,.7);
+  overflow:hidden;
+}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:118px;height:33px;background:#000;border-radius:20px;z-index:80}
+.statusbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;font-family:var(--disp);font-weight:700;font-size:14px;z-index:70;pointer-events:none}
+.statusbar .sb-r{display:flex;align-items:center;gap:6px}
+.statusbar svg{display:block}
+
+.viewport{position:absolute;inset:0;overflow:hidden}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.screen.active{display:flex}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding-top:52px}
+.scroll::-webkit-scrollbar{width:0}
+
+/* ---------- reusable ---------- */
+.pill{font-family:var(--disp);font-weight:700;border:0;border-radius:999px;cursor:pointer;transition:transform .12s,background .15s;letter-spacing:.01em}
+.pill:active{transform:scale(.97)}
+.pill-green{background:var(--green);color:#000;font-size:15px;padding:15px 22px}
+.pill-green:active{background:var(--green-press)}
+.pill-ghost{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.28);font-size:15px;padding:15px 22px}
+.eq{display:inline-flex;align-items:flex-end;gap:2px;height:14px}
+.eq i{width:3px;background:var(--green);border-radius:2px;animation:eq .9s ease-in-out infinite}
+.eq i:nth-child(1){height:40%;animation-delay:-.2s}
+.eq i:nth-child(2){height:90%;animation-delay:-.5s}
+.eq i:nth-child(3){height:60%;animation-delay:-.1s}
+.eq i:nth-child(4){height:100%;animation-delay:-.7s}
+@keyframes eq{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+@media (prefers-reduced-motion:reduce){.eq i{animation:none}}
+
+.art{border-radius:8px;position:relative;overflow:hidden;flex:none;background:#333}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:block}
+.art::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(160deg,rgba(255,255,255,.16),rgba(0,0,0,0) 38%),linear-gradient(0deg,rgba(0,0,0,.28),rgba(0,0,0,0) 45%)}
+.art .note{position:absolute;bottom:8%;right:8%;opacity:.85;z-index:1}
+
+/* match ring */
+.ring{--p:80;--c:var(--green);position:relative;border-radius:50%;flex:none;
+  background:conic-gradient(var(--c) calc(var(--p)*1%),rgba(255,255,255,.14) 0);
+  display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring::before{content:"";position:absolute;inset:12.5%;background:var(--base);border-radius:50%}
+.ring b{position:relative;font-family:var(--disp);font-weight:800;line-height:1;color:var(--white);text-shadow:0 1px 3px rgba(0,0,0,.65)}
+.ring small{position:relative;display:block;font-size:8px;color:var(--sub);font-weight:600;margin-top:1px;letter-spacing:.04em}
+
+/* ---------- HOME (spotify) ---------- */
+.home-top{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 12px}
+.home-top h2{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:-.02em}
+.home-top .avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#4c8bf5,#8e44ad);display:grid;place-items:center;font-family:var(--disp);font-weight:800;font-size:13px}
+.chips-row{display:flex;gap:8px;padding:2px 16px 14px;overflow-x:auto}
+.chips-row::-webkit-scrollbar{height:0}
+.tab-chip{font-family:var(--disp);font-weight:600;font-size:13.5px;padding:8px 15px;border-radius:999px;background:var(--elev2);color:var(--white);border:0;white-space:nowrap;cursor:pointer}
+.tab-chip.on{background:var(--green);color:#000}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 22px}
+.quick{display:flex;align-items:center;gap:10px;background:var(--elev2);border-radius:6px;overflow:hidden;height:56px;cursor:pointer;transition:background .15s}
+.quick:hover{background:var(--elev3)}
+.quick .qart{width:56px;height:56px;flex:none}
+.quick span{font-family:var(--disp);font-weight:700;font-size:12.5px;line-height:1.15}
+.sec-h{font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:-.01em;padding:0 16px 12px}
+.rail{display:flex;gap:14px;overflow-x:auto;padding:0 16px 24px}
+.rail::-webkit-scrollbar{height:0}
+.card{width:135px;flex:none;cursor:pointer}
+.card .cart{width:135px;height:135px;margin-bottom:9px}
+.card h4{font-family:var(--disp);font-weight:700;font-size:13.5px;line-height:1.2}
+.card p{color:var(--sub);font-size:12px;margin-top:3px;line-height:1.3}
+.round .cart{border-radius:50%}
+
+/* promo card for the feature */
+.feat{margin:0 16px 24px;border-radius:12px;padding:18px;position:relative;overflow:hidden;cursor:pointer;
+  background:linear-gradient(135deg,#1ED760 0%,#0f7a37 60%,#0a3f1f 100%)}
+.feat .badge{display:inline-block;font-family:var(--disp);font-weight:800;font-size:10px;letter-spacing:.14em;background:rgba(0,0,0,.28);color:#eafff0;padding:5px 9px;border-radius:6px;margin-bottom:12px}
+.feat h3{font-family:var(--disp);font-weight:900;font-size:22px;letter-spacing:-.02em;color:#04140a;line-height:1.05;max-width:76%}
+.feat p{color:#06210f;font-size:13px;margin-top:8px;max-width:80%;font-weight:500;line-height:1.35}
+.feat .arrow{position:absolute;right:16px;bottom:16px;width:40px;height:40px;border-radius:50%;background:#04140a;display:grid;place-items:center}
+.feat .wave{position:absolute;right:-30px;top:-20px;opacity:.28}
+
+/* ---------- NEARBY ---------- */
+.near-head{padding:8px 16px 10px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.near-head .loc{font-family:var(--disp);font-weight:800;font-size:23px;letter-spacing:-.02em;line-height:1.05}
+.near-head .loc small{display:block;font-family:var(--body);font-weight:600;font-size:12.5px;color:var(--sub);margin-top:5px}
+.near-head .loc small b{color:var(--green)}
+.live-tag{display:flex;align-items:center;gap:6px;font-family:var(--disp);font-weight:700;font-size:11px;color:var(--green);background:rgba(30,215,96,.12);padding:7px 11px;border-radius:999px;flex:none}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,215,96,.55)}70%{box-shadow:0 0 0 7px rgba(30,215,96,0)}100%{box-shadow:0 0 0 0 rgba(30,215,96,0)}}
+.filters{display:flex;gap:8px;padding:2px 16px 12px;overflow-x:auto}
+.filters::-webkit-scrollbar{height:0}
+.gchip{font-family:var(--disp);font-weight:700;font-size:12.5px;padding:9px 14px;border-radius:999px;background:var(--elev2);color:var(--white);border:1px solid transparent;white-space:nowrap;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:7px}
+.gchip .dot{width:8px;height:8px;border-radius:50%}
+.gchip.on{background:var(--white);color:#000}
+.gchip.on .dot{outline:2px solid rgba(0,0,0,.15)}
+
+.map{position:relative;margin:0 16px;height:266px;border-radius:14px;overflow:hidden;background:#0f1512;border:1px solid var(--line)}
+.map svg.bg{position:absolute;inset:0;width:100%;height:100%}
+.pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;z-index:5;transition:transform .15s}
+.pin:active{transform:translate(-50%,-100%) scale(.94)}
+.pin .body{width:40px;height:40px;border-radius:50% 50% 50% 2px;transform:rotate(45deg);display:grid;place-items:center;box-shadow:0 6px 14px rgba(0,0,0,.5);border:2px solid rgba(255,255,255,.9)}
+.pin .body span{transform:rotate(-45deg);font-family:var(--disp);font-weight:800;font-size:11px;color:#0a0a0a}
+.pin.high .body{border-color:var(--green);box-shadow:0 0 0 3px rgba(30,215,96,.35),0 6px 14px rgba(0,0,0,.5)}
+.pin .tip{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;background:#000;border:1px solid var(--line);border-radius:8px;padding:6px 9px;white-space:nowrap;font-size:10.5px;font-weight:600;opacity:0;pointer-events:none;transition:.15s}
+.pin.sel .tip{opacity:1}
+.pin.sel{z-index:8}
+.pin.sel .body{outline:3px solid var(--white)}
+.you{position:absolute;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:#4c8bf5;border:3px solid #fff;box-shadow:0 0 0 6px rgba(76,139,245,.25);z-index:4}
+
+/* bottom sheet list */
+.sheet{margin:16px 0 0;background:var(--base);border-radius:20px 20px 0 0;flex:1;padding:10px 0 100px}
+.grab{width:36px;height:4px;border-radius:2px;background:#4a4a4a;margin:2px auto 12px}
+.sheet-h{display:flex;align-items:baseline;justify-content:space-between;padding:0 16px 6px}
+.sheet-h h3{font-family:var(--disp);font-weight:800;font-size:17px}
+.sheet-h span{font-size:12px;color:var(--sub)}
+.venue-row{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;transition:background .15s}
+.venue-row:active{background:var(--elev1)}
+.venue-row .vart{width:52px;height:52px;flex:none}
+.venue-row .meta{flex:1;min-width:0}
+.venue-row .meta h4{font-family:var(--disp);font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:7px}
+.gtag{font-family:var(--disp);font-weight:700;font-size:9px;padding:2px 6px;border-radius:4px;color:#0a0a0a}
+.venue-row .now{font-size:12.5px;color:var(--sub);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.venue-row .now b{color:var(--white);font-weight:600}
+.venue-row .dist{font-size:11.5px;color:var(--sub2);margin-top:3px}
+
+/* ---------- VENUE DETAIL ---------- */
+.v-hero{position:relative;padding:52px 0 0;overflow:hidden}
+.v-bg{position:absolute;inset:0;filter:blur(34px) saturate(1.2);transform:scale(1.4);opacity:.55}
+.v-hero-in{position:relative;padding:14px 16px 20px;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(18,18,18,.92) 78%,var(--base))}
+.v-back{position:absolute;top:60px;left:14px;z-index:9;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.4);border:0;display:grid;place-items:center;cursor:pointer}
+.v-title{display:flex;align-items:flex-end;gap:14px;margin-top:34px}
+.v-title .vart{width:110px;height:110px;box-shadow:0 18px 40px rgba(0,0,0,.6)}
+.v-title .vt{flex:1;min-width:0;padding-bottom:2px}
+.v-title .gtag{margin-bottom:8px}
+.v-title h2{font-family:var(--disp);font-weight:900;font-size:26px;letter-spacing:-.03em;line-height:1}
+.v-title .sub{font-size:13px;color:var(--sub);margin-top:7px;display:flex;align-items:center;gap:6px}
+.nowbar{display:flex;align-items:center;gap:12px;margin-top:18px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.nowbar .eyebrow{font-family:var(--disp);font-weight:800;font-size:9.5px;letter-spacing:.14em;color:var(--green);display:flex;align-items:center;gap:7px}
+.nowbar h4{font-family:var(--disp);font-weight:700;font-size:15px;margin-top:5px}
+.nowbar p{font-size:12.5px;color:var(--sub);margin-top:2px}
+.nowbar .match{text-align:center;flex:none}
+.cta-row{display:flex;gap:10px;padding:18px 16px 6px}
+.cta-row .pill-green{flex:1;display:flex;align-items:center;justify-content:center;gap:8px}
+.cta-row .icon-btn{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:transparent;display:grid;place-items:center;cursor:pointer;flex:none;transition:.15s}
+.cta-row .icon-btn:active{background:rgba(255,255,255,.1)}
+.cta-row .icon-btn.saved{border-color:var(--green)}
+.qr-enter{margin:14px 16px 4px;display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#20263f,#141726);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer}
+.qr-enter .qb{width:40px;height:40px;border-radius:10px;background:#000;display:grid;place-items:center;flex:none}
+.qr-enter h5{font-family:var(--disp);font-weight:700;font-size:13.5px}
+.qr-enter p{font-size:11.5px;color:var(--sub);margin-top:2px}
+.hist{padding:18px 16px 30px}
+.hist h3{font-family:var(--disp);font-weight:800;font-size:16px;margin-bottom:4px}
+.hist .cap{font-size:11.5px;color:var(--sub);margin-bottom:12px}
+.trow{display:flex;align-items:center;gap:12px;padding:8px 0}
+.trow .tart{width:44px;height:44px;flex:none}
+.trow .ti{flex:1;min-width:0}
+.trow .ti h5{font-weight:600;font-size:13.5px;color:var(--white)}
+.trow .ti p{font-size:12px;color:var(--sub);margin-top:2px}
+.trow .tt{font-size:11px;color:var(--sub2);font-variant-numeric:tabular-nums}
+.trow.live .ti h5{color:var(--green)}
+
+/* event/ticket teaser */
+.ev{margin:6px 16px 26px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--elev1);cursor:pointer}
+.ev .evtop{height:80px;background:linear-gradient(120deg,#7b2ff7,#f107a3);position:relative;display:flex;align-items:flex-end;padding:10px 14px}
+.ev .evtop b{font-family:var(--disp);font-weight:900;font-size:15px}
+.ev .evb{padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
+.ev .evb .p{font-size:12.5px;color:var(--sub)}
+.ev .evb .p b{color:var(--white);font-family:var(--disp);font-weight:700;font-size:14px}
+
+/* ---------- QR MODE ---------- */
+#s-qr .scroll{padding-top:52px;background:radial-gradient(120% 80% at 50% 0%,#123a22 0%,#0a0a0a 60%)}
+.qr-wrap{padding:8px 22px 120px;text-align:center}
+.qr-in-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:800;font-size:11px;letter-spacing:.1em;color:var(--green);background:rgba(30,215,96,.14);padding:8px 14px;border-radius:999px;margin:8px 0 22px}
+.qr-art{width:230px;height:230px;margin:0 auto 22px;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.qr-wrap .eyebrow{font-family:var(--disp);font-weight:800;font-size:10px;letter-spacing:.16em;color:var(--green);display:flex;align-items:center;justify-content:center;gap:8px}
+.qr-wrap h2{font-family:var(--disp);font-weight:900;font-size:25px;letter-spacing:-.02em;margin-top:10px}
+.qr-wrap .artist{font-size:15px;color:var(--sub);margin-top:6px}
+.progress{width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.16);margin:24px 0 6px;overflow:hidden}
+.progress i{display:block;height:100%;width:38%;background:var(--white);border-radius:2px}
+.ptime{display:flex;justify-content:space-between;font-size:11px;color:var(--sub2);font-variant-numeric:tabular-nums}
+.qr-actions{display:flex;flex-direction:column;gap:12px;margin-top:26px}
+.qr-actions .pill-green{width:100%}
+.qr-actions .pill-ghost{width:100%}
+.suggest{margin-top:26px;text-align:left;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:16px}
+.suggest h4{font-family:var(--disp);font-weight:800;font-size:14px;display:flex;align-items:center;gap:8px}
+.suggest p{font-size:12px;color:var(--sub);margin-top:5px;line-height:1.4}
+.suggest .qbtn{margin-top:12px;width:100%;background:var(--elev3);color:#fff;padding:13px;border-radius:999px;font-family:var(--disp);font-weight:700;font-size:13.5px;border:0;cursor:pointer}
+
+/* ---------- TICKET ---------- */
+#s-ticket .scroll{padding-top:52px}
+.tk{padding:8px 16px 120px}
+.tk-back{display:flex;align-items:center;gap:8px;color:var(--sub);font-family:var(--disp);font-weight:700;font-size:13px;background:none;border:0;cursor:pointer;padding:6px 0 14px}
+.tk-hero{border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.tk-hero .top{height:150px;background:linear-gradient(120deg,#7b2ff7,#f107a3 70%);position:relative;display:flex;align-items:flex-end;padding:16px}
+.tk-hero .top .note{position:absolute;right:14px;top:14px;opacity:.5}
+.tk-hero .top h2{font-family:var(--disp);font-weight:900;font-size:22px;letter-spacing:-.02em;line-height:1.05}
+.tk-hero .info{padding:16px;background:var(--elev1)}
+.tk-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub);padding:6px 0}
+.tk-row b{color:#fff;font-weight:600}
+.tk-line{border-top:1px solid var(--line);margin:14px 0}
+.tk-price{display:flex;align-items:center;justify-content:space-between}
+.tk-price span{font-size:13px;color:var(--sub)}
+.tk-price b{font-family:var(--disp);font-weight:900;font-size:26px;letter-spacing:-.02em}
+.applepay{margin-top:18px;width:100%;height:54px;border-radius:12px;background:#fff;color:#000;border:0;cursor:pointer;font-family:var(--disp);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s}
+.applepay:active{transform:scale(.98)}
+.oneclick{text-align:center;font-size:11.5px;color:var(--sub2);margin-top:12px}
+
+/* ---------- CONFIRM ---------- */
+#s-confirm .scroll{padding-top:52px;background:radial-gradient(120% 70% at 50% -5%,#123a22 0%,#0a0a0a 55%)}
+.cf{padding:40px 22px 120px;text-align:center}
+.check{width:96px;height:96px;border-radius:50%;background:var(--green);display:grid;place-items:center;margin:10px auto 26px;animation:pop .5s cubic-bezier(.2,1.3,.5,1)}
+@keyframes pop{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+.cf h2{font-family:var(--disp);font-weight:900;font-size:26px;letter-spacing:-.02em}
+.cf .lead{color:var(--sub);font-size:13.5px;margin-top:10px;line-height:1.45}
+.cf .lead b{color:#fff}
+.cf-card{margin-top:26px;text-align:left;background:var(--elev1);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.cf-item{display:flex;align-items:center;gap:13px;padding:15px 16px}
+.cf-item+.cf-item{border-top:1px solid var(--line)}
+.cf-item .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;flex:none}
+.cf-item h5{font-family:var(--disp);font-weight:700;font-size:13.5px}
+.cf-item p{font-size:11.5px;color:var(--sub);margin-top:2px}
+.cf-item .chk{margin-left:auto;color:var(--green)}
+.cf .pill-green{width:100%;margin-top:26px}
+.cf .link{display:block;color:var(--sub);font-family:var(--disp);font-weight:700;font-size:13px;background:none;border:0;margin:16px auto 0;cursor:pointer}
+
+/* ---------- SIMPLE SCREENS ---------- */
+.simple{padding:12px 16px 120px}
+.simple .search-bar{display:flex;align-items:center;gap:10px;background:#fff;border-radius:8px;padding:12px 14px;color:#000;font-family:var(--disp);font-weight:600;font-size:14px;margin-bottom:20px}
+.gcat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gcat{height:96px;border-radius:10px;padding:13px;position:relative;overflow:hidden;cursor:pointer}
+.gcat b{font-family:var(--disp);font-weight:800;font-size:15px;letter-spacing:-.01em}
+.gcat .note{position:absolute;right:-8px;bottom:-8px;transform:rotate(25deg);opacity:.85}
+.lib-row{display:flex;align-items:center;gap:12px;padding:10px 0;cursor:pointer}
+.lib-row .lart{width:54px;height:54px;flex:none}
+.lib-row .lart.round{border-radius:50%}
+.lib-row h4{font-family:var(--disp);font-weight:700;font-size:14px}
+.lib-row p{font-size:12px;color:var(--sub);margin-top:3px}
+
+/* ---------- mini player + nav ---------- */
+.miniplayer{position:absolute;left:8px;right:8px;bottom:66px;height:56px;border-radius:8px;background:linear-gradient(90deg,#3a2a55,#2a3a55);display:flex;align-items:center;gap:11px;padding:0 12px;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.4);cursor:pointer}
+.miniplayer .mart{width:40px;height:40px;flex:none}
+.miniplayer .mi{flex:1;min-width:0}
+.miniplayer .mi h5{font-family:var(--disp);font-weight:700;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.miniplayer .mi p{font-size:11px;color:rgba(255,255,255,.72);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.miniplayer .mp-eq{margin-left:auto}
+.navbar{position:absolute;left:0;right:0;bottom:0;height:66px;background:linear-gradient(180deg,rgba(18,18,18,.6),#121212 40%);display:flex;z-index:65;padding-bottom:6px}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:none;border:0;color:var(--sub);cursor:pointer;font-family:var(--disp);font-weight:600;font-size:10px;transition:color .15s}
+.nav-item svg{width:24px;height:24px}
+.nav-item.on{color:var(--white)}
+.nav-item.on.feature{color:var(--green)}
+.nav-item .nd{position:absolute;top:8px;transform:translateX(11px);width:6px;height:6px;border-radius:50%;background:var(--green)}
+
+/* ---------- B2B DASHBOARD ---------- */
+.dash-wrap{display:none;width:100%;justify-content:center}
+.dash-wrap.active{display:flex}
+.tablet{width:834px;max-width:100%;background:#0d0d0d;border-radius:26px;border:1px solid #262626;box-shadow:0 40px 90px rgba(0,0,0,.6);overflow:hidden}
+.dash{padding:26px 30px 34px;font-family:var(--body)}
+.dash-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.dash-top .l{display:flex;align-items:center;gap:12px}
+.dash-top .l .g{width:38px;height:38px;border-radius:9px;background:var(--green);display:grid;place-items:center}
+.dash-top h2{font-family:var(--disp);font-weight:800;font-size:19px}
+.dash-top p{font-size:12px;color:var(--sub);margin-top:2px}
+.dash-top .venue-pick{display:flex;align-items:center;gap:10px;background:var(--elev2);border-radius:10px;padding:9px 14px;font-family:var(--disp);font-weight:700;font-size:13px}
+.dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+.panel{background:var(--elev1);border:1px solid var(--line);border-radius:14px;padding:18px}
+.panel .ph{font-family:var(--disp);font-weight:800;font-size:14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.now-live{display:flex;align-items:center;gap:14px}
+.now-live .nart{width:70px;height:70px;flex:none}
+.now-live h3{font-family:var(--disp);font-weight:800;font-size:17px}
+.now-live p{font-size:13px;color:var(--sub);margin-top:3px}
+.now-live .eyebrow{font-family:var(--disp);font-weight:800;font-size:9px;letter-spacing:.14em;color:var(--green);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:18px}
+.kpi{background:var(--elev2);border-radius:10px;padding:13px}
+.kpi b{font-family:var(--disp);font-weight:900;font-size:22px;letter-spacing:-.02em;display:block}
+.kpi span{font-size:11px;color:var(--sub);margin-top:3px;display:block}
+.kpi b.g{color:var(--green)}
+.genre-toggles{display:flex;flex-direction:column;gap:10px}
+.gt{display:flex;align-items:center;justify-content:space-between;background:var(--elev2);border-radius:10px;padding:11px 13px}
+.gt .lft{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:700;font-size:13px}
+.gt .dot{width:11px;height:11px;border-radius:50%}
+.sw{width:42px;height:24px;border-radius:999px;background:#555;position:relative;cursor:pointer;transition:background .18s;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .18s}
+.sw.on{background:var(--green)}
+.sw.on::after{left:21px}
+.bars{display:flex;align-items:flex-end;gap:10px;height:120px;margin-top:6px}
+.bars .b{flex:1;background:linear-gradient(180deg,var(--green),#0f7a37);border-radius:6px 6px 0 0;position:relative}
+.bars .b span{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:10px;color:var(--sub);font-family:var(--disp);font-weight:600}
+.dash-note{margin-top:16px;font-size:11.5px;color:var(--sub2);text-align:center}
+/* ---- Ampliación B2B (tarjetas nuevas) ---- */
+.tt-row{display:flex;align-items:center;gap:12px;background:var(--elev2);border-radius:10px;padding:10px 12px;margin-top:8px}
+.tt-row.top{border:1px solid rgba(30,215,96,.4);background:rgba(30,215,96,.07)}
+.tt-pos{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--sub2);width:15px;text-align:center;flex:none}
+.tt-row.top .tt-pos{color:var(--green)}
+.tt-art{width:40px;height:40px;border-radius:6px;flex:none}
+.tt-meta{flex:1;min-width:0}
+.tt-meta h5{font-family:var(--disp);font-weight:700;font-size:13.5px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-meta p{font-size:11.5px;color:var(--sub);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-metric{font-family:var(--disp);font-weight:800;font-size:12.5px;color:var(--green);flex:none;text-align:right;white-space:nowrap}
+.cola-x{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--sub);font-size:14px;cursor:pointer;flex:none;transition:.15s}
+.cola-x:hover{border-color:#f0555c;color:#f0555c}
+.tt-row.vetoed{opacity:.55}
+.tt-row.fading{opacity:0;transition:opacity .3s}
+.veto-tag{font-family:var(--disp);font-weight:800;font-size:8.5px;letter-spacing:.04em;color:#f5b942;background:rgba(245,185,66,.14);padding:4px 7px;border-radius:5px;flex:none}
+.seg{display:flex;gap:6px;background:var(--elev2);border-radius:10px;padding:5px}
+.seg button{flex:1;border:0;background:none;color:var(--sub);font-family:var(--disp);font-weight:700;font-size:13px;padding:9px 6px;border-radius:7px;cursor:pointer;transition:.15s}
+.seg button.on{background:var(--green);color:#04140a}
+#salaToast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:#282828;border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:none;align-items:center;gap:16px;z-index:100050;box-shadow:0 12px 34px rgba(0,0,0,.5);font-family:var(--body)}
+#salaToast.show{display:flex;transform:translateX(-50%) translateY(0);transition:transform .25s}
+#salaToast span{font-size:13px;color:#fff}
+#salaToast button{background:none;border:0;color:var(--green);font-family:var(--disp);font-weight:800;font-size:13px;cursor:pointer;padding:0}
+
+/* ---------- DJ / CABINA ---------- */
+.avatar-c{border-radius:50%;display:grid;place-items:center;font-family:var(--disp);font-weight:800;color:#04140a;flex:none}
+.dj-card{margin:14px 16px 4px;background:linear-gradient(135deg,#12351f,#0e1a13);border:1px solid rgba(30,215,96,.28);border-radius:14px;padding:14px}
+.dj-card .dh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.dj-card .dh .lbl{font-family:var(--disp);font-weight:800;font-size:10px;letter-spacing:.12em;color:var(--green);display:flex;align-items:center;gap:7px}
+.dj-now{display:flex;align-items:center;gap:12px}
+.dj-now .avatar-c{width:44px;height:44px;font-size:16px}
+.dj-now .di{flex:1;min-width:0}
+.dj-now .di h5{font-family:var(--disp);font-weight:700;font-size:14.5px}
+.dj-now .di p{font-size:12px;color:var(--sub);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dj-meta{font-size:11.5px;color:var(--sub2);margin:12px 0}
+.dj-cta{width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+#s-dj .scroll{padding-top:52px;background:radial-gradient(120% 60% at 50% 0%,#0f2c1b 0%,#0a0a0a 55%)}
+.dj-wrap{padding:6px 16px 20px}
+.dj-top{display:flex;align-items:center;gap:12px;padding:2px 0 8px}
+.dj-top .tt{flex:1}
+.dj-top h2{font-family:var(--disp);font-weight:900;font-size:20px;letter-spacing:-.02em}
+.dj-top p{font-size:12px;color:var(--sub);margin-top:2px}
+.iconbtn-sm{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);border:0;display:grid;place-items:center;cursor:pointer;flex:none;color:#fff;font-size:18px;line-height:1}
+.sec-t{font-family:var(--disp);font-weight:800;font-size:13px;margin:20px 4px 8px;color:var(--white);display:flex;align-items:center;justify-content:space-between}
+.sec-t span{font-family:var(--body);font-weight:600;font-size:11px;color:var(--sub)}
+.q-row{display:flex;align-items:center;gap:12px;padding:9px 0}
+.q-row .avatar-c{width:38px;height:38px;font-size:14px}
+.q-row .qi{flex:1;min-width:0}
+.q-row .qi h5{font-weight:600;font-size:13.5px}
+.q-row .qi p{font-size:11.5px;color:var(--sub);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q-row .pos{font-family:var(--disp);font-weight:800;font-size:12px;color:var(--sub2);width:24px}
+.q-row.you{position:static;transform:none;width:auto;height:auto;box-shadow:none;background:rgba(30,215,96,.08);border:1px solid rgba(30,215,96,.3);border-radius:12px;padding:9px 12px;margin:4px 0}
+.q-row.you .qi h5{color:var(--green)}
+.q-live{font-family:var(--disp);font-weight:800;font-size:9px;letter-spacing:.08em;color:var(--green);background:rgba(30,215,96,.14);padding:4px 8px;border-radius:6px;flex:none}
+.connect{background:var(--elev1);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;margin-top:8px}
+.connect h4{font-family:var(--disp);font-weight:800;font-size:15px}
+.connect p{font-size:12px;color:var(--sub);margin:8px 0 15px;line-height:1.4}
+.connect .pill-green{width:100%;display:flex;align-items:center;justify-content:center;gap:9px}
+.pick{display:flex;align-items:center;gap:12px;padding:9px 0;cursor:pointer}
+.pick.locked{opacity:.42;cursor:not-allowed}
+.pick .part{width:44px;height:44px;flex:none}
+.pick .pk{flex:1;min-width:0}
+.pick .pk h5{font-weight:600;font-size:13.5px}
+.pick .pk p{font-size:11.5px;color:var(--sub);margin-top:2px}
+.pick .add{width:28px;height:28px;border-radius:50%;border:1.6px solid var(--sub);display:grid;place-items:center;flex:none;color:var(--sub);font-weight:700;font-size:15px}
+.pick.on .add{background:var(--green);border-color:var(--green);color:#000}
+.pick .lock{font-size:10px;color:var(--sub2);white-space:nowrap}
+.dj-foot{position:sticky;bottom:0;margin:18px 0 0;padding:14px 0 4px;background:linear-gradient(180deg,rgba(10,10,10,0),#0a0a0a 28%)}
+.dj-foot .pill{width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+.dj-foot .status{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:12px;background:rgba(30,215,96,.1);border:1px solid rgba(30,215,96,.3);border-radius:12px;padding:12px 14px}
+.dj-foot .status b{font-family:var(--disp);font-weight:800;font-size:14px;color:var(--green)}
+.dj-foot .status span{font-size:11px;color:var(--sub)}
+.dj-foot .leave{width:100%;background:none;border:0;color:var(--sub);font-family:var(--disp);font-weight:700;font-size:13px;margin-top:10px;cursor:pointer}
+.live-head{text-align:center;padding:8px 0 6px}
+.live-head .tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:800;font-size:11px;letter-spacing:.1em;color:var(--green);background:rgba(30,215,96,.14);padding:8px 14px;border-radius:999px}
+.live-art{width:180px;height:180px;border-radius:14px;margin:18px auto 16px;box-shadow:0 22px 55px rgba(0,0,0,.6)}
+.live-head h2{font-family:var(--disp);font-weight:900;font-size:22px;letter-spacing:-.02em}
+.live-head p{font-size:13px;color:var(--sub);margin-top:5px}
+.set-row{display:flex;align-items:center;gap:12px;padding:9px 0}
+.set-row .num{width:22px;text-align:center;font-family:var(--disp);font-weight:700;font-size:12px;color:var(--sub2)}
+.set-row .si{flex:1;min-width:0}.set-row .si h5{font-weight:600;font-size:13.5px}.set-row .si p{font-size:11.5px;color:var(--sub)}
+.set-row.playing .si h5{color:var(--green)}
+.set-row.done{opacity:.45}
+.dj-badge{font-family:var(--disp);font-weight:700;font-size:9px;color:var(--green);background:rgba(30,215,96,.14);padding:2px 6px;border-radius:4px;white-space:nowrap}
+.miniplayer.you{background:linear-gradient(90deg,#0f7a37,#12351f);box-shadow:0 0 0 1px rgba(30,215,96,.45),0 8px 24px rgba(0,0,0,.4)}
+
+.page-foot{max-width:640px;text-align:center;color:var(--sub2);font-size:11.5px;margin-top:26px;line-height:1.6}
+.page-foot b{color:var(--sub)}
+
+@media(max-width:440px){
+  body{padding:14px 8px 40px}
+  .device{width:100%;max-width:390px;height:88vh;min-height:720px}
+  .brand h1{font-size:16px}
+  /* panel B2B: apilar en una columna para que no se corte en móvil */
+  .dash{padding:20px 16px 26px}
+  .dash-grid{grid-template-columns:1fr}
+  .dash-grid>div{min-width:0}
+  .dash-top{flex-direction:column;align-items:flex-start;gap:12px}
+}
+</style>
+
+<div class="page-head">
+  <div class="brand">
+    <div class="glyph"><svg viewBox="0 0 24 24" fill="#000"><path d="M12 2A10 10 0 1 0 22 12 10 10 0 0 0 12 2Zm4.59 14.41a.62.62 0 0 1-.86.21c-2.35-1.44-5.3-1.76-8.79-.96a.63.63 0 1 1-.28-1.22c3.82-.87 7.09-.5 9.72 1.11a.62.62 0 0 1 .21.86Zm1.22-2.72a.78.78 0 0 1-1.07.26c-2.69-1.65-6.79-2.13-9.97-1.16a.78.78 0 1 1-.45-1.49c3.63-1.1 8.15-.57 11.24 1.32a.78.78 0 0 1 .25 1.07Zm.11-2.84C14.8 8.94 9.3 8.76 6.24 9.69a.94.94 0 1 1-.54-1.8c3.52-1.07 9.6-.86 13.4 1.39a.94.94 0 0 1-.96 1.61Z"/></svg></div>
+    <div>
+      <h1>Now Playing</h1>
+      <p>Concepto de producto · descubre clubs por su música en tiempo real</p>
+    </div>
+  </div>
+  <div class="view-toggle">
+    <button id="tg-app" class="on" onclick="setView('app')">App · móvil</button>
+    <button id="tg-dash" onclick="setView('dash')">Panel B2B · tablet</button>
+  </div>
+</div>
+
+<!-- ================= MOBILE APP ================= -->
+<div class="stage" id="stage-app">
+<div class="device">
+  <div class="island"></div>
+  <div class="statusbar">
+    <span>21:47</span>
+    <div class="sb-r">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1" opacity=".4"/></svg>
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="#fff"><path d="M8.5 2.5C5.9 2.5 3.6 3.5 1.9 5.1L0 3.1C2.2 1 5.2 0 8.5 0s6.3 1 8.5 3.1l-1.9 2C13.4 3.5 11.1 2.5 8.5 2.5Zm0 4c1.6 0 3 .6 4.1 1.6l-1.9 2C10.1 9.4 9.3 9 8.5 9s-1.6.4-2.2 1.1l-1.9-2C5.5 7.1 6.9 6.5 8.5 6.5Z"/></svg>
+      <svg width="26" height="12" viewBox="0 0 26 12"><rect x="1" y="1" width="21" height="10" rx="3" fill="none" stroke="#fff" stroke-opacity=".5"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="#fff"/><rect x="23" y="4" width="2" height="4" rx="1" fill="#fff" opacity=".6"/></svg>
+    </div>
+  </div>
+
+  <div class="viewport">
+
+    <!-- HOME -->
+    <div class="screen active" id="s-home">
+      <div class="scroll">
+        <div class="home-top">
+          <h2>Buenas noches</h2>
+          <div class="avatar" onclick="go('profile')" style="cursor:pointer">M</div>
+        </div>
+        <div class="chips-row">
+          <button class="tab-chip on">Todo</button>
+          <button class="tab-chip">Música</button>
+          <button class="tab-chip">Pódcasts</button>
+          <button class="tab-chip chip-clubs" onclick="go('nearby')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px"><path d="M12 2C7.6 2 4 5.6 4 10c0 5.6 8 12 8 12s8-6.4 8-12c0-4.4-3.6-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/></svg>Clubs</button>
+        </div>
+
+        <!-- feature promo -->
+        <div class="feat" onclick="go('nearby')">
+          <svg class="wave" width="120" height="120" viewBox="0 0 24 24" fill="#04140a"><path d="M12 2A10 10 0 1 0 22 12 10 10 0 0 0 12 2Zm4.59 14.41a.62.62 0 0 1-.86.21c-2.35-1.44-5.3-1.76-8.79-.96a.63.63 0 1 1-.28-1.22c3.82-.87 7.09-.5 9.72 1.11a.62.62 0 0 1 .21.86Zm1.22-2.72a.78.78 0 0 1-1.07.26c-2.69-1.65-6.79-2.13-9.97-1.16a.78.78 0 1 1-.45-1.49c3.63-1.1 8.15-.57 11.24 1.32a.78.78 0 0 1 .25 1.07Z"/></svg>
+          <span class="badge">NUEVO · CERCA DE TI</span>
+          <h3>¿Dónde suena tu música ahora mismo?</h3>
+          <p>Descubre clubs por su ambiente antes de entrar. Con tu % de compatibilidad.</p>
+          <div class="arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1ED760" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+
+        <div class="quick-grid" id="quickGrid"></div>
+
+        <h3 class="sec-h">Escuchado recientemente</h3>
+        <div class="rail" id="railRecent"></div>
+
+        <h3 class="sec-h">Hecho para ti</h3>
+        <div class="rail round" id="railMade"></div>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="screen" id="s-search">
+      <div class="scroll">
+        <div class="home-top"><h2>Buscar</h2></div>
+        <div class="simple">
+          <div class="search-bar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4" stroke-linecap="round"/></svg>
+            ¿Qué quieres escuchar?
+          </div>
+          <h3 class="sec-h" style="padding:0 0 12px">Explorar todo</h3>
+          <div class="gcat-grid" id="catGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEARBY (feature) -->
+    <div class="screen" id="s-nearby">
+      <div class="scroll">
+        <div class="near-head">
+          <button class="iconbtn-sm" onclick="back()" style="margin-right:4px">‹</button>
+          <div class="loc">Clubs cerca de ti
+            <small>Malasaña, Madrid · <b>7 locales sonando</b></small>
+          </div>
+          <div class="live-tag"><span class="live-dot"></span>EN DIRECTO</div>
+        </div>
+        <div class="filters" id="filters"></div>
+        <div class="map" id="map">
+          <svg class="bg" viewBox="0 0 360 266" preserveAspectRatio="xMidYMid slice">
+            <rect width="360" height="266" fill="#0f1512"/>
+            <path d="M-10 60 L370 40" stroke="#1c241f" stroke-width="14"/>
+            <path d="M-10 150 L370 176" stroke="#1c241f" stroke-width="18"/>
+            <path d="M-10 230 L370 216" stroke="#1c241f" stroke-width="12"/>
+            <path d="M70 -10 L54 276" stroke="#1c241f" stroke-width="12"/>
+            <path d="M180 -10 L196 276" stroke="#1c241f" stroke-width="16"/>
+            <path d="M290 -10 L276 276" stroke="#1c241f" stroke-width="10"/>
+            <rect x="90" y="180" width="80" height="66" rx="10" fill="#132a1c"/>
+            <rect x="215" y="66" width="90" height="70" rx="10" fill="#101d28"/>
+            <text x="118" y="218" fill="#2c4a38" font-family="Montserrat" font-size="9" font-weight="700">PARQUE</text>
+          </svg>
+          <div class="you" style="left:52%;top:56%"></div>
+          <!-- pins injected -->
+        </div>
+
+        <div class="sheet">
+          <div class="grab"></div>
+          <div class="sheet-h"><h3>Sonando cerca</h3><span id="sheetCount"></span></div>
+          <div id="venueList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENUE DETAIL -->
+    <div class="screen" id="s-venue">
+      <div class="scroll" id="venueScroll"><!-- injected --></div>
+    </div>
+
+    <!-- DJ / CABINA -->
+    <div class="screen" id="s-dj">
+      <div class="scroll" id="djScroll"></div>
+    </div>
+
+    <!-- QR MODE -->
+    <div class="screen" id="s-qr">
+      <div class="scroll">
+        <div class="qr-wrap">
+          <button class="tk-back" onclick="back()" style="margin:0 auto 0 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2.4"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Salir</button>
+          <div class="qr-in-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1ED760"><path d="M12 2C8 2 4.5 4.5 4.5 9c0 5.2 7.5 13 7.5 13s7.5-7.8 7.5-13C19.5 4.5 16 2 12 2Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/></svg> ESTÁS EN <span id="qrVenue">SALA BARDOT</span></div>
+
+          <!-- ACCIÓN PRINCIPAL: poner tu música -->
+          <div style="background:var(--elev1);border:1px solid rgba(30,215,96,.35);border-radius:18px;padding:24px 20px;margin-top:2px">
+            <div style="width:54px;height:54px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto"><svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.7"><circle cx="12" cy="12" r="9.3"/><circle cx="12" cy="12" r="4.3"/><circle cx="12" cy="12" r="1.1" fill="#000" stroke="none"/></svg></div>
+            <h2 style="margin-top:14px">Pon tu música en la cabina</h2>
+            <p style="font-size:13px;color:var(--sub);margin:8px 0 18px;line-height:1.45">Estás dentro del club. Elige hasta 5 canciones de tu ADN y entrarán en la cola compartida.</p>
+            <button class="pill pill-green" style="width:100%" onclick="enterDJ(currentVenue.id)">Únete a la Jam</button>
+          </div>
+
+          <!-- SECUNDARIO: contexto de lo que suena -->
+          <div style="text-align:left;margin-top:26px">
+            <div class="sec-t">Sonando ahora</div>
+            <div class="q-row">
+              <div class="art" id="qrArt" style="width:44px;height:44px;border-radius:8px;flex:none"></div>
+              <div class="qi"><h5 id="qrTrack">—</h5><p><span class="eq" style="vertical-align:-2px"><i></i><i></i><i></i><i></i></span> <span id="qrArtist">—</span></p></div>
+              <button id="qrSave" onclick="qrSaveTrack(this)" title="Guardar en tu biblioteca" aria-label="Guardar en tu biblioteca" style="background:none;border:0;padding:4px;cursor:pointer;flex:none;line-height:0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="1.8"><circle cx="12" cy="12" r="9.2"/><path d="M12 8.2v7.6M8.2 12h7.6" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <div class="sec-t" style="margin-top:16px">A continuación <span>cola compartida</span></div>
+            <div id="qrUpNext"></div>
+            <div class="qr-actions" style="margin-top:20px">
+              <button class="pill pill-ghost" onclick="go('ticket')">Ver evento de esta noche</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TICKET -->
+    <div class="screen" id="s-ticket">
+      <div class="scroll">
+        <div class="tk">
+          <button class="tk-back" onclick="back()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2.4"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg> Volver</button>
+          <div class="tk-hero">
+            <div class="top" style="background:linear-gradient(120deg,rgba(123,47,247,.72),rgba(241,7,163,.72) 70%),url('fotos/club-1.jpg') center/cover">
+              <svg class="note" width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,.9)"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg>
+              <h2>Noche Techno<br>Sala Bardot</h2>
+            </div>
+            <div class="info">
+              <div class="tk-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg> Hoy · <b>Viernes, 3 jul</b> · 23:30–06:00</div>
+              <div class="tk-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2"><path d="M12 2C8 2 4.5 4.5 4.5 9c0 5.2 7.5 13 7.5 13s7.5-7.8 7.5-13C19.5 4.5 16 2 12 2Z"/><circle cx="12" cy="9" r="2.5"/></svg> C/ del Barco 15 · a <b>220 m</b> de ti</div>
+              <div class="tk-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg> Line-up: Bicep (live) · Marcel Dettmann</div>
+              <div class="tk-line"></div>
+              <div class="tk-price"><span>Entrada general + 1 consumición</span><b>18€</b></div>
+              <button class="applepay" onclick="go('confirm')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#000"><path d="M17 4.2c-.7.8-1.8 1.4-2.9 1.3-.1-1.1.4-2.2 1-2.9.7-.8 1.9-1.4 2.9-1.4.1 1.1-.4 2.2-1 3Zm1 1.6c-1.6-.1-3 .9-3.7.9-.8 0-2-.9-3.2-.8-1.7 0-3.2 1-4 2.5-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.7c1.3 0 2.2-1.2 3-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.5-3.8 0-2.4 1.9-3.5 2-3.6-1.1-1.6-2.8-1.8-3.4-1.8Z"/></svg>
+                Pagar con Apple Pay
+              </button>
+              <p class="oneclick">1 toque · sin registro · confirmación instantánea</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIRM -->
+    <div class="screen" id="s-confirm">
+      <div class="scroll">
+        <div class="cf">
+          <div class="check"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3"><path d="M5 13l4 4 10-11" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h2>¡Todo listo!</h2>
+          <p class="lead">Tu entrada para <b>Noche Techno · Sala Bardot</b> está confirmada. Nos vemos esta noche.</p>
+          <div class="cf-card">
+            <div class="cf-item">
+              <div class="ic" style="background:#000"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg></div>
+              <div><h5>Entrada en Wallet</h5><p>Añadida a Apple Wallet · lista para escanear</p></div>
+              <div class="chk"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1ED760" stroke-width="2.6"><path d="M5 13l4 4 10-11" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="cf-item">
+              <div class="ic" style="background:var(--green)"><svg width="22" height="22" viewBox="0 0 24 24" fill="#000"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg></div>
+              <div><h5>Bicep añadido a tu playlist</h5><p>«Sonando en tus clubs» · +3 temas de la sesión</p></div>
+              <div class="chk"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1ED760" stroke-width="2.6"><path d="M5 13l4 4 10-11" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="cf-item">
+              <div class="ic" style="background:#4c8bf5"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2C8 2 4.5 4.5 4.5 9c0 5.2 7.5 13 7.5 13s7.5-7.8 7.5-13C19.5 4.5 16 2 12 2Z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+              <div><h5>Cómo llegar guardado</h5><p>Ruta a Sala Bardot lista en Mapas</p></div>
+              <div class="chk"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1ED760" stroke-width="2.6"><path d="M5 13l4 4 10-11" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+          </div>
+          <button class="pill pill-green" onclick="go('nearby');resetNav()">Volver a explorar cerca</button>
+          <button class="link" onclick="go('home');resetNav()">Ir al inicio</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIBRARY -->
+    <div class="screen" id="s-library">
+      <div class="scroll">
+        <div class="home-top"><h2>Tu biblioteca</h2><div class="avatar" onclick="go('profile')" style="cursor:pointer">M</div></div>
+        <div class="simple" id="libList"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE / TU ADN -->
+    <div class="screen" id="s-profile">
+      <div class="scroll" id="profileScroll"></div>
+    </div>
+
+  </div>
+
+  <!-- mini player -->
+  <div class="miniplayer" id="mini" onclick="go('qr')">
+    <div class="mart art" id="miniArt"></div>
+    <div class="mi"><h5 id="miniTrack">Opal</h5><p id="miniArtist">Bicep · en Sala Bardot</p></div>
+    <span class="eq mp-eq"><i></i><i></i><i></i><i></i></span>
+  </div>
+
+  <!-- bottom nav -->
+  <div class="navbar">
+    <button class="nav-item on" data-tab="home" onclick="tab('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 4 9v12h5v-7h6v7h5V9z"/></svg>Inicio</button>
+    <button class="nav-item" data-tab="search" onclick="tab('search')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4" stroke-linecap="round"/></svg>Buscar</button>
+    <button class="nav-item" data-tab="library" onclick="tab('library')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.5 3 21 6.5v14L14.5 17V3ZM3 6h9v2H3V6Zm0 5h9v2H3v-2Zm0 5h9v2H3v-2Z"/></svg>Tu biblioteca</button>
+    <button class="nav-item" onclick="alert('Crear — próximamente')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>Crear</button>
+  </div>
+</div>
+</div>
+
+<!-- ================= B2B DASHBOARD ================= -->
+<div class="dash-wrap" id="stage-dash">
+  <div class="tablet">
+    <div class="dash">
+      <div class="dash-top">
+        <div class="l">
+          <div class="g"><svg viewBox="0 0 24 24" width="24" height="24" fill="#000"><path d="M12 2A10 10 0 1 0 22 12 10 10 0 0 0 12 2Zm4.59 14.41a.62.62 0 0 1-.86.21c-2.35-1.44-5.3-1.76-8.79-.96a.63.63 0 1 1-.28-1.22c3.82-.87 7.09-.5 9.72 1.11a.62.62 0 0 1 .21.86Zm1.22-2.72a.78.78 0 0 1-1.07.26c-2.69-1.65-6.79-2.13-9.97-1.16a.78.78 0 1 1-.45-1.49c3.63-1.1 8.15-.57 11.24 1.32a.78.78 0 0 1 .25 1.07Z"/></svg></div>
+          <div><h2>Spotify Now Playing · Business</h2><p>Panel del local · controla el ADN musical de tu sala</p></div>
+        </div>
+        <div class="venue-pick">
+          <div class="art" style="width:26px;height:26px;--g1:#7b2ff7;--g2:#3a0d6e;background:linear-gradient(135deg,#7b2ff7,#3a0d6e)"></div>
+          Sala Bardot
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2.4"><path d="M6 9l6 6 6-6" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div>
+          <div class="panel">
+            <div class="ph">Sonando ahora <span class="live-tag"><span class="live-dot"></span>EN DIRECTO</span></div>
+            <div class="now-live">
+              <div class="nart art" style="background:linear-gradient(135deg,#a855f7,#4c1d95)"><img referrerpolicy="no-referrer" onerror="this.remove()" src="portadas/bicep-opal.jpg"></div>
+              <div>
+                <div class="eyebrow"><span class="eq"><i></i><i></i><i></i><i></i></span> SPOTIFY CONNECT</div>
+                <h3>Opal</h3>
+                <p>Bicep · Techno · reproduciéndose desde la cola del local</p>
+                <p style="font-size:12px;color:var(--sub);margin-top:7px">🎧 En cabina: <b style="color:#fff">Laura M.</b> · 2 DJs de la comunidad en cola</p>
+              </div>
+            </div>
+            <div class="kpis">
+              <div class="kpi"><b class="g">92%</b><span>Match medio de quien está dentro</span></div>
+              <div class="kpi"><b>48</b><span>Personas viendo el local ahora</span></div>
+              <div class="kpi"><b>+12</b><span>Han pulsado «Cómo llegar»</span></div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:16px">
+            <div class="ph">Interés por franja horaria · hoy</div>
+            <div class="bars">
+              <div class="b" style="height:35%"><span>20h</span></div>
+              <div class="b" style="height:52%"><span>21h</span></div>
+              <div class="b" style="height:70%"><span>22h</span></div>
+              <div class="b" style="height:100%"><span>23h</span></div>
+              <div class="b" style="height:88%"><span>00h</span></div>
+              <div class="b" style="height:60%"><span>01h</span></div>
+            </div>
+            <p class="dash-note" style="margin-top:34px">Vistas de tu ficha en la pestaña «Cerca» de usuarios a menos de 1,5 km</p>
+          </div>
+
+          <div class="panel" style="margin-top:16px">
+            <div class="ph">Los temas que más han conectado esta noche</div>
+            <p style="font-size:12px;color:var(--sub);margin:-6px 0 12px">Guardados y likes desde dentro de la sala</p>
+            <div id="topTracks"></div>
+          </div>
+        </div>
+
+        <div>
+        <div class="panel">
+          <div class="ph">ADN musical permitido</div>
+          <p style="font-size:12px;color:var(--sub);margin:-6px 0 14px">Define qué géneros pueden entrar en la cola comunitaria. Mantienes el carácter de tu sala.</p>
+          <div class="genre-toggles" id="genreToggles"></div>
+          <p class="dash-note" style="margin-top:18px">Los usuarios solo pueden sugerir temas dentro de los géneros activos.</p>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="ph">Cola de la sala</div>
+          <p style="font-size:12px;color:var(--sub);margin:-6px 0 12px">Modera lo que va a sonar. Puedes quitar o vetar temas.</p>
+          <div id="salaQueue"></div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="ph">Repetición de temas</div>
+          <p style="font-size:12px;color:var(--sub);margin:-6px 0 12px">¿Cada cuánto puede repetirse un mismo tema?</p>
+          <div class="seg" id="repeatSeg">
+            <button onclick="repeatPick(this)">1 h</button>
+            <button class="on" onclick="repeatPick(this)">2 h</button>
+            <button onclick="repeatPick(this)">Toda la noche</button>
+          </div>
+          <p class="dash-note" style="margin-top:14px;text-align:left">Si alguien añade un tema que sonó hace menos de ese tiempo, la app le sugiere otro parecido.</p>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-foot">
+  <b>Spotify Now Playing</b> — prototipo de concepto. Recreación del sistema de diseño de Spotify con fines de portfolio (colores, tipografía y patrones de UI). Sin afiliación con Spotify AB. Carátulas y datos ficticios.
+</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const GENRES = {
+  Techno: {c:'#a855f7'},
+  House:  {c:'#22d3ee'},
+  Indie:  {c:'#f472b6'},
+  Jazz:   {c:'#f5b942'},
+  Latin:  {c:'#fb7185'},
+  Rock:   {c:'#ef4444'},
+};
+function grad(a,b,ang){ang=ang||135;return `linear-gradient(${ang}deg,${a},${b})`}
+const ART = {
+  opal:   grad('#a855f7','#3b0a6b'),
+  daft:   grad('#f5c542','#b3401f'),
+  fisher: grad('#22d3ee','#0b5563'),
+  smiths: grad('#f472b6','#6b1846'),
+  celia:  grad('#fb7185','#7a1220'),
+  blur:   grad('#ef4444','#5a0f0f'),
+  herbie: grad('#f5b942','#6b4310'),
+  a:grad('#4c8bf5','#1a2f66'), b:grad('#22c55e','#0d3d20'), c:grad('#f97316','#5c2a08'),
+  d:grad('#e879f9','#4a0d5c'), e:grad('#38bdf8','#0b3a52'), f:grad('#facc15','#5c4a08'),
+};
+const VENUES = [
+  {id:'bardot', name:'Sala Bardot', genre:'Techno', match:94, dist:'220 m', x:32, y:30,
+   track:'Opal', artist:'Bicep', art:ART.opal,
+   hist:[['Opal','Bicep','ahora',true],['Glue','Bicep','21:39'],['Windowlicker','Aphex Twin','21:32'],['Avril 14th','Aphex Twin','21:28'],['Xtal','Aphex Twin','21:21']]},
+  {id:'goya', name:'Goya Social Club', genre:'House', match:90, dist:'300 m', x:70, y:22,
+   track:'One More Time', artist:'Daft Punk', art:ART.daft,
+   hist:[['One More Time','Daft Punk','ahora',true],['Around the World','Daft Punk','21:40'],['Music Sounds Better','Stardust','21:34'],['Gabriel','Roy Davis Jr.','21:27']]},
+  {id:'malasana', name:'Club Malasaña', genre:'House', match:88, dist:'400 m', x:22, y:64,
+   track:'Losing It', artist:'FISHER', art:ART.fisher,
+   hist:[['Losing It','FISHER','ahora',true],['You Little Beauty','FISHER','21:38'],['Insomnia','Faithless','21:30']]},
+  {id:'ochoymedio', name:'Ochoymedio', genre:'Indie', match:82, dist:'1,1 km', x:82, y:58,
+   track:'This Charming Man', artist:'The Smiths', art:ART.smiths,
+   hist:[['This Charming Man','The Smiths','ahora',true],['Just Like Heaven','The Cure','21:41'],['Bizarre Love Triangle','New Order','21:33']]},
+  {id:'siroco', name:'Siroco', genre:'Rock', match:70, dist:'900 m', x:56, y:74,
+   track:'Song 2', artist:'Blur', art:ART.blur,
+   hist:[['Song 2','Blur','ahora',true],['Common People','Pulp','21:37'],['Wonderwall','Oasis','21:29']]},
+  {id:'tempo', name:'Tempo Latino', genre:'Latin', match:61, dist:'850 m', x:44, y:47,
+   track:'La Vida Es Un Carnaval', artist:'Celia Cruz', art:ART.celia,
+   hist:[['La Vida Es Un Carnaval','Celia Cruz','ahora',true],['Vivir Mi Vida','Marc Anthony','21:36'],['La Gozadera','Gente de Zona','21:28']]},
+  {id:'junco', name:'El Junco', genre:'Jazz', match:76, dist:'650 m', x:14, y:40,
+   track:'Chameleon', artist:'Herbie Hancock', art:ART.herbie,
+   hist:[['Chameleon','Herbie Hancock','ahora',true],['So What','Miles Davis','21:35'],['Take Five','Dave Brubeck','21:26']]},
+];
+const NOTE = '<svg class="note" width="30" height="30" viewBox="0 0 24 24" fill="rgba(255,255,255,.85)"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg>';
+/* fotos de stock reales por palabra clave (deterministas con lock); si fallan, queda el gradiente */
+// Fotos locales (Pexels, licencia libre) en spotify/fotos/: 6 por tema. El tema sale de las palabras clave y la foto de la semilla.
+// Portadas reales de las canciones (buscador oficial de Apple/iTunes, 300 px) en spotify/portadas/. Si no hay, foto de Pexels.
+const COVERS={'Bizarre Love Triangle|New Order':'new-order-bizarre-love-triangle','Chameleon|Herbie Hancock':'herbie-hancock-chameleon','Gabriel|Roy Davis Jr.':'roy-davis-jr-gabriel','Glue|Bicep':'bicep-glue','La Gozadera|Gente de Zona':'gente-de-zona-la-gozadera','Losing It|FISHER':'fisher-losing-it','One More Time|Daft Punk':'daft-punk-one-more-time','Opal|Bicep':'bicep-opal','Percolator|Cajmere':'cajmere-percolator','Song 2|Blur':'blur-song-2','This Charming Man|The Smiths':'the-smiths-this-charming-man','Your Love|Frankie Knuckles':'frankie-knuckles-your-love'};
+function cover(x){const c=COVERS[x.t+'|'+x.a];return c?`portadas/${c}.jpg`:pic(x.kw,x.seed)}
+function pic(kw,seed){const k=String(kw);const t=/portrait|musician/.test(k)?'retrato':/neon|synth|robot/.test(k)?'neon':/jazz|piano|bar/.test(k)?'jazz':/headphones|vinyl|record/.test(k)?'cascos':/nightclub|dj|dance|party/.test(k)?'club':'directo';return `fotos/${t}-${(Math.abs(Math.floor(Number(seed))||0)%6)+1}.jpg`}
+function artImg(url){return url?`<img loading="lazy" referrerpolicy="no-referrer" onerror="var m=this.dataset.t?null:(this.src.match(/lock=(\\d+)/)||[]);this.dataset.t=1;if(m&&m[1]){this.src='https://picsum.photos/seed/snp'+m[1]+'/400'}else{this.remove()}" src="${url}">`:NOTE}
+function matchColor(m){return m>=80?'var(--green)':m>=60?'var(--amber)':'var(--red)'}
+function artDiv(bg,cls,extra,url){return `<div class="art ${cls||''}" style="background:${bg};${extra||''}">${artImg(url)}</div>`}
+/* keywords de imagen por género musical */
+const GKW={Techno:'nightclub,dj',House:'dj,party',Jazz:'jazz,bar',Indie:'concert,band',Latin:'dance,music',Rock:'concert,guitar'};
+VENUES.forEach((v,i)=>{v.seed=101+i;v.img=pic(GKW[v.genre],v.seed,700);v.imgSm=pic(GKW[v.genre],v.seed,320)});
+
+/* ---------------- ROUTER ---------------- */
+let history=['home'];
+const screens=()=>document.querySelectorAll('#stage-app .screen');
+function show(id){screens().forEach(s=>s.classList.toggle('active',s.id==='s-'+id));document.querySelectorAll('#stage-app .scroll').forEach(s=>s.scrollTop=0);
+  const imm=(id==='dj'||id==='qr');
+  document.querySelector('.navbar').style.display=imm?'none':'flex';
+  const hideMini=['nearby','venue','qr','dj','ticket','confirm'].includes(id);
+  document.getElementById('mini').style.display=hideMini?'none':'flex';
+}
+function go(id){history.push(id);show(id)}
+function back(){if(history.length>1){history.pop();show(history[history.length-1])}}
+const TAB_IDS=['home','search','library'];
+function tab(id){history=[id];show(id);document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('on',n.dataset.tab===id))}
+function resetNav(){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));const cur=history[history.length-1];const t=TAB_IDS.includes(cur)?cur:'home';const el=document.querySelector(`.nav-item[data-tab="${t}"]`);if(el)el.classList.add('on')}
+
+/* ---------------- VIEW TOGGLE ---------------- */
+function setView(v){
+  document.getElementById('stage-app').style.display = v==='app'?'flex':'none';
+  document.getElementById('stage-dash').classList.toggle('active',v==='dash');
+  document.getElementById('tg-app').classList.toggle('on',v==='app');
+  document.getElementById('tg-dash').classList.toggle('on',v==='dash');
+}
+
+/* ---------------- RENDER: HOME ---------------- */
+const quick=[['Éxitos España',ART.a,'pop,concert'],['Chill Vibes',ART.b,'headphones,relax'],['Rock Clásico',ART.blur,'guitar,rock'],['Latin Party',ART.celia,'dance,party'],['Focus Flow',ART.e,'piano,study'],['Techno Bunker',ART.opal,'nightclub,dj']];
+document.getElementById('quickGrid').innerHTML = quick.map((q,i)=>
+  `<div class="quick">${artDiv(q[1],'qart','',pic(q[2],10+i,160))}<span>${q[0]}</span></div>`).join('');
+const recent=[['Sesión de Bicep','Techno · en directo',ART.opal,'dj,nightclub'],['Discovery','Daft Punk',ART.daft,'neon,synth'],['Random Access','Daft Punk',ART.daft,'robot,music'],['The Queen Is Dead','The Smiths',ART.smiths,'band,vintage'],['Head Hunters','Herbie Hancock',ART.herbie,'jazz,piano']];
+document.getElementById('railRecent').innerHTML=recent.map((r,i)=>
+  `<div class="card">${artDiv(r[2],'cart','',pic(r[3],20+i,320))}<h4>${r[0]}</h4><p>${r[1]}</p></div>`).join('');
+const made=[['Daily Mix 1','Bicep, FISHER…',ART.b,'headphones,music'],['Descubrimiento','Novedades para ti',ART.d,'vinyl,record'],['On Repeat','Lo que más suenas',ART.c,'concert,crowd'],['Tus me gusta','412 canciones',ART.e,'music,neon']];
+document.getElementById('railMade').innerHTML=made.map((r,i)=>
+  `<div class="card">${artDiv(r[2],'cart','',pic(r[3],30+i,320))}<h4>${r[0]}</h4><p>${r[1]}</p></div>`).join('');
+
+/* ---------------- RENDER: SEARCH ---------------- */
+const cats=[['Techno','#a855f7'],['House','#22d3ee'],['Indie','#f472b6'],['Jazz','#f5b942'],['Latin','#fb7185'],['Rock','#ef4444'],['Pop','#4c8bf5'],['En vivo','#1ED760']];
+document.getElementById('catGrid').innerHTML=cats.map(c=>
+  `<div class="gcat" style="background:${c[1]}">${NOTE.replace('class="note"','class="note" width="52" height="52"')}<b>${c[0]}</b></div>`).join('');
+
+/* ---------------- RENDER: NEARBY ---------------- */
+let activeGenre='Todo';
+function renderFilters(){
+  const cont=document.getElementById('filters');
+  const opts=['Todo',...Object.keys(GENRES)];
+  cont.innerHTML=opts.map(g=>{
+    const dot=g==='Todo'?'':`<span class="dot" style="background:${GENRES[g].c}"></span>`;
+    return `<button class="gchip ${g===activeGenre?'on':''}" onclick="setGenre('${g}')">${dot}${g}</button>`;
+  }).join('');
+}
+function setGenre(g){activeGenre=g;renderFilters();renderPins();renderList()}
+function visibleVenues(){return activeGenre==='Todo'?VENUES:VENUES.filter(v=>v.genre===activeGenre)}
+function renderPins(){
+  const map=document.getElementById('map');
+  map.querySelectorAll('.pin').forEach(p=>p.remove());
+  visibleVenues().forEach(v=>{
+    const high=v.match>=80;
+    const el=document.createElement('div');
+    el.className='pin'+(high?' high':'');
+    el.style.left=v.x+'%';el.style.top=v.y+'%';
+    el.onclick=()=>{selectPin(v.id);openVenue(v.id)};
+    el.dataset.id=v.id;
+    el.innerHTML=`<div class="tip">${v.name} · ${v.track}</div>
+      <div class="body" style="background:${GENRES[v.genre].c}"><span>${v.match}</span></div>`;
+    map.appendChild(el);
+  });
+}
+function selectPin(id){document.querySelectorAll('#map .pin').forEach(p=>p.classList.toggle('sel',p.dataset.id===id))}
+function renderList(){
+  const list=visibleVenues().slice().sort((a,b)=>b.match-a.match);
+  document.getElementById('sheetCount').textContent=list.length+' locales';
+  document.getElementById('venueList').innerHTML=list.map(v=>`
+    <div class="venue-row" onclick="selectPin('${v.id}');openVenue('${v.id}')">
+      ${artDiv(v.art,'vart','',v.imgSm)}
+      <div class="meta">
+        <h4>${v.name} <span class="gtag" style="background:${GENRES[v.genre].c}">${v.genre.toUpperCase()}</span>${DJINFO[v.id]&&!DJINFO[v.id].now.auto?' <span class="dj-badge">🎧 DJ</span>':''}</h4>
+        <div class="now"><span class="eq"><i></i><i></i><i></i><i></i></span> <b>${v.track}</b> · ${v.artist}</div>
+        <div class="dist">a ${v.dist} de ti</div>
+      </div>
+      <div class="ring" style="--p:${v.match};--c:${matchColor(v.match)};width:58px;height:58px">
+        <b style="font-size:17px">${v.match}<small style="display:inline;font-size:9px;color:#fff">%</small></b><small style="font-size:7.5px;color:#fff;letter-spacing:.05em">MATCH</small>
+      </div>
+    </div>`).join('');
+}
+
+/* ---------------- RENDER: VENUE DETAIL ---------------- */
+let currentVenue=VENUES[0];
+function openVenue(id){
+  const v=VENUES.find(x=>x.id===id);currentVenue=v;
+  const c=matchColor(v.match);
+  const djInfo=DJINFO[v.id];
+  const nowBy = djInfo.now.auto
+    ? `<span class="dj-badge" style="font-size:11px">Cola del local</span>`
+    : `${av(djInfo.now.ini,djInfo.now.col)}<span style="font-size:12.5px;color:var(--sub)">Pincha <b style="color:#fff">${djInfo.now.name}</b></span>`;
+  const upNextHtml=upcomingFor(v).map((u,i)=>`
+    <div class="trow">
+      ${artDiv(v.art,'tart','',pic(GKW[v.genre],v.seed+60+i,120))}
+      <div class="ti"><h5>${u.t}</h5><p>${u.a}</p></div>
+      <div class="tt">por ${u.by.n}</div>
+    </div>`).join('');
+  const hist=v.hist.map((h,i)=>`
+    <div class="trow ${h[3]?'live':''}">
+      ${artDiv(v.art,'tart','',pic(GKW[v.genre],v.seed+40+i,120))}
+      <div class="ti"><h5>${h[3]?'● ':''}${h[0]}</h5><p>${h[1]}</p></div>
+      <div class="tt">${h[2]}</div>
+    </div>`).join('');
+  document.getElementById('venueScroll').innerHTML=`
+    <button class="v-back" onclick="back()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="v-hero">
+      <div class="v-bg" style="background:${v.art}"><img referrerpolicy="no-referrer" onerror="this.remove()" src="${v.img}" style="width:100%;height:100%;object-fit:cover"></div>
+      <div class="v-hero-in">
+        <div class="v-title">
+          ${artDiv(v.art,'vart','',v.img)}
+          <div class="vt">
+            <span class="gtag" style="background:${GENRES[v.genre].c}">${v.genre.toUpperCase()}</span>
+            <h2>${v.name}</h2>
+            <div class="sub"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2"><path d="M12 2C8 2 4.5 4.5 4.5 9c0 5.2 7.5 13 7.5 13s7.5-7.8 7.5-13C19.5 4.5 16 2 12 2Z"/></svg> a ${v.dist} · abierto ahora</div>
+          </div>
+        </div>
+        <div class="nowbar" style="display:block">
+          <div class="eyebrow"><span class="eq"><i></i><i></i><i></i><i></i></span> SONANDO AHORA</div>
+          <h2 style="font-size:29px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:9px 0 3px">${v.track}</h2>
+          <p style="font-size:15px;color:var(--sub);margin:0 0 13px">${v.artist}</p>
+          <div style="display:flex;align-items:center;gap:12px">
+            ${nowBy}
+            <div style="margin-left:auto;text-align:center;flex:none">
+              <div class="ring" style="--p:${v.match};--c:${c};width:62px;height:62px;margin:0 auto">
+                <b style="font-size:19px">${v.match}<small style="display:inline;font-size:10px;color:#fff">%</small></b><small style="font-size:8px;color:#fff;letter-spacing:.06em">MATCH</small>
+              </div>
+              <div style="font-size:8.5px;color:var(--sub2);margin-top:5px;letter-spacing:.06em;font-weight:700">SEGÚN TU ADN</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cta-row" style="justify-content:flex-start">
+      <button class="pill pill-green" style="flex:none;width:auto;font-size:14px;padding:12px 22px" onclick="alert('Abriendo ruta a ${v.name} en Mapas…')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4"><path d="M12 2C8 2 4.5 4.5 4.5 9c0 5.2 7.5 13 7.5 13s7.5-7.8 7.5-13C19.5 4.5 16 2 12 2Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Cómo llegar</button>
+    </div>
+    <div class="hist" style="margin-top:6px">
+      <h3>A continuación en la cabina</h3>
+      <div class="cap">Cola compartida · lo que van a poner los que están dentro</div>
+      ${upNextHtml}
+    </div>
+    <div class="qr-enter" onclick="enterQR('${v.id}')">
+      <div class="qb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1ED760" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-7"/></svg></div>
+      <div style="flex:1"><h5>Escanea el código del club para pinchar</h5><p>El QR está en la pared del local. Al escanearlo puedes poner tus canciones en la cola.</p></div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2.4"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="ev" onclick="go('ticket')">
+      <div class="evtop" style="background:linear-gradient(120deg,rgba(123,47,247,.68),rgba(241,7,163,.68)),url('${pic(GKW[v.genre],v.seed+80,600)}') center/cover"><b>Esta noche · ${v.genre==='Techno'?'Bicep (live)':'Sesión especial'}</b></div>
+      <div class="evb"><div class="p">Entrada + consumición<br><b>Desde 18€</b></div>
+        <button class="pill pill-green" style="padding:11px 18px;font-size:13px">Ver evento</button></div>
+    </div>
+    <div class="hist">
+      <h3>Han sonado aquí</h3>
+      <div class="cap">Últimas 2 horas · así suena el local esta noche</div>
+      ${hist}
+    </div>`;
+  go('venue');
+}
+function toggleSave(btn){
+  const on=btn.classList.toggle('saved');
+  btn.innerHTML= on
+    ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="#1ED760"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>'
+    : '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>';
+}
+
+/* ---------------- QR MODE ---------------- */
+function enterQR(id){
+  const v=VENUES.find(x=>x.id===id);currentVenue=v;
+  document.getElementById('qrVenue').textContent=v.name.toUpperCase();
+  document.getElementById('qrTrack').textContent=v.track;
+  document.getElementById('qrArtist').textContent=v.artist;
+  document.getElementById('qrArt').style.background=v.art;
+  document.getElementById('qrArt').innerHTML=artImg(v.imgSm);
+  document.getElementById('qrUpNext').innerHTML=upcomingFor(v).map((u,i)=>`
+    <div class="trow">
+      ${artDiv(v.art,'tart','',pic(GKW[v.genre],v.seed+70+i,120))}
+      <div class="ti"><h5>${u.t}</h5><p>${u.a}</p></div>
+      <div class="tt">por ${u.by.n}</div>
+    </div>`).join('');
+  const s=document.getElementById('qrSave');s.disabled=false;s.title='Guardar en tu biblioteca';s.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="1.8"><circle cx="12" cy="12" r="9.2"/><path d="M12 8.2v7.6M8.2 12h7.6" stroke-linecap="round"/></svg>';
+  go('qr');
+}
+function qrSaveTrack(btn){btn.disabled=true;btn.title='Guardada en tu biblioteca';btn.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="#1ED760"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm-1.2 14.3L6.6 12 8 10.6l2.8 2.8 5.2-5.2L17.4 9.6l-6.6 6.7Z"/></svg>'}
+
+/* ---------------- LIBRARY ---------------- */
+const lib=[['Sonando en tus clubs','Playlist · 24 canciones',ART.opal,false,'nightclub,dj'],['Tus me gusta','Playlist · 412 canciones',ART.d,false,'music,neon'],['Bicep','Artista',ART.opal,true,'portrait,man'],['Daft Punk','Artista',ART.daft,true,'helmet,robot'],['Sesión Malasaña 03/07','Playlist creada esta noche',ART.fisher,false,'bar,party']];
+document.getElementById('libList').innerHTML=lib.map((l,i)=>`
+  <div class="lib-row">${artDiv(l[2],'lart'+(l[3]?' round':''),'',pic(l[4],60+i,160))}
+    <div><h4>${l[0]}</h4><p>${l[1]}</p></div></div>`).join('');
+
+/* ---------------- DASHBOARD ---------------- */
+document.getElementById('genreToggles').innerHTML=Object.entries(GENRES).map(([g,d],i)=>`
+  <div class="gt">
+    <div class="lft"><span class="dot" style="background:${d.c}"></span>${g}</div>
+    <div class="sw ${['Techno','House','Indie'].includes(g)?'on':''}" onclick="this.classList.toggle('on')"></div>
+  </div>`).join('');
+
+/* --- Ampliación B2B: temas top + cola de la sala + repetición --- */
+const TOPTRACKS=[
+  {t:'Opal',a:'Bicep',by:'Laura M.',n:23,kw:'nightclub,dj',seed:101},
+  {t:'Percolator',a:'Cajmere',by:'Dani R.',n:18,kw:'dj,party',seed:311},
+  {t:'One More Time',a:'Daft Punk',by:'la cola del local',n:15,kw:'neon,synth',seed:312},
+  {t:'Windowlicker',a:'Aphex Twin',by:'Marco B.',n:12,kw:'nightclub,dj',seed:313},
+  {t:'Little Doubt',a:'Overmono',by:'Nuria',n:9,kw:'dj,party',seed:314}
+];
+document.getElementById('topTracks').innerHTML=TOPTRACKS.map(function(t,i){
+  return '<div class="tt-row'+(i===0?' top':'')+'">'
+    +'<span class="tt-pos">'+(i+1)+'</span>'
+    +artDiv(ART.opal,'tt-art','',cover(t))
+    +'<div class="tt-meta"><h5>'+t.t+'</h5><p>'+t.a+' · pinchada por '+t.by+'</p></div>'
+    +'<span class="tt-metric">'+t.n+' guardados</span></div>';
+}).join('');
+
+const SALA_QUEUE=[
+  {t:'Percolator',a:'Cajmere',by:'Dani R.',kw:'nightclub,dj',seed:321,state:'active'},
+  {t:'Gabriel',a:'Roy Davis Jr.',by:'Nuria',kw:'dj,party',seed:322,state:'active'},
+  {t:'Little Doubt',a:'Overmono',by:'Marco B.',kw:'nightclub,dj',seed:323,state:'active'},
+  {t:'Your Love',a:'Frankie Knuckles',by:'Elena',kw:'dj,party',seed:324,state:'active'}
+];
+function salaRowHtml(s,i,vetoed){
+  return '<div class="tt-row'+(vetoed?' vetoed':'')+'" data-i="'+i+'">'
+    +artDiv(ART.opal,'tt-art','',cover(s))
+    +'<div class="tt-meta"><h5>'+s.t+'</h5><p>'+s.a+' · por '+s.by+'</p></div>'
+    +(vetoed?'<span class="veto-tag">VETADA HASTA EL CIERRE</span>':'<button class="cola-x" title="Quitar de la cola" onclick="salaRemove('+i+')">✕</button>')
+    +'</div>';
+}
+function renderSalaQueue(){
+  var h='';
+  SALA_QUEUE.forEach(function(s,i){if(s.state==='active')h+=salaRowHtml(s,i,false);});
+  SALA_QUEUE.forEach(function(s,i){if(s.state==='vetoed')h+=salaRowHtml(s,i,true);});
+  document.getElementById('salaQueue').innerHTML=h;
+}
+renderSalaQueue();
+
+var salaToast=document.createElement('div');salaToast.id='salaToast';document.body.appendChild(salaToast);
+var salaToastTimer=null, lastRemoved=null;
+function salaRemove(i){
+  var row=document.querySelector('#salaQueue .tt-row[data-i="'+i+'"]');
+  if(row)row.classList.add('fading');
+  lastRemoved=i;
+  setTimeout(function(){SALA_QUEUE[i].state='removed';renderSalaQueue();},300);
+  salaToast.innerHTML='<span>Eliminada de la cola</span><button onclick="salaVeto()">Vetar esta noche</button>';
+  salaToast.classList.add('show');
+  clearTimeout(salaToastTimer);
+  salaToastTimer=setTimeout(function(){salaToast.classList.remove('show');},4500);
+}
+function salaVeto(){
+  if(lastRemoved!=null){SALA_QUEUE[lastRemoved].state='vetoed';renderSalaQueue();}
+  salaToast.classList.remove('show');clearTimeout(salaToastTimer);
+}
+function repeatPick(btn){var seg=btn.parentElement;[].forEach.call(seg.children,function(b){b.classList.remove('on');});btn.classList.add('on');}
+
+/* ---------------- DJ / CABINA ---------------- */
+const DJINFO={
+  bardot:    {now:{name:'Laura M.', ini:'L', col:'#f472b6'}, waiting:2, perTurn:15, allowed:['Techno','House','Indie']},
+  goya:      {now:{name:'Cola del local', ini:'♪', col:'#22d3ee', auto:true}, waiting:0, perTurn:15, allowed:['House','Techno','Latin']},
+  malasana:  {now:{name:'Sergio D.', ini:'S', col:'#22d3ee'}, waiting:1, perTurn:12, allowed:['House','Indie']},
+  ochoymedio:{now:{name:'Marta L.', ini:'M', col:'#f472b6'}, waiting:3, perTurn:10, allowed:['Indie','Rock','Jazz']},
+  siroco:    {now:{name:'Cola del local', ini:'♪', col:'#ef4444', auto:true}, waiting:0, perTurn:12, allowed:['Rock','Indie']},
+  tempo:     {now:{name:'Yeni P.', ini:'Y', col:'#fb7185'}, waiting:1, perTurn:12, allowed:['Latin','House']},
+  junco:     {now:{name:'Cola del local', ini:'♪', col:'#f5b942', auto:true}, waiting:0, perTurn:14, allowed:['Jazz','House']},
+};
+const DJNAMES=[
+  {n:'Dani R.', i:'D', c:'#a855f7', o:'Windowlicker · Aphex Twin'},
+  {n:'Nuria',   i:'N', c:'#22d3ee', o:'Gabriel · Roy Davis Jr.'},
+  {n:'Marco B.',i:'M', c:'#f5b942', o:'Percolator · Cajmere'},
+];
+const MYTRACKS=[
+  {t:'Glue',a:'Bicep',g:'Techno'},
+  {t:'Little Doubt',a:'Overmono',g:'Techno'},
+  {t:'One More Time',a:'Daft Punk',g:'House'},
+  {t:'Losing It',a:'FISHER',g:'House'},
+  {t:'This Charming Man',a:'The Smiths',g:'Indie'},
+  {t:'Bizarre Love Triangle',a:'New Order',g:'Indie'},
+  {t:'Chameleon',a:'Herbie Hancock',g:'Jazz'},
+  {t:'Song 2',a:'Blur',g:'Rock'},
+  {t:'La Gozadera',a:'Gente de Zona',g:'Latin'},
+];
+
+/* ---------------- ADN DEL USUARIO (perfil) ---------------- */
+const USER = {
+  name:'Mery Villena', ini:'M', col:'var(--green)',
+  personality:'Exploradora nocturna',
+  /* ADN = peso 0-100 de cada género según lo que más escuchas en Spotify */
+  dna:{Techno:96, House:90, Indie:80, Jazz:74, Rock:66, Latin:58},
+  topArtists:[['Bicep','Techno'],['Overmono','Techno'],['Daft Punk','House'],['The Smiths','Indie'],['Herbie Hancock','Jazz']]
+};
+/* otras personas de la red (para el match tipo Blend) */
+const PEOPLE = [
+  {n:'Lucía',  ini:'L', col:'#f472b6', dna:{Techno:90,House:85,Indie:78,Jazz:50,Rock:40,Latin:30}},
+  {n:'Marcos', ini:'M', col:'#22d3ee', dna:{Techno:70,House:95,Indie:50,Jazz:60,Rock:35,Latin:80}},
+  {n:'Nerea',  ini:'N', col:'#f5b942', dna:{Techno:30,House:45,Indie:88,Jazz:92,Rock:72,Latin:35}},
+];
+/* % de match: TU ADN ↔ lo que suena en el bar (70% género en directo + 30% ADN del local) */
+function venueMatch(v){
+  const info=DJINFO[v.id];
+  const allowed=info?info.allowed:[v.genre];
+  const primary=USER.dna[v.genre]||0;
+  const avg=allowed.reduce((s,g)=>s+(USER.dna[g]||0),0)/allowed.length;
+  return Math.round(primary*0.7 + avg*0.3);
+}
+/* % de match: TU ADN ↔ el ADN de otra persona (solapamiento de gustos, tipo Blend) */
+function personMatch(dna){
+  let num=0, den=0;
+  for(const g in USER.dna){ num+=Math.min(USER.dna[g],dna[g]||0); den+=Math.max(USER.dna[g],dna[g]||0); }
+  return Math.round(num/den*100);
+}
+/* género que más compartís (para el subtítulo del match entre personas) */
+function topShared(dna){
+  let best='', bv=-1;
+  for(const g in USER.dna){ const v=Math.min(USER.dna[g],dna[g]||0); if(v>bv){bv=v;best=g;} }
+  return best;
+}
+/* el % de cada bar ahora DERIVA de tu ADN — ya no es un número fijo escrito a mano */
+VENUES.forEach(v=>{ v.match=venueMatch(v); });
+
+let dj={venueId:null, picks:[], queued:false};
+let djPickerOpen=false;
+const MAX_PICKS=5, REPLENISH_MIN=30;
+/* pool de temas por género para la cola compartida del club */
+const QTRACKS={
+  Techno:[['Percolator','Cajmere'],['Little Doubt','Overmono'],['Windowlicker','Aphex Twin']],
+  House:[['Gabriel','Roy Davis Jr.'],['Music Sounds Better','Stardust'],['Your Love','Frankie Knuckles']],
+  Indie:[['Just Like Heaven','The Cure'],['Bizarre Love Triangle','New Order'],['Last Nite','The Strokes']],
+  Jazz:[['So What','Miles Davis'],['Take Five','Dave Brubeck'],['Cantaloupe Island','Herbie Hancock']],
+  Latin:[['Vivir Mi Vida','Marc Anthony'],['La Gozadera','Gente de Zona'],['Bailando','Enrique Iglesias']],
+  Rock:[['Common People','Pulp'],['Wonderwall','Oasis'],['Mr. Brightside','The Killers']],
+};
+const QUEUERS=[{n:'Dani R.',i:'D',c:'#a855f7'},{n:'Nuria',i:'N',c:'#22d3ee'},{n:'Marco B.',i:'M',c:'#f5b942'}];
+function upcomingFor(v){const pool=QTRACKS[v.genre]||QTRACKS.House;return pool.map((t,i)=>({t:t[0],a:t[1],by:QUEUERS[i%QUEUERS.length]}));}
+function av(ini,col){return `<div class="avatar-c" style="background:${col}">${ini}</div>`}
+function djEta(info){return info.waiting*info.perTurn + (info.now.auto?0:8)}
+
+function djCardFor(v){
+  const info=DJINFO[v.id];
+  if(dj.live && dj.venueId===v.id){
+    return `<div class="dj-card">
+      <div class="dh"><span class="lbl"><span class="live-dot"></span>ESTÁS EN CABINA</span><span class="q-live">EN DIRECTO</span></div>
+      <div class="dj-now">${av('T','var(--green)')}<div class="di"><h5>Estás pinchando aquí</h5><p>Tu música suena ahora en ${v.name}</p></div></div>
+      <button class="pill pill-green dj-cta" style="margin-top:12px" onclick="go('dj')">Volver a tu cabina</button></div>`;
+  }
+  return `<div class="dj-card">
+    <div class="dh"><span class="lbl">🎧 CABINA COMUNITARIA</span>${info.now.auto?'':'<span class="q-live">EN VIVO</span>'}</div>
+    <div class="dj-now">${av(info.now.ini,info.now.col)}
+      <div class="di"><h5>${info.now.auto?'Nadie pinchando ahora':'Ahora pincha '+info.now.name}</h5>
+        <p>${info.now.auto?'Cola del local · sé el primer DJ':'Sonando: '+v.track+' · '+v.artist}</p></div></div>
+    <div class="dj-meta">${info.waiting?info.waiting+' en cola · ':''}~${info.perTurn} min por turno · tu música desde tu cuenta de Spotify</div>
+    <button class="pill pill-green dj-cta" onclick="enterDJ('${v.id}')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2"><path d="M9 18V6l10-2v12" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3"/><circle cx="19" cy="16" r="3"/></svg>
+      Tú eres el DJ</button></div>`;
+}
+
+function enterDJ(id){if(dj.venueId!==id){dj.venueId=id;dj.picks=[];dj.queued=false}djPickerOpen=false;renderDJ();go('dj')}
+function toggleTrack(i){const t=MYTRACKS[i];const idx=dj.picks.findIndex(s=>s.t===t.t);if(idx>=0)dj.picks.splice(idx,1);else if(dj.picks.length<MAX_PICKS)dj.picks.push({t:t.t,a:t.a,g:t.g});renderDJ()}
+function queuePicks(){if(!dj.picks.length)return;dj.queued=true;djPickerOpen=false;renderDJ()}
+function toggleDjPicker(){djPickerOpen=!djPickerOpen;renderDJ()}
+
+function renderDJ(){
+  const v=VENUES.find(x=>x.id===dj.venueId), info=DJINFO[dj.venueId], allowed=info.allowed, el=document.getElementById('djScroll');
+  const eta=6*4; // ~24 min de cola por delante (mock)
+  const shared=upcomingFor(v).map(u=>`
+    <div class="q-row">${av(u.by.i,u.by.c)}
+      <div class="qi"><h5>${u.t}</h5><p>${u.a} · por ${u.by.n}</p></div></div>`).join('');
+  const yourQueued=dj.queued?dj.picks.map((t,i)=>`
+    <div class="q-row you">${av('M','var(--green)')}
+      <div class="qi"><h5>${t.t}</h5><p>${t.a} · tu tema</p></div>
+      <span class="q-live">~${eta+i*4} MIN</span></div>`).join(''):'';
+
+  const picks=MYTRACKS.map((t,i)=>{
+    const inAdn=allowed.includes(t.g), on=dj.picks.some(s=>s.t===t.t);
+    const full=dj.picks.length>=MAX_PICKS && !on;
+    const clickable=inAdn && !full && !dj.queued;
+    return `<div class="pick ${inAdn?'':'locked'} ${on?'on':''}" ${clickable?`onclick="toggleTrack(${i})"`:''} ${full&&inAdn?'style="opacity:.4"':''}>
+      ${artDiv(ART.opal,'part','',pic((GKW[t.g]||'music'),300+i,120))}
+      <div class="pk"><h5>${t.t}</h5><p>${t.a} · ${t.g}</p></div>
+      ${inAdn?`<div class="add">${on?'✓':'+'}</div>`:`<div class="lock">🔒 fuera de tu ADN</div>`}</div>`;
+  }).join('');
+
+  let foot;
+  if(dj.queued){
+    foot=`<div class="dj-foot">
+      <div class="status"><div><b>Tus ${dj.picks.length} ${dj.picks.length===1?'tema está':'temas están'} en cola</b><br><span>Entran en la cabina en ~${eta} min</span></div></div>
+      <p style="text-align:center;font-size:11px;color:var(--sub2);margin-top:10px">Tu música ya está dentro. Podrás añadir otros ${MAX_PICKS} temas en ${REPLENISH_MIN} min.</p></div>`;
+  } else {
+    foot=`<div class="dj-foot">
+      <button class="pill pill-green" onclick="queuePicks()" ${dj.picks.length?'':'style="opacity:.5"'}>Añadir ${dj.picks.length} a la cola</button>
+      <p style="text-align:center;font-size:11px;color:var(--sub2);margin-top:10px">${dj.picks.length?('Entrarán en la cabina en ~'+eta+' min'):('Elige hasta '+MAX_PICKS+' temas de tu ADN')}</p></div>`;
+  }
+
+  el.innerHTML=`<div class="dj-wrap">
+    <div class="dj-top"><button class="iconbtn-sm" onclick="back()">‹</button>
+      <div class="tt"><h2>Pon tu música</h2><p>${v.name} · estás dentro</p></div>
+      <div class="live-tag"><span class="live-dot"></span>EN DIRECTO</div></div>
+    <div class="sec-t">Ahora suena</div>
+    <div class="q-row">${info.now.auto?av('♪',info.now.col):av(info.now.ini,info.now.col)}
+      <div class="qi"><h5>${v.track}</h5><p><span class="eq" style="vertical-align:-2px"><i></i><i></i><i></i><i></i></span> ${v.artist}</p></div>
+      <span class="q-live">EN VIVO</span></div>
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin:24px 4px 10px">
+      <h3 style="font-family:var(--disp);font-weight:800;font-size:18px;letter-spacing:-.01em;margin:0">A continuación</h3>
+      <span style="font-size:11px;color:var(--sub2)">cola compartida</span>
+    </div>
+    ${shared}${yourQueued}
+    <button data-tour="tu-musica" onclick="toggleDjPicker()" style="width:100%;display:flex;align-items:center;gap:10px;background:none;border:0;border-top:1px solid var(--line);padding:15px 4px 13px;margin-top:14px;cursor:pointer;text-align:left">
+      <div style="flex:1"><div style="font-family:var(--disp);font-weight:800;font-size:14px;color:#fff">Tu música</div>
+        <div style="font-size:12px;color:var(--sub2);margin-top:2px">${dj.picks.length}/${MAX_PICKS} elegidas · pon temas de tu ADN</div></div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2.4" style="transform:rotate(${djPickerOpen?'180deg':'0deg'});transition:transform .2s;flex:none"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div style="${djPickerOpen?'':'display:none'}">
+      <p style="font-size:11.5px;color:var(--sub2);margin:0 4px 8px">Este club admite: <b style="color:var(--sub)">${allowed.join(' · ')}</b></p>
+      ${picks}
+    </div>
+    ${foot}</div>`;
+}
+
+/* now playing (mini) */
+function setNowPlaying(o){
+  document.getElementById('miniTrack').textContent=o.track;
+  document.getElementById('miniArtist').textContent=o.isYou?('Tú pinchando · '+o.venue):(o.artist+' · en '+o.venue);
+  const a=document.getElementById('miniArt');a.style.background=o.art;a.innerHTML=artImg(o.img);
+  document.getElementById('mini').classList.toggle('you',!!o.isYou);
+}
+function resetNowPlaying(){const v=currentVenue;setNowPlaying({track:v.track,artist:v.artist,art:v.art,img:v.imgSm,venue:v.name,isYou:false})}
+function miniClick(){enterQR(currentVenue.id)}
+
+/* ---------------- RENDER: PERFIL / TU ADN ---------------- */
+function renderProfile(){
+  const bars=Object.entries(USER.dna).sort((a,b)=>b[1]-a[1]).map(([g,val])=>{
+    const c=GENRES[g].c;
+    return `<div style="display:flex;align-items:center;gap:10px;margin:10px 0">
+      <span style="width:70px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${c}"></span>${g}</span>
+      <div style="flex:1;height:8px;border-radius:999px;background:var(--elev2);overflow:hidden"><i style="display:block;height:100%;width:${val}%;background:${c}"></i></div>
+      <span style="width:26px;text-align:right;font-size:12px;font-weight:700;color:var(--sub)">${val}</span>
+    </div>`;
+  }).join('');
+  const artists=USER.topArtists.map((a,i)=>
+    `<div class="card">${artDiv(ART.opal,'cart round','',pic('portrait,musician',70+i,320))}<h4>${a[0]}</h4><p>${a[1]}</p></div>`).join('');
+  const people=PEOPLE.map(p=>{
+    const m=personMatch(p.dna);
+    return `<div class="venue-row" style="cursor:default">
+      ${av(p.ini,p.col)}
+      <div class="meta" style="margin-left:12px"><h4>${p.n}</h4>
+        <div class="dist">Coincidís sobre todo en ${topShared(p.dna)}</div></div>
+      <div class="ring" style="--p:${m};--c:${matchColor(m)};width:58px;height:58px">
+        <b style="font-size:19px">${m}<small style="display:inline;font-size:10px;color:#fff">%</small></b><small style="font-size:8.5px;color:#fff;letter-spacing:.06em">MATCH</small></div>
+    </div>`;
+  }).join('');
+  document.getElementById('profileScroll').innerHTML=`
+    <button class="iconbtn-sm" onclick="back()" style="margin:0 0 6px">‹</button>
+    <div style="text-align:center;margin:4px 0 24px">
+      <div class="avatar" style="width:88px;height:88px;border-radius:50%;font-size:34px;margin:0 auto 12px;background:var(--green);color:#000">${USER.ini}</div>
+      <h2 style="margin:0">${USER.name}</h2>
+      <span style="display:inline-block;margin-top:9px;font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--green);background:rgba(30,215,96,.14);padding:5px 12px;border-radius:999px">${USER.personality.toUpperCase()}</span>
+    </div>
+    <h3 class="sec-h">Tu ADN musical</h3>
+    <p style="font-size:12px;color:var(--sub);margin:-4px 0 12px">Se calcula con lo que escuchas en Spotify. Es tu carné musical: define tu match con los clubs y con la gente.</p>
+    ${bars}
+    <h3 class="sec-h" style="margin-top:28px">DJ en la sala</h3>
+    <div style="display:flex;align-items:center;gap:12px;background:var(--elev1);padding:14px 16px;border-radius:12px">
+      <div style="flex:1"><h4 style="margin:0;font-size:14px">Aparecer como DJ visible</h4>
+        <p style="margin:3px 0 0;font-size:12px;color:var(--sub);line-height:1.4">Cuando pones música en un club, la gente de la sala puede verte y seguir tu sesión. Desactívalo para pinchar en anónimo.</p></div>
+      <div class="sw on" onclick="this.classList.toggle('on')"></div>
+    </div>
+    <h3 class="sec-h" style="margin-top:28px">Artistas que te definen</h3>
+    <div class="rail round">${artists}</div>
+    <h3 class="sec-h" style="margin-top:28px">Gente con tu ADN</h3>
+    <p style="font-size:12px;color:var(--sub);margin:-4px 0 14px">Tu ADN comparado con el de otras personas, como un Blend. Cuanto más se solapan vuestros gustos, más alto el match.</p>
+    ${people}
+    <div style="height:24px"></div>`;
+}
+
+/* ---------------- INIT ---------------- */
+resetNowPlaying();
+document.getElementById('mini').onclick=miniClick;
+renderFilters();renderPins();renderList();renderProfile();
+</script>
+
+<!-- ============ SISTEMA DE RECORRIDO GUIADO (aditivo, no toca el diseño) ============ -->
+<script>
+(function(){
+  var SEEN_KEY='snp_tour_v1';
+  var css=''
+  +'@keyframes snpPulse{0%{box-shadow:0 0 0 0 rgba(30,215,96,.55)}70%{box-shadow:0 0 0 18px rgba(30,215,96,0)}100%{box-shadow:0 0 0 0 rgba(30,215,96,0)}}'
+  +'#snpHot{position:fixed;width:16px;height:16px;border-radius:50%;background:#1ed760;border:2px solid #fff;z-index:100001;pointer-events:none;display:none;animation:snpPulse 1.6s infinite}'
+  +'#snpLabel{position:fixed;max-width:210px;background:rgba(28,28,32,.4);-webkit-backdrop-filter:blur(8px) saturate(1.3);backdrop-filter:blur(8px) saturate(1.3);color:#fff;font:600 12.5px/1.35 system-ui,-apple-system,sans-serif;padding:9px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.18);z-index:100001;pointer-events:none;display:none;box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12)}'
+  +'@keyframes snpHelpPulse{0%{box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 0 rgba(30,215,96,.45)}70%{box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 8px rgba(30,215,96,0)}100%{box-shadow:0 8px 24px rgba(0,0,0,.45),0 0 0 0 rgba(30,215,96,0)}}'
+  +'#snpHelp{position:fixed;right:18px;bottom:88px;width:44px;height:44px;padding:0;border-radius:50%;background:#1ed760;color:#04140a;border:0;font:800 21px system-ui;display:flex;align-items:center;justify-content:center;z-index:100000;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.45);animation:snpHelpPulse 2.6s infinite}'
+  +'#snpHelp .snp-hic{flex:none;width:24px;height:24px;border-radius:50%;background:rgba(4,20,10,.22);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800}'
+  +'#snpResume{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:#1ed760;color:#04140a;border:0;border-radius:999px;padding:11px 18px;font:700 13px system-ui;z-index:100002;cursor:pointer;display:none;box-shadow:0 8px 24px rgba(0,0,0,.45)}'
+  +'#snpWel{position:fixed;inset:0;background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);z-index:100003;display:none;align-items:center;justify-content:center;padding:24px}'
+  +'#snpWel.on{display:flex}'
+  +'.snp-card{background:rgba(28,28,32,.6);-webkit-backdrop-filter:blur(24px) saturate(1.3);backdrop-filter:blur(24px) saturate(1.3);border:1px solid rgba(255,255,255,.14);border-radius:18px;max-width:340px;width:100%;padding:26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.1);font-family:system-ui,-apple-system,sans-serif}'
+  +'.snp-card h3{color:#fff;font-size:21px;font-weight:800;margin:0 0 4px}'
+  +'.snp-card .sub{color:#b3b3b3;font-size:13px;margin:0 0 18px}'
+  +'.snp-step{display:flex;gap:12px;align-items:flex-start;margin:12px 0}'
+  +'.snp-num{flex:none;width:26px;height:26px;border-radius:50%;background:rgba(30,215,96,.16);color:#1ed760;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}'
+  +'.snp-step p{color:#e6e6e6;font-size:13.5px;line-height:1.35;margin:2px 0 0}'
+  +'.snp-btns{margin-top:22px;display:flex;flex-direction:column;gap:10px}'
+  +'.snp-b1{background:#1ed760;color:#04140a;border:0;border-radius:999px;padding:14px;font:800 14px system-ui;cursor:pointer}'
+  +'.snp-b2{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:13px;font:700 14px system-ui;cursor:pointer}'
+  +'#snpClose{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;width:min(340px,90vw);background:rgba(28,28,32,.6);-webkit-backdrop-filter:blur(24px) saturate(1.3);backdrop-filter:blur(24px) saturate(1.3);border:1px solid rgba(30,215,96,.4);border-radius:16px;padding:18px;z-index:100002;display:none;box-shadow:0 16px 40px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.1);font-family:system-ui,-apple-system,sans-serif}'
+  +'#snpClose h4{color:#fff;margin:0 0 4px;font-size:16px;font-weight:800}'
+  +'#snpClose p{color:#b3b3b3;margin:0 0 14px;font-size:13px;line-height:1.4}'
+  +'#snpClose .cb2{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:12px 16px;font:700 13.5px system-ui;cursor:pointer;width:100%;margin-top:8px}'
+  +'#snpClose .cx{background:none;border:0;color:#b3b3b3;font:600 12px system-ui;cursor:pointer;margin-top:10px;width:100%;padding:4px}'
+  +'@media(max-width:440px){#snpHelp{bottom:168px;right:14px;width:42px;height:42px;font-size:20px}}';
+  var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+
+  function mk(tag,id,html){var e=document.createElement(tag);if(id)e.id=id;if(html!=null)e.innerHTML=html;document.body.appendChild(e);return e;}
+  var hot=mk('div','snpHot','');
+  var label=mk('div','snpLabel','');
+  var help=mk('button','snpHelp','?');
+  var resume=mk('button','snpResume','↻ Retomar recorrido');
+  var wel=mk('div','snpWel',
+    '<div class="snp-card">'
+    +'<h3>Recorrido de 2 minutos</h3>'
+    +'<p class="sub">Te enseño cómo funciona, paso a paso.</p>'
+    +'<div class="snp-step"><div class="snp-num">1</div><p>Descubre qué suena cerca de ti</p></div>'
+    +'<div class="snp-step"><div class="snp-num">2</div><p>Entra en el club que más encaja contigo</p></div>'
+    +'<div class="snp-step"><div class="snp-num">3</div><p>Añade tu canción a la cola del local</p></div>'
+    +'<div class="snp-btns"><button class="snp-b1" id="snpStart">Empezar recorrido</button>'
+    +'<button class="snp-b2" id="snpSkip">Explorar por mi cuenta</button></div>'
+    +'</div>');
+  var closing=mk('div','snpClose',
+    '<h4>Tu canción ya está en la cola 🎶</h4>'
+    +'<p>Esto es Now Playing: la música del club la construye la gente que está dentro.</p>'
+    +'<button class="cb2" id="snpDash">Ver el panel del local</button>'
+    +'<button class="cb2" id="snpEvent">Ver el evento de esta noche</button>'
+    +'<button class="cx" id="snpEnd">Cerrar y explorar libre</button>');
+
+  var STEPS=[
+    {enter:function(){setView('app');tab('home');}, sel:'#s-home .feat', text:'Empieza aquí: descubre qué suena cerca de ti'},
+    {enter:function(){go('nearby');}, sel:'#venueList .venue-row', text:'Este club es el que más encaja contigo. Entra a verlo'},
+    {enter:function(){openVenue('bardot');}, sel:'#s-venue .qr-enter', text:'¿Estás en la puerta? Escanea el código del club para entrar'},
+    {enter:function(){enterQR('bardot');}, sel:'#s-qr .pill-green', text:'Únete a la Jam: la cola la hacéis entre todos'},
+    {enter:function(){enterDJ('bardot');}, sel:'#s-dj [data-tour="tu-musica"]', text:'Abre “Tu música” para elegir un tema tuyo'},
+    {enter:function(){djPickerOpen=true;renderDJ();}, sel:'#s-dj .pick:not(.locked)', text:'Elige las que más encajen contigo, hasta 5'},
+    {enter:function(){}, sel:'#s-dj .dj-foot .pill-green', text:'Cuando tengas tu set, añádelo a la cola', guard:function(){return dj.picks.length>0;}},
+    {closing:true, delay:3500, enter:function(){if(dj.picks.length&&!dj.queued)queuePicks();}}
+  ];
+
+  var tour={active:false,step:0}, curEl=null, curText='';
+
+  function hideHot(){hot.style.display='none';label.style.display='none';curEl=null;}
+  function hideResume(){resume.style.display='none';}
+  function hideAll(){hideHot();hideResume();closing.style.display='none';}
+  function seen(){try{localStorage.setItem(SEEN_KEY,'1');}catch(e){}}
+
+  function position(){
+    if(!curEl||!document.body.contains(curEl))return;
+    var r=curEl.getBoundingClientRect();
+    if(r.width===0&&r.height===0)return;
+    hot.style.left=(r.right-14)+'px'; hot.style.top=(r.top+r.height/2-8)+'px'; hot.style.display='block';
+    label.textContent=curText; label.style.display='block';
+    var lw=label.offsetWidth, lh=label.offsetHeight;
+    var lx=Math.max(8,Math.min(r.left+r.width/2-lw/2, window.innerWidth-lw-8));
+    var ly=r.top-lh-14; if(ly<10) ly=r.bottom+14;
+    label.style.left=lx+'px'; label.style.top=ly+'px';
+  }
+  function animScroll(el,to,dur){
+    var from=el.scrollTop, delta=to-from, t0=null;
+    if(Math.abs(delta)<4){el.scrollTop=to;return;}
+    function step(ts){
+      if(t0===null)t0=ts;
+      var p=Math.min(1,(ts-t0)/dur);
+      var e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2; /* easeInOutQuad */
+      el.scrollTop=from+delta*e;
+      if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  function goStep(i){
+    tour.active=true; tour.step=i; hideResume(); closing.style.display='none';
+    var s=STEPS[i];
+    try{s.enter();}catch(err){}
+    if(s.closing){hideHot();setTimeout(function(){closing.style.display='block';},s.delay||260);return;}
+    hideHot();
+    setTimeout(function(){
+      var e=document.querySelector(s.sel);
+      if(!e){resume.style.display='block';return;}
+      /* la pantalla entra desde arriba; solo desplazamos (suave, dentro del móvil)
+         si el objetivo no está a la vista, y sin centrarlo (lo dejamos a ~1/3) */
+      var needScroll=false, sc=e.closest('.scroll');
+      if(sc){
+        var er=e.getBoundingClientRect(), cr=sc.getBoundingClientRect();
+        var visible=er.top>=cr.top+54 && er.bottom<=cr.bottom-64;
+        if(!visible){
+          needScroll=true;
+          var desired=sc.scrollTop+(er.top-cr.top)-cr.height*0.34;
+          animScroll(sc,Math.max(0,desired),720);
+        }
+      }
+      setTimeout(function(){curEl=e;curText=s.text;position();}, needScroll?820:120);
+    },440);
+  }
+  function next(){if(tour.step<STEPS.length-1)goStep(tour.step+1);}
+  function startTour(){seen();wel.classList.remove('on');hideAll();goStep(0);}
+  function endTour(){tour.active=false;hideAll();}
+
+  wel.querySelector('#snpStart').addEventListener('click',startTour);
+  wel.querySelector('#snpSkip').addEventListener('click',function(){seen();wel.classList.remove('on');});
+  help.addEventListener('click',function(){hideAll();wel.classList.add('on');});
+  resume.addEventListener('click',function(){hideResume();goStep(tour.step);});
+  closing.querySelector('#snpEvent').addEventListener('click',function(){endTour();try{go('ticket');}catch(e){}});
+  closing.querySelector('#snpDash').addEventListener('click',function(){try{setView('dash');}catch(e){}endTour();});
+  closing.querySelector('#snpEnd').addEventListener('click',endTour);
+
+  window.addEventListener('resize',position);
+  document.addEventListener('scroll',position,true);
+
+  document.addEventListener('click',function(ev){
+    if(!tour.active)return;
+    if(ev.target.closest('#snpHelp,#snpResume,#snpWel,#snpClose'))return;
+    var s=STEPS[tour.step];
+    /* avance por delegación: si lo clicado es el objetivo del paso (y cumple la guarda), avanzamos */
+    if(!s.closing && ev.target.closest(s.sel) && (!s.guard||s.guard())){setTimeout(next,60);return;}
+    /* off-path: si el objetivo se re-renderizó, re-anclar; si ya no se ve, ofrecer retomar */
+    setTimeout(function(){
+      if(!tour.active||STEPS[tour.step].closing||closing.style.display==='block')return;
+      var s2=STEPS[tour.step];
+      if(!curEl||!document.body.contains(curEl)){
+        var e2=document.querySelector(s2.sel);
+        if(e2){curEl=e2;curText=s2.text;position();return;}
+        hideHot();resume.style.display='block';return;
+      }
+      var r=curEl.getBoundingClientRect();
+      var vis=r.width>0&&r.height>0&&r.bottom>0&&r.top<window.innerHeight;
+      if(!vis){hideHot();resume.style.display='block';}
+    },700);
+  },true);
+
+  try{if(!localStorage.getItem(SEEN_KEY))setTimeout(function(){wel.classList.add('on');},450);}
+  catch(e){setTimeout(function(){wel.classList.add('on');},450);}
+})();
+</script>

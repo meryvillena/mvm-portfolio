@@ -1,0 +1,128 @@
+/* ############################################################
+   COMPONENTE · EL CHIP DE HORA
+   La pieza de la pantalla de elegir hora, que es donde se ve el modelo
+   entero: no vendemos pizzas, vendemos huecos de horno.
+
+   Un chip dice tres cosas a la vez y por tres caminos distintos:
+     LA HORA        en cifra grande, de comanda, con números de ancho fijo
+     CÓMO VA EL HORNO  en la barra de la izquierda, y coincide con el
+                    tamaño de la llama grande de al lado
+     SI PUEDES      por si se puede pulsar o no
+
+   ------------------------------------------------------------
+   LO BLOQUEADO NO ESTRENA COLOR
+   ------------------------------------------------------------
+   El sistema tiene seis colores y ninguno rojo. Una franja llena no se
+   pinta de alarma: se le pone TRAMA y TACHADO, y deja de ser un botón.
+   Es la regla fundacional del §01, y aquí es donde más se nota que
+   funciona — una rejilla de veinticuatro horas donde lo cerrado se
+   distingue sin haber inventado un color nuevo para ello.
+   ############################################################ */
+
+/* ============================================================
+   LA PIEZA
+   ------------------------------------------------------------
+   La hora grande, el estado pequeño debajo, y una BARRA DE ESTADO a la
+   izquierda. El verde es el único color reservado del sistema y dice
+   exactamente esto: «esta franja admite tu pedido».
+   ============================================================ */
+.chip {
+  font: inherit; cursor: pointer; text-align: left;
+  background: var(--papel); color: var(--tinta);
+  border: var(--linea); border-left: 6px solid var(--tinta);
+  padding: var(--e2) var(--e3); min-height: 48px;
+  font-variation-settings: var(--voz-comanda);
+  font-variant-numeric: tabular-nums; font-size: var(--t4); line-height: var(--lh-caja);
+  position: relative;
+
+  /* EL GESTO, el mismo que perdió el botón y por el mismo motivo. Aquí NO
+     es levantarse: es CRECER. Un chip vive pegado a otros seis en una fila
+     apretada, y engordarle el borde —que fue lo primero que se probó—
+     recolocaba la fila entera cada vez que pasabas el ratón. `scale` no
+     ocupa sitio: el chip crece por encima de sus vecinos sin moverlos. La
+     sombra es la pequeña, la de los botones pequeños, porque es una pieza
+     de ese tamaño. */
+  transition:
+    transform  var(--mov-corto) ease-out,
+    box-shadow var(--mov-corto) ease-out;
+}
+
+.chip small {
+  display: block; margin-top: 4px;
+  font-size: var(--t10); letter-spacing: .06em; text-transform: uppercase;
+  font-variation-settings: var(--voz-rotulo); opacity: .75;
+}
+
+/* SEMÁFORO. La barra izquierda dice de un vistazo cómo va el horno a esa
+   hora, y coincide con el tamaño de la llama: verde pequeña, naranja
+   mediana, roja grande. Antes todas las libres eran verdes y por eso «se
+   veía todo verde» sin que el verde significase nada. */
+.chip[data-nivel="rescoldo"]   { border-left-color: var(--horno-1); }
+.chip[data-nivel="brasa"]      { border-left-color: var(--horno-2); }
+.chip[data-nivel="llama-viva"] { border-left-color: var(--horno-3); }
+
+/* Queda poco: se ensucia el papel. Sigue siendo pulsable. */
+.chip--pocasPlazas { background: var(--papel-2); }
+
+/* NO PUEDES: trama y tachado, sin color nuevo. */
+.chip--completa, .chip--noCabe {
+  border-left-color: var(--tinta); background-image: var(--trama);
+  cursor: default; opacity: .55;
+  text-decoration: line-through;
+}
+/* Cerrada es distinto de llena: no es que no quepas, es que no abrimos.
+   Se dice bajando la barra, no tachando: no hay nada que tachar. */
+.chip--cerrada {
+  border-left-color: rgba(20, 24, 56, .3); cursor: default; opacity: .45;
+}
+
+/* Elegido y enfocado se dicen igual —anillo de tinta— porque son lo
+   mismo desde dos sitios: «esta es la que estás mirando». */
+.chip--sel { outline: 3px solid var(--tinta); outline-offset: 2px; }
+.chip:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
+
+.chip:hover, .chip:focus-visible {
+  transform: scale(1.06);
+  box-shadow: var(--sombra-peq) var(--sombra-peq) 0 var(--tinta);
+}
+
+/* Las bloqueadas no crecen, y esto no es un olvido: no son botones —el
+   componente las pinta como <span>— y no se pueden pulsar. Siguen
+   respondiendo al ratón para alimentar la llama grande, pero un gesto de
+   «tócame» en algo que no se puede tocar es exactamente la mentira que el
+   sistema evita con la trama y el tachado. */
+.chip--completa:hover, .chip--noCabe:hover, .chip--cerrada:hover {
+  transform: none; box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip { transition: none; }
+  .chip:hover, .chip:focus-visible { transform: none; box-shadow: none; }
+}
+
+/* La pegatina de promo, en la esquina y girada, como en el prototipo. Va
+   en amarillo, que es el color que el sistema reserva para promo y no se
+   usa en ningún otro sitio. */
+/* NO SE PARTE, Y EN MÓVIL SUELTA LA COLA (13/10/2026, lo vio Mery).
+
+   La etiqueta va en absoluto sobre la esquina del chip, así que al
+   partirse crece HACIA DENTRO: a 390 px caía en tres líneas y la
+   tercera tapaba la hora del botón. No se leían ni las 19:00 ni las
+   19:15 ni las 19:30 — en la pantalla que el caso usa para contar que
+   las promos mueven pedidos.
+
+   Dos reglas y ninguna media tinta: aquí no se parte nunca, y por
+   debajo de 420 px se queda solo con el número. «−10 %» pegado a una
+   hora concreta ya dice «a esta hora» sin escribirlo; lo que no se
+   puede es taparla. */
+.chip__promo {
+  position: absolute; top: -9px; right: -6px;
+  background: var(--promo); color: var(--tinta); border: var(--linea);
+  padding: 1px 5px; transform: rotate(-4deg);
+  font-size: var(--t10); letter-spacing: .04em; text-transform: uppercase;
+  font-variation-settings: var(--voz-rotulo);
+  white-space: nowrap;
+}
+@media (max-width: 420px) {
+  .chip__promo-cola { display: none; }
+}

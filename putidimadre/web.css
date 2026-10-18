@@ -1,0 +1,2587 @@
+/* ============================================================
+   PUTI DI MADRE — WEB DEL CLIENTE
+   ------------------------------------------------------------
+   Los tokens de abajo NO se editan aquí: son copia literal de
+   SISTEMA-DE-DISENO.html (hasta su aviso FIN DE TOKENS). Si hay
+   que cambiar un color o una medida, se cambia allí y se vuelve
+   a volcar. El sistema manda; esta hoja obedece.
+
+   El panel del turno tiene su propia hoja, panel.css, que NO
+   importa estos tokens a propósito. Ver la cabecera de ese archivo.
+   ============================================================ */
+
+/* ############################################################
+   PUTI DI MADRE - SISTEMA DE DISENO
+   Entre esta linea y FIN DE TOKENS: se copia tal cual a web.css.
+
+   SEIS COLORES. NINGUNO ROJO. UN SOLO RESERVADO.
+   Cada color tiene UN trabajo. Si un color hace dos cosas,
+   deja de significar una de ellas.
+   ############################################################ */
+/* Los tokens viven en `tokens.css`, que es la única fuente de verdad y la
+   lee también `SISTEMA-DE-DISENO.html`. Estaban escritos aquí Y en el
+   documento, y ya habían derivado. Si buscas un color o una voz, está allí.
+   Se carga ANTES que esta hoja: ver el cargador al pie de index.html. */
+
+.v-cartel { font-family:var(--fuente); font-variation-settings: var(--voz-cartel);
+  text-transform:uppercase; line-height: var(--lh-cartel); letter-spacing:-.01em }
+.v-rotulo { font-family:var(--fuente); font-variation-settings: var(--voz-rotulo);
+  text-transform:uppercase; letter-spacing:.06em }
+.v-comanda{ font-family:var(--fuente); font-variation-settings: var(--voz-comanda);
+  font-variant-numeric:tabular-nums }
+.v-texto  { font-family:var(--fuente); font-variation-settings: var(--voz-texto); line-height: var(--lh-texto) }
+.v-mano   { font-family:var(--mano); font-weight:400; text-transform:none }  /* nunca < 28px */
+
+/* ############# FIN DE TOKENS ############# */
+
+/* ============================================================
+   DE AQUÍ PARA ABAJO: TODAVÍA ES EL ESTILO CERO.
+   Se va sustituyendo bloque a bloque en la fase 2, pasando las
+   115 pruebas entre uno y otro. Lo que quede aquí sin tocar es
+   lo que todavía no se ha rediseñado.
+   ============================================================ */
+
+/* NEGRO PURO: RETIRADO EL 25/08/2026 (decisión de Mery). Todo lo que era
+   `#000` pasa a `var(--tinta)`, que es `#141838` — un azul muy oscuro
+   elegido justamente para NO ser negro. Y el gris `#555` de las notas,
+   igual. Eran restos del estilo cero, no decisiones: la auditoría del §00
+   los contaba como «colores fuera de la paleta» y tenía razón.
+   El panel de demo NO se toca: se declara a sí mismo fuera del producto.
+
+   ============================================================
+   ESTILO CERO — feo a propósito.
+   Aquí no hay ninguna decisión de diseño que defender: solo lo
+   mínimo para distinguir bloques y estados mientras se prueba
+   la lógica. La capa visual ("Roma después de medianoche") se
+   construye aparte y sustituye este archivo entero.
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+/* FASE 2 · el armazón de la página ya usa los tokens */
+body {
+  margin: 0;
+  padding: 0 0 60px;
+  font-family: var(--fuente);
+  font-variation-settings: var(--voz-texto);
+  font-size: var(--t4);
+  line-height: var(--lh-texto);
+  color: var(--tinta);
+  background: var(--papel);
+}
+
+/* FASE 2 · el ancho pasa a ser el del sistema (--ancho) */
+main, .cab, .pie { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--e5); }
+/* El panel de demo se alinea con la página, pero su relleno es suyo y
+   lo pone demo.css: metido en la regla de arriba, el atajo `padding`
+   le borraba el vertical y la caja salía pegada a su propio borde.
+   Mismo cuento que el recorte de la cartilla. */
+.demo { max-width: var(--ancho); margin-left: auto; margin-right: auto; }
+
+h1 { font-size: var(--t3); margin: 16px 0 4px; }
+h2 { font-size: var(--t4); margin: 0 0 6px; }
+p  { margin: 6px 0; }
+
+/* LA BASE, VESTIDA. Estas dos reglas son del estilo cero y llevaban el
+   blanco del navegador. No se veían —los componentes las tapan— pero un
+   blanco escrito en la hoja es un blanco que algún día alguien hereda.
+   Decisión de Mery del 26/08: todo lo que era blanco pasa a PAPEL y todo
+   lo que era negro pasa a TINTA. Así se quitan dos colores de la web en
+   vez de cambiarlos por otros dos que tampoco estaban en la paleta. */
+button {
+  font: inherit;
+  padding: 6px 10px;
+  border: 1px solid var(--tinta);
+  background: var(--papel);
+  color: var(--tinta);
+  cursor: pointer;
+}
+/* SIN GRIS. Esta regla venía de "estilo cero" y pintaba `color` y
+   `border-color` en #999 a TODO botón deshabilitado. Como es un selector de
+   elemento con pseudoclase, le ganaba en peso a `.btn` y le cambiaba el
+   borde de tinta por gris — así que el botón deshabilitado del componente
+   no era el que el sistema declara, y se veía. Lo cazó Mery el 23/08 en el
+   ticket de seguimiento.
+
+   El gris además no está en la paleta: los seis colores del sistema no
+   incluyen ninguno, y "apagado" aquí se dice bajando la opacidad, no
+   metiendo un color de fuera. Se queda solo el cursor, que sí es de todos
+   los botones y no pisa a nadie. */
+button:disabled { cursor: not-allowed; }
+
+input, select, textarea {
+  font: inherit;
+  padding: 5px;
+  border: 1px solid var(--tinta);
+  background: var(--papel);
+  color: var(--tinta);
+  /* El AZUL DEL SISTEMA. Una barra deslizante y una casilla nativas se
+     pintan por dentro con el color de acento del sistema operativo —azul
+     en Mac, y otro distinto en cada máquina—. No sale al medir los
+     colores del elemento porque no es suyo: lo pone el navegador por
+     debajo. Era el único color de fuera que quedaba a la vista, y encima
+     cambiaba según quién abriera la página. (26/08) */
+  accent-color: var(--tinta);
+}
+label { display: block; margin: 8px 0; }
+label.chk { display: flex; gap: 6px; align-items: center; }
+fieldset { border: 1px solid var(--tinta); margin: 10px 0; }
+
+/* cabecera */
+.cab {
+  border-bottom: var(--linea-media); display: flex; gap: var(--e4);
+  align-items: center; flex-wrap: wrap; padding-top: var(--e3); padding-bottom: var(--e3);
+  position: sticky; top: 0; background: var(--papel); z-index: 90;
+}
+.cab__marca {
+  font-variation-settings: var(--voz-cartel);
+  text-transform: uppercase; font-size: var(--t7); line-height: var(--lh-cartel);
+  letter-spacing: .04em; text-decoration: none; color: var(--tinta);
+  margin-right: auto;
+}
+.cab__nav { display: flex; gap: 0; align-items: center; flex-wrap: wrap; }
+.cab__link {
+  font-family: var(--fuente); font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t9); letter-spacing: .04em;
+  background: none; border: 0; border-right: var(--linea);
+  padding: var(--e2) var(--e3); cursor: pointer; color: var(--tinta);
+  white-space: nowrap;
+}
+.cab__link:last-of-type { border-right: 0; }
+/* EL CORAL RELLENA, NO TIÑE. Hasta el 25/08 el hover pintaba la letra de
+   coral: sobre papel eso da 2,69 de contraste —hace falta 4,5 para letra
+   de 11 px— así que el menú PERDÍA legibilidad justo al señalarlo. Ahora
+   el coral va detrás y la letra en tinta, como el rótulo del §01: sale más
+   coral que antes y se lee siempre. Es la misma corrección que se le hizo
+   al signo +/× el 18 de agosto, y por el mismo número. */
+.cab__link:hover { background: var(--marca); color: var(--tinta); }
+.cab__link:focus-visible { outline: 3px solid var(--tinta); outline-offset: -3px; }
+.cab__caja {
+  font-family: var(--fuente); font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t9); letter-spacing: .06em;
+  background: var(--tinta); color: var(--papel); border: 0;
+  padding: var(--e2) var(--e4); cursor: pointer; margin-left: auto;
+  min-height: 36px; white-space: nowrap;
+}
+.cab__caja:hover { background: var(--marca); color: var(--tinta); }
+.cab__caja:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+
+/* ------------------------------------------------------------
+   LA CAJA CON ALGO DENTRO SE QUEDA EN CORAL (10/10/2026)
+   ------------------------------------------------------------
+   Antes el coral era un DESTELLO de medio segundo al añadir, y luego
+   el botón volvía a tinta. Así, la única diferencia entre una caja
+   vacía y una con tres pizzas era una cifra pequeña en la esquina: si
+   no estabas mirando en ese medio segundo, no te enterabas de nada.
+
+   Ahora el coral es el ESTADO, no el aviso. La caja está encendida
+   mientras tengas algo dentro, y es lo único coral de la cabecera.
+
+   Coral de fondo y tinta encima, nunca al revés: la regla del sistema
+   es que el coral rellena y no escribe. Tinta sobre coral contrasta
+   5,33 a 1, por encima del 4,5 que hace falta.
+   ------------------------------------------------------------ */
+.cab__caja--llena { background: var(--marca); color: var(--tinta); }
+/* Encendida ya, el hover se dice al revés: se apaga a tinta. */
+.cab__caja--llena:hover { background: var(--tinta); color: var(--papel); }
+
+/* El salto al meter algo. Sin esto, añadir desde el "+" de una fila no
+   se nota. Ya SOLO es escala: el destello coral sobraba desde que el
+   coral se queda puesto —encender lo que ya está encendido no se ve— y
+   además peleaba con el color del estado al acabar la animación.
+   Definido en SISTEMA-DE-DISENO §10. */
+.cab__caja--salta { animation: caja-salta .42s cubic-bezier(.2,.9,.3,1.4); }
+.cab__caja--salta #n-caja { animation: none; }
+@keyframes caja-salta {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.09); }
+  100% { transform: scale(1); }
+}
+@keyframes caja-cifra {
+  0%   { transform: scale(1.9); }
+  100% { transform: scale(1); }
+}
+#n-caja { display: inline-block; min-width: 1ch; }
+/* El estado final se aplica igual: quien no quiere movimiento se entera
+   por el aria-live y por la cifra, que sí cambia. */
+@media (prefers-reduced-motion: reduce) {
+  .cab__caja--salta,
+  .cab__caja--salta #n-caja { animation: none; }
+}
+.cab__estado {
+  width: 100%; margin: 0;
+  font-variation-settings: var(--voz-rotulo);
+  font-size: var(--t9); text-transform: uppercase; letter-spacing: .08em;
+  border-top: var(--linea); padding-top: var(--e1);
+}
+
+/* secciones del scroll de home */
+.seccion { border-bottom: 1px solid var(--tinta); padding: 28px 0; scroll-margin-top: 12px; }
+.seccion--hero { border-bottom-width: 3px; }
+.seccion--manifiesto, .seccion--cierre { border-bottom-width: 3px; }
+.seccion--cierre { border-bottom: none; }
+
+.seccion--hero h1 { font-size: var(--t1); margin: 0 0 8px; }
+.lede { font-size: var(--t4); max-width: 46ch; }
+.utilidad { border: 1px solid var(--tinta); display: inline-block; padding: 4px 8px; font-size: var(--t7); }
+.cta { font-weight: bold; border-width: 2px; }
+
+.mapa-conceptual {
+  border: 1px dashed var(--tinta); padding: 28px 10px; text-align: center;
+  font-size: var(--t8); color: #666; margin-top: 10px;
+}
+
+/* bloques y filas */
+.bloque { border: 1px solid var(--tinta); padding: 10px; margin: 10px 0; }
+.bloque--alerta { border-width: 3px; }
+
+.fila {
+  display: flex; justify-content: space-between; gap: 12px;
+  align-items: flex-start; padding: 8px 0; border-top: 1px solid #ccc;
+}
+.fila__acc { display: flex; gap: 6px; align-items: center; white-space: nowrap; }
+.fila--off { color: #888; }
+.fila--sel { outline: 2px solid var(--tinta); }
+.fila--franja { border-top: 1px solid var(--tinta); }
+
+.precio { font-variant-numeric: tabular-nums; }
+.nota { font-size: var(--t8); color: var(--tinta); margin: 2px 0; }
+.error { border: 2px solid var(--tinta); padding: 6px; }
+.aviso-legal { border: 1px dashed var(--tinta); padding: 8px; }
+.volver { margin-bottom: 8px; }
+
+/* AQUÍ HABÍA DOS COMPONENTES ESCRITOS DOS VECES. `.tag` y `.badge` se
+   declaraban una vez aquí, con el estilo cero (var(--tinta), #fff, #ddd, #eee,
+   #666 — cinco colores fuera de la paleta), y otra vez más abajo, ya
+   rediseñados. Los de aquí no pintaban nada: la cascada los tapaba
+   entero. Retirados el 25/08/2026 al sacar el componente. */
+
+/* seguimiento */
+.pasos { list-style: none; padding: 0; margin: 10px 0; }
+.pasos li { padding: 4px 0 4px 20px; color: #999; border-bottom: 1px solid #eee; }
+.pasos li::before { content: "○ "; margin-left: -18px; }
+.pasos li.on { color: var(--tinta); font-weight: bold; }
+.pasos li.on::before { content: "● "; }
+
+/* panel de demo */
+/* El panel de demo ya no se estiliza aquí. Entró en la paleta de marca el
+   26/08 —«lo que lo separa del producto no es el color: es su borde doble,
+   su título y que se declara fuera»— y esa decisión se mantiene, pero
+   escrita en demo.css: desde el 13/10 es el mismo panel que el del local. */
+
+/* pie */
+.pie {
+  border-top: var(--linea-media); margin-top: var(--e7); padding-top: var(--e5);
+  padding-bottom: var(--e7); font-size: var(--t7); line-height: var(--lh-texto);
+}
+.pie strong {
+  font-variation-settings: var(--voz-cartel); text-transform: uppercase;
+  font-size: var(--t6); letter-spacing: .02em;
+}
+.pie p { margin: 0 0 var(--e3); }
+.pie a { color: var(--tinta); }
+
+@media (max-width: 520px) {
+  .fila { flex-direction: column; }
+  .fila__acc { flex-wrap: wrap; }
+}
+
+
+/* cómo recalentarla */
+.metodo { border: 1px solid var(--tinta); padding: 10px; margin: 10px 0; }
+.metodo--mejor { border-width: 3px; }
+.metodo h3 { font-size: var(--t6); margin: 0 0 4px; }
+.metodo ol { margin: 6px 0 0; padding-left: 18px; max-width: 56ch; }
+.metodo li { margin: 4px 0; }
+.enlace { border: 0; border-bottom: 1px solid var(--tinta); padding: 0; background: none; }
+
+
+/* (el bloque del panel del turno se ha movido a panel.css) */
+
+
+/* ############################################################
+   FASE 2 · BLOQUES YA REDISEÑADOS
+   Van al final para que ganen por cascada al estilo cero de
+   arriba. Según se rediseña un bloque, sus reglas viejas se
+   borran de la mitad superior y aparecen aquí.
+   ############################################################ */
+
+/* ------------------------------------------------------------
+   01 · HERO
+   ------------------------------------------------------------ */
+.seccion--hero {
+  border-bottom: none;
+  padding: var(--e8) 0 var(--e9);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--e7);
+  align-items: end;
+}
+
+/* ============================================================
+   COMPONENTE LOGO — tres variantes del sistema
+   A: horizontal, coral SIN borde, dentro de caja con borde
+   B: horizontal, coral CON borde, dentro de caja con borde
+   C: mascota montada sobre coral, tagline debajo, sin caja
+   ============================================================ */
+
+/* --- Piezas compartidas --- */
+.logo__mascota { display: block; height: auto; }
+.logo__nombre {
+  font-family: var(--fuente);
+  font-variation-settings: var(--voz-cartel);
+  text-transform: uppercase;
+  line-height: var(--lh-cartel);
+  letter-spacing: -.01em;
+  background: var(--marca);
+  color: var(--tinta);
+  margin: 0;
+}
+.logo__tagline {
+  font-family: var(--fuente);
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--tinta);
+  margin: 0;
+}
+
+/* --- A: horizontal, coral sin borde, caja bordeada --- */
+.logo--a {
+  display: flex;
+  align-items: stretch;
+  border: var(--linea-gorda);
+}
+.logo--a .logo__mascota {
+  width: 120px;
+  padding: var(--e3);
+  flex-shrink: 0;
+}
+.logo--a .logo__nombre {
+  font-size: clamp(26px, 4vw, 42px);
+  padding: var(--e3) var(--e4);
+  display: grid;
+  place-content: center;
+}
+.logo--a .logo__tagline {
+  font-size: clamp(11px, 1.4vw, 14px);
+  padding: var(--e3) var(--e4);
+  display: grid;
+  place-content: center;
+  line-height: var(--lh-medio);
+}
+
+/* --- B: horizontal, coral CON borde, caja bordeada --- */
+.logo--b {
+  display: flex;
+  align-items: stretch;
+  border: var(--linea-gorda);
+}
+.logo--b .logo__mascota {
+  width: 120px;
+  padding: var(--e3);
+  flex-shrink: 0;
+}
+.logo--b .logo__nombre {
+  font-size: clamp(28px, 4.5vw, 48px);
+  padding: var(--e3) var(--e5);
+  display: grid;
+  place-content: center;
+  border-left: var(--linea-gorda);
+  border-right: var(--linea-gorda);
+}
+.logo--b .logo__tagline {
+  font-size: clamp(11px, 1.4vw, 14px);
+  padding: var(--e3) var(--e4);
+  display: grid;
+  place-content: center;
+  line-height: var(--lh-medio);
+}
+
+/* --- C: montada, mascota sobre coral, tagline debajo --- */
+.logo--c {
+  display: inline-block;
+  text-align: center;
+}
+.logo--c .logo__nombre {
+  font-size: clamp(30px, 5vw, 54px);
+  padding: var(--e3) var(--e5) var(--e2);
+  display: inline-block;
+  position: relative;
+}
+.logo--c .logo__mascota {
+  width: clamp(90px, 11vw, 130px);
+  position: relative;
+  z-index: 1;
+  margin: 0 auto -20px;  /* se monta sobre el coral */
+}
+.logo--c .logo__tagline {
+  font-size: clamp(11px, 1.4vw, 14px);
+  margin-top: var(--e2);
+  letter-spacing: .06em;
+}
+
+/* El logo del hero es el SVG de marca (variante A: horizontal, coral sin
+   borde). Va como imagen y no como texto: es el logotipo, no un titular,
+   y así no depende de que Archivo haya cargado. Ver SISTEMA-DE-DISENO §12. */
+.hero__logo {
+  display: block;
+  width: clamp(230px, 33vw, 430px);
+  height: auto;
+  margin: 0 0 var(--e6);
+}
+
+.seccion--hero h1 {
+  font-family: var(--fuente);
+  font-variation-settings: var(--voz-cartel);
+  text-transform: uppercase;
+  font-size: var(--cartel-g);
+  line-height: var(--lh-cartel);
+  letter-spacing: -.015em;
+  margin: 0 0 var(--e4);
+}
+
+.hero__apoyo {
+  font-variation-settings: var(--voz-texto);
+  font-size: var(--t4);
+  max-width: 44ch;
+  margin: 0 0 var(--e6);
+}
+
+.hero__acciones { display: flex; gap: var(--e3); flex-wrap: wrap; margin: 0; }
+
+/* ------------------------------------------------------------
+   EL HORNO COMO INDICADOR
+   La llama crece con la ocupación real del turno. No es adorno:
+   si el horno va lleno, la llama va alta y pasa a tinta.
+   ------------------------------------------------------------ */
+.horno-cal {
+  border: var(--linea-gorda);
+  background: var(--papel-2);
+  padding: var(--e4) var(--e5) var(--e3);
+  text-align: center;
+  min-width: 236px;
+}
+.horno-cal__rot {
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase;
+  font-size: var(--t10);
+  letter-spacing: .1em;
+  margin: 0 0 var(--e2);
+  opacity: .6;
+}
+.horno-cal__pista {
+  font-size: var(--t10);
+  letter-spacing: .04em;
+  opacity: .45;
+  margin: 0 0 var(--e1);
+  font-style: italic;
+}
+.horno-cal__svg { display: block; width: 132px; height: 152px; margin: 0 auto; }
+/* El color y el pulso de la llama ya NO viven aquí: están en
+   `componentes/llama.css`, que cargan la web, el muestrario y el
+   documento. Aquí se queda solo el TAMAÑO de la caja, que sí es de
+   esta pantalla: el hero la enseña a 132×152 y el selector de hora
+   también, pero podrían no coincidir. El color no puede. */
+
+
+/* La frase del nivel: es el estado, va en rótulo y con peso */
+.horno-cal__nivel {
+  font-family: var(--fuente);
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase;
+  font-size: var(--t8);
+  letter-spacing: .06em;
+  text-align: center;
+  margin: var(--e3) 0 var(--e2);
+  color: var(--tinta);
+}
+
+.utilidad {
+  font-family: var(--fuente);
+  font-variation-settings: var(--voz-rotulo);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--t7);
+  border: 0;
+  padding: var(--e2) 0 0;
+  margin: var(--e2) 0 0;
+  border-top: var(--linea);
+  display: block;
+  max-width: 20ch;
+  margin-inline: auto;
+  line-height: var(--lh-medio);
+}
+.utilidad strong {
+  display: block;
+  font-variation-settings: var(--voz-comanda);
+  font-size: var(--t1);
+  line-height: var(--lh-tit);
+}
+
+/* El botón vive en `componentes/boton.css`, que leen la web y el
+   documento del sistema. Ver la cabecera de ese archivo. */
+
+
+@media (max-width: 760px) {
+  .seccion--hero { grid-template-columns: 1fr; align-items: start; }
+  .horno-cal { justify-self: start; }
+}
+
+/* ------------------------------------------------------------
+   03 · LA CARTA — página de carta impresa
+   Referencias: Da Maria (grabados, ornamentos a los dos lados del
+   título, márgenes generosos) y CRAV (botón compacto, mucho aire).
+   ------------------------------------------------------------ */
+#carta, #tienda { border-bottom: none; padding: var(--e9) 0; }
+
+/* La página enmarcada: márgenes de verdad por los cuatro lados */
+.carta-hoja {
+  border: var(--linea-media);
+  padding: var(--e8) var(--e8) var(--e7);
+  background: var(--papel);
+}
+/* A la izquierda, como el resto de la página. El único bloque centrado
+   es el manifiesto: ver la regla de alineación en SISTEMA-DE-DISENO §09.
+   Se probó la carta centrada, imitando una carta impresa, y funcionaba;
+   pero obligaba a explicar una excepción cada vez que alguien miraba la
+   página, y una regla que hay que explicar dos veces no es una regla. */
+#carta > h2, #tienda > h2, .carta-tit {
+  font-variation-settings: var(--voz-cartel);
+  text-transform: uppercase; font-size: var(--cartel-m);
+  line-height: var(--lh-cartel); margin: 0 0 var(--e2); text-align: left;
+}
+#carta > .nota, #tienda > .nota {
+  font-size: var(--t7); opacity: .75; margin: 0 0 var(--e8);
+  text-align: left; letter-spacing: .02em;
+}
+
+.ast { width: 26px; height: 26px; flex: none; fill: var(--marca);
+       stroke: var(--tinta); stroke-width: 5; }
+
+/* Los dos asteriscos que flanquean el título de categoría van algo más
+   grandes que los de las reseñas: ahí son cinco seguidos y a este tamaño
+   se apelmazarían. Por eso el tamaño se sube AQUÍ y no en .ast. */
+.cat__tit .ast { width: 36px; height: 36px; }
+
+/* Giran con el scroll, cada uno hacia un lado.
+
+   Una vuelta ENTERA cada una, y no los 80° del primer intento: el giro
+   se reparte entre todo el rato que la estrella está en pantalla, así
+   que 80° salían a poquísimos grados por píxel de scroll y no se
+   apreciaba. 360° se ven de sobra. Además el recorrido va de 5% a 95%
+   en vez de 0 a 100, que comprime la misma vuelta en menos scroll y la
+   hace otro poco más rápida.
+
+   Va con animation-timeline, sin JavaScript y sin GSAP: es un adorno,
+   y no merece ni una librería ni un listener de scroll. Donde el
+   navegador no lo soporte, los asteriscos se quedan quietos y no se
+   pierde nada. Cuando entre GSAP en la fase de movimiento, esto se
+   puede unificar ahí. */
+@keyframes ast-giro-izq {
+  from { transform: rotate(180deg); }
+  to   { transform: rotate(-180deg); }
+}
+@keyframes ast-giro-der {
+  from { transform: rotate(-180deg); }
+  to   { transform: rotate(180deg); }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cat__tit .ast {
+      animation: ast-giro-der linear both;
+      animation-timeline: view();
+      animation-range: cover 5% cover 95%;
+    }
+    .cat__tit .ast:first-child { animation-name: ast-giro-izq; }
+  }
+}
+
+.cat { margin: 0 0 var(--e9); position: relative; }
+.cat:last-child { margin-bottom: 0; }
+
+/* Título centrado con un asterisco a cada lado */
+/* DENTRO del marco se centra. La frontera es el borde de la hoja: fuera
+   manda la alineación de la página (izquierda), dentro manda la hoja de
+   carta impresa, que centra sus títulos entre ornamentos como cualquier
+   carta de restaurante. Ver SISTEMA-DE-DISENO §09. */
+.cat__tit {
+  display: flex; align-items: center; justify-content: center; gap: var(--e4);
+  font-variation-settings: var(--voz-comanda);
+  text-transform: uppercase; font-size: var(--t3); letter-spacing: .1em;
+  margin: 0 0 var(--e3); text-align: center;
+}
+.cat__nota {
+  font-size: var(--t7); opacity: .75; margin: 0 auto var(--e5);
+  max-width: 46ch; text-align: center;
+}
+
+/* La ilustración, como el grabado de una carta impresa */
+.cat__ilus {
+  display: block; width: 92px; height: 92px; object-fit: contain;
+  margin: 0 auto var(--e5); opacity: .92;
+}
+
+.cat__rej { display: grid; grid-template-columns: 1fr; gap: 0;
+            border-top: var(--linea); }
+
+/* --- la fila: TODAS DE LA MISMA ALTURA para que las líneas casen --- */
+.pz {
+  display: grid;
+  grid-template-columns: 128px 1fr 108px;
+  align-items: center;
+  min-height: 128px;
+  border: 0; border-bottom: var(--linea);
+  background: var(--papel);
+}
+.pz__foto {
+  width: 128px; height: 86px;
+  border: var(--linea); background: var(--papel-2);
+  display: grid; place-items: center; justify-self: center;
+  position: relative; overflow: hidden;
+}
+.pz__foto span {
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t10); letter-spacing: .1em; opacity: .4;
+}
+.pz__foto img, .ficha__foto img {
+  width: 100%; height: 100%; object-fit: contain; display: block;
+}
+/* La miniatura llena siempre su cuadro. El recorte se hace dentro del marco
+   —nunca encoge el producto ni desplaza la fila siguiente— y la ficha grande
+   conserva la foto completa. */
+.pz__foto img { position: absolute; inset: 0; object-fit: cover; object-position: center; }
+.pz__cuerpo { padding: var(--e4) var(--e6); }
+.pz__nom {
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t4); line-height: var(--lh-tit); margin: 0 0 3px;
+}
+/* La fila se pulsa para desplegar sus ingredientes, así que se anuncia
+   como pulsable. La esquina de los botones y el propio panel quedan
+   fuera, y recuperan el cursor normal. */
+.pz[data-fila] { cursor: pointer; }
+/* AL PASAR POR ENCIMA: el coral BARRE de izquierda a derecha, como el dedo
+   siguiendo el renglón en una carta de papel. Sale de `movimiento.html`
+   §"Carta · el dedo siguiendo el renglón": la capa crece de scaleX 0 a 1
+   desde el borde izquierdo, al 18 % de opacidad, en 0,32 s.
+
+   Antes esto era un relleno de topo que aparecía de golpe. El topo se
+   quitó porque ya lo usaban otras tres cosas apiladas en el mismo sitio
+   —el hueco de la foto, la trama de quitar y el fondo de la fila abierta—
+   y todo se apelmazaba en el mismo gris.
+
+   El coral va al 18 %, no lleno: aquí solo señala por dónde vas, no es un
+   estado. Relleno compite con el precio y con el "+", que sí son coral de
+   verdad. Y va en una capa aparte, no en `background`, porque un fondo no
+   se puede barrer: solo encenderse.
+
+   z-index -1 lo deja encima del fondo de la fila pero debajo del texto;
+   `isolation` encierra ese -1 en la propia fila para que no se escape
+   detrás de la sección. Es el mismo apaño que `.fila{isolation:isolate}`
+   del prototipo. */
+.pz[data-fila] { position: relative; isolation: isolate; }
+.pz[data-fila]::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: var(--marca);
+  opacity: 0; transform: scaleX(0); transform-origin: left center;
+  transition:
+    transform var(--mov-medio) cubic-bezier(.55, .085, .68, .53),   /* al salir: power2.in */
+    opacity   var(--mov-medio) ease-in;
+}
+.pz[data-fila]:not([data-abierta]):hover::before,
+.pz[data-fila]:not([data-abierta]):focus-within::before {
+  opacity: .18; transform: scaleX(1);
+  transition:
+    transform var(--mov-largo) cubic-bezier(.215, .61, .355, 1),    /* al entrar: power3.out */
+    opacity   var(--mov-largo) ease-out;
+}
+
+/* Sin movimiento no hay barrido, pero sí el aviso: se enciende y ya. */
+@media (prefers-reduced-motion: reduce) {
+  .pz[data-fila]::before { transition: opacity var(--mov-corto) linear; transform: scaleX(1); }
+}
+/* La fila abierta no se marca con nada añadido. Antes llevaba una pestaña
+   de tinta de 6 px a la izquierda, y esa pestaña arrastraba dos cosas más:
+   un padding-left de compensación en la foto y en el texto, y otros 6 px en
+   el panel. Resultado: al abrirse, TODO se desplazaba a la derecha respecto
+   a como estaba cerrado. Eso —más la línea que cerraba el panel por arriba—
+   es lo que se veía descuadrado.
+   Fuera las tres. La señal de "esta está abierta" ya la da el panel al
+   aparecer: no hace falta subrayarlo con una barra encima. */
+.pz[data-abierta] { background: var(--papel); }
+
+/* Al desplegarse, la fila deja de medir 128 y pasa a medir lo que ocupe el
+   panel. Entonces `min-height` ya no sujeta nada, la primera franja se encoge
+   a lo que mide el texto (105) y la foto —que sigue midiendo 86— se queda con
+   9 px de aire en vez de 21: pegada al borde del panel y descuadrada respecto
+   a como se veía cerrada.
+   Se fija el alto de la PRIMERA FRANJA, no el de la fila: así la foto conserva
+   exactamente el mismo aire abierta que cerrada, y el panel crece por debajo
+   sin empujarla. Es el mismo arreglo que ya llevaba el merchan, aplicado al
+   estado abierto — y por eso el merchan lleva su propio número más abajo. */
+.pz[data-abierta] { grid-template-rows: minmax(128px, auto) auto; }
+.pz__pie, .pz__panel { cursor: auto; }
+
+/* ------------------------------------------------------------
+   PANEL DESPLEGABLE DE LA FILA
+   La carta tiene dos vistas y esta es la de trabajar: se despliega
+   sin salir del listado. La otra —la ficha entera con la foto
+   grande— se reserva para la foto. Ocupa las tres columnas de la
+   rejilla porque cuelga de la fila, no de una de sus celdas.
+   ------------------------------------------------------------ */
+.pz__panel {
+  grid-column: 1 / -1;
+  /* Sin `border-top`: era la línea que cortaba justo debajo de la foto y
+     partía la card en dos. El panel ya se distingue por lo que contiene. */
+  padding: var(--e5);
+  background: var(--papel);
+}
+/* Los dos grupos EN PARALELO, no apilados: puestos uno debajo de otro
+   el panel medía media pantalla y la carta dejaba de leerse como lista.
+   Uno al lado del otro caben, y además se ve de un vistazo que son dos
+   cosas opuestas. */
+.pzp {
+  display: grid; gap: var(--e5);
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+.pzp__g { border: 0; margin: 0; padding: 0; min-width: 0; }
+/* Sin trama de fondo. La trama significa "esto está fuera" y como banda
+   de lado a lado parecía una valla de obra; además caía sobre topo y no
+   se distinguía. Lo que dice que aquí se quita es el rótulo y el "Sin"
+   de cada tick, que ya lo dicen dos veces. */
+.pzp__tit {
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t10); letter-spacing: .12em;
+  padding: 0 0 var(--e2); margin: 0 0 var(--e3);
+  border-bottom: var(--linea);
+  width: 100%;
+}
+.pzp__rej { display: flex; flex-direction: column; gap: var(--e2); }
+/* Los ticks del panel van más finos que los de la ficha, y desde el
+   24/08 eso se pide con `.tick--peq` en el marcado en vez de caerles
+   encima desde aquí. La diferencia no es de estilo: así el muestrario
+   puede enseñar los dos tamaños, y `pintarPanel()` dice en voz alta
+   cuál está usando. */
+
+/* Lo obligatorio ocupa las dos columnas y va arriba del todo: es lo
+   primero que hay que decidir, no un extra más. Las tallas van en fila
+   porque son cortas y en columna desperdiciarían media card. */
+.pzp__g--obliga { grid-column: 1 / -1; }
+.pzp__rej--fila { flex-direction: row; flex-wrap: wrap; }
+.pzp__rej--fila .tick { min-width: 76px; }
+
+/* El error de validación: en tinta y con borde grueso a la izquierda,
+   como el resto de errores del sistema (§07). No en coral: el coral
+   significa marca, no problema. */
+.pzp__error {
+  grid-column: 1 / -1; margin: 0;
+  font-size: var(--t7); font-variation-settings: var(--voz-rotulo);
+  border-left: 6px solid var(--tinta); padding: var(--e2) var(--e3);
+  background-image: var(--trama);
+}
+
+.pzp__alerg {
+  grid-column: 1 / -1;
+  font-size: var(--t8); opacity: .7; margin: 0;
+  padding-top: var(--e3); border-top: var(--linea);
+}
+/* Una sola definición. Estaba escrita dos veces, aquí y 1.300 líneas más
+   abajo, con valores distintos de `gap` y de `margin`: la de abajo ganaba
+   por cascada y la de arriba era letra muerta que parecía viva. Quien
+   editara esta se habría vuelto loco viendo que no cambiaba nada. */
+.pzp__pie {
+  grid-column: 1 / -1;
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--e3);
+  margin: var(--e4) 0 0;
+}
+.pzp__nota { font-size: var(--t9); opacity: .6; }
+
+@media (max-width: 700px) {
+  .pzp { grid-template-columns: 1fr; gap: var(--e4); }
+  .pz__panel { padding: var(--e4) var(--e4) var(--e4) calc(var(--e4) + 6px); }
+}
+
+/* El nombre se subraya al pasar por encima y no en reposo: subrayar
+   todos los nombres de la carta la convertiría en una lista de enlaces. */
+/* El nombre abre la ficha, pero NO se subraya al pasar por encima. Tenía
+   sentido cuando la fila no reaccionaba: el subrayado era la única señal de
+   que aquello se podía pulsar. Ahora el coral barre la fila entera, y dos
+   avisos para el mismo gesto es uno de más — se leía como enlace de texto
+   dentro de algo que ya se estaba encendiendo.
+   El anillo de foco SÍ se queda: quien va con teclado no ve el barrido del
+   ratón y necesita saber dónde está parado. */
+/* El nombre del producto también abre su ficha. Medía 17 px de alto, por
+   debajo del mínimo de 24 que pide la norma para algo que se pulsa. El
+   relleno lo sube a 29 y el margen negativo lo devuelve a su sitio: crece
+   la zona sensible, no la maqueta. (La foto de la misma fila va al mismo
+   destino y mide 92×62, así que el acceso estaba cubierto; esto es para
+   que no haya que acertar.) */
+.pz__nombre-btn {
+  font: inherit; letter-spacing: inherit; text-transform: inherit;
+  color: inherit; background: none; border: 0;
+  padding: 6px 0; margin: -6px 0;
+  cursor: pointer; text-align: left;
+  text-decoration: none;
+}
+.pz__nombre-btn:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+/* Dos líneas como máximo: es lo que garantiza que todas las filas midan
+   igual y que los renglones casen de una a otra. */
+.pz__ing {
+  font-size: var(--t7); line-height: var(--lh-texto); opacity: .85; margin: 0 0 var(--e2);
+  max-width: 52ch; display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.pz__eti { margin: 0; display: flex; flex-wrap: wrap; gap: var(--e1); }
+
+/* LA ETIQUETA YA NO VIVE AQUÍ: `componentes/etiqueta.css`. */
+
+.pz__pie {
+  display: flex; flex-direction: column; align-items: flex-end; justify-content: center;
+  gap: var(--e2); padding: var(--e4) var(--e5) var(--e4) 0;
+  border: 0; margin: 0;
+}
+.pz__precio {
+  font-variation-settings: var(--voz-comanda);
+  font-size: var(--t2); font-variant-numeric: tabular-nums; line-height: var(--lh-caja);
+}
+.pz__nota { font-size: var(--t10); opacity: .7; font-style: normal; text-align: right; line-height: var(--lh-medio); }
+
+/* El "+" de CRAV: compacto, coral, con la sombra dura del sistema */
+.mas {
+  font-family: var(--fuente); font-variation-settings: var(--voz-signo);
+  font-size: var(--t2); line-height: var(--lh-caja);
+  width: 44px; height: 44px; cursor: pointer;
+  border: var(--linea-media); background: var(--marca); color: var(--tinta);
+  box-shadow: 3px 3px 0 var(--tinta);
+}
+.mas:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+
+/* Agotada: sin color de alarma. Trama, opacidad y etiqueta en negativo. */
+.pz--off { background-image: var(--trama); }
+.pz--off .pz__foto, .pz--off .pz__ing, .pz--off .pz__precio { opacity: .45; }
+.pz__ago {
+  font-variation-settings: var(--voz-rotulo);
+  font-size: var(--t10); text-transform: uppercase; letter-spacing: .06em;
+  background: var(--tinta); color: var(--papel); padding: 2px 6px; margin-left: var(--e2);
+  display: inline-block; vertical-align: 2px;
+}
+/* Bebidas: la columna de foto se conserva vacía para que los nombres alineen */
+.aviso-cerrado {
+  border: var(--linea-gorda); border-left-width: 12px;
+  background-image: var(--trama); padding: var(--e4); margin: 0 0 var(--e6);
+}
+.aviso-cerrado h3 {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t4); margin: 0 0 var(--e1);
+}
+.aviso-cerrado p { margin: 0; font-size: var(--t6); }
+
+@media (max-width: 620px) {
+  /* El marco de la hoja pasa de 64 px a 14: en un móvil de 430 px,
+     128 px de margen lateral estrangulaban el texto hasta dejarlo en
+     una palabra por línea. Los márgenes generosos son de escritorio. */
+  .carta-hoja { padding: var(--e5) var(--e3); border-width: 1px; }
+  #carta, #tienda { padding: var(--e7) 0; }
+  #carta > .nota, #tienda > .nota { margin-bottom: var(--e6); }
+  .cat { margin-bottom: var(--e7); }
+  .cat__tit { font-size: var(--t5); gap: var(--e2); letter-spacing: .06em; }
+  .ast { width: 18px; height: 18px; }
+  .cat__ilus { width: 72px; height: 72px; margin-bottom: var(--e4); }
+
+  /* ------------------------------------------------------------
+     LA FILA EN EL MÓVIL — rehecha el 10/10/2026
+     ------------------------------------------------------------
+     Dos columnas: la foto a la izquierda, y a su derecha el texto
+     arriba y el precio abajo. Eso ya era así. Lo que estaba mal es
+     que la foto medía 92×62 dentro de una columna de 185 px de alto,
+     así que dejaba 123 px de nada debajo: la fila se veía vacía por
+     la izquierda y la pizza no se veía.
+
+     Ahora LA FOTO LLENA SU COLUMNA —`align-self: stretch` y `cover`—
+     y el precio y el «+» se van a los extremos del renglón. Y los
+     ingredientes se cortan en dos líneas en vez de tres: en un móvil
+     la tercera no la lee nadie, y la foto vende más pizza que ella.
+
+     Resultado medido: fila de 185 a 168 px, foto de 92×62 a 112×167,
+     y la carta entera de 4,9 a 4,7 pantallas. Se probó también sin
+     recortar los ingredientes (misma foto, misma altura de antes);
+     Mery eligió esta.
+     ------------------------------------------------------------ */
+  .pz {
+    grid-template-columns: 112px 1fr;
+    grid-template-areas: "foto cuerpo" "foto pie";
+    align-items: start;
+    min-height: 0;
+    padding: 0;
+  }
+  .pz__foto {
+    grid-area: foto; width: 112px; height: auto; min-height: 96px;
+    justify-self: start; align-self: stretch;
+    /* La raya de abajo de la fila ya separa una pizza de la siguiente;
+       el marco propio de la foto sobraría y, pegadas unas a otras,
+       parecían una tira. Queda solo la línea que las separa del texto. */
+    margin: 0; border: 0; border-right: var(--linea);
+  }
+  /* `cover` y no `contain`: la foto ya no está dentro de un marco con
+     aire, es la columna entera. Recortar es mejor que dejar franjas. */
+  .pz__foto img { object-fit: cover; }
+  .pz__cuerpo { grid-area: cuerpo; padding: var(--e2) var(--e3) 2px var(--e3); }
+  .pz__nom { font-size: var(--t5); }
+  .pz__ing { font-size: var(--t8); -webkit-line-clamp: 2; margin-bottom: 2px; }
+  .pz__eti { gap: 3px; }
+  .pz__pie {
+    grid-area: pie; flex-direction: row; align-items: center;
+    justify-content: space-between; gap: var(--e2);
+    border: 0; padding: 0 var(--e3) var(--e2) var(--e3);
+  }
+  /* El precio a un lado y el botón al otro: pegados a la izquierda
+     dejaban medio renglón vacío a la derecha de cada pizza. */
+  .pz__accion { align-items: flex-end; }
+  .pz__precio { font-size: var(--t3); }
+  .mas { width: 38px; height: 38px; font-size: var(--t3); }
+
+  /* Bebidas: sin columna de foto, el texto ocupa todo el ancho */
+}
+
+/* El botón de cada fila es secundario: si hubiera dieciséis corales
+   gritando por la columna derecha, no habría ninguno. Un primario
+   por pantalla (regla del §06 del sistema). */
+.btn--peq {
+  font-size: var(--t9); letter-spacing: .06em;
+  padding: var(--e2) var(--e3); min-height: 38px;
+  border-width: 2px; box-shadow: 3px 3px 0 var(--tinta);
+}
+
+/* ------------------------------------------------------------
+   02 · EL MANIFIESTO — solo tipografía. El bloque que respira.
+   No lleva foto, ni ilustración, ni caja: entre dos bloques densos
+   (hero y carta) hace falta un sitio donde no pase nada.
+   ------------------------------------------------------------ */
+.seccion--manifiesto {
+  border-bottom: none;
+  padding: var(--e9) 0;
+  text-align: center;
+}
+.mani__rot {
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t9); letter-spacing: .18em;
+  background: var(--marca); color: var(--tinta);
+  display: inline-block; padding: 4px 10px; margin: 0 0 var(--e6);
+}
+.mani__tit {
+  font-variation-settings: var(--voz-cartel);
+  text-transform: uppercase;
+  font-size: var(--cartel-g);
+  line-height: var(--lh-cartel); letter-spacing: -.015em;
+  margin: 0 auto var(--e5);
+  /* 21ch, no 16: a 16 el navegador partía "No hacemos delivery." y
+     salían TRES líneas, ignorando el <br> del marcado. El remate es
+     de dos tiempos —no hacemos aquello / hacemos esto— y en tres
+     líneas se deshace el chiste. El tope solo está para que en
+     pantallas muy anchas no se estire de más. */
+  max-width: 21ch;
+}
+.mani__txt {
+  font-variation-settings: var(--voz-texto);
+  font-size: var(--t3); line-height: var(--lh-texto);
+  margin: 0 auto var(--e5); max-width: 44ch;
+}
+/* La manuscrita: acento y firma, nunca información. Y a 34 px,
+   por encima del mínimo de 28 que pide el sistema. */
+.mani__firma {
+  font-family: var(--mano); font-size: var(--d2); line-height: var(--lh-tit);
+  margin: 0; opacity: .9;
+}
+/* La firma es además la salida para quien vive lejos: baja a #barrio,
+   que es donde los agregadores tienen su contexto. Va subrayada porque
+   sin subrayado no se ve que es pulsable, y NO va en coral: el coral
+   no escribe texto (2,69 de contraste). Ver SISTEMA-DE-DISENO §01. */
+.mani__lejos {
+  font: inherit; color: var(--tinta); background: none; border: 0;
+  padding: 0; cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  /* 14 px y no 7: Oooh Baby tiene los rabos muy largos y a 7 el
+     subrayado partía la "j" de lejos y la "p" de tampoco. */
+  text-underline-offset: 14px;
+  transition: text-decoration-thickness var(--mov-corto) ease;
+}
+.mani__lejos:hover { text-decoration-thickness: 3px; }
+.mani__lejos:focus-visible { outline: 3px solid var(--tinta); outline-offset: 5px; }
+/* La flecha va en Archivo: en la manuscrita queda como un garabato */
+.mani__flecha {
+  font-family: var(--fuente);
+  font-variation-settings: var(--voz-rotulo);
+  font-size: .5em; margin-left: .35em;
+  display: inline-block;
+  transition: transform var(--mov-corto) ease;
+}
+.mani__lejos:hover .mani__flecha { transform: translateX(4px); }
+@media (prefers-reduced-motion: reduce) {
+  .mani__lejos, .mani__flecha { transition: none; }
+}
+@media (max-width: 620px) {
+  .seccion--manifiesto { padding: var(--e7) 0; }
+  .mani__txt { font-size: var(--t4); }
+  .mani__firma { font-size: var(--t1); }
+}
+
+/* ------------------------------------------------------------
+   FICHA DE PRODUCTO · manda la foto
+   La segunda forma de ver el menú. Foto grande arriba, y debajo
+   todo lo que hace falta para pedirlo.
+   ------------------------------------------------------------ */
+.ficha { max-width: 640px; margin: 0 auto; padding: var(--e7) 0; }
+
+.ficha__marco { position: relative; border: var(--linea-media); background: var(--papel-2); }
+.ficha__foto {
+  aspect-ratio: 3 / 2; display: grid; place-items: center;
+}
+.ficha__foto span {
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t9); letter-spacing: .12em; opacity: .4;
+}
+
+/* La cruz y las flechas: coral relleno con la sombra dura del sistema */
+.ficha__x, .ficha__flecha {
+  position: absolute; cursor: pointer;
+  font-family: var(--fuente); font-variation-settings: var(--voz-signo);
+  background: var(--marca); color: var(--tinta);
+  border: var(--linea-media); box-shadow: 3px 3px 0 var(--tinta);
+  display: grid; place-items: center; line-height: var(--lh-caja);
+}
+.ficha__x { top: -14px; right: -14px; width: 44px; height: 44px; font-size: var(--t2); }
+.ficha__flecha { top: 50%; transform: translateY(-50%); width: 48px; height: 56px; font-size: var(--d3); }
+.ficha__flecha--izq { left: -16px; }
+.ficha__flecha--der { right: -16px; }
+.ficha__x:hover, .ficha__flecha:hover { background: var(--tinta); color: var(--papel); }
+.ficha__x:focus-visible, .ficha__flecha:focus-visible {
+  outline: 3px solid var(--tinta); outline-offset: 3px;
+}
+.ficha__pos {
+  position: absolute; bottom: var(--e3); right: var(--e3); margin: 0;
+  font-variation-settings: var(--voz-rotulo); font-variant-numeric: tabular-nums;
+  font-size: var(--t9); letter-spacing: .08em;
+  background: var(--tinta); color: var(--papel); padding: 3px 8px;
+}
+
+.ficha__cuerpo { padding: var(--e6) 0 0; }
+.ficha__eti { margin: 0 0 var(--e3); display: flex; gap: var(--e1); flex-wrap: wrap; }
+.ficha__nom {
+  font-variation-settings: var(--voz-cartel); text-transform: uppercase;
+  font-size: var(--cartel-m); line-height: var(--lh-cartel); margin: 0 0 var(--e2);
+}
+.ficha__ing { font-size: var(--t4); margin: 0 0 var(--e2); max-width: 52ch; }
+.ficha__alerg { font-size: var(--t8); opacity: .75; margin: 0 0 var(--e5); }
+
+/* --- las opciones: ticks industriales, cuadrados y con borde --- */
+.ops { border: 0; padding: 0; margin: 0 0 var(--e5); }
+.ops__tit {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t9); letter-spacing: .1em; padding: 0; margin: 0 0 var(--e3);
+}
+.ops__rej { display: flex; flex-wrap: wrap; gap: var(--e2); }
+
+/* EL TICK YA NO VIVE AQUÍ. Se ha mudado a `componentes/tick.css`, que
+   cargan la web Y el capítulo 07 del sistema — igual que el botón, el
+   campo y la llama. Con él se fue el tamaño pequeño, que estaba escrito
+   como `.pzp .tick` y por eso el muestrario no podía enseñarlo: fuera
+   del panel no existía. Ahora es `.tick--peq` y se pide por su nombre. */
+
+.ficha__cant { display: flex; align-items: center; gap: var(--e3); margin: 0 0 var(--e4); }
+.ficha__cant-eti {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t9); letter-spacing: .1em;
+}
+.ficha__cant input {
+  width: 84px; font-family: var(--fuente); font-size: var(--t3);
+  font-variation-settings: var(--voz-comanda); font-variant-numeric: tabular-nums;
+  padding: var(--e2) var(--e3); border: var(--linea-media);
+  background: var(--papel); color: var(--tinta); min-height: var(--toque);
+}
+.ficha__error {
+  border-left: 8px solid var(--tinta); background: var(--papel-2);
+  padding: var(--e3); margin: 0 0 var(--e3); font-size: var(--t6);
+  font-variation-settings: var(--voz-rotulo);
+}
+
+/* la foto de la fila es un botón: tiene que parecerlo */
+/* El merchan va CUADRADO, no en 3:2. Una camiseta, un delantal o un
+   bote de aceite en un hueco apaisado salen diminutos y descentrados:
+   3:2 es una proporción de plato, no de prenda. El cuadrado es además
+   lo que ya usa la galería de ilustraciones del §05, y aguanta objetos
+   de formas muy distintas —una camiseta y un imán— sin recortar mal. */
+#lista-tienda .pz__foto { height: 128px; }
+/* Y la fila crece para que la foto respire. En la carta el hueco mide
+   86 en una fila de 128: 21 px de aire arriba y abajo. Al pasar el
+   merchan a cuadrado, la foto medía lo mismo que la fila y quedaba
+   pegada a las dos líneas, leyéndose como una banda y no como un hueco.
+   170 = 128 + esos mismos 21 por lado. */
+#lista-tienda .pz { min-height: 170px; }
+/* Y abierta, la misma cuenta con el número del merchan: 170, no 128. */
+#lista-tienda .pz[data-abierta] { grid-template-rows: minmax(170px, auto) auto; }
+.ficha__foto--cuadrada { aspect-ratio: 1; }
+
+/* `font: inherit` traía la letra pero NO el color: un <button> coge el
+   color del sistema operativo, que es negro puro. Era el último negro que
+   quedaba en el producto, y solo se veía en el rótulo «foto · 3:2» —que
+   además desaparece cuando lleguen las fotos—, así que llevaba semanas ahí
+   sin que nadie lo notara. Hallazgo del 25/08 al retirar el negro. */
+button.pz__foto { cursor: pointer; padding: 0; font: inherit; color: var(--tinta); }
+button.pz__foto:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
+
+@media (max-width: 620px) {
+  .ficha { padding: var(--e5) 0; }
+  .ficha__flecha { width: 40px; height: 48px; font-size: var(--t2); }
+  .ficha__flecha--izq { left: -8px; }
+  .ficha__flecha--der { right: -8px; }
+  .ficha__x { top: -12px; right: -8px; width: 40px; height: 40px; }
+}
+
+/* ------------------------------------------------------------
+   05 · CÓMO FUNCIONA — tres casillas numeradas
+   Cuadrado e industrial: cada paso es una celda con su número
+   en bloque coral, como los rótulos de un almacén.
+   ------------------------------------------------------------ */
+#como { border-bottom: none; padding: var(--e9) 0; }
+
+/* rótulo y titular de bloque · valen para el resto de secciones */
+.rot-coral {
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t9); letter-spacing: .16em;
+  background: var(--marca); color: var(--tinta);
+  display: inline-block; padding: 4px 10px; margin: 0 0 var(--e5);
+}
+.tit-bloque {
+  font-variation-settings: var(--voz-cartel);
+  text-transform: uppercase; font-size: var(--cartel-m);
+  line-height: var(--lh-cartel); letter-spacing: -.015em; margin: 0 0 var(--e7); max-width: 14ch;
+}
+
+.como-pasos {
+  list-style: none; margin: 0 0 var(--e6); padding: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+  border: var(--linea-media);
+}
+.paso {
+  padding: var(--e5);
+  border-right: var(--linea-media);
+  display: flex; flex-direction: column;
+}
+.paso:last-child { border-right: 0; }
+.paso__n {
+  font-variation-settings: var(--voz-comanda);
+  font-variant-numeric: tabular-nums; font-size: var(--t1); line-height: var(--lh-caja);
+  background: var(--marca); color: var(--tinta);
+  align-self: flex-start; padding: var(--e2) var(--e3) 6px;
+  margin: 0 0 var(--e4);
+}
+.paso__tit {
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t4); line-height: var(--lh-tit);
+  margin: 0 0 var(--e2);
+}
+.paso__txt { font-size: var(--t6); line-height: var(--lh-texto); margin: 0; opacity: .9; }
+
+.como__pago {
+  border: var(--linea-media); border-left-width: 10px;
+  padding: var(--e4) var(--e5); margin: 0; font-size: var(--t5);
+  background: var(--papel-2);
+}
+.como__pago strong { font-variation-settings: var(--voz-rotulo); }
+
+@media (max-width: 760px) {
+  #como { padding: var(--e7) 0; }
+  .como-pasos { grid-template-columns: 1fr; }
+  .paso { border-right: 0; border-bottom: var(--linea-media); }
+  .paso:last-child { border-bottom: 0; }
+}
+
+/* La clase .pasos es del seguimiento del pedido y trae viñetas de círculo
+   y texto gris. Estos pasos son otra cosa: se blindan. */
+.como-pasos li::before { content: none; }
+.como-pasos li { color: var(--tinta); border-bottom: 0; padding: var(--e5); }
+
+/* ------------------------------------------------------------
+   06 · PRUEBA SOCIAL — casillas, como el resto
+   ------------------------------------------------------------ */
+#resenas { border-bottom: none; padding: var(--e9) 0; }
+
+#lista-resenas {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;
+  border: var(--linea-media); margin: 0 0 var(--e5);
+}
+.resena {
+  margin: 0; padding: var(--e5) var(--e5) var(--e4);
+  border-right: var(--linea-media); border-bottom: var(--linea-media);
+  display: flex; flex-direction: column;
+}
+.resena:nth-child(2n) { border-right: 0; }
+.resena:nth-last-child(-n+1) { border-bottom: 0; }
+
+/* La primera ocupa las dos columnas y va en cuerpo grande */
+.resena--grande { grid-column: 1 / -1; background: var(--papel-2); }
+.resena--grande .resena__txt { font-size: var(--t2); line-height: var(--lh-medio); max-width: 40ch; }
+
+.resena__comilla {
+  font-variation-settings: var(--voz-cartel);
+  font-size: var(--d0); line-height: .5; color: var(--marca);
+  display: block; margin: 0 0 var(--e2);
+}
+.resena__txt { font-size: var(--t5); line-height: var(--lh-texto); margin: 0 0 var(--e4); flex: 1; }
+.resena__firma {
+  font-variation-settings: var(--voz-rotulo); font-style: normal;
+  text-transform: uppercase; font-size: var(--t9); letter-spacing: .09em;
+  border-top: var(--linea); padding-top: var(--e2); align-self: flex-start;
+}
+
+/* El aviso de que son inventadas: trama, como todo lo que bloquea o advierte */
+.aviso-ficticio {
+  border: var(--linea-media); border-left-width: 10px;
+  background-image: var(--trama);
+  padding: var(--e4) var(--e5); margin: 0; font-size: var(--t7); max-width: 72ch;
+}
+.aviso-ficticio strong { font-variation-settings: var(--voz-rotulo); }
+
+@media (max-width: 700px) {
+  #resenas { padding: var(--e7) 0; }
+  #lista-resenas { grid-template-columns: 1fr; }
+  .resena { border-right: 0; }
+  .resena--grande .resena__txt { font-size: var(--t3); }
+}
+
+/* --- resumen de la ficha de Google (ficticio, ver el aviso del bloque) --- */
+.gg {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+  gap: var(--e5); border: var(--linea-media); border-bottom: 0;
+  padding: var(--e4) var(--e5); background: var(--papel-2);
+}
+.gg__nota {
+  font-variation-settings: var(--voz-cartel); font-variant-numeric: tabular-nums;
+  font-size: var(--d0); line-height: var(--lh-cartel); margin: 0;
+}
+.gg__sobre { font-size: var(--t3); opacity: .5; }
+.gg__cuerpo { min-width: 0; }
+.gg__estrellas { margin: 0 0 var(--e1); display: flex; gap: 3px; }
+.gg__estrellas .ast { width: 15px; height: 15px; stroke-width: 6; }
+.gg__txt { margin: 0; font-size: var(--t6); max-width: 46ch; }
+.gg__txt strong { font-variation-settings: var(--voz-rotulo); }
+.gg__enlace { text-decoration: none; white-space: nowrap; }
+
+@media (max-width: 700px) {
+  .gg { grid-template-columns: auto 1fr; gap: var(--e3); }
+  .gg__nota { font-size: var(--d1); }
+  .gg__enlace { grid-column: 1 / -1; text-align: center; }
+}
+
+/* ------------------------------------------------------------
+   07 · QUIÉNES SOMOS — cuatro momentos en orden
+   ------------------------------------------------------------ */
+#historia { border-bottom: none; padding: var(--e9) 0; }
+
+.hist__cab {
+  display: grid; grid-template-columns: 1fr 300px; gap: var(--e7);
+  align-items: start; margin: 0 0 var(--e7);
+}
+.hist__entradilla { font-size: var(--t3); line-height: var(--lh-texto); margin: 0; max-width: 42ch; }
+
+.hist__foto { margin: 0; }
+.hist__foto figcaption {
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t10); letter-spacing: .08em;
+  margin-top: var(--e2); opacity: .6; line-height: var(--lh-medio);
+}
+/* hueco de foto reutilizable */
+.foto-hueco {
+  border: var(--linea-media); background: var(--papel-2);
+  display: grid; place-items: center; aspect-ratio: 3 / 2;
+}
+.foto-hueco--retrato { aspect-ratio: 3 / 4; }
+.foto-hueco span {
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t10); letter-spacing: .1em; opacity: .4;
+}
+
+.hist__beats {
+  list-style: none; margin: 0 0 var(--e6); padding: 0;
+  border-top: var(--linea-media);
+}
+.hist__beats li { list-style: none; }
+.beat {
+  border-bottom: var(--linea-media);
+  border-left: 0; margin: 0; padding: 0;   /* el estilo cero le ponía barra izquierda */
+}
+/* La fila cerrada: número, título y el signo. Toda ella es el disparador. */
+.beat__cab {
+  display: grid; grid-template-columns: 84px 1fr auto; gap: var(--e5);
+  align-items: center; padding: var(--e4) 0;
+  cursor: pointer; list-style: none; min-height: var(--toque);
+}
+.beat__cab::-webkit-details-marker { display: none; }
+.beat__cab:focus-visible { outline: 3px solid var(--tinta); outline-offset: -3px; }
+.beat__n {
+  font-variation-settings: var(--voz-cartel); font-variant-numeric: tabular-nums;
+  font-size: var(--d1); line-height: var(--lh-cartel); color: var(--marca);
+}
+.beat__tit {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t4); line-height: var(--lh-tit);
+}
+/* Un signo + de coral, sin caja. Gira 45° al abrirse y se queda en aspa:
+   un solo objeto en dos estados, no dos iconos distintos. */
+.beat__mas {
+  width: 30px; height: 30px; flex: none; position: relative;
+  transition: transform var(--mov-medio) ease;
+}
+.beat__mas::before, .beat__mas::after {
+  content: ""; position: absolute; inset: 0; margin: auto;
+  background: var(--tinta);
+}
+.beat__mas::before { width: 26px; height: 4px; }
+.beat__mas::after  { width: 4px; height: 26px; }
+.beat[open] .beat__mas { transform: rotate(45deg); }
+
+.beat__txt {
+  font-size: var(--t5); line-height: var(--lh-texto); margin: 0 0 var(--e5);
+  padding-left: calc(84px + var(--e5)); max-width: 68ch;
+}
+
+.hist__cierre {
+  border: 0; padding: 0; margin: 0; display: block;
+  font-family: var(--mano); font-size: var(--d3); line-height: var(--lh-medio);
+  max-width: 30ch;
+}
+
+@media (max-width: 760px) {
+  #historia { padding: var(--e7) 0; }
+  .hist__cab { grid-template-columns: 1fr; gap: var(--e5); }
+  .hist__foto { max-width: 240px; }
+  .beat__cab { grid-template-columns: 52px 1fr auto; gap: var(--e3); }
+  .beat__n { font-size: var(--d3); }
+  .beat__tit { font-size: var(--t5); }
+  .beat__txt { padding-left: calc(52px + var(--e3)); }
+  .hist__cierre { font-size: var(--t1); }
+}
+
+/* ------------------------------------------------------------
+   08 · EL LOCAL — dirección, horarios y mapa
+   El bloque más informativo: sin ornamento, dato encima de dato.
+   ------------------------------------------------------------ */
+#barrio { border-bottom: none; padding: var(--e9) 0; }
+
+.barrio__cuerpo {
+  display: grid; grid-template-columns: 1fr 340px; gap: var(--e7);
+  align-items: start;
+}
+.barrio__dir {
+  font-size: var(--t3); line-height: var(--lh-texto); margin: 0 0 var(--e4); max-width: 42ch;
+}
+.barrio__recogida {
+  font-size: var(--t5); line-height: var(--lh-texto); margin: 0 0 var(--e6); max-width: 52ch;
+}
+.barrio__recogida strong {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t8); letter-spacing: .08em;
+}
+
+/* tabla de horarios: filas alternas */
+.hrs {
+  border: var(--linea-media); margin: 0;
+}
+.hr {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: var(--e3) var(--e4); min-height: var(--toque);
+  border-bottom: var(--linea);
+}
+.hr:last-of-type { border-bottom: 0; }
+.hr:nth-child(even) { background: var(--papel-2); }
+.hr__dia {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t7); letter-spacing: .06em;
+}
+.hr__horas {
+  font-variation-settings: var(--voz-comanda); font-variant-numeric: tabular-nums;
+  font-size: var(--t5);
+}
+/* El lunes NO se tacha. El tachado significa "esto existía y ya no está
+   disponible" —una pizza agotada, una franja que vuela—, y aplicado a la
+   palabra "Cerrado" dice justo lo contrario: que ya no está cerrado.
+   Aquí basta con bajarlo de intensidad. */
+.hr--cerrado .hr__horas {
+  opacity: .45;
+}
+.hrs__nota {
+  margin: 0; padding: var(--e3) var(--e4);
+  font-size: var(--t8); opacity: .6; border-top: var(--linea);
+}
+
+/* bloque de agregadores: discreto, por debajo */
+.barrio__apps { margin: var(--e6) 0 0; max-width: 52ch; }
+.barrio__apps-txt { font-size: var(--t6); line-height: var(--lh-texto); margin: 0 0 var(--e3); }
+.barrio__apps-row { display: flex; gap: var(--e3); flex-wrap: wrap; margin: 0 0 var(--e2); }
+.barrio__app {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t8); letter-spacing: .06em; text-decoration: none;
+  border: var(--linea-media); padding: var(--e2) var(--e4);
+  color: var(--tinta); min-height: var(--toque);
+  display: inline-flex; align-items: center;
+  transition: background var(--mov-corto), box-shadow var(--mov-corto);
+}
+.barrio__app:hover { background: var(--papel-2); box-shadow: var(--sombra); }
+.barrio__app:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+.barrio__apps-nota { font-size: var(--t8); opacity: .5; margin: var(--e2) 0 0; }
+
+/* mapa a la derecha */
+.barrio__mapa { position: sticky; top: var(--e5); }
+
+@media (max-width: 760px) {
+  #barrio { padding: var(--e7) 0; }
+  .barrio__cuerpo { grid-template-columns: 1fr; gap: var(--e5); }
+  .barrio__mapa { position: static; max-width: 320px; }
+}
+
+/* ------------------------------------------------------------
+   09 · CÓMO RECALENTARLA — tres métodos en casillas
+   Post-compra: protege el producto y es la pieza GEO con más
+   recorrido ("cómo recalentar pizza" > nombre del local).
+   ------------------------------------------------------------ */
+#recalentar { border-bottom: none; padding: var(--e9) 0; }
+
+.recal__entrada {
+  font-size: var(--t3); line-height: var(--lh-texto); margin: 0 0 var(--e4); max-width: 52ch;
+}
+.recal__antes {
+  border: var(--linea-media); border-left-width: 10px;
+  padding: var(--e4) var(--e5); margin: 0 0 var(--e7);
+  font-size: var(--t6); line-height: var(--lh-texto); max-width: 52ch;
+  background: var(--papel-2);
+}
+
+/* Los tres métodos: casillas como en "cómo funciona" */
+#lista-metodos {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+  border: var(--linea-media); margin: 0 0 var(--e6);
+}
+.metodo {
+  padding: var(--e5); border-right: var(--linea-media);
+  display: flex; flex-direction: column;
+}
+.metodo:last-child { border-right: 0; }
+.metodo--mejor { background: var(--papel-2); }
+
+.metodo__cab {
+  display: flex; flex-wrap: wrap; gap: var(--e2); align-items: baseline;
+  margin: 0 0 var(--e3);
+}
+.metodo__nom {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t4); line-height: var(--lh-tit); margin: 0;
+}
+.metodo__tiempo {
+  font-variation-settings: var(--voz-comanda); font-variant-numeric: tabular-nums;
+  font-size: var(--t8); letter-spacing: .04em;
+  background: var(--tinta); color: var(--papel); padding: 2px 8px;
+}
+.metodo__rec {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t10); letter-spacing: .1em;
+  background: var(--marca); color: var(--tinta); padding: 3px 8px;
+}
+.metodo__por {
+  font-size: var(--t6); line-height: var(--lh-texto); margin: 0 0 var(--e4); opacity: .8;
+}
+.metodo__pasos {
+  margin: 0; padding: 0 0 0 var(--e5); font-size: var(--t6); line-height: var(--lh-texto);
+}
+.metodo__pasos li { padding: var(--e1) 0; }
+.metodo__pasos li::marker {
+  font-variation-settings: var(--voz-comanda); font-variant-numeric: tabular-nums;
+}
+
+/* Microondas: trama, como las advertencias */
+.recal__micro {
+  border: var(--linea-media); border-left-width: 10px;
+  background-image: var(--trama); padding: var(--e4) var(--e5);
+  margin: 0 0 var(--e4); max-width: 72ch;
+}
+.recal__micro-t {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t7); letter-spacing: .06em; margin: 0 0 var(--e2);
+}
+.recal__micro-p { font-size: var(--t6); line-height: var(--lh-texto); margin: 0; }
+
+.recal__guardar { font-size: var(--t7); opacity: .6; margin: 0; max-width: 60ch; }
+
+@media (max-width: 760px) {
+  #recalentar { padding: var(--e7) 0; }
+  #lista-metodos { grid-template-columns: 1fr; }
+  .metodo { border-right: 0; border-bottom: var(--linea-media); }
+  .metodo:last-child { border-bottom: 0; }
+}
+
+/* ------------------------------------------------------------
+   10 · PREGUNTAS FRECUENTES — desplegables como historia
+   Mismo patrón <details> con el signo +/× de tinta.
+   ------------------------------------------------------------ */
+#faq { border-bottom: none; padding: var(--e9) 0; }
+
+#lista-faq { border-top: var(--linea-media); }
+/* Solo línea abajo, como los beats de historia. Las de los lados venían
+   de una regla del estilo cero que ya se ha borrado. */
+#lista-faq { border-top: var(--linea-media); }
+.faq {
+  border: 0; border-bottom: var(--linea-media); margin: 0; padding: 0;
+}
+.faq__cab {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: var(--e4); padding: var(--e4) 0;
+  cursor: pointer; list-style: none; min-height: var(--toque);
+}
+.faq__cab::-webkit-details-marker { display: none; }
+.faq__cab:focus-visible { outline: 3px solid var(--tinta); outline-offset: -3px; }
+.faq__q {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t6); letter-spacing: .02em; line-height: var(--lh-medio);
+}
+/* El signo va MÁS grande que el de historia y en coral. Historia tiene
+   los números 01/02/03 tirando de la fila; la FAQ no tiene nada, así
+   que el signo es lo único que dice "esto se abre" y necesita peso.
+   Coral porque aquí solo rellena una forma, no escribe texto ni traza
+   un borde: cumple la regla del §01. */
+.faq__mas {
+  width: 34px; height: 34px; flex: none; position: relative;
+  transition: transform var(--mov-medio) ease;
+}
+.faq__mas::before, .faq__mas::after {
+  content: ""; position: absolute; inset: 0; margin: auto;
+  background: var(--marca);
+}
+.faq__mas::before { width: 30px; height: 4px; }
+.faq__mas::after  { width: 4px; height: 30px; }
+.faq[open] .faq__mas { transform: rotate(45deg); }
+@media (prefers-reduced-motion: reduce) {
+  .faq__mas { transition: none; }
+}
+
+.faq__a {
+  font-size: var(--t5); line-height: var(--lh-texto); margin: 0 0 var(--e5);
+  max-width: 68ch; padding: 0;
+}
+
+@media (max-width: 760px) {
+  #faq { padding: var(--e7) 0; }
+  .faq__q { font-size: var(--t7); }
+}
+
+/* ------------------------------------------------------------
+   11 · CIERRE — CTA final, todo el peso tipográfico
+   ------------------------------------------------------------ */
+#cierre {
+  border-bottom: none; padding: var(--e9) 0;
+  text-align: center;
+}
+/* EL CIERRE BAJA UN ESCALÓN, y esto se decidió el 09/10/2026. Los tres
+   carteles de la página —hero, manifiesto y cierre— medían los tres 84.
+   Se barajó recuperar la gradación vieja de 84/78/72 y se descartó:
+   habría que inventar dos tamaños nuevos para una diferencia del 7 %
+   que hay que buscar con lupa. El cierre pasa al tamaño mediano que YA
+   existe en el sistema, que es un escalón que se ve sin estrenar nada:
+   el hero abre a lo grande, el cierre recuerda. */
+.cierre__tit {
+  font-variation-settings: var(--voz-cartel);
+  text-transform: uppercase; font-size: var(--cartel-m);
+  line-height: var(--lh-cartel); letter-spacing: -.02em; margin: 0 0 var(--e7);
+}
+.cierre__cta {
+  font-family: var(--fuente); font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t4); letter-spacing: .1em;
+  background: var(--tinta); color: var(--papel); border: 0;
+  padding: var(--e4) var(--e7); min-height: var(--toque);
+  cursor: pointer;   /* sombra y transición: las pone el gesto de la casa */
+}
+.cierre__cta:focus-visible { outline: 3px solid var(--tinta); outline-offset: 4px; }
+
+@media (max-width: 760px) {
+  #cierre { padding: var(--e7) 0; }
+}
+
+/* ============================================================
+   FLUJO DE PEDIDO — vistas fuera del scroll de home
+   ============================================================ */
+
+/* Botón primario compartido: tinta sólido, hover coral */
+/* Coral relleno con tinta encima: 5,33 de contraste, pasa de sobra.
+   Es la acción principal de la caja y la única de la pantalla, así que
+   cumple la regla de un solo primario por pantalla (§06). */
+/* `.btn-primario` vivía aquí con su propio relleno, su foco y su
+   deshabilitado. Era una de las siete clases que el componente unificó, y
+   desde entonces no la usaba nadie: cero apariciones en `app.js`, en
+   `index.html` y en el panel. Retirada el 23/08/2026 al arreglar el
+   deshabilitado — mantener el estado de una clase muerta es tener dos
+   deshabilitados y descubrirlo el día que uno de los dos se cuela. */
+
+/* Enlace con estilo del sistema */
+.enlace {
+  font: inherit; background: none; border: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px;
+  /* Mismo truco que el nombre de la fila: medían 14 px de alto, por debajo
+     del mínimo que pide la norma para algo que se pulsa. */
+  color: var(--tinta); padding: 5px 0; margin: -5px 0;
+}
+.enlace:hover { text-decoration-thickness: 3px; }
+
+/* ------------------------------------------------------------
+   CARRITO — la caja
+   ------------------------------------------------------------ */
+#v-carrito { padding: var(--e7) 0; }
+
+/* carrito vacío */
+.caja-vacia {
+  border: var(--linea-media); border-style: dashed;
+  padding: var(--e7) var(--e6); text-align: center;
+}
+.caja-vacia__tit {
+  font-variation-settings: var(--voz-cartel); text-transform: uppercase;
+  font-size: var(--t2); line-height: var(--lh-cartel); margin: 0 0 var(--e3);
+}
+.caja-vacia__txt { margin: 0 0 var(--e5); font-size: var(--t5); }
+
+/* alerta de producto agotado dentro del carrito */
+.caja-alerta {
+  border: var(--linea-media); border-left-width: 10px;
+  background-image: var(--trama); padding: var(--e5);
+  margin: 0 0 var(--e5);
+}
+.caja-alerta__tit {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t4); margin: 0 0 var(--e3);
+}
+.caja-alerta p { margin: 0 0 var(--e4); font-size: var(--t6); line-height: var(--lh-texto); }
+
+/* items del carrito */
+.caja-items { border: var(--linea-media); margin: 0 0 var(--e5); }
+.ci {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: var(--e4); padding: var(--e4) var(--e5);
+  border-bottom: var(--linea); min-height: 60px;
+}
+.ci:last-child { border-bottom: 0; }
+.ci__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ci__nom {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t6); letter-spacing: .02em;
+}
+.ci__det { font-size: var(--t8); opacity: .6; }
+.ci__acc { display: flex; align-items: center; gap: var(--e3); white-space: nowrap; }
+/* ------------------------------------------------------------
+   CONTADOR EN LA FILA DE LA CARTA
+   El "+" se convierte en − n + en cuanto llevas alguna, para poder
+   saber cuántas tienes sin ir al carrito a mirarlo. Reutiliza las
+   medidas del contador del carrito: es el mismo gesto en dos sitios.
+   ------------------------------------------------------------ */
+.pz__cant { display: inline-flex; align-items: center; }
+
+/* La esquina de la acción: el "+" grande, o el rótulo y el contador
+   uno debajo de otro. En columna y pegados a la derecha, como el
+   precio que tienen encima. */
+.pz__accion {
+  display: flex; flex-direction: column; align-items: flex-end; gap: var(--e1);
+}
+
+/* El rótulo del contador de la fila. Mismo tono que `.pz__tocadas`
+   —rótulo pequeño, sin caja ni color— porque es lo mismo: un dato, no
+   una acción. El porqué está en `componentes/filaProducto.js`.
+
+   Va en SU PROPIA LÍNEA, encima del contador. Puesto al lado ensanchaba
+   la columna del precio en el escritorio, y en el móvil partía «EN TU /
+   CAJA» en dos y empujaba el precio a otras dos líneas. Encima no le
+   quita sitio a nada. */
+.pz__cant-rot {
+  white-space: nowrap;
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t10); letter-spacing: .07em;
+  opacity: .6;
+}
+.pz__btn {
+  font-family: var(--fuente); font-size: var(--t3); font-weight: 900;
+  width: 34px; height: 34px; border: var(--linea-media);
+  background: var(--papel); color: var(--tinta); cursor: pointer;
+  display: grid; place-items: center; line-height: var(--lh-caja);
+}
+.pz__btn:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
+.pz__n {
+  font-variation-settings: var(--voz-comanda); font-variant-numeric: tabular-nums;
+  font-size: var(--t5); min-width: 30px; text-align: center;
+  /* El número es información, no otro botón: queda sin caja como en el
+     contador del carrito (.ci__n). Solo los signos conservan el marco. */
+  height: 34px; display: grid; place-items: center;
+}
+
+/* El aviso de unidades personalizadas. Rótulo pequeño, sin caja ni
+   color: es un dato, no una acción. Si llevara botón habría que elegir
+   cuál de las variantes, y eso se hace en el carrito. */
+.pz__tocadas {
+  display: block; margin-top: var(--e1);
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t10); letter-spacing: .07em;
+  opacity: .6; text-align: right;
+}
+
+/* Las salidas del carrito y las vueltas atrás del proceso */
+.caja-pie__salidas {
+  display: flex; gap: var(--e3); flex-wrap: wrap;
+  margin: var(--e5) 0 0;
+}
+.paso-atras { margin: var(--e6) 0 0; }
+
+/* Los "sin" del carrito, con el mismo peso visual que los extras: para
+   cocina un "sin anchoa" es tan importante como un "con miel". */
+.ci__sin { font-variation-settings: var(--voz-rotulo); }
+
+/* El bloque de quitar va después del de añadir y se distingue con la
+   trama, el mismo recurso que marca lo que está fuera en el resto del
+   sistema. No lleva coral: aquí no se está vendiendo nada. */
+.ops--quitar { background-image: var(--trama); }
+.ops__pie {
+  font-size: var(--t8); opacity: .7; margin: var(--e2) 0 0;
+}
+
+.ci__cant { display: flex; align-items: center; gap: 0; }
+.ci__btn {
+  font-family: var(--fuente); font-size: var(--t3); font-weight: 900;
+  width: 36px; height: 36px; border: var(--linea-media);
+  background: var(--papel); color: var(--tinta); cursor: pointer;
+  display: grid; place-items: center; line-height: var(--lh-caja);
+}
+.ci__btn:focus-visible { outline: 3px solid var(--tinta); outline-offset: 2px; }
+.ci__n {
+  font-variation-settings: var(--voz-comanda); font-variant-numeric: tabular-nums;
+  font-size: var(--t4); min-width: 28px; text-align: center;
+}
+.ci__precio {
+  font-variation-settings: var(--voz-comanda); font-variant-numeric: tabular-nums;
+  font-size: var(--t4); min-width: 60px; text-align: right;
+}
+.ci__quitar {
+  font-family: var(--fuente); font-size: var(--t9);
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; letter-spacing: .06em;
+  background: none; border: var(--linea); padding: 4px 8px;
+  cursor: pointer; color: var(--tinta); opacity: .5;
+}
+.ci__quitar:hover { opacity: 1; background: var(--papel-2); }
+
+/* pie del carrito: totales y CTA */
+.caja-pie {
+  border: var(--linea-media); padding: var(--e5);
+  background: var(--papel-2);
+}
+.caja-pie__promo {
+  border: var(--linea-media); border-left-width: 8px;
+  background: var(--papel); padding: var(--e3) var(--e4);
+  font-size: var(--t6); margin: 0 0 var(--e3);
+}
+.caja-pie__desc { font-size: var(--t5); margin: 0 0 var(--e3); }
+.caja-pie__nota { font-size: var(--t7); opacity: .6; margin: 0 0 var(--e2); }
+.caja-pie__total {
+  font-size: var(--t3); margin: var(--e4) 0;
+}
+/* La cifra va SOBRE coral, no EN coral. El coral como texto se queda en
+   2,69 de contraste y el §01 lo prohíbe: no escribe, rellena. Puesto de
+   fondo, con la tinta encima, canta más que si fuera texto naranja y
+   además cumple. */
+.caja-pie__total strong {
+  font-variation-settings: var(--voz-comanda); font-variant-numeric: tabular-nums;
+  background: var(--marca); color: var(--tinta);
+  padding: 2px 8px; box-decoration-break: clone;
+}
+.caja-pie__hora { font-size: var(--t5); margin: 0 0 var(--e5); }
+
+@media (max-width: 620px) {
+  .ci { flex-direction: column; align-items: flex-start; gap: var(--e3); }
+  .ci__acc { width: 100%; justify-content: space-between; }
+}
+
+/* ------------------------------------------------------------
+   FRANJAS — la pantalla joya del case
+   5 estados expresados sin color (excepto promo):
+   disponible, pocas plazas, lleno, no cabe, cerrada.
+   ------------------------------------------------------------ */
+#v-franjas { padding: var(--e7) 0; }
+.fj__sub { font-size: var(--t5); margin: 0 0 var(--e6); opacity: .7; }
+
+/* aviso de promo por hora */
+/* local cerrado / pausado dentro del flujo */
+.fj-cerrado {
+  border: var(--linea-media); border-style: dashed;
+  padding: var(--e6); text-align: center;
+}
+.fj-cerrado__tit {
+  font-variation-settings: var(--voz-cartel); text-transform: uppercase;
+  font-size: var(--t2); margin: 0 0 var(--e3);
+}
+
+/* tabla de franjas */
+.fj-tabla { border: var(--linea-media); }
+.fj-tabla__nota {
+  padding: var(--e3) var(--e4); margin: 0;
+  font-size: var(--t7); opacity: .6; border-bottom: var(--linea);
+}
+
+/* ------------------------------------------------------------
+   ELEGIR HORA · el horno, de verdad
+   Rehecho siguiendo `movimiento.html` §01. La versión anterior era una
+   lista de quince filas con una llama diminuta cada una: había que
+   bajar scrolleando para ver la noche, y ninguna llama se podía comparar
+   con la de al lado porque nunca estaban las dos a la vista.
+
+   Ahora la caja tiene dos mitades, como el prototipo:
+   · a la izquierda UNA llama grande, que lee la franja que señalas;
+   · a la derecha las horas en rejilla, la noche entera de un vistazo.
+
+   Ahí está el modelo de capacidad hecho interfaz: pasas el dedo por las
+   horas y ves el horno de cada una sin abrir nada.
+   ------------------------------------------------------------ */
+.fj {
+  display: grid; grid-template-columns: 230px 1fr; gap: var(--e6);
+  align-items: center;
+  border: var(--linea-media); padding: var(--e5);
+  background: var(--papel);
+}
+
+/* --- la mitad izquierda: la llama que manda --- */
+.fj__horno { text-align: center; }
+.fj__llama { display: grid; place-items: center; min-height: 152px; }
+.fj__svg { display: block; width: 132px; height: 152px; overflow: visible; }
+/* El color de esta llama es el de `componentes/llama.css`, y desde el
+   23/08 es el ÚNICO: antes esta pantalla y el hero tenían cada una el
+   suyo. Ganó este —el semáforo— y el hero se pasó a él. */
+.fj__estado {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t7); letter-spacing: .07em; margin: var(--e2) 0 0;
+}
+.fj__cifra {
+  font-variant-numeric: tabular-nums; font-size: var(--t8);
+  opacity: .75; margin: 3px 0 0;
+}
+
+/* --- la mitad derecha: la noche entera --- */
+.fj__lado { min-width: 0; }
+.fj__chips { display: flex; flex-wrap: wrap; gap: var(--e2); }
+
+/* EL CHIP DE HORA YA NO VIVE AQUÍ. Se ha mudado a
+   `componentes/chipHora.css` + `chipHora.js`, que cargan la web Y el
+   capítulo 08 del sistema. Aquí se queda solo lo que es COLOCACIÓN:
+   cómo se reparten los chips en la rejilla, que es asunto del
+   contenedor y no de la pieza (misma regla que el campo del §07). */
+
+.fj__nota {
+  margin: var(--e4) 0 0; font-size: var(--t7); opacity: .6;
+  border-top: var(--linea); padding-top: var(--e3);
+}
+
+@media (max-width: 760px) {
+  /* La llama se va arriba y se encoge: en móvil manda la rejilla de horas,
+     que es lo que se toca. La llama sigue estando, porque es lo que hace
+     legible la rejilla. */
+  .fj { grid-template-columns: 1fr; gap: var(--e4); padding: var(--e4); }
+  .fj__horno { display: grid; grid-template-columns: 90px 1fr; align-items: center;
+               text-align: left; gap: var(--e3); }
+  .fj__llama { min-height: 96px; grid-row: span 2; }
+  .fj__svg { width: 84px; height: 96px; }
+  .fj__estado { margin: 0; }
+  .chip { flex: 1 1 96px; }
+}
+
+/* Y AQUÍ HABÍA UN COMPONENTE ENTERO QUE NO PINTABA NADA. `.badge` y sus
+   siete variantes vivían en esta hoja, y esta hoja es la de la WEB — que
+   no usa `badge` en ningún sitio: ni `index.html`, ni `app.js`, ni los
+   componentes. El único que lo usa es el PANEL DEL TURNO, y el panel
+   tiene el suyo propio en `panel.css`, a propósito.
+
+   Así que estas siete variantes llevaban semanas describiendo estados de
+   franja que ya cuenta el chip de hora (`componentes/chipHora.css`), sin
+   pintar un solo píxel. Retiradas el 25/08/2026.
+
+   OJO SI ALGUIEN «ORDENA» ESTO: el `.badge` del panel NO se toca y NO se
+   unifica con la web. Que las dos hojas sean independientes es el
+   argumento del case study —saber cuándo NO aplicar la identidad— y
+   juntarlas se lo carga. Que existieran los dos era el accidente; el que
+   sobraba era este.
+
+/* AQUÍ HABÍA UN CHIP MUERTO. `.fr`, `.fr__btn`, `.fr__svg`, `.fr__fuego`,
+   `.fr__hora` y `.fr__dice` eran la versión anterior de esta pieza, de
+   antes de que fuera un chip. Cero apariciones en `app.js`, en
+   `index.html` y en el panel: llevaban semanas sin pintar nada.
+
+   Retiradas el 25/08/2026 al sacar el componente, por el mismo motivo por
+   el que se retiró `.btn-primario` el 23: mantener los estados de una
+   clase muerta es tener dos versiones de la pieza y descubrirlo el día
+   que alguien edita la equivocada. */
+
+/* ------------------------------------------------------------
+   DATOS — formulario de recogida
+   ------------------------------------------------------------ */
+#v-datos { padding: var(--e7) 0; }
+
+.form-datos { max-width: 480px; }
+/* EL CAMPO YA NO VIVE AQUÍ. Se ha mudado a
+   `componentes/campo.css`, que cargan la web Y el capítulo 07 del
+   sistema de diseño — igual que el botón y la llama. El motivo está
+   escrito en la cabecera de ese archivo: mientras el campo vivió aquí,
+   el documento tenía su propia copia y enseñaba cuatro clases que no
+   existen. No se ha cambiado ni una declaración al mudarlo.
+   Lo de abajo (`.form-datos*`, `#bloque-email`) es el FORMULARIO, que
+   es otra cosa: cómo se ordenan los campos en esta pantalla concreta. */
+
+.form-datos__nota { font-size: var(--t7); opacity: .6; margin: 0 0 var(--e4); }
+.form-datos__pago {
+  border: var(--linea-media); border-left-width: 8px;
+  background: var(--papel-2); padding: var(--e3) var(--e4);
+  font-size: var(--t6); margin: var(--e5) 0;
+}
+.form-datos__pago strong {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t8); letter-spacing: .06em;
+}
+.form-datos__error {
+  border: var(--linea-media); border-left-width: 10px;
+  background-image: var(--trama); padding: var(--e3) var(--e4);
+  font-size: var(--t6); margin: 0 0 var(--e4);
+}
+
+/* resumen del pedido en datos y confirmación */
+.conf__resumen {
+  border: var(--linea-media); padding: var(--e5);
+  background: var(--papel-2); margin: 0 0 var(--e5);
+}
+.conf__ref {
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t7); letter-spacing: .06em; margin: 0 0 var(--e3);
+}
+.conf__items { font-size: var(--t5); margin: 0 0 var(--e3); line-height: var(--lh-texto); }
+.conf__nota { font-size: var(--t7); opacity: .6; margin: 0 0 var(--e2); }
+.conf__total { font-size: var(--t3); margin: var(--e3) 0; }
+.conf__total strong {
+  font-variation-settings: var(--voz-comanda); font-variant-numeric: tabular-nums;
+}
+.conf__sub { font-size: var(--t4); margin: 0 0 var(--e3); max-width: 52ch; }
+/* Dónde se recoge. Faltaba: la confirmación decía a qué hora ir y no
+   adónde. (Auditoría de Mery, 13/10/2026.) */
+.conf__donde { font-size: var(--t5); margin: 0 0 var(--e5); max-width: 52ch; }
+
+/* ------------------------------------------------------------
+   VALIDANDO — estado transitorio
+   ------------------------------------------------------------ */
+#v-validando { padding: var(--e9) 0; }
+.validando { text-align: center; }
+.validando__tit {
+  font-variation-settings: var(--voz-cartel); text-transform: uppercase;
+  font-size: var(--cartel-p); line-height: var(--lh-cartel); margin: 0 0 var(--e4);
+}
+.validando__txt { font-size: var(--t5); opacity: .6; margin: 0; }
+
+/* ------------------------------------------------------------
+   CONFIRMACIÓN
+   ------------------------------------------------------------ */
+#v-confirmacion { padding: var(--e7) 0; }
+
+/* ------------------------------------------------------------
+   SEGUIMIENTO — pasos del pedido
+   ------------------------------------------------------------ */
+#v-seguimiento { padding: var(--e7) 0; }
+.seg__sub { font-size: var(--t3); margin: 0 0 var(--e5); }
+.seg__nota { font-size: var(--t7); opacity: .6; margin: 0 0 var(--e2); }
+
+/* ------------------------------------------------------------
+   EL TICKET DEL HORNO
+   El seguimiento como albarán de taller: papel con grosor, separador de
+   puntos y un sello girado por cada paso. Diseño del canvas del 21/08,
+   opción 1b — el original está en `referencias/seguimiento-gamificado/`.
+
+   Los colores del canvas (#ED6A55, #171C3F) NO se copian: van los tokens
+   del sistema, que son parecidos pero no iguales. Copiarlos habría metido
+   dos colores nuevos en la paleta por la puerta de atrás.
+   ------------------------------------------------------------ */
+.tk {
+  border: var(--linea-gorda); background: var(--papel);
+  box-shadow: var(--sombra); padding: var(--e6);
+  max-width: 640px;
+}
+.tk__cab {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: var(--e5); padding-bottom: var(--e5);
+  /* De puntos, como el troquel de un albarán: es el detalle que más
+     trabaja para que esto se lea como un ticket y no como una tarjeta. */
+  border-bottom: 2px dashed var(--tinta);
+}
+.tk__rot {
+  display: inline-block; background: var(--marca); color: var(--tinta);
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t8); letter-spacing: .14em; padding: 5px 9px;
+}
+.tk__ref {
+  margin: var(--e3) 0 0; font-variation-settings: var(--voz-cartel);
+  text-transform: uppercase; font-size: var(--d1); line-height: var(--lh-cartel);
+  letter-spacing: -.02em;
+}
+.tk__prog { text-align: right; flex: 0 0 auto; }
+.tk__prog-rot {
+  margin: 0; font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t9); letter-spacing: .14em; opacity: .6;
+}
+.tk__prog-n {
+  margin: var(--e1) 0 0; font-variation-settings: var(--voz-comanda);
+  font-size: var(--d0); line-height: .85; color: var(--marca);
+  font-variant-numeric: tabular-nums;
+}
+.tk__prog-pie { margin: 6px 0 0; font-size: var(--t7); }
+
+.tk__pasos { list-style: none; margin: 0; padding: 0; }
+.tk__paso {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--e4); padding: var(--e4) 0; border-bottom: var(--linea);
+}
+.tk__paso-izq { display: flex; align-items: baseline; gap: var(--e3); }
+.tk__paso-n {
+  font-variation-settings: var(--voz-rotulo); font-size: var(--t8);
+  letter-spacing: .1em; color: var(--marca); font-variant-numeric: tabular-nums;
+}
+.tk__paso-txt { font-variation-settings: 'wdth' 85, 'wght' 700; font-size: var(--t3); }
+
+/* EL SELLO. Girado, porque un sello puesto a mano nunca sale recto — y
+   ese par de grados es la diferencia entre parecer estampado y parecer
+   una etiqueta más de interfaz. */
+.tk__sello {
+  border: var(--linea-media); padding: 6px 10px;
+  font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+  font-size: var(--t8); letter-spacing: .12em; white-space: nowrap;
+  transform: rotate(-3deg);
+}
+.tk__paso.es-hecho .tk__sello { background: var(--tinta); color: var(--papel); }
+.tk__paso.es-activo .tk__sello {
+  background: var(--marca); color: var(--tinta);
+  animation: tk-late 1.6s ease-in-out infinite;
+}
+/* Lo pendiente se apaga, no se pinta de otro color: es el mismo idioma
+   que la franja bloqueada y la pizza agotada. */
+.tk__paso.es-pendiente { opacity: .4; }
+.tk__paso.es-pendiente .tk__sello { background: none; }
+
+@keyframes tk-late {
+  0%, 100% { transform: rotate(-3deg) scale(1); }
+  50%      { transform: rotate(-3deg) scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tk__paso.es-activo .tk__sello { animation: none; }
+}
+
+/* La cartilla NO se dibuja con casillas: es de cartón y se sella en el
+   mostrador. Aquí solo se recuerda que la traigas. Ver el comentario de
+   `pintarSeguimiento()` en app.js. */
+.tk__cartilla {
+  margin-top: var(--e5); border: var(--linea-media); padding: var(--e4);
+  background: var(--papel-2);
+}
+.tk__cartilla-rot {
+  margin: 0 0 var(--e2); font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; font-size: var(--t9); letter-spacing: .14em;
+}
+.tk__cartilla-txt { margin: 0; font-size: var(--t5); line-height: var(--lh-medio); }
+.tk__cartilla-txt strong { font-variation-settings: 'wdth' 85, 'wght' 800; }
+
+.tk__pie { margin: var(--e5) 0 var(--e3); font-size: var(--t4); }
+
+.seg__botones { display: flex; gap: var(--e3); flex-wrap: wrap; margin: var(--e5) 0 0; }
+
+@media (max-width: 620px) {
+  .tk { padding: var(--e4); }
+  .tk__cab { flex-direction: column; gap: var(--e4); }
+  .tk__prog { text-align: left; }
+  .tk__paso { flex-wrap: wrap; gap: var(--e2); }
+}
+
+/* ------------------------------------------------------------
+   INCIDENCIA — error técnico / sin conexión
+   ------------------------------------------------------------ */
+#v-incidencia { padding: var(--e9) 0; }
+.incidencia {
+  border: var(--linea-media); border-left-width: 10px;
+  background-image: var(--trama); padding: var(--e6);
+  max-width: 560px;
+}
+.incidencia__tit {
+  font-variation-settings: var(--voz-cartel); text-transform: uppercase;
+  font-size: var(--t2); line-height: var(--lh-cartel); margin: 0 0 var(--e4);
+}
+.incidencia__txt { font-size: var(--t5); line-height: var(--lh-texto); margin: 0 0 var(--e5); }
+
+/* ------------------------------------------------------------
+   RESPONSIVE — cabecera y pie
+   ------------------------------------------------------------ */
+/* ============================================================
+   EL MENÚ DE MÓVIL · hamburguesa, decisión de Mery del 25/08/2026
+   ------------------------------------------------------------
+   Hasta hoy los siete enlaces iban desplegados también en el móvil:
+   ocupaban media pantalla antes de que empezara el hero, y encogían a
+   24 px de alto — o sea, en la pantalla que se usa con el dedo eran la
+   zona pulsable MÁS PEQUEÑA de toda la web. Lo peor del sitio, en el
+   peor sitio.
+
+   Se pliega, pero al abrirse va a PANTALLA COMPLETA y en voz de cartel.
+   Palabras de Mery: «que sea muy grande al expandirse para que no pierda
+   el rollo industrial». No es un cajón de enlaces pequeñitos: es el
+   mismo cartel de la web, ocupando la pantalla entera.
+
+   En escritorio no existe: allí el menú cabe entero y esconderlo sería
+   esconder por gusto.
+   ============================================================ */
+
+/* La hamburguesa. Un cuadrado de 48 con los tres trazos del sistema:
+   grosor de línea gorda, punta cuadrada, cero redondeo. */
+/* Los tres nacen escondidos —solo existen en móvil— pero VESTIDOS. Si un
+   <button> no declara color ni fondo, coge los del sistema operativo:
+   blanco y negro puro. Estaban declarados solo dentro de la media query,
+   así que en escritorio eran los dos únicos colores fuera de la paleta de
+   toda la web. No se veían, porque están ocultos; los encontró la
+   auditoría del §00, que mide el CSS y no lo que se ve. Arreglado el
+   26/08 — y es un buen recordatorio de que «no se ve» no es «no está». */
+.cab__ham,
+.cab__cerrar { display: none; background: var(--papel); color: var(--tinta); }
+.cab__nav-tit { display: none; }
+
+@media (max-width: 760px) {
+  .cab__ham {
+    display: flex; align-items: center; gap: var(--e2);
+    font-family: var(--fuente); font-variation-settings: var(--voz-rotulo);
+    text-transform: uppercase; font-size: var(--t9); letter-spacing: .06em;
+    background: var(--papel); color: var(--tinta);
+    border: var(--linea-gorda); padding: var(--e2) var(--e3);
+    min-height: var(--toque); cursor: pointer;
+  }
+  .cab__ham svg { width: 22px; height: 16px; flex: none; }
+  .cab__ham svg path { stroke: var(--tinta); stroke-width: 2.5; stroke-linecap: square; }
+  .cab__ham:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+
+  /* CERRADO: fuera del recorrido del tabulador, no solo invisible.
+     Un menú tapado por el que se puede tabular manda el foco a sitios
+     que no se ven, y quien navega con teclado se pierde. */
+  .cab__nav[hidden] { display: none; }
+
+  /* ABIERTO: la pantalla entera. `position: fixed` y no `absolute`
+     porque la cabecera es pegajosa y el menú tiene que tapar la web,
+     no colgar de ella. */
+  .cab__nav {
+    position: fixed; inset: 0; z-index: 200;
+    background: var(--papel);
+    display: flex; flex-direction: column; align-items: stretch;
+    gap: 0; padding: var(--e5) var(--e5) var(--e6);
+    overflow-y: auto;
+  }
+
+  .cab__nav-tit {
+    display: block; margin: 0 0 var(--e5);
+    font-variation-settings: var(--voz-rotulo); text-transform: uppercase;
+    font-size: var(--t9); letter-spacing: .1em; opacity: .55;
+  }
+
+  /* LOS ENLACES, EN VOZ DE CARTEL. Aquí está el «rollo industrial»: no
+     son opciones de una lista, son siete titulares apilados. Cada uno
+     ocupa su línea entera y se separa con una línea de tinta, como los
+     renglones de un albarán. */
+  .cab__nav .cab__link {
+    font-variation-settings: var(--voz-cartel);
+    font-size: var(--cartel-m); line-height: var(--lh-cartel);
+    letter-spacing: 0; text-align: left;
+    padding: var(--e4) 0; min-height: var(--toque);
+    border: 0; border-bottom: var(--linea-media);
+    white-space: normal;
+  }
+  .cab__nav .cab__link:last-of-type { border-bottom: var(--linea-media); }
+
+  /* AQUÍ EL CORAL RELLENA, NO TIÑE. La regla de la cabecera de escritorio
+     (`.cab__link:hover { color: var(--marca) }`) se colaba en el menú: en
+     un móvil no hay ratón, pero el `:hover` se queda pegado después de
+     tocar, así que el enlace que acabas de pulsar se quedaba en coral.
+     Se apaga, y el acuse lo da el relleno con la letra en tinta. */
+  .cab__nav .cab__link:hover { color: var(--tinta); }
+  .cab__nav .cab__link:active,
+  .cab__nav .cab__link:focus-visible { background: var(--marca); color: var(--tinta); outline: 0; }
+
+  .cab__nav .cab__caja {
+    margin: var(--e5) 0 0; font-size: var(--t6);
+    min-height: var(--toque); padding: var(--e3) var(--e5);
+    align-self: flex-start;
+  }
+
+  /* Cerrar, abajo y en terciario: es la salida, no una acción. */
+  .cab__cerrar {
+    display: block; margin: auto 0 0; align-self: flex-start;
+    font-family: var(--fuente); font-variation-settings: var(--voz-rotulo);
+    text-transform: uppercase; font-size: var(--t9); letter-spacing: .06em;
+    background: none; border: 0; color: var(--tinta);
+    text-decoration: underline; text-underline-offset: 4px;
+    padding: var(--e4) 0 0; min-height: var(--toque); cursor: pointer;
+  }
+  .cab__cerrar:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+
+  /* Con el menú abierto, la web de detrás no se mueve. */
+  body.cab--abierto { overflow: hidden; }
+}
+
+/* Y el «+» de la carta sube a 48 en móvil (decisión de Mery del 25/08).
+   Medía 44 en escritorio y encogía a 38 en el móvil: los botones se hacían
+   más pequeños justo donde se usa el dedo. */
+@media (max-width: 760px) {
+  .mas { min-height: var(--toque); min-width: var(--toque); }
+}
+
+
+/* Dos vueltas atrás, en horizontal y con el mismo peso: ninguna manda sobre
+   la otra. En móvil se apilan, que dos botones de 48 px no caben de lado. */
+.paso-atras--dos { display: flex; flex-wrap: wrap; gap: var(--e3); }
+@media (max-width: 480px) {
+  .paso-atras--dos { flex-direction: column; align-items: stretch; }
+}
+
+
+/* ------------------------------------------------------------
+   EL CORREO, COLGANDO DE SU CASILLA
+   Aparece solo si marcas "quiero enterarme". Antes salía pegado —cero
+   píxeles— justo debajo de la casilla, y con otro ancho: la casilla mide
+   lo que mide su texto y el campo ocupa el formulario entero. Dos cajas
+   de anchos distintos tocándose se leen como un error de maquetación,
+   no como una cosa que depende de la otra.
+
+   Ahora cuelga: se separa, se mete hacia dentro y lleva una barra de
+   tinta a la izquierda que lo ata a la casilla de arriba. Se lee lo que
+   es —una consecuencia de haber marcado— sin necesidad de explicarlo.
+   ------------------------------------------------------------ */
+#bloque-email {
+  margin: var(--e4) 0 var(--e5);
+  padding-left: var(--e4);
+  border-left: var(--linea-media);
+}
+#bloque-email .campo { margin-bottom: var(--e2); }
+#bloque-email .form-datos__nota { margin: 0; }
+
+
+/* ------------------------------------------------------------
+   EL PIE DEL PANEL: cantidad, precio y aviso
+   Los tres en una línea y con la cantidad DELANTE del botón, que es el
+   orden en que se decide: cuántas quiero, cuánto cuesta, meterlas.
+   ------------------------------------------------------------ */
+.pzp__cant { display: inline-flex; align-items: center; gap: var(--e2); }
+.pzp__n {
+  font-variation-settings: var(--voz-comanda);
+  font-variant-numeric: tabular-nums; font-size: var(--t3);
+  min-width: 2ch; text-align: center;
+}
+/* El precio va dentro del botón y con el mismo peso que el verbo: es la
+   otra mitad de la decisión, no una nota al pie. */
+.pzp__pie [data-total] { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 480px) {
+  /* En móvil la cantidad se queda arriba y el botón ocupa el ancho: un
+     botón de "meter en la caja" estrecho al lado de dos cuadraditos es
+     justo el que peor se acierta con el pulgar. */
+  .pzp__pie { gap: var(--e2); }
+  .pzp__pie .btn { flex: 1 1 100%; }
+}
+
+
+/* ------------------------------------------------------------
+   EL "+" DE LA FILA, ABIERTO: deja de ser "+" y deja de ser coral
+   Mery: "ese más se me hace raro que se quede en naranja... yo lo pondría
+   transparente. Pero igual colisiona con el contador."
+
+   Las dos intuiciones eran buenas y la segunda es la que manda: dejarlo
+   en "+" sin relleno lo volvería idéntico al "+" del contador − n +, que
+   está a un centímetro y significa otra cosa (sumar otra, no cerrar).
+   Mismo símbolo y mismo color para dos acciones distintas es peor que el
+   coral raro.
+
+   Así que no se le quita el color: se le quita el SIGNIFICADO de "+".
+   Gira 45° y se convierte en "×", que es lo que hace de verdad ahí. Es
+   el mismo idioma que ya usan las FAQ y "quiénes somos" (§10), donde el
+   signo gira al desplegarse — así que no se estrena nada.
+
+   Y de paso se vacía el relleno, por la regla de la casa: el coral marca
+   LA acción, y con el panel abierto la acción es "Meterla en la caja",
+   ahí abajo. Dos corales peleando en la misma card no puede ser.
+   ------------------------------------------------------------ */
+/* GIRA EL SIGNO, NO LA CAJA. Al girar el botón entero el cuadrado se
+   convertía en rombo, que es justo lo que no se quiere: la caja es la
+   misma pieza antes y después, lo único que cambia es lo que dice.
+   Por eso el "+" vive dentro de un <span> y el giro va ahí.
+   El botón conserva su gesto de levantarse y hundirse sin tocar nada,
+   porque los dos transforms están en elementos distintos y ya no se
+   pisan. */
+.mas__signo {
+  display: block; line-height: var(--lh-caja);
+  transition: transform var(--mov-medio) ease;
+}
+.mas[aria-expanded="true"] {
+  background: var(--papel);
+  transition: background var(--mov-corto) ease;
+}
+.mas[aria-expanded="true"] .mas__signo { transform: rotate(45deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .mas__signo, .mas[aria-expanded="true"] { transition: none; }
+}
+
+
+/* ------------------------------------------------------------
+   BANDAS DE PROMO · cinta corrida, dos tiras en sentidos opuestos
+
+   Es una CINTA: letras seguidas pasando de largo, como la banda de una
+   obra. No son etiquetas ni pegatinas — eso fue un intento anterior y no
+   era lo que hacía falta.
+
+   Colores: tinta y papel, los dos de siempre, invertidos de una banda a
+   otra. Ese contraste es el que hace que se lea como cinta y no como un
+   aviso más de la página. El amarillo de promo se queda fuera a propósito:
+   ese token está reservado a la pegatina pequeña (§06 — "solo la pegatina
+   de promo") y a lo ancho de la pantalla deja de señalar y empieza a
+   gritar.
+
+   Motivo de que exista todo esto: la promo del aceite ya estaba en el
+   sistema pero solo se veía DENTRO del carrito, o sea después de decidir
+   qué pides. Para que mueva a alguien tiene que verse antes.
+   ------------------------------------------------------------ */
+.bandas {
+  /* El envoltorio: se sale del contenedor para ir de borde a borde, y se
+     acerca al hero y al manifiesto hasta pisarlos un poco. Puede hacerlo
+     porque es transparente — la cinta cruza por encima sin tapar nada, que
+     es lo que hace una cinta pegada de verdad. */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: calc(var(--e5) * -1);
+  margin-bottom: calc(var(--e5) * -1);
+}
+
+/* LA CAJA QUE RECORTA LAS DIAGONALES, y solo ellas.
+   Al girar una cinta que va de borde a borde, las esquinas se quedan al
+   aire: por eso cada tira sobra por los lados y esto recorta lo que sobra.
+   La explicación va FUERA, porque una caja que recorta no puede contener
+   además lo que tiene que crecer.
+
+   Las cifras salen de una cuenta y son de este ángulo: a 3° una cinta de
+   106vw sube 62 px de un extremo al otro y ocupa 131 con el giro. Dos,
+   separadas 95, caben en 226 y cruzan enteras. La separación mínima para
+   que no se toquen es 69 px; hay 95, o sea 26 de aire.
+   Si alguien cambia el ángulo, estas cifras cambian con él. */
+.bandas__cintas {
+  position: relative;
+  height: clamp(190px, 20vw, 232px);
+  overflow: hidden;
+}
+
+/* Cada tira: más ancha que la pantalla, girada, y con sus dos líneas de
+   tinta. Las líneas van AQUÍ y no en la caja porque acompañan a la cinta
+   en su ángulo, que es lo que la hace parecer pegada encima. */
+.banda {
+  position: absolute; left: 50%;
+  width: 106vw; overflow: hidden;
+  background: none;
+  border-top: var(--linea-gorda); border-bottom: var(--linea-gorda);
+  transform: translateX(-50%) rotate(-3deg);
+}
+.banda--coral { top: 14%; }
+.banda--tinta { top: 55%; }   /* ~95 px por debajo: ver la cuenta de arriba */
+
+.banda__pista {
+  display: flex; width: max-content;
+  will-change: transform;
+  animation: banda-izq 38s linear infinite;
+}
+.banda--tinta .banda__pista { animation-name: banda-der; }
+.banda__pista > span { display: flex; }   /* las copias de relleno */
+
+/* Las letras van seguidas y apretadas: es una cinta, no una lista. */
+/* LETRAS GRANDES Y EN CORAL, LIMPIAS.
+   Llevaron un perfil de tinta un rato y Mery lo quitó: ensuciaba. Queda
+   coral plano, y conviene saber lo que cuesta: coral sobre papel da 2,69
+   de contraste, por debajo del 3,0 que pide un texto grande. Se sostiene
+   porque la cinta es el gancho y no el dato — lo que hay que leer de
+   verdad está en el renglón de debajo, en tinta y a 14,36. Si alguna vez
+   la cinta pasa a llevar información que no esté repetida ahí, esto deja
+   de ser defendible. */
+.banda__it {
+  flex: none; display: flex; align-items: center; gap: var(--e5);
+  padding: var(--e3) var(--e5) var(--e3) 0;
+  font-variation-settings: var(--voz-rotulo);
+  text-transform: uppercase; letter-spacing: .06em;
+  font-size: var(--cartel-p); line-height: var(--lh-caja); white-space: nowrap;
+  color: var(--marca);
+}
+
+/* El asterisco de la casa, más pequeño que en los títulos porque aquí van
+   muchos seguidos. Sobre la banda de tinta cambia el perfil: el suyo es de
+   tinta y ahí desaparecería. */
+/* El asterisco, al tamaño de las letras y SIN el perfil de tinta que
+   lleva en el resto de la web: aquí va con las letras, y las letras van
+   limpias. Y girando hacia la derecha, despacio: es el único movimiento
+   propio dentro de una cinta que ya se desplaza, así que a más velocidad
+   competiría con ella en vez de acompañarla. */
+.banda .ast {
+  width: 1em; height: 1em; stroke: none;
+  animation: ast-vuelta 9s linear infinite;
+}
+@keyframes ast-vuelta { to { transform: rotate(360deg); } }
+
+@keyframes banda-izq { from { transform: translateX(0); }    to { transform: translateX(-25%); } }
+@keyframes banda-der { from { transform: translateX(-25%); } to { transform: translateX(0); } }
+
+/* Sin movimiento no hay cinta: las promos se quedan quietas y legibles.
+   No se pierde información, se pierde el gesto. */
+@media (prefers-reduced-motion: reduce) {
+  .banda__pista { animation: none; width: 100%; flex-wrap: wrap; }
+  .banda__pista > span { display: none; }
+  .banda .ast { animation: none; }
+  /* Sin movimiento tampoco hay diagonal: una cinta girada que no se mueve
+     es una raya torcida, y encima obliga a leer en cuesta. */
+  .bandas__cintas { height: auto; }
+  .banda { position: static; width: 100%; transform: none; left: auto; }
+}
+
+@media (max-width: 620px) {
+  .banda__it { font-size: var(--t2); gap: var(--e4); padding: var(--e3) var(--e4) var(--e3) 0; }
+  .banda--tinta { display: none; }   /* en móvil, una sola: dos es ruido */
+}
+
+
+/* EL RENGLÓN QUE EXPLICA, PLEGADO HASTA QUE TE ACERCAS
+   Al pasar por encima de la cinta pasan DOS cosas a la vez: la cinta se
+   para y la explicación se despliega. Parar la cinta no es un adorno — es
+   lo que hace que el gesto se sienta intencionado y no un accidente, y de
+   paso deja el texto de arriba quieto para poder leerlo.
+
+   El hover va sobre LA CINTA ENTERA, no sobre cada promo. Perseguir con el
+   ratón un texto que pasa de largo es imposible, y sería peor cuanto mejor
+   funcionara la animación.
+
+   `focus-within` para el teclado, y se despliega también con `:active`
+   para que un toque en pantalla táctil lo abra. Pero abajo hay una red
+   mejor: donde no hay hover, no se pliega nunca. */
+.bandas:hover .banda__pista,
+.bandas:focus-within .banda__pista { animation-play-state: paused; }
+
+.promos-detalle {
+  /* Sube 55 px para pegarse a las cintas. La caja que las recorta tiene
+     altura fija y la tira de abajo no llega a su borde, así que entre las
+     dos quedaba un hueco muerto. Al ir en el flujo, todo lo que viene
+     después —el manifiesto— sube con ella. */
+  margin-top: -55px;
+  /* Y DELANTE de las cintas. Al subir tanto, la cinta de abajo le cruza por
+     encima: las tiras van posicionadas y por eso se pintaban las últimas,
+     con su línea de tinta atravesando la primera frase. Con la explicación
+     por delante, la cinta pasa por DETRÁS y se mete debajo de la caja, que
+     es lo que se quiere — parece que la explicación se descuelga de ella. */
+  position: relative; z-index: 1;
+  background: var(--papel-2);
+  border-top: var(--linea-media); border-bottom: var(--linea-media);
+  padding: var(--e3) max(var(--e5), calc(50vw - var(--ancho) / 2 + var(--e5)));
+  display: flex; flex-wrap: wrap; gap: var(--e2) var(--e6);
+
+  /* Plegado: se va la altura, no solo la vista. `grid-template-rows` sería
+     más fino, pero max-height basta y no obliga a envolver el contenido en
+     otra caja. */
+  max-height: 0; padding-top: 0; padding-bottom: 0;
+  border-top-width: 0; border-bottom-width: 0; overflow: hidden;
+  transition: max-height var(--mov-medio) ease, padding var(--mov-medio) ease, border-width var(--mov-medio) ease;
+}
+.bandas:hover .promos-detalle,
+.bandas:focus-within .promos-detalle,
+.bandas:active .promos-detalle {
+  max-height: 40vh;
+  padding-top: var(--e3); padding-bottom: var(--e3);
+  border-top-width: 2px; border-bottom-width: 2px;
+}
+.promos-detalle__it {
+  margin: 0; font-size: var(--t7); line-height: var(--lh-texto); max-width: 46ch;
+}
+.promos-detalle__it strong {
+  font-variation-settings: var(--voz-rotulo);
+}
+/* DONDE NO HAY RATÓN, NO SE PLIEGA. En una pantalla táctil el hover no
+   existe, y esconder detrás de él la única explicación de una promo sería
+   esconderla del sitio donde más se pide pizza. Aquí se queda abierto. */
+@media (hover: none) {
+  .promos-detalle {
+    max-height: none; overflow: visible;
+    padding-top: var(--e3); padding-bottom: var(--e3);
+    border-top-width: 2px; border-bottom-width: 2px; transition: none;
+  }
+}
+/* Y quien pida menos movimiento tampoco tiene por qué perderse el texto. */
+@media (prefers-reduced-motion: reduce) {
+  .promos-detalle {
+    max-height: none; overflow: visible;
+    padding-top: var(--e3); padding-bottom: var(--e3);
+    border-top-width: 2px; border-bottom-width: 2px; transition: none;
+  }
+}
+
+@media (max-width: 620px) {
+  /* PADDING-LEFT Y PADDING-RIGHT, NO EL ATAJO (13/10/2026, lo cazó Mery
+     encogiendo la ventana del ordenador).
+
+     Esto solo quiere estrechar los márgenes laterales. Escrito como
+     `padding: var(--e3) var(--e4)` reponía también el de arriba y el de
+     abajo, que el plegado pone a cero a propósito —son parte de la
+     animación—. Resultado: en una ventana estrecha CON RATÓN, donde el
+     hover sigue vivo y la cartilla sigue plegada, asomaba una franja con
+     la frase cortada por la mitad. En un móvil de verdad no se veía,
+     porque allí manda `@media (hover: none)` y está abierta entera.
+
+     El atajo de padding no es más corto: es que dice cuatro cosas
+     cuando querías decir dos. */
+  .promos-detalle { padding-left: var(--e4); padding-right: var(--e4); gap: var(--e2); }
+  .promos-detalle__it { font-size: var(--t8); }
+}
+
+/* Imágenes aprobadas: encuadre completo y adaptable. */
+.hist__imagen, .barrio__imagen { display: block; width: 100%; height: auto; border: var(--linea-media); }
+
+
+/* ############################################################
+   LA CORTINA DEL AGREGADOR
+   La pantalla que sale al pulsar «Just Eat» o «Uber Eats» para
+   decir que la pizzería es inventada. El porqué está en app.js.
+
+   Va en papel sobre tinta translúcida, como cualquier cosa de la
+   casa, y NO estrena nada: usa los botones del sistema, el
+   titular mediano y la línea gorda. Una pantalla que se ríe de la
+   web no tiene por qué parecer de otra web.
+   ############################################################ */
+.cortina {
+  border: var(--linea-gorda); background: var(--papel); color: var(--tinta);
+  padding: var(--e6) var(--e6) var(--e5);
+  max-width: 34rem; width: calc(100% - var(--e5));
+  box-shadow: var(--sombra);
+}
+.cortina::backdrop { background: rgba(20, 24, 56, .72); }
+
+.cortina__tit {
+  font-variation-settings: var(--voz-cartel); text-transform: uppercase;
+  font-size: var(--cartel-p); line-height: var(--lh-cartel);
+  letter-spacing: -.015em; margin: 0 0 var(--e4);
+}
+.cortina__txt { font-size: var(--t3); line-height: var(--lh-texto); margin: 0 0 var(--e3); }
+.cortina__pie {
+  font-size: var(--t7); line-height: var(--lh-texto); opacity: .7;
+  margin: 0 0 var(--e5);
+}
+/* En columna y no en fila: la de irse es la larga, y en un móvil
+   dos botones de 48 px uno al lado del otro no caben. */
+.cortina__acc { display: flex; flex-wrap: wrap; gap: var(--e3); margin: 0; }
+.cortina__acc .btn { flex: 1 1 auto; justify-content: center; text-align: center; }
+.cortina__acc a.btn { display: inline-flex; align-items: center; text-decoration: none; }
+
+@media (max-width: 480px) {
+  .cortina { padding: var(--e5) var(--e4) var(--e4); }
+  .cortina__acc { flex-direction: column; }
+}

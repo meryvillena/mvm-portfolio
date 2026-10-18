@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+  <!-- Abrir el prototipo como archivo suelto (file://) hace que Chrome se
+       guarde app.js y web.css y siga sirviéndolos viejos aunque cambien en
+       disco: se ven fallos que ya no existen. Servido por http, estas dos
+       líneas obligan a pedirlo todo de nuevo en cada carga.
+       Para abrirlo bien: cd putidimadre && npm run web -->
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ============================================================
+     LO QUE SE VE FUERA DE LA PÁGINA
+     ------------------------------------------------------------
+     Nada de este bloque se ve dentro de la web. Es lo que leen
+     Google, las IA y las apps de mensajería: el título azul del
+     buscador, la frase gris de debajo y la tarjeta que sale al
+     pegar el enlace en LinkedIn o WhatsApp.
+
+     *** PENDIENTE AL PUBLICAR ***
+     Tres líneas llevan DOMINIO-PENDIENTE y hay que cambiarlo por
+     la dirección real el día que esto se suba: el `canonical`,
+     el `og:url` y el `og:image`. Están marcadas una a una.
+     ============================================================ -->
+<title>Puti Di Madre · Pizza al horno de leña en Lavapiés</title>
+<meta name="description" content="Pizza al horno de leña para recoger en Lavapiés. Pides, eliges tu hueco en el horno y te la llevas caliente. No hacemos delivery: hacemos pizza.">
+
+<!-- EL LOCAL ES FICTICIO. Mientras esto esté puesto, la maqueta no
+     entra en Google ni en las respuestas de las IA: una pizzería que
+     no existe no debe salir como sitio real al que ir a cenar. Se
+     quita cuando se decida hacer el experimento de indexarla, y
+     entonces hay que decir en la descripción que es un caso de
+     portfolio. Es la única línea que hay que tocar para cambiarlo. -->
+<meta name="robots" content="noindex, nofollow">
+
+<!-- La dirección buena de esta página, para que no compitan copias. -->
+<link rel="canonical" href="https://DOMINIO-PENDIENTE/putidimadre/">   <!-- ← cambiar al publicar -->
+
+<!-- La tarjeta al compartir. La imagen se genera de los tokens y el
+     logo de verdad con `node tarjeta-social.js`; el molde está en
+     `tarjeta-social.html`. Mide 1200×630, que es lo que piden. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Puti Di Madre">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Puti Di Madre · Pizza al horno de leña en Lavapiés">
+<meta property="og:description" content="Pizza al horno de leña para recoger en Lavapiés. Pides, eliges tu hueco en el horno y te la llevas caliente. No hacemos delivery: hacemos pizza.">
+<meta property="og:url" content="https://DOMINIO-PENDIENTE/putidimadre/">   <!-- ← cambiar al publicar -->
+<meta property="og:image" content="https://DOMINIO-PENDIENTE/putidimadre/imagenes/social/tarjeta-og.jpg">   <!-- ← cambiar al publicar -->
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Puti Di Madre — «Muy fina de masa. Poco fina de modales.» junto a una pizza recién salida del horno.">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Tiñe la barra del navegador en el móvil. Es el único sitio del
+     proyecto donde un color va escrito a mano y no sale de un token:
+     una etiqueta <meta> no sabe leer CSS. Es `--papel` de tokens.css;
+     si ese cambia, esta línea se cambia con él. -->
+<meta name="theme-color" content="#F4E9D7">
+<!-- ============================================================
+     LAS FICHAS QUE LEEN LAS MÁQUINAS
+     ------------------------------------------------------------
+     Esto NO SE ESCRIBE A MANO. Lo genera `node geo-serializar.js`
+     a partir del mismo motor del horno y la misma carta que ve el
+     cliente, y lo deja aquí, entre estas dos marcas.
+
+     Está escrito en el HTML y no solo inyectado con JavaScript
+     porque buena parte de los rastreadores de los motores
+     generativos no ejecutan JavaScript: si las fichas solo
+     existieran al ejecutarse, para ellos la página no tendría
+     ninguna. En ejecución, `geo.js` las pone al día con lo que el
+     local haya cambiado desde el panel.
+
+     Si tocas la carta, los horarios o las preguntas, vuelve a
+     lanzar el generador. Hay una prueba que lo comprueba y falla
+     si estas fichas se quedan viejas.
+     ============================================================ -->
+<!-- GEO:INICIO -->
+<script type="application/ld+json" data-geo="restaurante">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Puti Di Madre",
+  "description": "Puti Di Madre es una pizzería de horno de leña en Lavapiés, Madrid, especializada en pizza napolitana de masa fina. Funciona exclusivamente con recogida en local: el cliente pide por la web, reserva una franja de 15 minutos y paga al recoger. No hace reparto propio ni admite reservas de mesa. Lunes, cerrado. Martes y miércoles, solo cenas, de 19:00 a 00:00. Jueves, viernes y sábado, de 13:00 a 01:00 sin cerrar entre comida y cena. Domingo, solo cenas, de 19:00 a 23:00. La última recogida es siempre 15 minutos antes del cierre. Las pizzas cuestan entre 10,50 € y 14,50 €.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Madrid",
+    "addressRegion": "Comunidad de Madrid",
+    "postalCode": "28012",
+    "addressCountry": "ES",
+    "streetAddress": "Calle del Rescoldo, 7"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 40.4089,
+    "longitude": -3.7009
+  },
+  "servesCuisine": [
+    "Pizza",
+    "Italiana",
+    "Napolitana"
+  ],
+  "priceRange": "€€",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Tuesday",
+        "Wednesday"
+      ],
+      "opens": "19:00",
+      "closes": "00:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ],
+      "opens": "13:00",
+      "closes": "01:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Sunday"
+      ],
+      "opens": "19:00",
+      "closes": "23:00"
+    }
+  ],
+  "hasMenu": {
+    "@type": "Menu",
+    "name": "Carta de Puti Di Madre",
+    "hasMenuSection": [
+      {
+        "@type": "MenuSection",
+        "name": "Las de siempre",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "La Margarita",
+            "description": "Tomate, mozzarella, parmesano y albahaca",
+            "offers": {
+              "@type": "Offer",
+              "price": "10.50",
+              "priceCurrency": "EUR"
+            },
+            "suitableForDiet": "https://schema.org/VegetarianDiet"
+          },
+          {
+            "@type": "MenuItem",
+            "name": "La Diavola",
+            "description": "Tomate, mozzarella, salame picante y chile",
+            "offers": {
+              "@type": "Offer",
+              "price": "12.50",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Cuatro Quesos",
+            "description": "Mozzarella, gorgonzola, provolone y parmesano",
+            "offers": {
+              "@type": "Offer",
+              "price": "12.90",
+              "priceCurrency": "EUR"
+            },
+            "suitableForDiet": "https://schema.org/VegetarianDiet"
+          },
+          {
+            "@type": "MenuItem",
+            "name": "La Parma",
+            "description": "Tomate, mozzarella, jamón de Parma, rúcula y parmesano",
+            "offers": {
+              "@type": "Offer",
+              "price": "13.50",
+              "priceCurrency": "EUR"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Las de la casa",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "La Malamadre",
+            "description": "Tomate, mozzarella, sobrasada, miel picante y cebolla roja",
+            "offers": {
+              "@type": "Offer",
+              "price": "13.90",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "La Puttanesca",
+            "description": "Tomate, mozzarella, aceituna negra, alcaparra, anchoa y orégano",
+            "offers": {
+              "@type": "Offer",
+              "price": "13.50",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "La del Barrio",
+            "description": "Crema de ajo asado, mozzarella, champiñón, panceta y perejil",
+            "offers": {
+              "@type": "Offer",
+              "price": "13.90",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "La Jefa",
+            "description": "Burrata, tomate confitado, pesto y pistacho",
+            "offers": {
+              "@type": "Offer",
+              "price": "14.50",
+              "priceCurrency": "EUR"
+            },
+            "suitableForDiet": "https://schema.org/VegetarianDiet"
+          }
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Calzones",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Calzone de la Casa",
+            "description": "Ricotta, mozzarella, salame picante y tomate",
+            "offers": {
+              "@type": "Offer",
+              "price": "14.50",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Calzone de Gorgonzola",
+            "description": "Gorgonzola, mozzarella, nuez y miel",
+            "offers": {
+              "@type": "Offer",
+              "price": "14.90",
+              "priceCurrency": "EUR"
+            },
+            "suitableForDiet": "https://schema.org/VegetarianDiet"
+          }
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Sin carne, con carácter",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "La Huerta",
+            "description": "Tomate, mozzarella, calabacín, berenjena y pimiento asado",
+            "offers": {
+              "@type": "Offer",
+              "price": "12.50",
+              "priceCurrency": "EUR"
+            },
+            "suitableForDiet": "https://schema.org/VegetarianDiet"
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Verde que te quiero",
+            "description": "Pesto, mozzarella, calabacín, rúcula y limón",
+            "offers": {
+              "@type": "Offer",
+              "price": "12.90",
+              "priceCurrency": "EUR"
+            },
+            "suitableForDiet": "https://schema.org/VegetarianDiet"
+          }
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Para acompañar",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Pan de pizza",
+            "description": "Nuestra masa con ajo y hierbas",
+            "offers": {
+              "@type": "Offer",
+              "price": "3.50",
+              "priceCurrency": "EUR"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Algo dulce",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Tiramisú",
+            "description": "De los de verdad",
+            "offers": {
+              "@type": "Offer",
+              "price": "5.50",
+              "priceCurrency": "EUR"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "MenuSection",
+        "name": "Bebidas",
+        "hasMenuItem": [
+          {
+            "@type": "MenuItem",
+            "name": "Agua",
+            "offers": {
+              "@type": "Offer",
+              "price": "1.80",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Refresco",
+            "offers": {
+              "@type": "Offer",
+              "price": "2.50",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Cerveza",
+            "offers": {
+              "@type": "Offer",
+              "price": "2.80",
+              "priceCurrency": "EUR"
+            }
+          },
+          {
+            "@type": "MenuItem",
+            "name": "Vino de la casa",
+            "description": "Botella individual",
+            "offers": {
+              "@type": "Offer",
+              "price": "3.50",
+              "priceCurrency": "EUR"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "acceptsReservations": "https://schema.org/False",
+  "hasDeliveryMethod": {
+    "@type": "DeliveryMethod",
+    "name": "Recogida en local"
+  },
+  "potentialAction": {
+    "@type": "OrderAction",
+    "name": "Pedir para recoger",
+    "deliveryMethod": "https://schema.org/OnSitePickup"
+  },
+  "paymentAccepted": "Tarjeta, efectivo (en el local)"
+}
+</script>
+<script type="application/ld+json" data-geo="faq">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Puti Di Madre hace envío a domicilio?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Puti Di Madre es solo recogida en local: se pide por la web y se recoge en la pizzería, en Lavapiés, Madrid. Para envío a domicilio la pizzería está disponible en plataformas de reparto, pero el pedido directo por su web es siempre recogida."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hay que reservar mesa en Puti Di Madre?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No se puede reservar mesa. Puti Di Madre es un local pequeño sin servicio de sala: lo que se reserva es una franja de recogida de 15 minutos para pasar a por el pedido."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo se pide en Puti Di Madre?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Se elige la pizza en la web, se reserva una franja de recogida de 15 minutos entre las que el horno puede cumplir, y se paga al recoger en el local con tarjeta o efectivo. No se cobra nada desde la web."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuál es el horario de Puti Di Madre?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "El horario de Puti Di Madre es este. Lunes, cerrado. Martes y miércoles, solo cenas, de 19:00 a 00:00. Jueves, viernes y sábado, de 13:00 a 01:00 sin cerrar entre comida y cena. Domingo, solo cenas, de 19:00 a 23:00. La última recogida es siempre 15 minutos antes del cierre."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuánto cuesta una pizza en Puti Di Madre?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Las pizzas de Puti Di Madre cuestan entre 10,50 € y 14,50 €. Los calzones están a 14,50 € y 14,90 €, y hay panes de pizza, postres y bebidas desde 1,80 €."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Puti Di Madre tiene opciones vegetarianas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Puti Di Madre tiene una sección de pizzas sin carne y varias vegetarianas repartidas por la carta, como La Margarita, Cuatro Quesos, La Jefa, La Huerta y Verde que te quiero. En cada producto se indican los alérgenos."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Dónde está Puti Di Madre?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Puti Di Madre está en el barrio de Lavapiés, distrito Centro de Madrid. Es un local pequeño de recogida, sin terraza ni servicio de mesas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo se recalienta una pizza para que vuelva a quedar crujiente?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La mejor forma de recalentar una pizza de masa fina es en una sartén seca a fuego medio-alto durante dos o tres minutos, hasta que la base vuelva a estar crujiente, y después añadir unas gotas de agua en el borde de la sartén y tapar un minuto para que el vapor funda el queso. En horno, hay que precalentar a 240 °C con la bandeja dentro y calentar la pizza cuatro o cinco minutos sobre la bandeja caliente. El microondas no se recomienda porque el vapor ablanda la base."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Se puede comprar merchandising de Puti Di Madre?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Puti Di Madre vende camisetas, sudaderas, delantales, bolsas y su aceite picante embotellado. Es solo recogida: los artículos se añaden al mismo pedido y se recogen en el local, no se envían por mensajería."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json" data-geo="recalentar">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cómo recalentar una pizza de masa fina para que vuelva a quedar crujiente",
+  "description": "Esa masa cruje. Sería una pena que la mataras en el microondas.",
+  "totalTime": "PT3M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "Sartén"
+    },
+    {
+      "@type": "HowToTool",
+      "name": "Tapa"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "text": "Sartén seca, sin nada de aceite, a fuego medio-alto."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "text": "La porción dentro, destapada, dos o tres minutos: hasta que la base vuelva a sonar al golpearla."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "text": "Ahora sí: unas gotas de agua en el borde de la sartén, tapa encima y un minuto más. El vapor funde el queso sin ablandar la base."
+    }
+  ],
+  "supply": [
+    {
+      "@type": "HowToSupply",
+      "name": "Pizza sobrante"
+    }
+  ]
+}
+</script>
+<!-- GEO:FIN -->
+
+<!-- Icono de pestaña: la pizza con la llama del logo (ilus-7), sobre papel. -->
+<link rel="icon" href="iconos/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" href="iconos/icono-512.png" sizes="512x512">
+<link rel="apple-touch-icon" href="iconos/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Oooh+Baby&display=swap" rel="stylesheet">
+  <!-- La hoja va con versión y va AQUÍ, en la cabeza. Cargarla al final
+       hace que la página aparezca un instante sin estilo. -->
+  <script>
+    (function () { var v = '?v=' + Date.now();
+      ["tokens.css","demo.css","componentes/boton.css","componentes/llama.css","componentes/campo.css","componentes/tick.css","componentes/chipHora.css","componentes/etiqueta.css","web.css"].forEach(function (f) { document.write('<link rel="stylesheet" href="./' + f + v + '">'); });
+    }());
+  </script>
+</head>
+<body>
+
+<!-- ============================================================
+     LA BARRA DE LA DEMO — no forma parte del producto.
+     Sirve para saltar entre las dos pantallas y ver que se hablan.
+     El porqué está en demo.css.
+     ============================================================ -->
+<nav class="demo-barra" aria-label="Demo de Puti Di Madre">
+  <a class="demo-barra__ir" href="./index.html" aria-current="page">La web del cliente</a>
+  <a class="demo-barra__ir" href="./panel.html">El panel del local</a>
+  <span class="demo-barra__nota">Dos pantallas del mismo sitio. Cambia un precio,
+    quita un producto o mueve un descuento en el panel, recarga la web y lo verás.</span>
+</nav>
+
+<!-- ============================================================
+     PANEL DE DEMO — no forma parte del producto.
+     ============================================================ -->
+<details class="demo">
+  <summary>Panel de demo — no forma parte del producto</summary>
+  <!-- Los mandos los pinta `demo.js`: son los MISMOS que los del panel del
+       local, con el mismo nombre y en el mismo orden. Lo de aquí abajo —el
+       titular, el carrito, los errores de red— solo existe en esta pantalla
+       y se pasa como «extra». -->
+  <div id="demo-caja"></div>
+</details>
+
+<header class="cab">
+  <a class="cab__marca" href="#hero" data-ir="home">Puti<br>Di<br>Madre</a>
+
+  <nav class="cab__nav" id="menu-movil">
+    <!-- El título y la × solo se ven con el menú desplegado en móvil. -->
+    <p class="cab__nav-tit" aria-hidden="true">Carta y demás</p>
+    <button class="cab__link" data-ancla="carta" type="button">Carta</button>
+    <button class="cab__link" data-ancla="tienda" type="button">Llévate algo puesto</button>
+    <button class="cab__link" data-ancla="como" type="button">Cómo funciona</button>
+    <button class="cab__link" data-ancla="historia" type="button">Quiénes somos</button>
+    <button class="cab__link" data-ancla="barrio" type="button">El local</button>
+    <button class="cab__link" data-ancla="recalentar" type="button">Recalentarla</button>
+    <button class="cab__cerrar" id="ham-x" type="button">Cerrar</button>
+  </nav>
+
+  <!-- LA CAJA VA FUERA DEL MENÚ, y esto se arregló el 10/10/2026.
+       Estaba dentro del <nav>, que en móvil se convierte en una pantalla
+       completa escondida detrás de la hamburguesa. Resultado: en el móvil
+       no se veía ni cuántas cosas llevabas ni que la caja estaba
+       encendida, justo lo que acabábamos de poner, a menos que abrieras
+       el menú. Ahora vive en la cabecera y se ve siempre.
+
+       aria-live: si el contador sube sin avisar, quien no ve la pantalla
+       no se entera de que su pizza ha entrado. SISTEMA-DE-DISENO §11. -->
+  <button class="cab__caja" data-ir="carrito" type="button">Mi caja ·
+    <span id="n-caja" aria-live="polite" aria-atomic="true">0</span></button>
+
+  <!-- LA HAMBURGUESA, Y VA LA ÚLTIMA (10/10/2026). Estaba justo después
+       de la marca, así que en el móvil quedaba sola en mitad de la
+       cabecera con la caja lejísimos a la derecha. Ahora las dos van
+       juntas al final: primero la caja, luego el menú.
+
+       Se mueve en el HTML y no con `order` del CSS a propósito: con
+       `order` lo que se ve y el orden en que se tabula dejan de
+       coincidir, y quien navega con teclado salta a sitios que no
+       entiende. Aquí no hace falta, porque este orden vale para las dos
+       pantallas: en escritorio la hamburguesa está escondida.
+
+       Solo se ve por debajo de 760: en escritorio el menú
+       cabe entero y esconderlo sería esconder por gusto. Es un <button> de
+       verdad con `aria-expanded`, no un icono con un clic encima: quien
+       navega con teclado o por voz tiene que oír si está abierto o cerrado.
+       Los tres trazos son un SVG y van marcados como decorativos, porque
+       lo que se anuncia es la palabra "Menú", no el dibujo. -->
+  <button class="cab__ham" id="ham" type="button" aria-expanded="false" aria-controls="menu-movil">
+    <svg viewBox="0 0 24 18" aria-hidden="true" focusable="false">
+      <path d="M0 2h24M0 9h24M0 16h24"/>
+    </svg>
+    <span class="cab__ham-txt">Menú</span>
+  </button>
+
+  <p class="cab__estado" id="estado-local"></p>
+</header>
+
+<main id="app">
+
+<!-- ============================================================
+     HOME — scroll narrativo. Los siete bloques de §7.
+     ============================================================ -->
+<section class="vista" id="v-home">
+
+
+  <!-- 01 · HERO: personalidad + utilidad
+       Rediseñado en la fase 2. La llama NO es decoración: es el indicador
+       de carga del horno y lee los datos de horno.js. Ver SISTEMA-DE-DISENO.html §04. -->
+  <section class="seccion seccion--hero" id="hero">
+
+    <div class="hero__texto">
+      <img class="hero__logo" src="ilustraciones/logo-a.svg"
+           alt="Puti Di Madre — pizza al horno de leña" width="1613" height="475">
+      <h1 id="hero-titular">Muy fina de masa.<br>Poco fina de modales.</h1>
+      <p class="hero__apoyo" id="hero-apoyo">Pizza al horno de leña para pedir ahora y recoger
+        cuando esté lista. Sin colas. Sin comisiones.</p>
+      <p class="hero__acciones">
+        <button type="button" data-ancla="carta" class="btn">Ver la carta</button>
+        <button type="button" data-ancla="como" class="btn btn--secundario">Ver cómo funciona</button></p>
+    </div>
+
+    <aside class="horno-cal" aria-label="Cómo está el horno ahora">
+      <p class="horno-cal__rot">El horno ahora</p>
+      <p class="horno-cal__pista">La llama sube cuando el horno se llena</p>
+      <svg class="horno-cal__svg" viewBox="0 0 200 230" role="img" aria-hidden="true">
+        <path class="boca" d="M18 214 Q100 188 182 214 L182 224 Q100 200 18 224 Z"/>
+        <g id="llama-fuego" class="fuego">
+          <path class="fuego__ext" d="M100 214 C48 190 40 138 68 100 C74 122 88 128 92 112 C98 78 76 58 88 24 C126 56 156 84 154 132 C152 176 132 200 100 214 Z"/>
+          <path class="fuego__med" d="M100 214 C68 198 62 162 80 136 C84 150 94 154 97 144 C101 122 88 108 96 84 C120 106 138 124 137 156 C136 186 120 204 100 214 Z"/>
+          <path class="fuego__int" d="M100 214 C84 205 80 184 89 170 C91 178 96 180 98 175 C100 163 94 156 98 143 C110 155 119 165 119 182 C118 198 110 208 100 214 Z"/>
+        </g>
+      </svg>
+      <p class="horno-cal__nivel" id="horno-nivel" aria-live="polite"></p>
+      <p class="utilidad" id="hero-utilidad" aria-live="polite"></p>
+    </aside>
+
+  </section>
+
+  <!-- LAS BANDAS DE PROMO, entre el hero y el manifiesto.
+       Va aquí y no en el carrito porque una promo que solo se ve al pagar
+       es una sorpresa simpática, no una palanca: al llegar al carrito ya
+       has decidido qué pides.
+       Y va DESPUÉS del hero, no antes: lo primero que se ve tiene que ser
+       la marca. La cinta entra cuando ya sabes dónde estás, y hace de
+       bisagra entre la promesa del hero y el manifiesto.
+       Las pinta app.js desde Promos.activas(), así que enseñan lo que el
+       local tenga encendido en su panel. Si no hay ninguna, no hay cinta. -->
+  <div id="bandas-promo" class="bandas" hidden aria-label="Promociones de hoy"></div>
+
+  <!-- 02 · EL MANIFIESTO MÍNIMO -->
+  <section class="seccion seccion--manifiesto" id="manifiesto">
+    <p class="mani__rot">El manifiesto</p>
+    <h2 class="mani__tit">No hacemos delivery.<br>Hacemos pizza.</h2>
+    <p class="mani__txt">Si estás cerca, no necesitas que una moto dé una vuelta por ti.
+       Pide, date un paseo y recógela caliente.</p>
+    <p class="mani__txt">Además, Lavapiés se anda en diez minutos y no tiene un tramo feo.
+       Bajas, das la vuelta, se te abre el hambre por el camino y vuelves con la caja
+       caliente en la mano.</p>
+    <!-- La firma lleva a #barrio, NO a Uber directamente. El bloque entero
+         argumenta que no hacemos reparto: meter aquí un botón de agregador
+         contradice al manifiesto dentro del propio manifiesto. En #barrio
+         el enlace ya existe con su contexto, que es lo que hace honesta
+         la salida. -->
+    <p class="mani__firma">
+      <button class="mani__lejos" type="button" data-ancla="barrio">Y si estás lejos, tampoco pasa nada<span class="mani__flecha" aria-hidden="true">→</span></button>
+    </p>
+  </section>
+
+  <!-- 03 · CÓMO FUNCIONA
+       Va ANTES de la carta: el modelo de esta pizzería (eliges franja y
+       recoges) no es obvio, y llegar a los precios sin saber cómo va
+       deja al cliente descolocado. -->
+  <section class="seccion" id="como">
+    <p class="rot-coral">Cómo funciona</p>
+    <h2 class="tit-bloque">Tres pasos<br>y a comer.</h2>
+    <ol class="como-pasos">
+      <li class="paso">
+        <span class="paso__n">01</span>
+        <h3 class="paso__tit">Elige tu pizza</h3>
+        <p class="paso__txt">Ves lo que hay ahora mismo. Si algo se ha agotado,
+          te enteras antes de bajar.</p>
+      </li>
+      <li class="paso">
+        <span class="paso__n">02</span>
+        <h3 class="paso__tit">Reserva hueco en el horno</h3>
+        <p class="paso__txt">Eliges una franja de quince minutos,
+          solo entre las que el horno puede cumplir.</p>
+      </li>
+      <li class="paso">
+        <span class="paso__n">03</span>
+        <h3 class="paso__tit">Ven a tu hora</h3>
+        <p class="paso__txt">Te damos cinco minutos para recogerla. Llega dentro de
+          ellos y te la llevas recién salida: ni ella fría de esperarte, ni tú esperándola.</p>
+      </li>
+    </ol>
+    <p class="como__pago"><strong>Pagas al recoger</strong>, con tarjeta o efectivo.
+      No te cobramos nada desde esta web.</p>
+  </section>
+
+  <!-- 04 · LA CARTA -->
+  <section class="seccion" id="carta">
+    <p class="rot-coral">La carta</p>
+    <h2 class="carta-tit">Lo que hay hoy.</h2>
+    <p class="nota">Solo recogida · Pagas en el local</p>
+    <div class="carta-hoja"><div id="lista-carta"></div></div>
+  </section>
+
+  <!-- 04-bis · LA TIENDA -->
+  <section class="seccion" id="tienda">
+    <p class="rot-coral">El merchan</p>
+    <h2 class="carta-tit">Llévate algo puesto.</h2>
+    <p class="nota">Camisetas, delantales y el aceite picante de la mesa. Se añaden a tu caja
+       y los recoges con la pizza. Tampoco los enviamos: seguimos sin tener moto.</p>
+    <div class="carta-hoja"><div id="lista-tienda"></div></div>
+  </section>
+
+  <!-- 05 · PRUEBA SOCIAL -->
+  <section class="seccion" id="resenas">
+    <p class="rot-coral">Lo que dice el barrio</p>
+    <h2 class="tit-bloque">Cinco vecinos<br>con opinión.</h2>
+    <div id="google-resumen" class="gg"></div>
+    <div id="lista-resenas"></div>
+    <!-- El aviso va DEBAJO y no arriba: si abre el bloque, lo primero que
+         lees es un descargo legal en vez de la voz del barrio. Pero tiene
+         que estar, y bien visible, porque las reseñas son inventadas. -->
+    <p class="aviso-ficticio" id="aviso-ficticio"><strong>Reseñas ficticias, y la nota y el
+       número también.</strong> Todo escrito para este caso conceptual: el negocio no existe,
+       el enlace a Google no lleva a ninguna parte y nada de esto reproduce opiniones reales
+       de ningún establecimiento.</p>
+  </section>
+
+  <!-- 05-bis · QUIÉNES SOMOS -->
+  <section class="seccion" id="historia">
+    <div class="hist__cab">
+      <div>
+        <p class="rot-coral">Quiénes somos</p>
+        <h2 class="tit-bloque" id="historia-titulo"></h2>
+        <p class="hist__entradilla" id="historia-entradilla"></p>
+      </div>
+      <!-- Retrato aprobado de los dueños ficticios del caso conceptual. -->
+      <figure class="hist__foto">
+        <img class="hist__imagen" src="imagenes/local/duenos.jpg" alt="Nino y Vero junto al horno, con la ropa de Puti Di Madre" width="1536" height="1024" loading="lazy">
+        <figcaption>Nino y Vero, un viernes cualquiera a las once.</figcaption>
+      </figure>
+    </div>
+
+    <ol class="hist__beats" id="historia-beats"></ol>
+    <p class="hist__cierre" id="historia-cierre"></p>
+  </section>
+
+  <!-- 06 · EL BARRIO -->
+  <section class="seccion" id="barrio">
+    <p class="rot-coral">Dónde estamos</p>
+    <h2 class="tit-bloque">Un horno en<br>Lavapiés.</h2>
+
+    <div class="barrio__cuerpo">
+      <div class="barrio__info">
+        <p class="barrio__dir">Lavapiés, Madrid.<br>
+          Un horno, dos personas y sitio justo para esperar de pie.</p>
+        <p class="barrio__recogida"><strong>Solo recogida.</strong> Si estás cerca, das un
+          paseo y te la llevas caliente. Si estás lejos, nos tienes en las apps.</p>
+        <div id="horarios"></div>
+      </div>
+      <div class="barrio__mapa">
+        <img class="barrio__imagen" src="imagenes/local/mapa-ficticio.jpg" alt="Mapa ilustrativo con el marcador de la pizzería. Ubicación ficticia." width="1536" height="1024" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- 06-ter · CÓMO RECALENTARLA
+       Contenido de post-compra: protege el producto, es coherente con
+       el manifiesto y alimenta un HowTo JSON-LD (geo.js). -->
+  <section class="seccion" id="recalentar">
+    <p class="rot-coral">Después de cenar</p>
+    <h2 class="tit-bloque" id="recalentar-titulo"></h2>
+    <p class="recal__entrada" id="recalentar-entradilla"></p>
+    <p class="recal__antes" id="recalentar-antes"></p>
+    <div id="lista-metodos"></div>
+    <div id="recalentar-extra"></div>
+  </section>
+
+  <!-- 06-bis · PREGUNTAS FRECUENTES
+       Doble función: resuelven dudas reales del cliente y son la
+       superficie que citan los motores generativos. Cada respuesta
+       empieza por la respuesta y se sostiene fuera de contexto.
+       El mismo contenido alimenta el FAQPage JSON-LD (geo.js). -->
+  <section class="seccion" id="faq">
+    <p class="rot-coral">FAQ</p>
+    <h2 class="tit-bloque">Preguntas que<br>nos hacen siempre.</h2>
+    <div id="lista-faq"></div>
+  </section>
+
+  <!-- 07 · CIERRE -->
+  <section class="seccion seccion--cierre" id="cierre">
+    <h2 class="cierre__tit">¿Lo vas a seguir<br>pensando<br>con hambre?</h2>
+    <p><button type="button" data-ancla="carta" class="btn btn--oscuro btn--ancho btn--liso">Ver la carta</button></p>
+  </section>
+
+</section>
+
+<!-- ============================================================
+     FLUJO DE PEDIDO
+     ============================================================ -->
+
+<section class="vista" id="v-producto"></section>
+
+<section class="vista" id="v-carrito">
+  <p class="rot-coral">Tu caja</p>
+  <h1 class="tit-bloque">Comprueba que<br>está todo.</h1>
+  <div id="lista-carrito"></div>
+  <div id="carrito-pie"></div>
+</section>
+
+<section class="vista" id="v-franjas">
+  <p class="rot-coral">Elige hora</p>
+  <h1 class="tit-bloque">¿Cuándo vienes<br>a por ella?</h1>
+  <p class="fj__sub">Solo enseñamos horas que el horno puede cumplir.</p>
+  <div id="aviso-franjas"></div>
+  <div id="lista-franjas"></div>
+  <!-- Vuelta atrás: sin esto, elegir hora era un callejón sin salida.
+       Va DESPUÉS de la lista para no competir con la acción principal. -->
+  <p class="paso-atras">
+    <button type="button" id="fj-volver" class="btn btn--secundario">Volver a la caja</button>
+  </p>
+</section>
+
+<section class="vista" id="v-datos">
+  <p class="rot-coral">Tus datos</p>
+  <h1 class="tit-bloque">¿A nombre de quién<br>sale esta maravilla?</h1>
+  <form id="f-datos" class="form-datos" novalidate>
+    <!-- Cada campo lleva DENTRO su ayuda y su hueco de aviso (decisión de
+         Mery, 24/08). Antes la nota del teléfono vivía suelta debajo de los
+         tres campos: se leía como una nota del formulario y no como lo que
+         es, la explicación de POR QUÉ pedimos ese dato. Y quien navega por
+         voz solo se la encontraba si pasaba de largo por ahí.
+         El `aria-describedby` ata las dos cosas al campo, así que se oyen
+         al entrar en él. El hueco del aviso va vacío y `hidden`: lo llena
+         `confirmar()` cuando hay algo que decir. -->
+    <label class="campo">
+      <span class="campo__eti">Nombre</span>
+      <input class="campo__input" name="nombre" required aria-describedby="err-nombre">
+      <p class="campo__error" id="err-nombre" hidden></p>
+    </label>
+    <label class="campo">
+      <span class="campo__eti">Teléfono</span>
+      <input class="campo__input" name="telefono" inputmode="tel" required
+             aria-describedby="err-telefono ayuda-telefono">
+      <p class="campo__error" id="err-telefono" hidden></p>
+      <p class="campo__ayuda" id="ayuda-telefono">Es para avisarte por WhatsApp cuando esté
+        lista, y para llamarte si pasa algo. Nada más.</p>
+    </label>
+    <label class="campo">
+      <span class="campo__eti">¿Algo que debamos saber? (opcional)</span>
+      <textarea class="campo__input" name="nota" maxlength="140" rows="2"
+                aria-describedby="ayuda-nota"></textarea>
+      <p class="campo__ayuda" id="ayuda-nota">Alergias, si vienes con prisa, lo que sea.
+        Lo lee cocina.</p>
+    </label>
+
+    <!-- El correo NO tiene nada que ver con la cartilla: esa es de cartón y
+         se sella en el mostrador. Aquí solo se pide para avisar de promos,
+         y por eso el texto vuelve a hablar solo de eso. -->
+    <label class="tick" style="max-width:fit-content"><input type="checkbox" name="consiente">
+      <span class="tick__txt">Avisadme de las promos y de las novedades del local.</span></label>
+    <!-- Pedir un teléfono sin decir qué se hace con él es justo lo que esta
+         web le reprocha a los agregadores. Ficticia, pero tiene que estar. -->
+    <p class="campo__ayuda">Tu teléfono se usa para avisarte de este pedido y nada más.
+      Si marcas la casilla, también para las promos, y puedes decirnos que paremos
+      cuando quieras. No lo cedemos a nadie. (Demo: no se envía ni se guarda en
+      ningún sitio.)</p>
+
+    <div id="bloque-email" hidden>
+      <label class="campo">
+        <span class="campo__eti">Correo electrónico</span>
+        <input class="campo__input" name="email" type="email" inputmode="email"
+               autocomplete="email" aria-describedby="err-email ayuda-email">
+        <p class="campo__error" id="err-email" hidden></p>
+        <p class="campo__ayuda" id="ayuda-email">Solo para contarte las promos que haya. Ni lo
+          compartimos ni te escribimos por otra cosa, y te puedes borrar cuando quieras.</p>
+      </label>
+    </div>
+    <p class="form-datos__pago"><strong>Pagas al recoger.</strong>
+      <!-- EN PRESENTE, como el resto de la web. El futuro —«no te
+           cobraremos»— aparecía solo aquí y en el aviso de agotado, y
+           en una página que promete no cobrarte, el tiempo verbal es
+           parte de la promesa: el presente la hace un hecho y el futuro
+           la deja en intención. -->
+      Con tarjeta o efectivo en el local. No te cobramos nada desde esta web.</p>
+    <div id="resumen-datos"></div>
+    <p id="error-datos" class="form-datos__error" hidden></p>
+    <button type="submit" class="btn btn--primario btn--medio btn--liso">Confirmar pedido</button>
+  </form>
+  <!-- Vuelta atrás. Fuera del <form> a propósito: dentro, un <button>
+       sin type dispararía el submit, y aunque lleve type="button" un
+       Enter en un campo sigue enviando. Cambiar de hora no debe poder
+       confirmar un pedido por accidente. -->
+  <!-- DOS salidas, no una. Antes desde aquí solo se podía cambiar de hora:
+       si te acordabas de la cerveza en el último paso, no había manera de
+       volver a por ella sin deshacer el pedido. Van juntas y en horizontal
+       porque son la misma cosa —volver atrás— y ninguna manda sobre la otra;
+       la que manda es "Confirmar pedido", que va arriba y dentro del form. -->
+  <p class="paso-atras paso-atras--dos">
+    <button type="button" id="dt-volver" class="btn btn--secundario">Volver a elegir hora</button>
+    <button type="button" id="dt-seguir" class="btn btn--secundario">Seguir comprando</button>
+  </p>
+</section>
+
+<section class="vista" id="v-validando">
+  <div class="validando">
+    <h1 class="validando__tit">Reservando tu hueco en el horno…</h1>
+    <p class="validando__txt">Comprobamos que la franja y los productos siguen libres.</p>
+  </div>
+</section>
+
+<section class="vista" id="v-confirmacion"></section>
+<section class="vista" id="v-seguimiento"></section>
+<section class="vista" id="v-incidencia"></section>
+
+
+<!-- ============================================================
+     LA CORTINA DEL AGREGADOR
+     Se abre al pulsar «Just Eat» o «Uber Eats». El texto vive en
+     `contenido.js`; aquí solo está el hueco. <dialog> y no un div
+     montado a mano porque el navegador ya sabe hacer lo difícil:
+     atrapar el foco dentro, cerrar con Escape y tapar el resto de
+     la página para los lectores de pantalla.
+     ============================================================ -->
+<dialog class="cortina" id="cortina" aria-labelledby="cortina-tit">
+  <h2 class="cortina__tit" id="cortina-tit"></h2>
+  <p class="cortina__txt"></p>
+  <p class="cortina__pie"></p>
+  <p class="cortina__acc">
+    <button type="button" class="btn btn--secundario" id="cortina-no"></button>
+    <a class="btn btn--primario" id="cortina-si" target="_blank" rel="noopener"></a>
+  </p>
+</dialog>
+
+</main>
+
+<footer class="pie">
+  <p><strong>Puti Di Madre</strong><br>Pizza de barrio. Horno de leña. Cero tonterías.</p>
+  <!-- El pie explicaba de dónde salían las ILUSTRACIONES y callaba de dónde
+       salían las FOTOS, que son las que parecen reales: las pizzas, los
+       dueños y el merchan. En un caso que presume de no mentirle al
+       cliente, esa era la omisión más cara. (Auditoría de Mery, 13/10/2026.) -->
+  <p class="nota">Caso conceptual de portfolio — negocio ficticio, inspirado en una pizzería real
+     de Lavapiés que no ha encargado este trabajo. Reseñas ficticias.
+     Ilustraciones de las pizzas <a href="https://www.freepik.com" class="enlace" target="_blank" rel="noopener">Designed by
+     Freepik</a>; las de pan, postre y bebidas están generadas con IA.
+     <strong>Las fotografías también están generadas con IA</strong>: las pizzas, los
+     productos de la carta, el merchan y las dos personas que aparecen en
+     «Quiénes somos», que no existen. El mapa del local es ficticio.</p>
+</footer>
+
+<!-- LOS SCRIPTS, TAMBIÉN CON VERSIÓN, y esto no es adorno de prototipo.
+     Chrome se guardaba app.js y seguía sirviéndolo viejo aunque cambiara en
+     disco. Consecuencia real: se veían fallos ya arreglados y no se veían
+     arreglos ya puestos, y se perdía media tarde persiguiendo fantasmas.
+     Las metas `Cache-Control` NO valen para esto: solo afectan al documento,
+     no a sus hojas ni a sus scripts. Cambiar la URL en cada carga sí.
+     Es un prototipo: no cachear nada no cuesta nada.
+     `document.write` aquí es deliberado — conserva el orden de carga, que
+     importa: app.js necesita a los demás ya definidos. -->
+<script>
+  (function () { var v = '?v=' + Date.now();
+    ["horno.js", "carta.js", "negocio.js", "promos.js", "contenido.js", "demo.js", "componentes/llama.js", "componentes/filaProducto.js", "componentes/chipHora.js", "geo.js", "app.js"].forEach(function (f) { document.write('<scr' + 'ipt src="./' + f + v + '"></scr' + 'ipt>'); });
+  }());
+</script>
+</body>
+</html>

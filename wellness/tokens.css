@@ -1,0 +1,121 @@
+/* ============================================================================
+   EME PÉREZ · TOKENS
+   ----------------------------------------------------------------------------
+   ÚNICA FUENTE DE VERDAD. Ningún valor de color, tipografía o espacio se
+   escribe a mano en ningún otro archivo. Si algo no está aquí, no existe.
+
+   `SISTEMA-DE-DISENO.html` LEE este archivo: no repite los valores, los
+   muestra. Por eso no puede desincronizarse.
+
+   Dos capas, a propósito:
+     · PRIMITIVOS  — qué es. `--color-pizarra` es un azul concreto.
+     · SEMÁNTICOS  — para qué sirve. `--accent` es el papel de acento.
+   El CSS usa casi siempre los SEMÁNTICOS. Cambiar a qué primitivo apunta un
+   semántico cambia el papel en toda la web sin tocar ni un componente.
+
+   v2 · 21-08-2026
+   ========================================================================== */
+:root{
+
+  /* ---------- PRIMITIVOS · COLOR ------------------------------------------ */
+  --color-cal:#f2eee5;            /* papel */
+  --color-arena-clara:#e7dfd2;
+  --color-arena-humeda:#d4c3ad;
+  --color-mortero:#b7b0a5;
+  --color-carbon:#34322d;         /* tinta */
+  --color-pizarra:#465f73;        /* acento */
+  --color-lamina:#ece8df;         /* fondo de cartela */
+  --color-puente:#ece6da;
+  --color-sensorial:#171a16;      /* el negro de la pausa */
+  --color-linea:rgba(52,50,45,.24);
+  --color-linea-inversa:rgba(242,238,229,.3);
+
+  /* ---------- SEMÁNTICOS · COLOR ------------------------------------------
+     Estos son los que usa el CSS. Vivían en design.css, fuera de este archivo:
+     buscar --color-pizarra en el código daba 1 uso y --accent daba 86, así que
+     parecía que el token no se usaba. 21-08-2026 */
+  --paper:var(--color-cal);
+  --ink:var(--color-carbon);
+  --accent:var(--color-pizarra);
+  --chalk:var(--color-arena-clara);
+  --sand:var(--color-arena-humeda);
+  --mortar:var(--color-mortero);
+  --line:var(--color-linea);
+
+  /* ---------- TIPOGRAFÍA · FAMILIAS --------------------------------------- */
+  --font-editorial:"Libre Baskerville",Georgia,serif;
+  --font-functional:"PT Sans Narrow","Avenir Next Condensed","Helvetica Neue",sans-serif;
+
+  /* ---------- TIPOGRAFÍA · ESCALA -----------------------------------------
+     Once peldaños. Si hace falta un tamaño que no está, se añade aquí; nunca
+     se escribe a mano en un componente. */
+  --type-cita:13vw;                             /* la cita de la pausa, sin tope */
+  --type-display-xl:clamp(62px,6.3vw,106px);    /* titular de sección a sangre */
+  --leading-display-xl:.88; --tracking-display-xl:-.065em;
+  --type-heading-l:clamp(40px,4.4vw,72px);      /* titular dentro de panel */
+  --leading-heading-l:.96;
+  --type-heading-m:clamp(28px,2.8vw,44px);      /* titular de capa y de ficha */
+  --leading-heading-m:1.05;
+  --type-heading-s:clamp(24px,2vw,32px);        /* titular de tarjeta · dato */
+  --leading-heading-s:1.1;
+  --type-lead:clamp(16px,1.25vw,20px);          /* párrafo de entrada · la marca */
+  --leading-lead:1.55;
+  --type-body:16px;        --leading-body:1.6;
+  --type-body-small:14px;  --leading-body-small:1.55;
+  --type-ui:12px;          --leading-ui:1.2;    --tracking-ui:.095em;
+  --type-micro:10px;       --leading-micro:1.2; --tracking-micro:.14em;
+  --type-nano:9px;                              /* numeración de pestañas */
+
+  /* ---------- ESPACIO ------------------------------------------------------ */
+  --space-1:4px;   --space-2:8px;   --space-3:12px;  --space-4:16px;
+  --space-5:20px;  --space-6:24px;  --space-7:28px;  --space-8:32px;
+  --space-9:36px;  --space-10:40px; --space-12:48px; --space-16:64px;
+  --space-20:80px; --space-24:96px; --space-32:128px;
+
+  /* ---------- REJILLA Y MEDIDAS DE LECTURA -------------------------------- */
+  --layout-columns:repeat(12,minmax(0,1fr));
+  --layout-gutter:clamp(16px,1.6vw,28px);
+  --layout-margin:clamp(20px,3.2vw,52px);
+  --layout-section-y:clamp(96px,15vh,180px);
+  --layout-block-y:clamp(56px,8vh,96px);
+  /* Hueco bajo la barra fija, y relleno de panel que crece con la ventana.
+     Eran los dos únicos espacios de la web escritos a mano. 21-08-2026 */
+  --layout-hueco-nav:106px;
+  --space-panel:clamp(28px,4vw,64px);
+  --content-reading:42ch;  --content-lead:34ch;
+  --content-guide:38ch;    --content-footer:48ch;
+
+  /* ---------- TAMAÑOS DE PIEZA -------------------------------------------- */
+  --size-art-max:620px;    --size-art-reserve:220px;
+  --size-diagram-min:440px; --size-diagram-min-mobile:380px;
+  --size-nav-mobile:72px;
+  --height-sensory:125vh;  --height-guide:110vh; --height-guide-art:100vh;
+
+  /* ---------- BORDE, FORMA Y SOMBRA --------------------------------------- */
+  --border-hairline:1px solid var(--color-linea);
+  --border-inverse:1px solid var(--color-linea-inversa);
+  --radius-organic:49% 51% 47% 53% / 56% 48% 52% 44%;
+  --shadow-lamina:0 18px 44px rgba(52,50,45,.055);
+
+  /* ---------- MOVIMIENTO --------------------------------------------------- */
+  --motion-fast:200ms; --motion-base:450ms; --motion-slow:900ms;
+  --ease-organic:cubic-bezier(.2,.7,.2,1);
+}
+
+/* Retirados el 21-08-2026 por no usarlos nadie:
+   --font-hand (Reenie Beanie), --layout-columns-mobile, --size-button-min. */
+
+@media(max-width:800px){
+  :root{
+    --layout-margin:20px;
+    --layout-gutter:16px;
+    --layout-section-y:96px;
+    --type-display-xl:clamp(58px,17vw,84px);
+    --height-sensory:100vh;
+    --height-guide-art:70vh;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  :root{--motion-fast:0ms; --motion-base:0ms; --motion-slow:0ms;}
+}
