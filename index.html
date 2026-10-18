@@ -422,7 +422,6 @@ ICONS.trashFull = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAAB
 const TIPOS = {
   real:     { label: "Proyecto real",   bg: "#d6f0d3", bd: "#2f7a2b" },
   concepto: { label: "Concepto",        bg: "#fbeecb", bd: "#a9791a" },
-  propio:   { label: "Producto propio", bg: "#e6defa", bd: "#6b55b8" },
   visual:   { label: "Trabajo visual",  bg: "#f7d9e0", bd: "#bf5a72" },
 };
 
@@ -486,7 +485,7 @@ const DESKTOP = [
     intro: "Conceptos de UI y producto que exploro por mi cuenta.",
     cards: [
       { kind: "project", title: "Spotify Now Playing", tipo: "concepto", estado: "Prototipo navegable", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt="Clubs cerca de ti en Spotify Now Playing" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Respira", tipo: "propio", estado: "En uso", desc: "App de respiración guiada, gratuita y sin cuenta. Una luna que respira contigo.", caseStudy: "case-respira", thumb: '<img src="respira/case/miniatura.jpg" width="600" height="200" alt="La luna de Respira" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Respira", tipo: "concepto", estado: "Prototipo navegable", desc: "App de respiración guiada, gratuita y sin cuenta. Una luna que respira contigo.", caseStudy: "case-respira", thumb: '<img src="respira/case/miniatura.jpg" width="600" height="200" alt="La luna de Respira" loading="lazy" decoding="async">' },
     ],
   },
   {
@@ -495,7 +494,7 @@ const DESKTOP = [
     cards: [
       { kind: "project", title: "Evolución del depredador", tipo: "visual", estado: "Caso disponible", desc: "Scrollytelling true-crime.", caseStudy: "case-depredador", thumb: '<img src="depredador/case/miniatura.jpg" width="640" height="400" alt="Portada de Evolución del depredador" loading="lazy" decoding="async">' },
       { kind: "project", title: "Mesa de lectura", tipo: "concepto", estado: "Prototipo navegable", desc: "Tarot interactivo de la vida freelance: 12 cartas ilustradas, física al barajar y una lectura que se escribe sola.", href: "mesa-de-lectura/index.html", thumb: '<img src="mesa-de-lectura/case/miniatura.jpg" width="640" height="400" alt="Mesa de lectura, tarot con física" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Este escritorio", tipo: "propio", estado: "Caso disponible", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" width="640" height="400" alt="El escritorio de este portfolio" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Este escritorio", tipo: "concepto", estado: "Caso disponible", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" width="640" height="400" alt="El escritorio de este portfolio" loading="lazy" decoding="async">' },
       { kind: "folder", ref: "personal-arte", title: "Personal · Arte", desc: "Collages, calendario y experimentos." },
     ],
   },
@@ -947,7 +946,7 @@ function caseRespiraHtml() {
       <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir Respira →</a></div>
       <h2 class="cs-title">Respira</h2>
       <p class="cs-sub">Una app de respiración guiada, gratuita y sin cuenta, para parar cinco minutos en mitad del día. La diseñé y la programé yo, y la regalo.</p>
-      <div class="cs-meta">Exploración de producto · producto propio&nbsp;&nbsp;·&nbsp;&nbsp;Octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
+      <div class="cs-meta">Exploración de producto · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
 
       ${fig("01-portada", "Pantalla de inicio de Respira: una luna de color lavanda y tres accesos", "La pantalla de inicio: una luna y tres caminos.")}
 
