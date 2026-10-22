@@ -95,22 +95,36 @@
   .pi-nota { font-size: 9px; color: rgba(0,0,0,0.55); line-height: 1.25; }
   .pn-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-  /* ---------- LA BOLSA (ventana del escritorio) ---------- */
-  .window.bolsa .content { padding: 0; background: #0d0d0d; max-height: none; overflow: hidden; }
-  .bolsa-head { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-bottom: 1px solid #2c2c2c; font-family: Monaco,Menlo,"Courier New",monospace; font-size: 12px; color: #f0c766; letter-spacing: 0.04em; }
-  .bolsa-row { display: grid; grid-template-columns: 44px 1fr auto 58px; align-items: center; gap: 8px; padding: 7px 12px; border-bottom: 1px solid #1d1d1d; font-family: Monaco,Menlo,"Courier New",monospace; font-size: 12px; color: #cfcfcf; }
-  .bolsa-row .sym { color: #8a8a8a; }
-  .bolsa-row .val { font-size: 15px; color: #fff; text-align: right; }
-  .bolsa-row .chg { text-align: right; font-size: 11px; }
-  .bolsa-row.up .chg { color: #4be37a; } .bolsa-row.down .chg { color: #4be37a; } .bolsa-row.joke .chg { color: #f0c766; }
-  .bolsa-row .spark { grid-column: 2; height: 14px; width: 100%; }
-  .bolsa-row .chg span { animation: bolsaBlink 1.6s steps(2, end) infinite; }
-  @keyframes bolsaBlink { 50% { opacity: 0.25; } }
-  .bolsa-tape { overflow: hidden; white-space: nowrap; padding: 6px 0; background: #1a1a1a; border-top: 1px solid #333; font-family: Monaco,Menlo,"Courier New",monospace; font-size: 11px; color: #f0c766; }
-  .bolsa-tape span { display: inline-block; padding-left: 100%; animation: bolsaTape 38s linear infinite; }
-  @keyframes bolsaTape { to { transform: translateX(-100%); } }
-  .bolsa-foot { padding: 6px 12px 8px; font-family: Monaco,Menlo,"Courier New",monospace; font-size: 10px; color: #7a7a7a; line-height: 1.4; }
-  @media (prefers-reduced-motion: reduce) { .bolsa-row .chg span, .bolsa-tape span { animation: none; } .bolsa-tape span { padding-left: 12px; } }
+  /* ---------- LA BOLSA (ventana del escritorio) ----------
+     Estilo "Stocks" de Apple traducido a los 90: rectas, sin degradados, relleno en puntitos (1 bit).
+     Fila cerrada = ▼ gris · fila abierta = ▲ verde. */
+  .window.bolsa .content { padding: 0; background: #0d0d0d; max-height: none; overflow: hidden; font-family: Monaco,Menlo,"Courier New",monospace; color: #cfcfcf; }
+  .bolsa-head { padding: 12px 14px 10px; border-bottom: 1px solid #2c2c2c; display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; }
+  .bolsa-head h2 { margin: 0; font: bold 20px/1.1 "Geneva","Helvetica Neue",Helvetica,Arial,sans-serif; color: #fff; }
+  .bolsa-head p { margin: 3px 0 0; font-size: 11px; color: #8a8a8a; }
+  .bolsa-fecha { font-size: 11px; color: #f0c766; white-space: nowrap; }
+  .bolsa-row { display: block; width: 100%; background: none; border: 0; border-bottom: 1px solid #1d1d1d; color: inherit; text-align: left; padding: 10px 14px; cursor: pointer; font: inherit; }
+  .bolsa-row:hover { background: #161616; }
+  .bolsa-row:focus-visible, .bolsa-cv a:focus-visible { outline: 2px solid #2b5fd6; outline-offset: -2px; }
+  .bolsa-top { display: grid; grid-template-columns: minmax(0,1fr) 100px 104px; align-items: center; gap: 10px; }
+  .bolsa-row .sym { display: block; font: bold 16px/1.1 "Geneva","Helvetica Neue",Helvetica,Arial,sans-serif; color: #fff; }
+  .bolsa-row .nm { display: block; font-size: 11px; color: #8a8a8a; margin-top: 3px; }
+  .bolsa-row .spark { width: 100px; height: 36px; display: block; }
+  .bolsa-row .spark polyline, .bolsa-row .spark line { vector-effect: non-scaling-stroke; }
+  .bolsa-row .val { text-align: right; font-size: 13px; color: #fff; white-space: nowrap; }
+  .bolsa-row .pill { display: block; margin: 4px 0 0 auto; width: max-content; min-width: 72px; padding: 2px 7px; text-align: right; font-size: 12px; color: #000; border: 1px solid #000; }
+  .bolsa-row.down .spark { color: #8a8a8a; } .bolsa-row.down .pill { background: #8a8a8a; }
+  .bolsa-row.up .spark { color: #4be37a; }   .bolsa-row.up .pill { background: #4be37a; }
+  .bolsa-row.up { background: #0f1a12; }
+  .bolsa-det { display: none; margin-top: 9px; padding-top: 8px; border-top: 1px solid #2c2c2c; font-size: 11px; line-height: 1.55; color: #cfcfcf; }
+  .bolsa-row.up .bolsa-det { display: block; }
+  .bolsa-det u { color: #f0c766; }
+  .bolsa-cv { display: flex; background: #141414; }
+  .bolsa-cv a { color: inherit; text-decoration: none; font-size: 12px; padding: 10px 14px; }
+  .bolsa-cv a:hover { background: #1c1c1c; }
+  .bolsa-cv .cv-main { flex: 1; }
+  .bolsa-cv .cv-main b { font-weight: normal; color: #8a8a8a; margin-right: 10px; }
+  .bolsa-cv .cv-dl { color: #f0c766; border-left: 1px solid #1d1d1d; }
   #menubar .mtitle { all: unset; box-sizing: border-box; height: 22px; padding: 0 9px; display: flex; align-items: center; font-size: 13px; font-weight: bold; cursor: default; color: #000; }
   #menubar .mtitle.mcat { padding: 0 10px 0 4px; }
   #menubar .mtitle.open, #menubar .mtitle:focus-visible { background: #000; color: #fff; }
@@ -258,26 +272,6 @@
   .balloon:before { content: ""; position: absolute; bottom: -7px; right: 27px; width: 0; height: 0;
     border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid #FFFBD6; z-index: 1; }
 
-  /* ---------- POPUP DE BIENVENIDA ---------- */
-  #welcome-backdrop {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.25); z-index: 30000; display: none;
-  }
-  #welcome-backdrop.show { display: block; }
-  #welcome {
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
-    width: 560px; max-width: 92vw; z-index: 30001; display: none;
-  }
-  #welcome.show { display: flex; }
-  #welcome .w-feat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 12px; }
-  #welcome .w-feat button { all: unset; box-sizing: border-box; cursor: pointer; border: 1px solid #000; background: #fff; display: flex; flex-direction: column; }
-  #welcome .w-feat button:hover, #welcome .w-feat button:focus-visible { outline: 2px solid #000; outline-offset: 1px; }
-  #welcome .w-feat img { width: 100%; aspect-ratio: 16/10; object-fit: cover; object-position: top left; display: block; border-bottom: 1px solid #000; }
-  #welcome .w-feat span { font-family: "ChicagoCS",Geneva,sans-serif; font-size: 11px; padding: 5px 7px 6px; line-height: 1.3; }
-  #welcome .w-lead { font-size: 15px; line-height: 1.4; margin: 0 0 4px; }
-  #welcome .w-small { font-size: 11px; color: rgba(0,0,0,0.6); margin: 0 0 12px; }
-  #welcome .w-actions { display: flex; justify-content: flex-end; }
-  @media (max-width: 520px) { #welcome .w-feat { grid-template-columns: 1fr; } #welcome .w-feat button { flex-direction: row; } #welcome .w-feat img { width: 40%; aspect-ratio: auto; border-bottom: 0; border-right: 1px solid #000; } #welcome .w-feat span { align-self: center; } }
-
   /* ---------- CAPA SEO / LECTORES DE PANTALLA (oculta, siempre en el DOM) ---------- */
   #mobile-view { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
@@ -301,8 +295,6 @@
       z-index: 500;
     }
     .window[id^="win-"] .content { max-height: none; flex: 1; }
-    /* popup de bienvenida: centrado y legible en móvil */
-    #welcome { width: 92vw !important; }
     .cards { grid-template-columns: 1fr; }
   }
   #mobile-view .m-head { padding: 28px 0 8px; }
@@ -370,27 +362,6 @@
     <div class="item" id="clock"></div>
   </div>
     <div class="item" id="clock"></div>
-  </div>
-</div>
-
-<!-- ===== POPUP DE BIENVENIDA ===== -->
-<div id="welcome-backdrop"></div>
-<div id="welcome" class="window focused" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
-  <div class="titlebar">
-    <div class="box" id="welcome-close" role="button" tabindex="0" aria-label="Cerrar">×</div>
-    <div class="title">Bienvenida</div>
-    <div class="box" aria-hidden="true"></div>
-  </div>
-  <div class="content">
-    <h2 id="welcome-title">Hola, soy Mery ✦</h2>
-    <p class="w-lead">Diseño, construyo y pongo en marcha productos digitales para negocios pequeños: desde lo que ve el cliente hasta lo que necesita el equipo para trabajar.</p>
-    <p class="w-small">Este es mi escritorio. Abre una carpeta o empieza por uno de estos proyectos:</p>
-    <div class="w-feat">
-      <button type="button" data-open="case-puti"><img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt=""><span>Puti Di Madre<br>Negocio y operaciones</span></button>
-      <button type="button" data-open="case-presupuestos"><img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt=""><span>Presupuestar sin echar la tarde<br>Herramienta en uso</span></button>
-      <button type="button" data-open="case-spotify"><img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt=""><span>Spotify Now Playing<br>Exploración de producto</span></button>
-    </div>
-    <div class="w-actions"><button class="btn" id="welcome-ok">Entrar al escritorio</button></div>
   </div>
 </div>
 
@@ -819,7 +790,7 @@ function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
 // Escape cierra la ventana que está al frente (salvo que haya un menú o la bienvenida abiertos: ellos cierran lo suyo primero)
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Escape" || e.defaultPrevented) return;
-  if (document.querySelector("#welcome.show") || document.querySelector('#menubar [aria-expanded="true"]')) return;
+  if (document.querySelector("#intro-host.show") || document.querySelector('#menubar [aria-expanded="true"]')) return;
   const w = document.querySelector(".window.open.focused:not(.closing)");
   if (w && w._close) w._close(e);
 });
@@ -1269,26 +1240,154 @@ desktop.addEventListener("mousedown", (e) => {
 /* ============================================================
    POPUP DE BIENVENIDA
    ============================================================ */
-(function welcome() {
-  const w = document.getElementById("welcome");
-  const back = document.getElementById("welcome-backdrop");
+/* @@PRESENTACION-INICIO@@ */
+/* ============================================================
+   PRESENTACIÓN DE ENTRADA (~27 s). Sustituye al popup de bienvenida.
+   NO editar aquí: la fuente está en _taller-intro/ (intro.css, intro.html, intro.js)
+   y se copia con:  python3 _taller-intro/build.py
+   Vive en un Shadow DOM para que sus estilos no se mezclen con los del escritorio.
+   window.showWelcome() la vuelve a lanzar (menús del gato y Ayuda).
+   ============================================================ */
+(function presentacion() {
+  const host = document.createElement("div");
+  host.id = "intro-host"; host.setAttribute("role", "dialog"); host.setAttribute("aria-modal", "true"); host.setAttribute("aria-label", "Presentación del portfolio");
+  const root = host.attachShadow({ mode: "open" });
+  root.innerHTML = "<style>" + "  /* Presentaci\u00f3n de entrada. Usa los tokens del sistema de dise\u00f1o del portfolio (SISTEMA-DE-DISENO-PORTFOLIO.md):\n     escritorio #b8b8b8, ventanas Platinum, Geneva / Chicago / Monaco, etiquetas .tag / .type-tag, bot\u00f3n .btn. */\n  :host { position: fixed; inset: 0; z-index: 40000; display: none; font-family: \"Geneva\",\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size: 12px; color: #000; opacity: 1; transition: opacity .5s ease; --mono: ui-monospace, \"SF Mono\", Menlo, Consolas, \"Liberation Mono\", monospace; }\n  :host(.show) { display: block; } :host(.bye) { opacity: 0; }\n  * { box-sizing: border-box; }\n  #stage { position: absolute; inset: 0; background: #b8b8b8; overflow: hidden; user-select: none; }\n  .fade { opacity: 0; transition: opacity .5s ease; } .fade.on { opacity: 1; }\n\n  /* barra de men\u00fas (la del escritorio) */\n  #menubar { position: absolute; top: 0; left: 0; right: 0; height: 22px; background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #ddd 2px); border-bottom: 1px solid #000; display: flex; align-items: center; padding: 0 8px; font-size: 13px; font-weight: bold; transform: translateY(-24px); transition: transform .5s ease; z-index: 30; }\n  #menubar.on { transform: none; }\n  #menubar .mt { height: 22px; padding: 0 9px; display: flex; align-items: center; }\n  #menubar .mt.cat { padding: 0 10px 0 4px; }\n  #menubar .sp { flex: 1; } #menubar .own { font-weight: normal; color: rgba(0,0,0,.6); margin-left: 14px; } #menubar .clk { margin-left: 14px; white-space: nowrap; }\n  @media (max-width: 900px) { #menubar .own { display: none; } } @media (max-width: 600px) { #menubar .m-opt, #menubar .clk { display: none; } }\n\n  /* iconos del escritorio (los del portfolio) */\n  #icons { position: absolute; top: 30px; right: 14px; bottom: 56px; display: flex; flex-direction: column; flex-wrap: wrap-reverse; align-content: flex-start; gap: 2px; transition: opacity .5s ease; }\n  #icons.dim { opacity: 0; }\n  .ico { width: 82px; padding: 4px 2px; display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0; transform: translateY(8px) scale(.9); transition: opacity .35s ease, transform .35s ease; }\n  .ico.on { opacity: 1; transform: none; }\n  .ico img { width: 32px; height: 32px; image-rendering: pixelated; }\n  .ico span { font-size: 11px; text-align: center; line-height: 1.2; padding: 1px 3px; }\n  .ico.sel span { background: #000; color: #fff; }\n\n  /* ventana Platinum */\n  .win { background: #ECECEC; border: 1px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,.45); display: flex; flex-direction: column; }\n  .win .tb { height: 20px; background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #99b8e8 2px); border-bottom: 1px solid #000; display: flex; align-items: center; padding: 0 4px; gap: 6px; flex-shrink: 0; }\n  .win .tb u { width: 13px; height: 13px; border: 1px solid #000; background: #fff; flex-shrink: 0; text-decoration: none; }\n  .win .tb span { flex: 1; text-align: center; font-weight: bold; font-size: 12px; margin-right: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n\n  /* ---------- escena de proyecto ---------- */\n  #pj { --h: clamp(190px, min(40vh, 62vw), 380px); position: absolute; inset: 22px 0 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 18px 40px; pointer-events: none; }\n  #pj .tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; }\n  #pj .tags > * { opacity: 0; transform: translateY(8px); transition: opacity .3s ease, transform .35s ease; }\n  #pj .tags > *.on { opacity: 1; transform: none; }\n  #pj .cat { display: inline-block; font-size: 13px; font-weight: bold; letter-spacing: .05em; text-transform: uppercase; padding: 4px 10px; border: 1px solid #000; border-radius: 3px; }\n  #pj .tipo { font-family: var(--mono); font-size: 11px; letter-spacing: .02em; text-transform: uppercase; padding: 3px 7px; border: 1px solid; border-radius: 3px; }\n  #pj .tipo.real { background: #d6f0d3; color: #2f7a2b; } #pj .tipo.concepto { background: #fbeecb; color: #a9791a; }\n  #pj .est { font-family: var(--mono); font-size: 12px; color: rgba(0,0,0,.6); } #pj .est::before { content: \"// \"; }\n  #pj h2 { margin: 0; text-align: center; font: normal clamp(22px, 4.2vw, 40px)/1.15 \"ChicagoCS\",\"Geneva\",sans-serif; max-width: 780px; }\n  #pj h2 .w { display: inline-block; opacity: 0; transform: translateY(.5em); transition: opacity .3s ease, transform .4s ease; margin: 0 .14em; }\n  #pj h2 .w.on { opacity: 1; transform: none; }\n  #pj .fig { font: normal clamp(17px, 2.5vw, 24px) \"MonacoCS\", var(--mono); background: #fff; border: 1px solid #000; box-shadow: 2px 2px 0 rgba(0,0,0,.3); padding: 5px 14px; opacity: 0; transform: translateY(6px); transition: opacity .3s ease, transform .35s ease; }\n  #pj .fig.on { opacity: 1; transform: none; } #pj .fig s { color: rgba(0,0,0,.5); margin-right: 8px; }\n  #pj .sub { font-size: clamp(12px, 1.7vw, 15px); margin: 0; text-align: center; max-width: 540px; color: rgba(0,0,0,.75); opacity: 0; transition: opacity .4s ease; }\n  #pj .sub.on { opacity: 1; }\n  #pj .scrbox { position: relative; width: 100%; height: calc(var(--h) + 26px); margin-top: 6px; }\n  #pj .scr { position: absolute; left: 50%; top: 0; max-width: 92vw; opacity: 0; transform: translateX(calc(-50% + 60px)); transition: opacity .3s ease, transform .5s ease; }\n  #pj .scr.on { opacity: 1; transform: translateX(-50%); }\n  #pj .scr.off { opacity: 0; transform: translateX(calc(-50% - 60px)); }\n  #pj .scr img { display: block; height: var(--h); width: auto; max-width: 92vw; background: #ddd; }\n  #pj .moon { position: relative; height: var(--h); aspect-ratio: 390 / 844; overflow: hidden; background: radial-gradient(120% 70% at 50% 28%, #35305f 0%, #231f46 55%, #181533 100%); }\n  #pj .moon::before { content: \"\"; position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 12% 18%, #fff8 50%, transparent 52%), radial-gradient(1px 1px at 82% 12%, #fff7 50%, transparent 52%), radial-gradient(1px 1px at 70% 40%, #fff6 50%, transparent 52%), radial-gradient(1px 1px at 22% 62%, #fff6 50%, transparent 52%), radial-gradient(1px 1px at 88% 74%, #fff7 50%, transparent 52%), radial-gradient(1px 1px at 40% 88%, #fff5 50%, transparent 52%); }\n  #pj .moon img { position: absolute; left: 50%; top: 31%; width: 74%; height: auto !important; max-width: none !important; transform: translate(-50%, -50%) scale(.72); mix-blend-mode: screen; filter: brightness(1.3) saturate(1.15); -webkit-mask-image: radial-gradient(circle, #000 52%, transparent 71%); mask-image: radial-gradient(circle, #000 52%, transparent 71%); animation: breathe 3s ease-in-out infinite; }\n  #pj .moon .tx { position: absolute; left: 0; right: 0; bottom: 14%; text-align: center; font: italic 20px/1.2 \"Cormorant Garamond\", Georgia, serif; color: #e9e3ff; }\n  #pj .moon .tx span { position: absolute; left: 0; right: 0; opacity: 0; animation: txin 3s ease-in-out infinite; } #pj .moon .tx span + span { animation-name: txout; }\n  @keyframes breathe { 0%, 100% { transform: translate(-50%, -50%) scale(.72); } 50% { transform: translate(-50%, -50%) scale(1.3); } }\n  @keyframes txin { 0%, 8% { opacity: 0; } 20%, 42% { opacity: 1; } 55%, 100% { opacity: 0; } }\n  @keyframes txout { 0%, 55% { opacity: 0; } 68%, 92% { opacity: 1; } 100% { opacity: 0; } }\n  #pj .dots { position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%); display: flex; gap: 6px; }\n  #pj .dots s { width: 8px; height: 8px; border: 1px solid #000; background: #fff; } #pj .dots s.on { background: #000; }\n  #pj.out > * { opacity: 0 !important; transform: translateY(-18px) !important; transition: opacity .3s ease, transform .35s ease !important; }\n\n  /* post-it (los del muro) */\n  #pibtn { position: absolute; top: 34px; left: 24px; width: 150px; min-height: 100px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: rgba(255,243,163,.6); border: 2px dashed rgba(0,0,0,.5); transform: rotate(-2deg); font-size: 12px; font-weight: bold; color: rgba(0,0,0,.7); text-align: center; opacity: 0; transition: opacity .35s ease; }\n  #pibtn b { font-size: 44px; font-weight: normal; line-height: 1; } #pibtn.on { opacity: 1; }\n  #pinote { position: absolute; left: 50%; top: 50%; width: 200px; min-height: 130px; padding: 16px 14px 12px; background: #fff3a3; border: 1px solid rgba(0,0,0,.45); box-shadow: 2px 2px 0 rgba(0,0,0,.3); font-size: 15px; line-height: 1.3; color: #111; transform: translate(-130%, -140%) rotate(-8deg) scale(.4); opacity: 0; transition: transform .6s ease, opacity .3s ease; transform-origin: top left; }\n  #pinote.on { opacity: 1; transform: translate(-50%, -50%) rotate(-2deg); }\n  #pinote.out { opacity: 0; transform: translate(-50%, -50%) rotate(-2deg) scale(.94); transition: opacity .35s ease, transform .35s ease; }\n\n  /* botones (.btn del sistema) */\n  .btn { font-family: inherit; font-size: 12px; font-weight: bold; padding: 5px 12px; border: 1px solid #000; background: #ddd; color: #111; cursor: pointer; border-radius: 0; }\n  .btn:hover { background: #cfcfcf; } .btn:active { background: #bbb; }\n  .btn:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }\n  #empieza { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }\n  #entrar { font-size: 15px; padding: 10px 30px; }\n  #skip { position: absolute; bottom: 14px; right: 14px; z-index: 60; }\n  #bar { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: #2b5fd6; z-index: 60; }\n\n  /* texto grande inicial */\n  #hero { position: absolute; left: 0; right: 0; top: 36%; text-align: center; padding: 0 22px; }\n  #hero h1 { margin: 0; font: normal clamp(30px, 6.5vw, 58px)/1.1 \"ChicagoCS\",\"Geneva\",sans-serif; }\n  #hero p { margin: 16px auto 0; max-width: 580px; font-size: clamp(15px, 2.4vw, 20px); line-height: 1.4; min-height: 2.8em; }\n  .caret::after { content: \"\"; display: inline-block; width: .55em; height: 1em; margin-left: 2px; background: #000; vertical-align: -2px; animation: blink .8s steps(1) infinite; }\n  @keyframes blink { 50% { opacity: 0; } }\n\n  /* subt\u00edtulo inferior */\n  #cap { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); max-width: 86vw; background: #fff; border: 1px solid #000; box-shadow: 2px 2px 0 rgba(0,0,0,.3); padding: 8px 14px; font-size: 13px; text-align: center; z-index: 20; }\n\n  /* cursor */\n  #cursor { position: absolute; left: 0; top: 0; width: 18px; height: 24px; z-index: 50; transition: transform .8s cubic-bezier(.45,.05,.2,1); pointer-events: none; opacity: 0; }\n  #cursor.on { opacity: 1; } #cursor svg { display: block; }\n  #cursor.click svg { animation: tap .25s; } @keyframes tap { 50% { transform: scale(.82); } }\n  @media (prefers-reduced-motion: reduce) { * { transition-duration: .01s !important; animation-duration: .01s !important; } }\n" + "</style>" + "<div id=\"stage\">\n  <div id=\"menubar\"><span class=\"mt cat\"><svg viewBox=\"0 0 15 12\" width=\"19\" height=\"15\" shape-rendering=\"crispEdges\" aria-hidden=\"true\"><path d=\"M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z\" fill=\"#000\"/></svg></span><span class=\"mt\">Archivo</span><span class=\"mt m-opt\">Edici\u00f3n</span><span class=\"mt\">Ver</span><span class=\"mt\">Proyectos</span><span class=\"mt\">Ayuda</span><span class=\"sp\"></span><span class=\"own\">Escritorio de Mery Villena</span><span class=\"clk\" id=\"clk\"></span></div>\n  <div id=\"icons\" aria-hidden=\"true\"></div>\n\n  <div id=\"hero\"><h1 class=\"fade\" id=\"h1\"></h1><p class=\"fade\" id=\"hp\"></p></div>\n  <div id=\"pj\" aria-hidden=\"true\"></div>\n\n  <div id=\"pibtn\" aria-hidden=\"true\"><b>+</b>Deja tu post-it</div>\n  <div id=\"pinote\" aria-hidden=\"true\"></div>\n  <div id=\"empieza\" class=\"fade\"><button id=\"entrar\" class=\"btn\" type=\"button\">Entrar</button></div>\n\n  <div id=\"cap\" class=\"fade\" role=\"status\"></div>\n  <div id=\"cursor\"><svg width=\"18\" height=\"24\" viewBox=\"0 0 18 24\"><path d=\"M1 1v19l5-4.5 3.2 7.5 3-1.3-3.2-7.4H16z\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/></svg></div>\n  <button id=\"skip\" class=\"btn\" type=\"button\">Saltar \u203a</button>\n  <div id=\"bar\"></div>\n</div>\n";
+  document.body.appendChild(host);
+  /* ---- Textos ---- */
+  const TEXTOS = {
+    nombre: "Mery Villena",
+    frase: "Diseño de producto digital y UI, con experiencia en operaciones.",
+    c1: "Esto es mi portfolio. Un escritorio donde todo se abre con un clic.",
+    c2: "Operaciones, diseño de producto y UI.",
+    c3: "Navega por el escritorio y descubre más proyectos.",
+    c4: "Deja tus comentarios por el escritorio.",
+    nota: "Déjame tus comentarios aquí",
+  };
+  // Carpetas del escritorio, con su color de categoría (sistema de diseño).
+  const CATS = { negocio: ["Soluciones de negocio", "#7fbf7a"], operaciones: ["Herramientas y operaciones", "#8fb4ec"], producto: ["Exploración de producto", "#f0c766"] };
+  // Cada proyecto: carpeta, tipo y estado reales (como en sus tarjetas), el gancho, la cifra y tres pantallas reales.
+  const PROYECTOS = [
+    { cat: "negocio", tipo: "concepto", estado: "Prototipo navegable", head: "Una pizzería que le gana margen a las apps de reparto", fig: { texto: "pedidos que el horno cumple" },
+      sub: "Operaciones y diseño de producto: la web solo ofrece las horas que el horno puede cumplir, y el panel ordena el turno.",
+      shots: [["La web", "putidimadre/case/01-web.jpg"], ["El panel del turno", "putidimadre/case/02-panel.jpg"], ["Elegir la hora", "putidimadre/case/03-franjas-punta.jpg"]] },
+    { cat: "operaciones", tipo: "real", estado: "En uso", head: "Presupuestar sin echar la tarde", fig: { antes: "1 h", de: 60, a: 10, suf: " min" },
+      sub: "Del PDF del fabricante al presupuesto del cliente, en un solo paso.",
+      shots: [["Original del fabricante", "generador-de-presupuestos/img/02-antes-original-korvel.jpg"], ["Presupuesto del cliente", "generador-de-presupuestos/img/03-despues-luz-norte.jpg"], ["PDF generado", "generador-de-presupuestos/img/08-pdf-generado.jpg"]] },
+    { cat: "producto", tipo: "concepto", estado: "Prototipo navegable", head: "Descubre música en el local donde estás", fig: { texto: "app + negocio" },
+      sub: "Diseño de producto: la ficha del club, la cola compartida y el panel del local, en un mismo producto.",
+      shots: [["Clubs cerca", "spotify/capturas/02-clubs-cerca.jpg"], ["Ficha del club", "spotify/capturas/03-ficha-club.jpg"], ["Panel del local", "spotify/capturas/06-panel-local.jpg"]] },
+    { cat: "producto", tipo: "concepto", estado: "Prototipo navegable", head: "Una luna que respira contigo", fig: { texto: "desde cero" },
+      sub: "UI diseñada y programada desde cero: una app de respiración guiada, gratuita y sin cuenta.",
+      shots: [["La luna que respira", "luna", 2200], ["El inicio de la app", "respira/case/intro-home.jpg"], ["Los ajustes", "respira/case/intro-ajustes.jpg"]] },
+  ];
+  const TIPOS = { real: "Proyecto real", concepto: "Concepto" };
+  const IC = typeof ICONS !== "undefined" ? ICONS : {};
+  const ESCRITORIO = [["Léeme primero", IC.favorites], ["Soluciones de negocio", IC.directory], ["Herramientas y operaciones", IC.directory], ["Exploración de producto", IC.directory], ["Voz visual", IC.directory], ["Sobre mí", IC.disk], ["Contacto", IC.mail], ["Papelera", IC.trashEmpty]];
+  const SEL = 3; // "Exploración de producto": la que pulsa el cursor
+  const $ = (s) => root.querySelector(s), $$ = (s) => [...root.querySelectorAll(s)];
+  const DURACION = 27000;
+  let run = 0, t0 = 0, raf = 0;
+
+  const wait = (ms, id) => new Promise((res, rej) => { setTimeout(() => (id === run ? res() : rej("cancel")), ms); });
+  const ok = (id) => { if (id !== run) throw "cancel"; };
+  const typeTo = async (el, text, id, v = 38) => { el.classList.add("caret"); el.textContent = ""; for (const ch of text) { ok(id); el.textContent += ch; await wait(v, id); } };
+  const caption = (txt) => { const c = $("#cap"); c.classList.remove("on"); setTimeout(() => { c.textContent = txt; c.classList.add("on"); }, 220); };
+  const cursor = (x, y, click) => new Promise((res) => { const c = $("#cursor"); c.classList.add("on"); c.style.transform = "translate(" + x + "px," + y + "px)"; setTimeout(() => { if (click) { c.classList.add("click"); setTimeout(() => c.classList.remove("click"), 260); } res(); }, 850); });
+  const centro = (el) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2 - 4, r.top + r.height / 2 - 2]; };
+  const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+  // Iconos y reloj: los mismos del escritorio.
+  $("#icons").innerHTML = ESCRITORIO.map((e) => '<div class="ico"><img src="' + (e[1] || "") + '" alt=""><span>' + esc(e[0]) + "</span></div>").join("");
+  const reloj = () => { const d = new Date(), dia = d.toLocaleDateString("es-ES", { weekday: "short" }).replace(".", ""); let h = d.getHours(); const ap = h >= 12 ? "PM" : "AM"; h = h % 12 || 12; $("#clk").textContent = dia.charAt(0).toUpperCase() + dia.slice(1) + " " + h + ":" + String(d.getMinutes()).padStart(2, "0") + " " + ap; };
+  reloj();
+
+  function reset() {
+    ["#h1", "#hp", "#cap", "#empieza"].forEach((s) => { $(s).classList.remove("on", "caret"); });
+    $("#h1").textContent = ""; $("#hp").textContent = ""; $("#menubar").classList.remove("on");
+    $$(".ico").forEach((i) => i.classList.remove("on", "sel")); $("#icons").classList.remove("dim");
+    $("#pj").className = ""; $("#pj").innerHTML = "";
+    $("#pibtn").classList.remove("on"); $("#pinote").classList.remove("on", "out"); $("#pinote").textContent = ""; $("#cursor").classList.remove("on");
+    $("#cursor").style.transform = "translate(" + innerWidth * .6 + "px," + innerHeight * .7 + "px)";
+  }
+  function final() {
+    reset(); $("#menubar").classList.add("on"); $$(".ico").forEach((i) => i.classList.add("on"));
+    $("#cap").textContent = TEXTOS.c3; $("#cap").classList.add("on"); $("#empieza").classList.add("on");
+    $("#bar").style.width = "100%";
+  }
+  function progreso() { cancelAnimationFrame(raf); const tick = () => { const p = Math.min(1, (performance.now() - t0) / DURACION); $("#bar").style.width = p * 100 + "%"; if (p < 1) raf = requestAnimationFrame(tick); }; tick(); }
+
+  // Una escena de proyecto: etiquetas del sistema (carpeta, tipo, estado), gancho palabra a palabra,
+  // cifra que cuenta y tres pantallas reales, de una en una y enteras.
+  const shots_ms = (P, i) => P.shots[i][2] || (i ? 650 : 750);
+  async function escena(P, id) {
+    const pj = $("#pj"); pj.className = ""; const C = CATS[P.cat];
+    pj.innerHTML = '<div class="tags"><span class="cat" style="background:' + C[1] + '">' + esc(C[0]) + '</span><span class="tipo ' + P.tipo + '">' + TIPOS[P.tipo] + '</span><span class="est">' + esc(P.estado.toLowerCase()) + "</span></div>" +
+      "<h2>" + P.head.split(" ").map((w) => '<span class="w">' + esc(w) + "</span>").join(" ") + "</h2>" +
+      '<div class="fig"></div><p class="sub">' + esc(P.sub) + "</p>" +
+      '<div class="scrbox">' + P.shots.map((s) => '<div class="win scr"><div class="tb"><u></u><span>' + esc(s[0]) + "</span></div>" + (s[1] === "luna" ? '<div class="moon"><img src="respira/case/intro-luna.jpg" alt=""><div class="tx"><span>Inhala</span><span>Exhala</span></div></div>' : '<img src="' + s[1] + '" alt="" onerror="if(this.src.indexOf(\'putidimadre-pizzeria\')<0)this.src=this.src.replace(\'putidimadre/case/\',\'putidimadre-pizzeria/putidimadre/case/\')">') + "</div>").join("") + '<div class="dots">' + P.shots.map(() => "<s></s>").join("") + "</div></div>";
+    const tags = $$("#pj .tags > *"), words = $$("#pj h2 .w"), fig = $("#pj .fig"), sub = $("#pj .sub"), shots = $$("#pj .scr"), dots = $$("#pj .dots s");
+    for (const c of tags) { c.classList.add("on"); await wait(90, id); }
+    for (const w of words) { w.classList.add("on"); await wait(55, id); }
+    fig.classList.add("on");
+    if (P.fig.texto) { fig.textContent = P.fig.texto; await wait(350, id); }
+    else { fig.innerHTML = "<s>" + P.fig.antes + "</s> " + P.fig.de + P.fig.suf; const n0 = performance.now(), dur = 650; await new Promise((res) => { const f = () => { if (id !== run) return res(); const k = Math.min(1, (performance.now() - n0) / dur), v = Math.round(P.fig.de + (P.fig.a - P.fig.de) * (1 - Math.pow(1 - k, 3))); fig.innerHTML = "<s>" + P.fig.antes + "</s> " + v + P.fig.suf; k < 1 ? requestAnimationFrame(f) : res(); }; f(); }); ok(id); }
+    sub.classList.add("on");
+    await wait(150, id);
+    for (let i = 0; i < shots.length; i++) {
+      if (i) shots[i - 1].classList.replace("on", "off");
+      shots[i].classList.add("on"); dots.forEach((d, k) => d.classList.toggle("on", k === i)); await wait(shots_ms(P, i), id);
+    }
+    await wait(150, id);
+    pj.classList.add("out"); await wait(380, id);
+  }
+
+  async function play() {
+    const id = ++run; reset(); reloj(); t0 = performance.now(); progreso();
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return final();
+    try {
+      // 1 · quién soy
+      await wait(300, id);
+      const h = $("#h1"); h.classList.add("on"); await typeTo(h, TEXTOS.nombre, id, 55); h.classList.remove("caret");
+      const p = $("#hp"); p.classList.add("on"); await typeTo(p, TEXTOS.frase, id, 28); p.classList.remove("caret");
+      await wait(900, id);
+      h.classList.remove("on"); p.classList.remove("on"); await wait(450, id);
+      // 2 · esto es un escritorio
+      $("#menubar").classList.add("on"); await wait(250, id);
+      for (const i of $$(".ico")) { i.classList.add("on"); await wait(110, id); }
+      caption(TEXTOS.c1);
+      const ico = $$(".ico")[SEL]; const [cx, cy] = centro(ico.querySelector("img"));
+      await cursor(cx, cy, true); ico.classList.add("sel"); await wait(600, id);
+      // 3 · cuatro proyectos
+      caption(TEXTOS.c2); $("#cursor").classList.remove("on"); $("#icons").classList.add("dim");
+      for (const P of PROYECTOS) await escena(P, id);
+      $("#icons").classList.remove("dim"); $$(".ico").forEach((i) => i.classList.remove("sel"));
+      // 4 · deja tu post-it
+      caption(TEXTOS.c4); $("#pibtn").classList.add("on"); await wait(350, id);
+      const [px, py] = centro($("#pibtn")); await cursor(px, py, true);
+      const nota = $("#pinote"); nota.classList.add("on"); $("#cursor").classList.remove("on"); await wait(650, id);
+      await typeTo(nota, TEXTOS.nota, id, 55); nota.classList.remove("caret"); await wait(800, id);
+      nota.classList.add("out"); $("#pibtn").classList.remove("on"); await wait(400, id);
+      // 5 · entrar
+      caption(TEXTOS.c3); $("#empieza").classList.add("on"); await wait(600, id);
+      cancelAnimationFrame(raf); $("#bar").style.width = "100%";
+    } catch (e) { if (e !== "cancel") throw e; }
+  }
+
   const KEY = "mery-bienvenida-vista";
   const marcarVista = () => { try { localStorage.setItem(KEY, "1"); } catch (e) {} };
   const yaVista = () => { try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; } };
-  // cerrar con la ×, con el botón, con Escape o eligiendo un proyecto: todo lleva al mismo sitio
-  const close = () => { w.classList.remove("show"); back.classList.remove("show"); marcarVista(); };
-  const okBtn = document.getElementById("welcome-ok");
-  window.showWelcome = () => { w.classList.add("show"); back.classList.add("show"); okBtn.focus(); };
-  // Primera visita: bienvenida. Después, directo al escritorio (se puede volver a ver desde el menú del gato)
-  if (!/[?&]quitar=/.test(location.search) && !yaVista()) window.showWelcome();
-  okBtn.addEventListener("click", close);
-  w.querySelectorAll(".w-feat button").forEach((b) => b.addEventListener("click", () => {
-    close();
-    if (b.dataset.open) openWindow(b.dataset.open); else window.location.href = b.dataset.href;
-  }));
-  document.getElementById("welcome-close").addEventListener("click", close);
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && w.classList.contains("show")) close(); });
+  let prevFocus = null;
+  const cerrar = () => { run++; cancelAnimationFrame(raf); marcarVista(); host.classList.add("bye"); setTimeout(() => { host.classList.remove("show", "bye"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }, 500); };
+  const mostrar = () => { prevFocus = document.activeElement; host.classList.remove("bye"); host.classList.add("show"); play(); $("#skip").focus(); };
+  $("#skip").addEventListener("click", cerrar);
+  $("#entrar").addEventListener("click", cerrar);
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && host.classList.contains("show")) cerrar(); });
+  window.showWelcome = mostrar;
+  // Primera visita: presentación. Después, directo al escritorio. ?presentacion la fuerza; ?quitar= la salta.
+  if (/[?&]presentacion\b/.test(location.search) || (!/[?&]quitar=/.test(location.search) && !yaVista())) mostrar();
 })();
+/* @@PRESENTACION-FIN@@ */
 
 /* ============================================================
    MURO DE POST-ITS (público, en Supabase; se publica solo)
@@ -1462,36 +1561,65 @@ desktop.addEventListener("mousedown", (e) => {
 })();
 
 /* ============================================================
-   LA BOLSA: cifras reales, contadas del propio escritorio
+   LA BOLSA: cabecera + 3 posiciones (NEG / UX / UI) + CV
    ============================================================ */
 (function bolsa() {
-  const all = [];
-  DESKTOP.forEach((d) => { if (d.cards) d.cards.forEach((c) => all.push(c)); });
-  Object.values(NESTED).forEach((n) => n.cards.forEach((c) => all.push(c)));
-  const proyectos = all.filter((c) => c.kind === "project" && (c.caseStudy || c.href));
-  const cases = proyectos.filter((c) => c.caseStudy);
-  const antes = 60, ahora = 10, baja = Math.round((antes - ahora) / antes * 100);
-  const spark = (seed, dir) => {
-    let y = dir > 0 ? 11 : 3, pts = [];
-    for (let i = 0; i < 24; i++) { seed = (seed * 9301 + 49297) % 233280; const r = seed / 233280 - 0.5; y = Math.max(2, Math.min(12, y - dir * 0.35 + r * 3)); pts.push((i * 5) + "," + y.toFixed(1)); }
-    return '<svg class="spark" viewBox="0 0 115 14" preserveAspectRatio="none" aria-hidden="true"><polyline points="' + pts.join(" ") + '" fill="none" stroke="#4be37a" stroke-width="1"/></svg>';
-  };
-  const rows = [
-    { sym: "PROY", name: "Proyectos en el escritorio", val: String(proyectos.length), chg: "▲", cls: "up", dir: 1 },
-    { sym: "CASE", name: "Case studies escritos", val: String(cases.length), chg: "▲", cls: "up", dir: 1 },
-    { sym: "OFIC", name: "Años de oficio", val: "20+", chg: "▲", cls: "up", dir: 1 },
-    { sym: "PRES", name: "Presupuestar: 1 h → 10 min", val: "−" + baja + "%", chg: "▼", cls: "down", dir: -1 },
-    { sym: "CAFE", name: "Cafés", val: "∞", chg: "▲▲", cls: "joke", dir: 1 },
+  // Tres posiciones (NEG / UX / UI). Cada una abre su case study del escritorio.
+  // val = cifra grande · pillA / pillC = texto de la etiqueta de color (abierta / cerrada)
+  const filas = [
+    { sym: "NEG", name: "Presupuestos", val: "1 h → 10 min", pillC: "abrir", pillA: "−83%", det: "Presupuestar sin echar la tarde. Herramienta no-code en uso.", win: "case-presupuestos", dir: -1 },
+    { sym: "UX", name: "Spotify Now Playing", val: "app + B2B", pillC: "abrir", pillA: "abierta", det: "Descubrir música en locales, con el modelo de negocio incluido.", win: "case-spotify", dir: 1 },
+    { sym: "UI", name: "Respira", val: "desde cero", pillC: "abrir", pillA: "abierta", det: "HTML y JS sin plantillas ni cuentas. Una luna que respira contigo.", win: "case-respira", dir: 1 },
   ];
+  // Línea de mercado: salto al abrir, luego se asienta (como Stocks). Semilla fija: siempre sale igual.
+  const W = 100, H = 36, N = 52;
+  const grafica = (seed, dir, id) => {
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280 - 0.5; };
+    let ruido = 0; const v = [];
+    for (let i = 0; i < N; i++) {
+      const t = i / (N - 1);
+      ruido = ruido * 0.72 + rnd() * (0.55 - 0.3 * t);
+      v.push(dir * (1 - Math.exp(-t * 5.5)) * 1.0 - dir * 0.18 * t + ruido * 0.5);
+    }
+    const lo = Math.min.apply(null, v), hi = Math.max.apply(null, v);
+    const pts = v.map((x, i) => [i * W / (N - 1), 32 - ((x - lo) / (hi - lo)) * 26]);
+    const linea = pts.map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+    const ref = pts[0][1].toFixed(1);
+    const dots = (k, n, w) => '<pattern id="p' + k + id + '" width="' + n + '" height="' + n + '" patternUnits="userSpaceOnUse"><rect width="' + w + '" height="' + w + '" fill="currentColor"/></pattern>';
+    // Relleno en puntitos que se aclara hacia abajo: tres bandas de densidad (1 bit, sin degradado).
+    const banda = (k, y0, y1) => '<rect x="0" y="' + y0 + '" width="' + W + '" height="' + (y1 - y0) + '" fill="url(#p' + k + id + ')" clip-path="url(#c' + id + ')"/>';
+    return '<svg class="spark" viewBox="0 0 ' + W + " " + H + '" preserveAspectRatio="none" aria-hidden="true">' +
+      '<defs>' + dots("a", 2, 1) + dots("b", 3, 1) + dots("c", 4, 1) +
+      '<clipPath id="c' + id + '"><polygon points="' + linea + " " + W + "," + H + ' 0,' + H + '"/></clipPath></defs>' +
+      banda("a", 0, 14) + banda("b", 14, 25) + banda("c", 25, H) +
+      '<line x1="0" x2="' + W + '" y1="' + ref + '" y2="' + ref + '" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" opacity=".55"/>' +
+      '<polyline points="' + linea + '" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></svg>';
+  };
+  const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const hoy = new Date().toLocaleDateString("es-ES", { day: "numeric", month: "long" });
   const html =
-    '<div class="bolsa-head"><span>MVM MAISON · BOLSA</span><span>cierre de hoy</span></div>' +
-    rows.map((r, i) => '<div class="bolsa-row ' + r.cls + '"><span class="sym">' + r.sym + '</span><span>' + r.name + '</span><span class="val">' + r.val + '</span><span class="chg"><span>' + r.chg + '</span></span>' + spark(i * 977 + 31, r.dir) + '</div>').join("") +
-    '<div class="bolsa-tape"><span>RESPIRA ▲ YA EN EL MERCADO &nbsp;·&nbsp; PRESUPUESTOS ▼ 1 H → 10 MIN &nbsp;·&nbsp; GATO ▲ MENÚ PRINCIPAL &nbsp;·&nbsp; PAPELERA ▬ SE RESTAURA SIEMPRE &nbsp;·&nbsp; CAFÉS ▲▲ SIN LÍMITE &nbsp;·&nbsp;</span></div>' +
-    '<div class="bolsa-foot">Las cifras se cuentan solas a partir de este escritorio. Los gráficos son decorativos y los cafés, una exageración.</div>';
-  const w = makeWindow("bolsa", "La Bolsa", null, html, 105, Math.max(40, Math.min(173, window.innerHeight - 400)), 340);
+    '<div class="bolsa-head"><div><h2>Mery Villena</h2><p>Negocio · UX · UI</p></div><span class="bolsa-fecha">' + esc(hoy) + '</span></div>' +
+    filas.map((f, i) =>
+      '<button type="button" class="bolsa-row down" data-i="' + i + '" aria-expanded="false"><div class="bolsa-top">' +
+        '<span><span class="sym">' + f.sym + '</span><span class="nm">' + esc(f.name) + '</span></span>' +
+        grafica(i * 977 + 31, f.dir, i) +
+        '<span><span class="val">' + esc(f.val) + '</span><span class="pill"><span class="ar">▼</span> <span class="pt">' + f.pillC + '</span></span></span></div>' +
+        '<div class="bolsa-det">' + esc(f.det) + '<br><u>Ver caso →</u></div></button>').join("") +
+    '<div class="bolsa-cv"><a class="cv-main" href="cv/index.html" target="_blank" rel="noopener"><b>CV</b>Currículum ↗</a><a class="cv-dl" href="cv/CV-Mery-Villena.pdf" download aria-label="Descargar el CV en PDF">PDF ↓</a></div>';
+  const w = makeWindow("bolsa", "La Bolsa", null, html, 105, Math.max(40, Math.min(173, window.innerHeight - 400)), 400);
   if (w) w.classList.add("bolsa");
+  // Solo una abierta a la vez. Una fila ya abierta, al pulsarla de nuevo, abre su case study.
+  const rows = w ? Array.from(w.querySelectorAll(".bolsa-row")) : [];
+  const poner = (r, abierta) => {
+    const f = filas[+r.dataset.i];
+    r.classList.toggle("up", abierta); r.classList.toggle("down", !abierta); r.setAttribute("aria-expanded", abierta ? "true" : "false");
+    r.querySelector(".ar").textContent = abierta ? "▲" : "▼"; r.querySelector(".pt").textContent = abierta ? f.pillA : f.pillC;
+  };
+  rows.forEach((r) => r.addEventListener("click", () => {
+    if (r.classList.contains("up")) { openWindow(filas[+r.dataset.i].win, r); return; }
+    rows.forEach((x) => poner(x, x === r));
+  }));
   if (window.innerWidth > 760) openWindow("bolsa");
-  window.__bolsaCuadre = { proyectos: proyectos.map((c) => c.title), cases: cases.map((c) => c.title), baja };
 })();
 
 /* ============================================================
