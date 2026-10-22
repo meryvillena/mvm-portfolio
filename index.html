@@ -1404,8 +1404,9 @@ desktop.addEventListener("mousedown", (e) => {
   }
 
   const KEY = "mery-presentacion-vista";
-  const marcarVista = () => { try { localStorage.setItem(KEY, "1"); } catch (e) {} };
-  const yaVista = () => { try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; } };
+  const CADUCA_DIAS = 30; // pasado este plazo, la presentación vuelve a salir sola
+  const marcarVista = () => { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} };
+  const yaVista = () => { try { const t = +localStorage.getItem(KEY); return t > 0 && Date.now() - t < CADUCA_DIAS * 864e5; } catch (e) { return false; } };
   let prevFocus = null;
   const cerrar = () => { run++; cancelAnimationFrame(raf); marcarVista(); host.classList.add("bye"); setTimeout(() => { host.classList.remove("show", "bye"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }, 500); };
   const mostrar = () => { prevFocus = document.activeElement; host.classList.remove("bye"); host.classList.add("show"); play(); $("#skip").focus(); };
