@@ -1374,7 +1374,7 @@ desktop.addEventListener("mousedown", (e) => {
     } catch (e) { if (e !== "cancel") throw e; }
   }
 
-  const KEY = "mery-bienvenida-vista";
+  const KEY = "mery-presentacion-vista";
   const marcarVista = () => { try { localStorage.setItem(KEY, "1"); } catch (e) {} };
   const yaVista = () => { try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; } };
   let prevFocus = null;
