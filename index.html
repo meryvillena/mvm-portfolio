@@ -710,7 +710,22 @@ function makeIcon(id, label, iconSrc, x, y) {
 // Cambia el icono de la Papelera entre vacía y llena según lo que contenga.
 function updateTrashIcon() {
   const img = document.querySelector('.icon[data-id="trash"] img');
-  if (img) img.src = trashedIds.length ? ICONS.trashFull : ICONS.trashEmpty;
+  if (img) img.src = (trashedIds.length || trashExtras.length) ? ICONS.trashFull : ICONS.trashEmpty;
+}
+
+// Ventanas y post-its también se pueden tirar: cada uno registra aquí cómo volver.
+const trashExtras = [];
+function pointOverTrash(x, y) {
+  const t = document.querySelector('.icon[data-id="trash"]');
+  if (!t) return false;
+  const r = t.getBoundingClientRect();
+  return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+}
+function trashAccept(restoreFn) {
+  trashExtras.push(restoreFn);
+  updateTrashIcon();
+  const t = document.querySelector('.icon[data-id="trash"]');
+  if (t) { t.classList.remove("wobble"); void t.offsetWidth; t.classList.add("wobble"); setTimeout(() => t.classList.remove("wobble"), 460); }
 }
 
 function restoreAll() {
@@ -720,6 +735,7 @@ function restoreAll() {
     if (el && pos) { el.style.display = "flex"; el.style.left = pos.x + "px"; el.style.top = pos.y + "px"; }
   });
   trashedIds = [];
+  trashExtras.splice(0).forEach((fn) => fn());
   updateTrashIcon();
 }
 
@@ -770,20 +786,33 @@ function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
   el.addEventListener("mousedown", () => focusWindow(id));
 
   const titlebar = el.querySelector(".titlebar");
-  let dragging = false, offX = 0, offY = 0;
+  let dragging = false, offX = 0, offY = 0, winMoved = false, startL = 0, startT = 0;
   titlebar.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("box")) return;
-    dragging = true;
+    dragging = true; winMoved = false; startL = el.offsetLeft; startT = el.offsetTop;
     const r = el.getBoundingClientRect();
     offX = e.clientX - r.left; offY = e.clientY - r.top;
     focusWindow(id);
   });
   document.addEventListener("mousemove", (e) => {
     if (!dragging) return;
+    winMoved = true;
     el.style.left = (e.clientX - offX) + "px";
     el.style.top = Math.max(24, e.clientY - offY) + "px";
   });
-  document.addEventListener("mouseup", () => { dragging = false; });
+  document.addEventListener("mouseup", (e) => {
+    if (!dragging) return;
+    dragging = false;
+    if (winMoved && pointOverTrash(e.clientX, e.clientY)) {
+      el.classList.add("closing");
+      delete openers[id];
+      setTimeout(() => {
+        el.classList.remove("open", "closing", "focused");
+        el.style.left = startL + "px"; el.style.top = startT + "px";
+      }, 150);
+      trashAccept(() => { el.style.left = startL + "px"; el.style.top = startT + "px"; openWindow(id); });
+    }
+  });
   return el;
 }
 
@@ -1507,7 +1536,12 @@ desktop.addEventListener("mousedown", (e) => {
         const sx = e.clientX, sy = e.clientY, l0 = n.offsetLeft, t0 = n.offsetTop; let movido = false;
         n.setPointerCapture(e.pointerId); n.style.zIndex = Math.min(++zNota, 95); n.classList.add("arrastrando");
         const mv = (ev) => { movido = true; n.style.left = Math.max(0, Math.min(l0 + ev.clientX - sx, window.innerWidth - 60)) + "px"; n.style.top = Math.max(24, Math.min(t0 + ev.clientY - sy, window.innerHeight - 40)) + "px"; };
-        const up = () => { n.removeEventListener("pointermove", mv); n.removeEventListener("pointerup", up); n.removeEventListener("pointercancel", up); n.classList.remove("arrastrando");
+        const up = (ev) => { n.removeEventListener("pointermove", mv); n.removeEventListener("pointerup", up); n.removeEventListener("pointercancel", up); n.classList.remove("arrastrando");
+          if (movido && ev.type === "pointerup" && pointOverTrash(ev.clientX, ev.clientY)) {
+            const o = leer(LS_OCULTOS, []); o.push(r.id); guardar(LS_OCULTOS, o);
+            trashAccept(() => { guardar(LS_OCULTOS, leer(LS_OCULTOS, []).filter((i) => i !== r.id)); pintarEscritorio(); });
+            pintarEscritorio(); return;
+          }
           if (movido) { const g = leer(LS_POS, {}); g[r.id] = [n.offsetLeft, n.offsetTop]; guardar(LS_POS, g); } };
         n.addEventListener("pointermove", mv); n.addEventListener("pointerup", up); n.addEventListener("pointercancel", up);
       });
@@ -1629,7 +1663,7 @@ desktop.addEventListener("mousedown", (e) => {
   const bar = document.getElementById("menubar");
   const titles = [...bar.querySelectorAll(".mtitle")];
   const drops = {};
-  const frontWindow = () => [...document.querySelectorAll(".window.open")].filter((w) => w.id !== "welcome").sort((a, b) => (+b.style.zIndex || 0) - (+a.style.zIndex || 0))[0];
+  const frontWindow = () => [...document.querySelectorAll(".window.open")].sort((a, b) => (+b.style.zIndex || 0) - (+a.style.zIndex || 0))[0];
   const closeWin = (w) => { const c = w && w.querySelector(".close"); if (c) c.click(); };
   const projects = [];
   DESKTOP.forEach((d) => { if (d.kind === "folder" && d.cards) d.cards.forEach((c) => { if (c.kind === "project" && (c.caseStudy || c.href)) projects.push({ folder: d.title, c }); }); });
@@ -1654,7 +1688,7 @@ desktop.addEventListener("mousedown", (e) => {
       { l: "Contacto", f: () => openWindow("contacto") },
       "-",
       { l: "Cerrar ventana", f: () => closeWin(frontWindow()) },
-      { l: "Cerrar todas las ventanas", f: () => document.querySelectorAll(".window.open").forEach((w) => { if (w.id !== "welcome") closeWin(w); }) },
+      { l: "Cerrar todas las ventanas", f: () => document.querySelectorAll(".window.open").forEach((w) => closeWin(w)) },
     ],
     edicion: [
       { l: "Copiar mi email", f: () => { try { navigator.clipboard.writeText("meryvillena@proton.me"); } catch (e) {} } },
