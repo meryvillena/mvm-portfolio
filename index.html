@@ -953,11 +953,16 @@ function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
   titlebar.addEventListener("dblclick", (e) => {
     if (movil() || e.target.closest(".box")) return;
     stopFx(); el.style.transform = ""; el.classList.add("anim");
-    if (el._prev) {                                    // restaurar
-      const p = el._prev; el._prev = null;
-      el.style.left = p.L + "px"; el.style.top = p.T + "px"; el.style.width = p.W + "px"; el.style.height = p.H + "px";
+    if (el._max) {                                     // volver al tamaño y sitio con que se abrió la ventana
+      el._max = false;
+      const cur = el.offsetHeight;
+      el.style.height = ""; el.classList.remove("redim"); el.style.width = (w || 380) + "px";
+      const objetivo = el.offsetHeight;                // altura natural del contenido
+      el.style.height = cur + "px"; void el.offsetHeight;
+      el.style.left = x + "px"; el.style.top = y + "px"; el.style.height = objetivo + "px";
+      setTimeout(() => { if (!el._max) el.style.height = ""; }, 270);
     } else {                                           // maximizar
-      el._prev = { L: el.offsetLeft, T: el.offsetTop, W: el.offsetWidth, H: el.offsetHeight };
+      el._max = true;
       el.style.width = window.innerWidth + "px"; el.style.height = (window.innerHeight - 22) + "px"; el.style.left = "0px"; el.style.top = "22px";
       el.classList.add("redim");
     }
