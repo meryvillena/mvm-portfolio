@@ -214,11 +214,13 @@
   .window .titlebar .box.zoom { border-color: transparent; background: transparent; cursor: pointer; } /* esquina derecha: cierra, pero sin dibujar nada */
   @media (max-width: 760px) {
     .window .titlebar { height: 34px; }
+    .window .titlebar .title { line-height: 33px; }
     .window .titlebar .box { width: 24px; height: 24px; font-size: 18px; }
   }
   .window .titlebar .title {
-    flex: 1; text-align: center; font-size: 12px; font-weight: bold;
-    background: #ECECEC; padding: 0 6px;
+    flex: 0 1 auto; min-width: 0; margin: 0 auto; align-self: stretch; line-height: 19px;   /* el fondo se ciñe al texto y deja ver las rayas a los lados */
+    text-align: center; font-size: 12px; font-weight: bold;
+    background: #ECECEC; padding: 0 8px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .window .content {
@@ -308,46 +310,77 @@
   #fondo-capa { position: absolute; inset: 0; z-index: 0; pointer-events: none; background-position: center; }
   body.sin-efectos .window.open { animation: none; }
   .pc, .rd { font-size: 12px; }
-  .pc-tabs { display: flex; gap: 2px; margin: -6px -6px 0; padding: 0 6px; border-bottom: 1px solid #000; }
-  .pc-tabs button { font: inherit; font-weight: bold; padding: 5px 12px; border: 1px solid #000; border-bottom: 0; background: #d4d4d4; color: #111; border-radius: 4px 4px 0 0; margin-bottom: -1px; cursor: pointer; }
-  .pc-tabs button[aria-selected="true"] { background: #ECECEC; border-bottom: 1px solid #ECECEC; }
-  .pc-pane { padding: 14px 0 4px; display: grid; gap: 14px; }
-  .pc-pane[hidden], .pc-fila[hidden] { display: none; }
-  .pc-fila { display: grid; gap: 6px; }
-  .pc-fila > b { font-size: 12px; }
-  .pc-op { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pc-op button, .pc-btn, .rd-btn { font: inherit; font-weight: bold; padding: 5px 12px; min-height: 28px; border: 1px solid #000; background: #ddd; color: #111; cursor: pointer; border-radius: 0; box-shadow: 1px 1px 0 rgba(0,0,0,.35); }
-  .pc-op button:active, .pc-btn:active, .rd-btn:active { background: #bbb; box-shadow: none; }
-  .pc-op button[aria-pressed="true"] { background: #000; color: #fff; }
-  .pc-op .chip { display: inline-block; width: 11px; height: 11px; border: 1px solid #000; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+  /* Panel de control: aire del panel «Apariencia» de Mac OS 8 (pestañas, caja con bisel, grupos con título, radios, deslizadores) */
+  .pc-tabs { display: flex; padding-left: 10px; position: relative; z-index: 1; margin-bottom: -1px; }
+  .pc-tabs button { font: inherit; padding: 4px 14px 3px; border: 1px solid #000; border-bottom: 0; background: linear-gradient(#e2e2e2, #c9c9c9); color: #111; border-radius: 6px 6px 0 0; margin-right: -1px; cursor: pointer; box-shadow: inset 1px 1px 0 #fff; }
+  .pc-tabs button[aria-selected="true"] { background: #ECECEC; font-weight: bold; padding-bottom: 5px; margin-bottom: -1px; z-index: 2; position: relative; }
+  .pc-caja { border: 1px solid #000; background: #ECECEC; box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #a5a5a5; border-radius: 0 6px 6px 6px; padding: 14px 14px 16px; }
+  .pc-pane { display: grid; gap: 12px; }
+  .pc-pane[hidden], .pc-grupo[hidden] { display: none; }
+  .pc-grupo { margin: 0; min-width: 0; padding: 4px 12px 11px; border: 1px solid #8f8f8f; border-radius: 4px; box-shadow: 1px 1px 0 #fff, inset 1px 1px 0 #fff; }
+  .pc-grupo legend { padding: 0 6px; font-weight: bold; }
+  .pc-radios { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+  .pc-radios.col { flex-direction: column; gap: 6px; }
+  .pc-radio { display: flex; align-items: center; gap: 7px; cursor: pointer; position: relative; }
+  .pc-radio input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .pc-radio .r { flex: none; width: 14px; height: 14px; border: 1px solid #000; border-radius: 50%; background: #fff; box-shadow: inset 1px 1px 0 #999; display: grid; place-items: center; }
+  .pc-radio input:checked + .r::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #000; }
+  .pc-radio input:focus-visible + .r { outline: 2px solid #2b5fd6; outline-offset: 2px; }
+  .pc-radio img, .pc-radio .sp { flex: none; width: 16px; height: 16px; image-rendering: pixelated; }
+  .pc-radio .chip { flex: none; width: 12px; height: 12px; border: 1px solid #000; background: var(--c); }
   .pc-sw { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .pc-sw button { width: 26px; height: 26px; padding: 0; border: 1px solid #000; background: var(--c); cursor: pointer; box-shadow: 1px 1px 0 rgba(0,0,0,.35); }
-  .pc-sw button[aria-pressed="true"] { outline: 2px solid #000; outline-offset: 2px; }
-  .pc-sw input[type=color] { width: 36px; height: 26px; padding: 0; border: 1px solid #000; background: #fff; cursor: pointer; }
+  .pc-sw button { width: 20px; height: 20px; padding: 0; border: 1px solid #000; background: var(--c); cursor: pointer; box-shadow: inset 1px 1px 0 rgba(255,255,255,.55); }
+  .pc-sw button[aria-pressed="true"] { outline: 2px solid #000; outline-offset: 1px; }
+  .pc-otro { position: relative; margin-left: 4px; cursor: pointer; }
+  .pc-otro input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+  .pc-otro:focus-within { outline: 2px solid #2b5fd6; outline-offset: 2px; }
   .pc-rango { display: flex; align-items: center; gap: 8px; }
-  .pc-rango input { flex: 1; accent-color: #000; min-width: 0; }
-  .pc-rango span { font-family: var(--mono); font-size: 11px; min-width: 34px; text-align: right; }
-  .pc-pie { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-top: 1px solid rgba(0,0,0,.25); padding-top: 10px; margin-top: 4px; }
+  .pc-rango img { flex: none; image-rendering: pixelated; }
+  .pc-rango span { font-family: var(--mono); font-size: 11px; min-width: 38px; text-align: right; }
+  .pc input[type=range] { -webkit-appearance: none; appearance: none; flex: 1; min-width: 0; height: 20px; background: transparent; margin: 0; }
+  .pc input[type=range]::-webkit-slider-runnable-track { height: 4px; background: #fff; border: 1px solid #000; box-shadow: inset 1px 1px 0 #999; }
+  .pc input[type=range]::-moz-range-track { height: 4px; background: #fff; border: 1px solid #000; box-shadow: inset 1px 1px 0 #999; }
+  .pc input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 18px; margin-top: -8px; border: 1px solid #000; border-radius: 3px; background: linear-gradient(#fff, #cdcdcd); box-shadow: inset 1px 1px 0 #fff, 1px 1px 0 rgba(0,0,0,.35); }
+  .pc input[type=range]::-moz-range-thumb { width: 12px; height: 16px; border: 1px solid #000; border-radius: 3px; background: linear-gradient(#fff, #cdcdcd); box-shadow: inset 1px 1px 0 #fff, 1px 1px 0 rgba(0,0,0,.35); }
+  .pc-op { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pc-pie { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
   .pc-nota { color: rgba(0,0,0,.6); font-family: var(--mono); font-size: 11px; }
-  .pc button:focus-visible, .pc input:focus-visible, .rd button:focus-visible, .rd select:focus-visible, .rd input:focus-visible, .rd a:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }
-  .rd { display: grid; gap: 12px; }
-  .rd-lcd { background: #b9c9a6; color: #1d2a19; border: 2px solid #000; box-shadow: inset 2px 2px 0 rgba(0,0,0,.35); padding: 8px 10px; font-family: var(--mono); display: grid; gap: 3px; min-height: 76px; }
-  .rd-lcd .est { font-size: 11px; letter-spacing: .08em; }
-  .rd-lcd .nom { font-size: 15px; font-weight: bold; white-space: nowrap; overflow: hidden; }
-  .rd-lcd .nom span { display: inline-block; }
-  .rd-lcd .nom.largo span { animation: rdMarq 9s linear infinite; padding-right: 3em; }
-  .rd-lcd .sub { font-size: 11px; opacity: .75; }
+  .pc input:focus-visible, .pc-sw button:focus-visible, .pc-tabs button:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }
+  .rd { display: grid; gap: 10px; justify-items: center; }
+  .ip-body { width: 100%; max-width: 270px; background: linear-gradient(160deg, #fbfbf8, #e6e6e1); border: 1px solid #000; border-radius: 22px; box-shadow: 2px 2px 0 rgba(0,0,0,.35), inset -2px -3px 0 rgba(0,0,0,.1); padding: 14px 14px 18px; display: grid; gap: 16px; justify-items: center; }
+  .ip-screen { width: 100%; background: #b9c9a6; color: #1d2a19; border: 2px solid #6d6d68; outline: 1px solid #000; box-shadow: inset 2px 2px 0 rgba(0,0,0,.3); font-family: var(--mono); font-size: 11px; }
+  .ip-bar { display: flex; justify-content: space-between; gap: 6px; padding: 3px 6px; border-bottom: 1px solid rgba(29,42,25,.55); font-size: 10px; letter-spacing: .04em; white-space: nowrap; }
+  .ip-nom { padding: 6px 6px 1px; font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; }
+  .ip-nom span { display: inline-block; }
+  .ip-nom.largo span { animation: rdMarq 9s linear infinite; padding-right: 3em; }
+  .ip-sub { padding: 0 6px 6px; font-size: 10px; opacity: .75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ip-lista { position: relative; height: 51px; overflow-y: auto; scrollbar-width: none; border-top: 1px solid rgba(29,42,25,.55); }
+  .ip-lista::-webkit-scrollbar { display: none; }
+  .ip-lista button { all: unset; box-sizing: border-box; display: block; width: 100%; height: 17px; padding: 2px 6px; cursor: default; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
+  .ip-lista button[aria-pressed="true"] { background: #1d2a19; color: #b9c9a6; }
+  .ip-lista button:focus-visible { outline: 2px solid #2b5fd6; outline-offset: -2px; }
+  .ip-rueda { position: relative; flex: none; width: 176px; height: 176px; border-radius: 50%; background: #fff; border: 1px solid #000; box-shadow: inset 0 0 0 7px #f0f0ec, inset 0 0 0 8px #bdbdb8; }
+  .ip-rueda button { position: absolute; font: inherit; font-size: 13px; font-weight: bold; color: #7a7a76; background: none; border: 0; cursor: pointer; width: 48px; height: 42px; padding: 0; border-radius: 10px; }
+  .ip-rueda button:active { color: #000; }
+  .ip-rueda button:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 1px; }
+  .ip-rueda .n { top: 8px; left: 63px; } .ip-rueda .s { bottom: 8px; left: 63px; } .ip-rueda .o { left: 8px; top: 67px; } .ip-rueda .e { right: 8px; top: 67px; }
+  .ip-rueda .centro { left: 55px; top: 55px; width: 64px; height: 64px; border-radius: 50%; border: 1px solid #000; background: #f4f4f1; color: #111; font-size: 18px; box-shadow: inset -2px -2px 0 rgba(0,0,0,.15); }
+  .ip-rueda .centro[aria-pressed="true"] { background: #d6d6d1; }
   @keyframes rdMarq { from { transform: translateX(0); } to { transform: translateX(-100%); } }
-  @media (prefers-reduced-motion: reduce) { .rd-lcd .nom.largo span { animation: none; } }
-  .rd-fila { display: flex; align-items: center; gap: 8px; }
-  .rd-fila label { font-weight: bold; min-width: 52px; }
-  .rd select { flex: 1; min-width: 0; font: inherit; padding: 4px; border: 1px solid #000; background: #fff; color: #111; border-radius: 0; }
-  .rd-fila input[type=range] { flex: 1; accent-color: #000; min-width: 0; }
-  .rd-btn.big { flex: 1; font-size: 15px; min-height: 36px; }
-  .rd-btn[aria-pressed="true"] { background: #000; color: #fff; }
+  @media (prefers-reduced-motion: reduce) { .ip-nom.largo span { animation: none; } }
   .rd-cred { font-family: var(--mono); font-size: 11px; color: rgba(0,0,0,.6); }
   .rd-cred a { color: inherit; }
-  @media (max-width: 760px) { #win-radio.window[id^="win-"] { top: auto !important; bottom: 0 !important; } #win-radio .content { flex: none; } }
+  /* el reproductor flota suelto sobre el escritorio, sin marco de ventana: es el propio iPod */
+  #win-radio.window { background: transparent; border: 0; box-shadow: none !important; min-width: 0; width: calc(270px * var(--rd-escala, 1)) !important; }
+  #win-radio .titlebar, #win-radio .rz { display: none; }
+  #win-radio .content { padding: 0; overflow: visible; max-height: none; background: transparent; zoom: var(--rd-escala, 1); }
+  .ip-grip { position: absolute; right: 7px; bottom: 7px; width: 16px; height: 16px; padding: 0; border: 0; background: repeating-linear-gradient(135deg, transparent 0 3px, #8f8f8a 3px 4px); clip-path: polygon(100% 0, 100% 100%, 0 100%); cursor: nwse-resize; touch-action: none; }
+  .ip-grip:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }
+  .ip-x { position: absolute; top: -8px; right: -8px; z-index: 2; width: 22px; height: 22px; padding: 0; border: 1px solid #000; border-radius: 50%; background: #f4f4f1; color: #333; font: bold 14px/1 var(--mono); cursor: pointer; }
+  .ip-x:hover { background: #ddd; } .ip-x:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }
+  .ip-body { position: relative; }
+  .ip-body .rd-cred { margin-top: -6px; }
+  @media (max-width: 760px) { #win-radio.window[id^="win-"] { top: auto !important; bottom: 18px !important; left: calc(50% - 135px * var(--rd-escala, 1)) !important; right: auto !important; width: calc(270px * var(--rd-escala, 1)) !important; } #win-radio .content { flex: none; } }
 
   /* ---------- CAPA SEO / LECTORES DE PANTALLA (oculta, siempre en el DOM) ---------- */
   #mobile-view { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -1869,7 +1902,7 @@ desktop.addEventListener("mousedown", (e) => {
   const HEX = /^#[0-9a-f]{6}$/i;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const MOVS = { controlada: { f: 0.86, e: 10, l: 0.5 }, expresiva: { f: 0.94, e: 16, l: 1 }, caotica: { f: 0.975, e: 24, l: 1.8 } };
-  const DEF = { fondo: "liso", colorFondo: "#b8b8b8", colorGato: "#cfcfcf", tam: 48, opac: 60, acento: "#99b8e8", mov: "expresiva", efectos: true, sonido: false, volSonido: 60, radio: "groovesalad", volRadio: 70 };
+  const DEF = { fondo: "liso", colorFondo: "#b8b8b8", colorGato: "#cfcfcf", tam: 48, opac: 60, acento: "#99b8e8", mov: "expresiva", efectos: true, sonido: false, volSonido: 60, radio: "groovesalad", volRadio: 70, escalaRadio: 1 };
   const A = Object.assign({}, DEF);
   try {
     const g = JSON.parse(localStorage.getItem(KEY) || "null");
@@ -1878,7 +1911,7 @@ desktop.addEventListener("mousedown", (e) => {
   ["colorFondo", "colorGato", "acento"].forEach((k) => { if (!HEX.test(A[k])) A[k] = DEF[k]; });
   if (["liso", "gato", "patron"].indexOf(A.fondo) < 0) A.fondo = DEF.fondo;
   if (!MOVS[A.mov]) A.mov = DEF.mov;
-  A.tam = clamp(A.tam, 24, 120); A.opac = clamp(A.opac, 10, 100); A.volSonido = clamp(A.volSonido, 0, 100); A.volRadio = clamp(A.volRadio, 0, 100);
+  A.tam = clamp(A.tam, 24, 120); A.opac = clamp(A.opac, 10, 100); A.volSonido = clamp(A.volSonido, 0, 100); A.volRadio = clamp(A.volRadio, 0, 100); A.escalaRadio = clamp(A.escalaRadio, 0.55, 1);
   const guardar = () => { try { localStorage.setItem(KEY, JSON.stringify(A)); } catch (e) {} };
 
   /* ---------- Fondo, color de barras y movimiento ---------- */
@@ -1944,40 +1977,43 @@ desktop.addEventListener("mousedown", (e) => {
     SONIDOS[tipo](c, c.currentTime + 0.01);
   }
   window.__snd = sonar;
-  document.addEventListener("click", (e) => { if (e.target.closest && e.target.closest(".mtitle, .mi, .window button, .window a")) sonar("clic"); }, true);
+  document.addEventListener("click", (e) => { if (e.target.closest && e.target.closest(".mtitle, .mi, .window button, .window a, .window input[type=radio]")) sonar("clic"); }, true);
 
   /* ---------- Ventana del Panel de control ---------- */
+  const IMG = { centro: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAeElEQVR42q1TwQ3AIAh0BVdgBVdwFnZyBWdxpysVTPpoUoWanIcx3JkzJAApAt2EPLDeWbiWCfncH0jovbvwKvDluCVQDa0UDFbc9bbAaoQwWEJuytsCRAQu6ipKkjdjnLygzos8OduZTjIIhRj+xmOB8Cz8Mo0RXHncQqdyq9cZAAAAAElFTkSuQmCC", mosaico: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAYklEQVR42mP4//8/AyUYQgApcjBUL5hBFoAaRJ7tSBjCcAHimcbG/8+kQTCITYwc3ACQxH+gxP80oJdmQmhi5OAGpBlDTAaqBvou7f8ZJFvwyVEvDEYDkQJMcV6gSm6kBAMAfnfgcgv+cSsAAAAASUVORK5CYII=", off: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAAeElEQVR42tWVwQkAMQgEU216Si1pwZ722ANBxM8dayCCP5lBjGYAGJ35rfgtbxIQ3iYgeE7rETh8LegFEW4mFmQ4IBD4ICu4pAMCCGXuveFBuEyQw+GSIccOqrxDEIfsg5YJqmcaJW2L1rbJWXLnsTtyro98OH/zAfPRW7jdya+CAAAAAElFTkSuQmCC", on: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAAAsTAAALEwEAmpwYAAAE9GlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDIgNzkuZGJhM2RhM2I1LCAyMDIzLzEyLzE1LTEwOjQyOjM3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjUuNiAoTWFjaW50b3NoKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjQtMDMtMjVUMTY6MDg6MTktMDU6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI0LTA0LTA0VDIyOjMzOjA1LTA1OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI0LTA0LTA0VDIyOjMzOjA1LTA1OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoyZDdiY2Y5NS03ZjBmLTQ0NjctOTQ2ZS1jZmEyZjMzNDdhNDQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MmQ3YmNmOTUtN2YwZi00NDY3LTk0NmUtY2ZhMmYzMzQ3YTQ0IiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MmQ3YmNmOTUtN2YwZi00NDY3LTk0NmUtY2ZhMmYzMzQ3YTQ0Ij4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDoyZDdiY2Y5NS03ZjBmLTQ0NjctOTQ2ZS1jZmEyZjMzNDdhNDQiIHN0RXZ0OndoZW49IjIwMjQtMDMtMjVUMTY6MDg6MTktMDU6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyNS42IChNYWNpbnRvc2gpIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pro8VN0AAAD1SURBVDiNtVXtDYQgDG0vt4CO4AreCM6CM8EsNwKuwgrvfpAaRD6Kyb2kURTe6ytFGQD9E6+Rycw8nI1a4Am5WoCZYYyvvp/nuSreFRDydV2rc0IIXBNpCqTkDf6mSFUgJy8JtEpzAsAZRAQJYzysBbwHgHiN03FZM00TWuN3LmhtTGpZvrRt8dlx3DMPIXBaGhl3HeTwPoa1VwdpprX7ogPnulUdwtBJFjRLkuHmYN/jOjlYpf5PyXtiFwcAWMK5DxERHfkOJ8jJS2LVEmlENGVq7oHWCVG9VN1NTkVGyYmIWPvDkc81AFX3CNRtOkosUDt4ih/00fyFDnXHswAAAABJRU5ErkJggg==" };   // iconos originales de la librería Mac OS 8 (icons_McOs_portfolio)
   const COLORES = [["#b8b8b8", "Gris"], ["#e4e4e4", "Blanquecino"], ["#8a8a8a", "Gris oscuro"], ["#2b2b2b", "Negro suave"], ["#99b8e8", "Azul"], ["#a6d8a0", "Verde"], ["#f0b3cc", "Rosa"], ["#f2c28a", "Naranja"], ["#c3b3ea", "Violeta"]];
   const ACENTOS = [["#99b8e8", "Azul Platinum"], ["#aab0b8", "Grafito"], ["#a6d8a0", "Verde"], ["#f0b3cc", "Rosa"], ["#f2c28a", "Naranja"], ["#c3b3ea", "Violeta"]];
-  const opciones = (k, lista) => '<div class="pc-op">' + lista.map((o) => '<button type="button" data-k="' + k + '" data-v="' + o[0] + '" aria-pressed="false">' + (o[2] ? '<span class="chip" style="--c:' + o[0] + '"></span>' : "") + o[1] + "</button>").join("") + "</div>";
-  const muestras = (k) => '<div class="pc-sw">' + COLORES.map((c) => '<button type="button" style="--c:' + c[0] + '" data-k="' + k + '" data-v="' + c[0] + '" aria-pressed="false" aria-label="' + c[1] + '" title="' + c[1] + '"></button>').join("") + '<input type="color" data-k="' + k + '" aria-label="Otro color"></div>';
-  const rango = (k, min, max) => '<div class="pc-rango"><input type="range" data-k="' + k + '" min="' + min + '" max="' + max + '" aria-labelledby="pc-l-' + k + '"><span data-out="' + k + '"></span></div>';
-  const fila = (k, titulo, cuerpo, solo) => '<div class="pc-fila"' + (solo ? ' data-solo="' + solo + '"' : "") + '><b id="pc-l-' + k + '">' + titulo + "</b>" + cuerpo + "</div>";
+  const radios = (k, lista, iconos, col) => '<div class="pc-radios' + (col ? " col" : "") + '">' + lista.map((o) => '<label class="pc-radio"><input type="radio" name="pc-' + k + '" data-k="' + k + '" data-v="' + o[0] + '"><span class="r" aria-hidden="true"></span>' +
+    (iconos ? (iconos[o[0]] ? '<img src="' + iconos[o[0]] + '" alt="">' : '<span class="sp"></span>') : o[2] ? '<span class="chip" style="--c:' + o[0] + '"></span>' : "") + "<span>" + o[1] + "</span></label>").join("") + "</div>";
+  const muestras = (k) => '<div class="pc-sw">' + COLORES.map((c) => '<button type="button" style="--c:' + c[0] + '" data-k="' + k + '" data-v="' + c[0] + '" aria-pressed="false" aria-label="' + c[1] + '" title="' + c[1] + '"></button>').join("") + '<label class="btn pc-otro">Otro…<input type="color" data-k="' + k + '" aria-label="Otro color"></label></div>';
+  const rango = (k, titulo, min, max, ico) => '<div class="pc-rango">' + (ico ? '<img src="' + ico[0] + '" alt="">' : "") + '<input type="range" data-k="' + k + '" min="' + min + '" max="' + max + '" aria-label="' + titulo + '">' + (ico ? '<img src="' + ico[1] + '" alt="">' : "") + '<span data-out="' + k + '"></span></div>';
+  const grupo = (titulo, cuerpo, solo) => '<fieldset class="pc-grupo"' + (solo ? ' data-solo="' + solo + '"' : "") + "><legend>" + titulo + "</legend>" + cuerpo + "</fieldset>";
   const TABS = [
     ["fondo", "Fondo",
-      fila("fondo", "Fondo de pantalla", opciones("fondo", [["liso", "Color liso"], ["gato", "Gato grande"], ["patron", "Gato repetido"]])) +
-      fila("colorFondo", "Color del escritorio", muestras("colorFondo")) +
-      fila("colorGato", "Color del gato", muestras("colorGato"), "gato") +
-      fila("opac", "Visibilidad del gato", rango("opac", 10, 100), "gato") +
-      fila("tam", "Tamaño del gato", rango("tam", 24, 120), "patron")],
-    ["colores", "Colores", fila("acento", "Color de las barras de ventana", opciones("acento", ACENTOS.map((a) => [a[0], a[1], true])))],
+      grupo("Fondo de pantalla", radios("fondo", [["liso", "Color liso"], ["gato", "Gato grande"], ["patron", "Gato repetido"]], { gato: IMG.centro, patron: IMG.mosaico }, true)) +
+      grupo("Color del escritorio", muestras("colorFondo")) +
+      grupo("Color del gato", muestras("colorGato"), "gato") +
+      grupo("Visibilidad del gato", rango("opac", "Visibilidad del gato", 10, 100), "gato") +
+      grupo("Tamaño del gato", rango("tam", "Tamaño del gato", 24, 120), "patron")],
+    ["colores", "Colores", grupo("Color de las barras de ventana", radios("acento", ACENTOS.map((a) => [a[0], a[1], true])))],
     ["mov", "Movimiento",
-      fila("mov", "Cómo se mueven las ventanas", opciones("mov", [["controlada", "Controlada"], ["expresiva", "Expresiva"], ["caotica", "Caótica"]])) +
-      fila("efectos", "Efectos de movimiento", opciones("efectos", [["true", "Activados"], ["false", "Desactivados"]]))],
+      grupo("Cómo se mueven las ventanas", radios("mov", [["controlada", "Controlada"], ["expresiva", "Expresiva"], ["caotica", "Caótica"]])) +
+      grupo("Efectos de movimiento", radios("efectos", [["true", "Activados"], ["false", "Desactivados"]]))],
     ["sonidos", "Sonidos",
-      fila("sonido", "Sonidos del escritorio", opciones("sonido", [["true", "Activados"], ["false", "Apagados"]])) +
-      fila("volSonido", "Volumen", rango("volSonido", 0, 100)) +
-      fila("prueba", "Probar", '<div class="pc-op">' + [["clic", "Clic"], ["abrir", "Abrir"], ["cerrar", "Cerrar"], ["papelera", "Papelera"], ["campanazo", "Campanazo"]].map((s) => '<button type="button" data-snd="' + s[0] + '">' + s[1] + "</button>").join("") + "</div>")],
+      grupo("Sonidos del escritorio", radios("sonido", [["true", "Activados"], ["false", "Apagados"]])) +
+      grupo("Volumen", rango("volSonido", "Volumen de los sonidos", 0, 100, [IMG.off, IMG.on])) +
+      grupo("Probar", '<div class="pc-op">' + [["clic", "Clic"], ["abrir", "Abrir"], ["cerrar", "Cerrar"], ["papelera", "Papelera"], ["campanazo", "Campanazo"]].map((s) => '<button type="button" class="btn" data-snd="' + s[0] + '">' + s[1] + "</button>").join("") + "</div>")],
   ];
   const html = '<div class="pc"><div class="pc-tabs" role="tablist" aria-label="Secciones del panel">' +
-    TABS.map((t, i) => '<button type="button" role="tab" id="pc-t-' + t[0] + '" aria-controls="pc-p-' + t[0] + '" aria-selected="' + (i === 0) + '" tabindex="' + (i === 0 ? 0 : -1) + '">' + t[1] + "</button>").join("") + "</div>" +
+    TABS.map((t, i) => '<button type="button" role="tab" id="pc-t-' + t[0] + '" aria-controls="pc-p-' + t[0] + '" aria-selected="' + (i === 0) + '" tabindex="' + (i === 0 ? 0 : -1) + '">' + t[1] + "</button>").join("") + '</div><div class="pc-caja">' +
     TABS.map((t, i) => '<div class="pc-pane" role="tabpanel" id="pc-p-' + t[0] + '" aria-labelledby="pc-t-' + t[0] + '"' + (i ? " hidden" : "") + ">" + t[2] + "</div>").join("") +
-    '<div class="pc-pie"><span class="pc-nota">// se guarda solo en este navegador</span><button type="button" class="pc-btn" id="pc-restaurar">Restaurar</button></div></div>';
-  makeWindow("panel", "Panel de control", null, html, 180, 70, 460);
+    '</div><div class="pc-pie"><span class="pc-nota">// se guarda solo en este navegador</span><button type="button" class="btn" id="pc-restaurar">Restaurar</button></div></div>';
+  makeWindow("panel", "Panel de control", null, html, 180, 70, 470);
   const pw = document.getElementById("win-panel");
 
   function refrescar() {
     pw.querySelectorAll("button[data-k][data-v]").forEach((b) => { b.setAttribute("aria-pressed", String(String(A[b.dataset.k]).toLowerCase() === b.dataset.v.toLowerCase())); });
+    pw.querySelectorAll('input[type="radio"][data-k]').forEach((i) => { i.checked = String(A[i.dataset.k]).toLowerCase() === i.dataset.v.toLowerCase(); });
     pw.querySelectorAll('input[type="range"][data-k]').forEach((i) => { i.value = A[i.dataset.k]; const o = pw.querySelector('[data-out="' + i.dataset.k + '"]'); if (o) o.textContent = i.dataset.k === "tam" ? A.tam + " px" : A[i.dataset.k] + " %"; });
     pw.querySelectorAll('input[type="color"][data-k]').forEach((i) => { i.value = A[i.dataset.k]; });
     pw.querySelectorAll("[data-solo]").forEach((f) => { f.hidden = f.dataset.solo === "gato" ? A.fondo === "liso" : A.fondo !== "patron"; });
@@ -1989,6 +2025,7 @@ desktop.addEventListener("mousedown", (e) => {
     else if (b.dataset.snd) sonar(b.dataset.snd, true);
     else if (b.id === "pc-restaurar") { Object.keys(DEF).forEach((k) => { if (k !== "radio" && k !== "volRadio") A[k] = DEF[k]; }); aplicar(); guardar(); refrescar(); sonar("papelera"); }
   });
+  pw.addEventListener("change", (e) => { const i = e.target; if (i.type === "radio" && i.checked) poner(i.dataset.k, i.dataset.v); });
   pw.addEventListener("input", (e) => {
     const i = e.target; if (!i.dataset || !i.dataset.k) return;
     if (i.type === "range") poner(i.dataset.k, +i.value);
@@ -2015,22 +2052,29 @@ desktop.addEventListener("mousedown", (e) => {
   if (!EMISORAS.some((e) => e[0] === A.radio)) A.radio = DEF.radio;
   const audioEl = new Audio(); audioEl.preload = "none"; audioEl.volume = A.volRadio / 100;
   let quiere = false, intento = 0;
-  const rhtml = '<div class="rd"><div class="rd-lcd" role="status" aria-live="polite"><div class="est" id="rd-est"></div><div class="nom" id="rd-nom"><span></span></div><div class="sub" id="rd-sub"></div></div>' +
-    '<div class="rd-fila"><button type="button" class="rd-btn big" id="rd-play" aria-label="Reproducir">▶</button><button type="button" class="rd-btn big" id="rd-stop" aria-label="Parar">■</button></div>' +
-    '<div class="rd-fila"><label for="rd-vol">Volumen</label><input type="range" id="rd-vol" min="0" max="100"></div>' +
-    '<div class="rd-fila"><label for="rd-estilo">Estilo</label><select id="rd-estilo">' + EMISORAS.map((e) => '<option value="' + e[0] + '">' + e[1] + " · " + e[2] + "</option>").join("") + "</select></div>" +
-    '<div class="rd-cred">Radio: <a href="https://somafm.com" target="_blank" rel="noopener">SomaFM.com</a></div></div>';
-  makeWindow("radio", "Reproductor de radio", null, rhtml, 560, 110, 340);
+  const ICO_PANEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADgUlEQVR4nL2XzUvjQBjGn7RxuwdX0YOIIiqIB7+iCAoKHoRQQRQET3pX8OrRy0LdP2AvoldBEC89ePAgSEEEEQ+tX6BVFAQRFVtLWVtrkuUNnTBJ0ya16gNDhnzM85v3fTOZCMhqYWFBi8fjOD4+hs/nS29vb//EN0hkHTKfnJxEc3Mzrq+vfQA0AF8OIgYCAS2VSuHk5AQPDw/o7e1FX18fDg4OvgVEVFUVi4uLWFtbw87ODu7v7zE1NYWenh50dXXh6OjoS0FEAkgkEhgbG8P09LQB8vT0pKeko6MD7e3tOD09zQGRZZn6TB+CEwnA6/VC0zQdZHR01AAJhUIGiCRJaG1tNdWI3+/Xz11cXHw4SiIBUCMAEh2fn58xMjKSAzI+Pq4btrS06CDUf319RV1dnXGuWBCRzJkYCGuPj4+QZdkA2d3dNUDI8O3tzXg2mUyipqYGDQ0NqKiowOHhobsIKIoCaryxtVFhDg8P54AMDg6ivr7eNCBFhCKRSCQoEimnKHiss87X6L7b21sMDQ1heXkZExMTOD8/x8bGhg5oFUEA8MmynCoJQFEUU2qof3Nzg4GBARNIMBjUo0IqKyvT00A14iSPkznJWqSsXV1dob+/3wSyubmJWCxmRCEWiwmuIqBybwNrzJwZ24GQyJhWUAayt7enF+X7+7v7CDDxs+fDzpvz0Px9Z2dn6O7uxurqKra2tkBLvJNEorSGnZ8lD2Utynypo8IkpdNpZwDNJudu3ohC15hcpUDlBuPDm2/2Tm8NL1cpULN5tJpZYazmfHHmg+BXyoIA6+vr+AxFo1HMzMwU9YzIiOfn50syZ1/VpqYm1NbWugdQsuFng9jJ4/HoR0EQjHRZtb+/n8/jnyRJv7PPK+FwOGACuLu7S3d2dtKHQ9fc3FzOCLTAMDia5ezsrO01J2ma5iUYHkSkr5Xf7zcqZ2lpyZixnWiVo+8Ak1tzOxAdwO4G66A060LXS5HID5ovjzRrl/n+GEA0Gk16vd7yTxu1WICVlZVfkiQ5rhqNjY1KZWXlz7a2ts/yV40URCKRH053RyIR2iOmXl5eNAKhbRrtA6urq00r5OXlpaOzIAiZcDj8x7YIC4nt8QgkGAyaQMrL3WWRmVO/aIBCIPQ3VVVV5dq8JAA7kFAopINYaiSez1w/VyqAVex3LbsvjGcymb9Z85xlmM7/B3o7qQV8BI5BAAAAAElFTkSuQmCC";
+  const ICO_RADIO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADNklEQVR4nMWXzZGjMBCFBUUCOkwC+LRnUsApOAQ7BKdgh2CHgFMghOG8J0hgqkwI2noSD1ptgb21h+0qLPOn93Wr1RKZc878Tys+eWi320WUZVm+PDMMQ3Te9332Sd/ZVgQoTMG6rv1/a60/aOM4+gMQ1+s1uvcOJFsDgDiFj8djJAyxlBEEdjgcZpAtiCwFQHF4XFWVP9iZFNHiOiqIyOl08tfXIDINQPHz+Wzq2pphsC9jriG0OIyRAgSjkYLIU+K3282Lj2NpyjId7pSYPkdfOJqm8ec6mSMA6TlE4bm1g4cwpnsR1OHmuRSH928hnHN4wNV17S6Xi/t2zvV975z7ntvn8+lbabgW7seGa/KebJumcdZaOIpLXjuXMEg2+Dp6evs2ErSvr1/+gMFbHQG0iEyqfuR8iXO8mmQAcTfVKoROup+f3xEERdlymJBfMl9yWWwgaodhhkBLCIgDouuMLzY4Ho/HKoQUpWDoI4BTt5CJBdWxmiDKMoI42s6LozMM1TujaIhecCAVuZzht7YOV7xIgKgRvqnGU/ydIQoLRIgaWiJXpvIzjTOiCFR1wgMSB5BuGksYgFPWtu0cIYp2bKdodrPeNUTAvA0lsjokVSrzOeY0PDcmRNlqy7fEl7D9naVE0xPYLABabI2cwyDHWv43H4hKK+RLa+TIAxYRmcVSGOMPC8v2EOWRtnFsY4DRX6heRJnFTDxZ4XRO0HC/nQoaZ5CGwdSkZajLXISQnZKe/1lM1vYCepFC4ULtkBEFDArd2LbRZqVYCOHd4nWofq+rW8p71pIAgfvWHMvOt3NBm6rsIBzA/qDAz36/d+g07Hzi2i3FcY5nuODQ42V57qY9RIAI64ioquhHle88jMkwFxEpqsVTm47YwtaNGxlAyPXFik0rd0e5fJ1jnFpKlwVlaXVdX+CGGYJjj1YvXjMAaLil5hhLiK09nwSPIxFDQFx7H0VgC0LOAhmttQhICAyDFE9GYAti7TsgBaUtJa53xtnWd0GoDemPEb0R1RtVwG95TpDsky8jfqDojvRUhGE2MYpM6DUDxD9/G8rvwvv9Pg/bdn4stgmgQVImq+KWt2v2B+GPLLhNS9QHAAAAAElFTkSuQmCC";
+  const rhtml = '<div class="rd"><div class="ip-body"><button type="button" class="ip-x" id="rd-x" aria-label="Cerrar reproductor">×</button><button type="button" class="ip-grip" id="rd-grip" aria-label="Cambiar el tamaño del reproductor"></button><div class="ip-screen" role="status" aria-live="polite"><div class="ip-bar"><span id="rd-est"></span><span id="rd-volbar"></span></div><div class="ip-nom" id="rd-nom"><span></span></div><div class="ip-sub" id="rd-sub"></div>' +
+    '<div class="ip-lista" id="rd-lista" role="group" aria-label="Estilos de radio">' + EMISORAS.map((e) => '<button type="button" data-id="' + e[0] + '" aria-pressed="false" title="' + e[2] + '">' + e[1] + "</button>").join("") + "</div></div>" +
+    '<div class="ip-rueda"><button type="button" class="n" id="rd-prev" aria-label="Estilo anterior">▲</button><button type="button" class="s" id="rd-next" aria-label="Estilo siguiente">▼</button><button type="button" class="o" id="rd-menos" aria-label="Bajar volumen">−</button><button type="button" class="e" id="rd-mas" aria-label="Subir volumen">+</button><button type="button" class="centro" id="rd-play" aria-label="Reproducir" aria-pressed="false">▶</button></div>' +
+    '<div class="rd-cred">Radio: <a href="https://somafm.com" target="_blank" rel="noopener">SomaFM.com</a></div></div></div>';
+  makeWindow("radio", "Reproductor de radio", null, rhtml, 560, 110, 310);
   const rw = document.getElementById("win-radio");
   const $r = (s) => rw.querySelector(s);
   const emisora = () => EMISORAS.filter((e) => e[0] === A.radio)[0];
+  let est = "parada";
+  function volBar() { const n = Math.round(A.volRadio / 12.5); $r("#rd-volbar").textContent = "VOL " + "█".repeat(n) + "░".repeat(8 - n); $r("#rd-volbar").setAttribute("aria-label", "Volumen " + A.volRadio + " %"); }
   function lcd(estado) {
-    const e = emisora(), nom = $r("#rd-nom");
+    est = estado;
+    const e = emisora(), nom = $r("#rd-nom"), lista = $r("#rd-lista");
     $r("#rd-est").textContent = { parada: "■ PARADA", conectando: "… CONECTANDO", sonando: "▶ EN DIRECTO", error: "× SIN SEÑAL" }[estado];
     $r("#rd-nom span").textContent = estado === "error" ? "No he podido conectar" : e[1];
-    $r("#rd-sub").textContent = estado === "error" ? "Prueba otro estilo o vuelve a pulsar ▶" : estado === "parada" ? "Elige un estilo y pulsa ▶" : e[2];
-    nom.classList.toggle("largo", e[1].length > 22 && estado !== "error");
-    $r("#rd-play").setAttribute("aria-pressed", String(estado === "sonando" || estado === "conectando"));
+    $r("#rd-sub").textContent = estado === "error" ? "Prueba otro estilo o pulsa ▶" : estado === "parada" ? "Elige un estilo y pulsa ▶" : e[2];
+    nom.classList.toggle("largo", e[1].length > 20 && estado !== "error");
+    const on = estado === "sonando" || estado === "conectando", play = $r("#rd-play");
+    play.setAttribute("aria-pressed", String(on)); play.setAttribute("aria-label", on ? "Parar" : "Reproducir"); play.textContent = on ? "■" : "▶";
+    lista.querySelectorAll("button").forEach((b) => { const s = b.dataset.id === A.radio; b.setAttribute("aria-pressed", String(s)); if (s) lista.scrollTop = Math.max(0, b.offsetTop - 17); });
+    volBar();
   }
   const urlDe = (id, i) => "https://ice" + SERVIDORES[i % SERVIDORES.length] + ".somafm.com/" + id + "-128-mp3";
   function tocar() { quiere = true; intento = 0; audioEl.src = urlDe(A.radio, 0); lcd("conectando"); const p = audioEl.play(); if (p && p.catch) p.catch(() => { if (quiere && audioEl.error) fallo(); }); }
@@ -2043,13 +2087,33 @@ desktop.addEventListener("mousedown", (e) => {
   audioEl.addEventListener("playing", () => { if (quiere) lcd("sonando"); });
   audioEl.addEventListener("waiting", () => { if (quiere) lcd("conectando"); });
   audioEl.addEventListener("error", fallo);
-  $r("#rd-play").addEventListener("click", tocar);
-  $r("#rd-stop").addEventListener("click", parar);
-  $r("#rd-vol").value = A.volRadio;
-  $r("#rd-vol").addEventListener("input", (e) => { A.volRadio = +e.target.value; audioEl.volume = A.volRadio / 100; guardar(); });
-  $r("#rd-estilo").value = A.radio;
-  $r("#rd-estilo").addEventListener("change", (e) => { A.radio = e.target.value; guardar(); if (quiere) tocar(); else lcd("parada"); });
+  function elegir(id) { A.radio = id; guardar(); if (quiere) tocar(); else lcd("parada"); }
+  const mover = (d) => { const i = EMISORAS.findIndex((e) => e[0] === A.radio); elegir(EMISORAS[(i + d + EMISORAS.length) % EMISORAS.length][0]); };
+  const volumen = (d) => { A.volRadio = clamp(A.volRadio + d, 0, 100); audioEl.volume = A.volRadio / 100; guardar(); volBar(); };
+  $r("#rd-play").addEventListener("click", () => { if (quiere) parar(); else tocar(); });
+  $r("#rd-prev").addEventListener("click", () => mover(-1));
+  $r("#rd-next").addEventListener("click", () => mover(1));
+  $r("#rd-menos").addEventListener("click", () => volumen(-10));
+  $r("#rd-mas").addEventListener("click", () => volumen(10));
+  $r("#rd-x").addEventListener("click", () => rw.querySelector(".close").click());
+  // tamaño: solo se puede hacer más pequeño (de 100 % a 55 %) con el agarrador de la esquina o con las flechas
+  const escala = (s) => { A.escalaRadio = clamp(s, 0.55, 1); rw.style.setProperty("--rd-escala", A.escalaRadio.toFixed(3)); };
+  escala(A.escalaRadio);
+  const grip = $r("#rd-grip"); let gr = null;
+  grip.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); try { grip.setPointerCapture(e.pointerId); } catch (_) {} gr = { x: e.clientX, y: e.clientY, w: 270 * A.escalaRadio }; });
+  grip.addEventListener("pointermove", (e) => { if (!gr) return; const dx = e.clientX - gr.x, dy = (e.clientY - gr.y) * 0.7; escala((gr.w + (Math.abs(dx) > Math.abs(dy) ? dx : dy)) / 270); });
+  const finGrip = () => { if (gr) { gr = null; guardar(); } };
+  grip.addEventListener("pointerup", finGrip); grip.addEventListener("pointercancel", finGrip);
+  grip.addEventListener("keydown", (e) => { const d = e.key === "ArrowLeft" || e.key === "ArrowUp" ? -0.05 : e.key === "ArrowRight" || e.key === "ArrowDown" ? 0.05 : 0; if (d) { e.preventDefault(); escala(A.escalaRadio + d); guardar(); } });
+  $r("#rd-lista").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) elegir(b.dataset.id); });
   lcd("parada");
+
+  // Iconos del escritorio: el del panel a la izquierda de «Léeme primero» y el del reproductor debajo
+  const pos = originalPos.leeme || { x: Math.max(120, window.innerWidth - 120), y: 40 };
+  makeIcon("panel", "Panel de control", ICO_PANEL, pos.x - 88, pos.y);
+  makeIcon("radio", "Reproductor de radio", ICO_RADIO, pos.x - 88, pos.y + 88);
+  const leemeEl = desktop.querySelector('.icon[data-id="leeme"]');
+  if (leemeEl) leemeEl.after(desktop.querySelector('.icon[data-id="panel"]'), desktop.querySelector('.icon[data-id="radio"]'));
 
   aplicar(); refrescar();
 })();
