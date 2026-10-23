@@ -11,7 +11,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script>try{var t=localStorage.getItem("mvm-theme");if(!t&&matchMedia("(prefers-color-scheme:dark)").matches)t="dark";if(t==="dark")document.documentElement.dataset.theme="dark"}catch(e){}</script>
-  <link rel="stylesheet" href="styles.css?v=20261023">
+  <link rel="alternate" hreflang="es" href="https://meryvillena.com/cv/">
+  <link rel="alternate" hreflang="en" href="https://meryvillena.com/cv/en.html">
+  <link rel="alternate" hreflang="x-default" href="https://meryvillena.com/cv/">
+  <link rel="stylesheet" href="styles.css?v=20261026">
 </head>
 <body>
   <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
@@ -23,13 +26,14 @@
       <a href="#proyectos">Proyectos</a>
       <a href="CV-Mery-Villena.pdf" download>PDF ↓</a>
       <a href="#contacto">Contacto</a>
+      <a class="lang-switch" href="en.html" hreflang="en" lang="en" title="English version" onclick="try{localStorage.setItem('mvm-lang','en')}catch(e){}">EN</a>
     </nav>
     <span class="availability"><i></i> Madrid · Disponible para proyectos</span>
     <button class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Cambiar entre modo claro y oscuro">MVM<i></i></button>
     <button class="menu" aria-expanded="false" aria-controls="mobileNav">Menú</button>
   </header>
   <nav id="mobileNav" class="mobile-nav" aria-label="Navegación móvil">
-    <a href="#trayectoria">01 Trayectoria</a><a href="#formacion">02 Formación</a><a href="#competencias">03 Competencias</a><a href="#proyectos">04 Proyectos</a><a href="CV-Mery-Villena.pdf" download>Descargar PDF ↓</a><a href="#contacto">05 Contacto</a>
+    <a href="#trayectoria">01 Trayectoria</a><a href="#formacion">02 Formación</a><a href="#competencias">03 Competencias</a><a href="#proyectos">04 Proyectos</a><a href="CV-Mery-Villena.pdf" download>Descargar PDF ↓</a><a href="#contacto">05 Contacto</a><a class="lang-switch" href="en.html" hreflang="en" lang="en" title="English version" onclick="try{localStorage.setItem('mvm-lang','en')}catch(e){}">EN</a>
   </nav>
 
   <main>
@@ -100,6 +104,6 @@
       <footer><span>Mery Villena © 2026</span><a href="#inicio">Volver arriba ↑</a></footer>
     </section>
   </main>
-  <script src="script.js?v=20261023"></script>
+  <script src="script.js?v=20261024"></script>
 </body>
 </html>

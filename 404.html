@@ -94,6 +94,19 @@
   </div>
 </main>
 <script>
+/* Idioma: preferencia guardada (mvm-lang) → idioma del navegador → español. La 404 no carga el diccionario del portfolio: sus textos van aquí. */
+(function () {
+  var L = "", nl = navigator.language || "";
+  try { L = localStorage.getItem("mvm-lang") || ""; } catch (e) {}
+  if (L !== "en" && L !== "es") L = (!nl || /^es/i.test(nl)) ? "es" : "en";
+  if (L !== "en") return;
+  document.documentElement.lang = "en"; document.title = "404 · Page not found — Mery Villena";
+  var T = { "Escritorio de Mery Villena": "Mery Villena's Desktop", "Esta página no existe": "This page doesn't exist", "El gato la ha buscado por todas partes y no la encuentra.": "The cat has looked for it everywhere and can't find it.", "// acaríciame, estoy triste": "// pet me, I'm sad", "Volver al escritorio": "Back to the desktop" };
+  document.querySelectorAll(".menubar span, h1, p, .btn").forEach(function (e) { var k = e.textContent.trim(); if (T[k]) e.textContent = T[k]; });
+  var g = document.querySelector('[aria-label^="Gato pixelado"]'); if (g) g.setAttribute("aria-label", "Pixel cat crying. Pet it, it's sad.");
+})();
+</script>
+<script>
 (function () {
   var cat = document.getElementById("cat"), pl = document.getElementById("pl"), pr = document.getElementById("pr");
   var fx = document.getElementById("fx"), pud = document.getElementById("pud"), NS = "http://www.w3.org/2000/svg", clicks = 0;

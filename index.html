@@ -3,27 +3,45 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mery Villena — Diseño de producto digital, no-code y operaciones</title>
-<meta name="description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños.">
+<title data-tl>Mery Villena — Diseño de producto digital, no-code y operaciones</title>
+<meta name="description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños." data-tl-content>
 <link rel="canonical" href="https://meryvillena.com/">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 15 12%22 shape-rendering=%22crispEdges%22 fill=%22%23111%22%3E%3Cpath d=%22M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z%22/%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_ES">
 <meta property="og:site_name" content="Mery Villena">
 <meta property="og:url" content="https://meryvillena.com/">
-<meta property="og:title" content="Mery Villena — Diseño de producto digital, no-code y operaciones">
-<meta property="og:description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños.">
+<meta property="og:title" content="Mery Villena — Diseño de producto digital, no-code y operaciones" data-tl-content>
+<meta property="og:description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños." data-tl-content>
 <meta property="og:image" content="https://meryvillena.com/og-cover.png">
 <meta property="og:image:secure_url" content="https://meryvillena.com/og-cover.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Mery Villena — Diseño de producto digital, no-code y operaciones">
+<meta property="og:image:alt" content="Mery Villena — Diseño de producto digital, no-code y operaciones" data-tl-content>
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Mery Villena — Diseño de producto digital, no-code y operaciones">
-<meta name="twitter:description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños.">
+<meta name="twitter:title" content="Mery Villena — Diseño de producto digital, no-code y operaciones" data-tl-content>
+<meta name="twitter:description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños." data-tl-content>
 <meta name="twitter:image" content="https://meryvillena.com/og-cover.png">
-<meta name="twitter:image:alt" content="Mery Villena — Diseño de producto digital, no-code y operaciones">
+<meta name="twitter:image:alt" content="Mery Villena — Diseño de producto digital, no-code y operaciones" data-tl-content>
+<script>
+/* Idioma: ?lang= → preferencia guardada → idioma del navegador → español. En inglés carga i18n/en.js (ver CHECKLIST-INGLES.md). */
+(function () {
+  var L = "", q = "", nl = navigator.language || "";
+  try { q = new URLSearchParams(location.search).get("lang") || ""; } catch (e) {}
+  if (q === "en" || q === "es") {
+    L = q;
+    try { localStorage.setItem("mvm-lang", q); } catch (e) {}
+    try { var u = new URL(location.href); u.searchParams.delete("lang"); history.replaceState(null, "", u.pathname + u.search + u.hash); } catch (e) {}
+  }
+  if (!L) { try { L = localStorage.getItem("mvm-lang") || ""; } catch (e) {} }
+  if (L !== "en" && L !== "es") L = (!nl || /^es/i.test(nl)) ? "es" : "en";
+  window.__LANG = L;
+  document.documentElement.lang = L;
+  window.__setLang = function (l) { try { localStorage.setItem("mvm-lang", l); } catch (e) {} location.href = location.pathname + "?lang=" + l + location.hash; };
+  if (L === "en") document.write('<script src="i18n/en.js"><\/script>');
+})();
+</script>
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; height: 100%; }
@@ -59,6 +77,10 @@
   }
   #menubar img { height: 15px; margin-right: 10px; }
   #menubar .spacer { flex: 1; }
+  #menubar .mlang, .m-lang { all: unset; box-sizing: border-box; height: 22px; margin-left: 14px; display: flex; align-items: center; font-size: 12px; cursor: pointer; color: #000; }
+  .mlang span, .m-lang span { opacity: .55; } .mlang span.on, .m-lang span.on { opacity: 1; font-weight: bold; }
+  .mlang:focus-visible, .m-lang:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 1px; }
+  #mobile-view .m-head { position: relative; } #mobile-view .m-lang { position: absolute; top: 28px; right: 0; margin: 0; height: 28px; padding: 0 4px; font-size: 14px; }
   #menubar .m-owner { font-weight: normal; color: rgba(0,0,0,0.6); }
   @media (max-width: 900px) { #menubar .item.m-owner { display: none; } }
   #menubar .item { margin-left: 14px; display: flex; align-items: center; gap: 5px; }
@@ -307,6 +329,12 @@
   .balloon:before { content: ""; position: absolute; bottom: -7px; right: 27px; width: 0; height: 0;
     border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid #FFFBD6; z-index: 1; }
 
+  /* ---------- AVISO «PÁGINA EN ESPAÑOL» (solo en inglés) ---------- */
+  .aviso-es { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 8px); max-width: min(92vw, 360px);
+    background: #FFFBD6; color: #000; border: 1px solid #000; border-radius: 8px; padding: 8px 12px; font-size: 12px; line-height: 1.4;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3); z-index: 30000; opacity: 0; transition: opacity 0.25s ease, transform 0.25s ease; pointer-events: none; }
+  .aviso-es.show { opacity: 1; transform: translate(-50%, 0); }
+
   /* ---------- PANEL DE CONTROL Y REPRODUCTOR DE RADIO ---------- */
   #fondo-capa { position: absolute; inset: 0; z-index: -1; pointer-events: none; background-position: center; }
   body.sin-efectos .window.open { animation: none; }
@@ -469,15 +497,16 @@
 
 <!-- ===== ESCRITORIO (pantallas grandes) ===== -->
 <div id="desktop">
-  <div id="menubar" role="menubar" aria-label="Menú del escritorio">
-    <button type="button" role="menuitem" class="mtitle mcat" data-menu="gato" aria-haspopup="true" aria-expanded="false" aria-label="Menú del gato"><svg class="cat" viewBox="0 0 15 12" width="19" height="15" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z" fill="#000"/></svg></button>
-    <button type="button" role="menuitem" class="mtitle" data-menu="archivo" aria-haspopup="true" aria-expanded="false">Archivo</button>
-    <button type="button" role="menuitem" class="mtitle m-opt" data-menu="edicion" aria-haspopup="true" aria-expanded="false">Edición</button>
-    <button type="button" role="menuitem" class="mtitle" data-menu="ver" aria-haspopup="true" aria-expanded="false">Ver</button>
-    <button type="button" role="menuitem" class="mtitle" data-menu="proyectos" aria-haspopup="true" aria-expanded="false">Proyectos</button>
-    <button type="button" role="menuitem" class="mtitle" data-menu="ayuda" aria-haspopup="true" aria-expanded="false">Ayuda</button>
+  <div id="menubar" role="menubar" aria-label="Menú del escritorio" data-tl-aria>
+    <button type="button" role="menuitem" class="mtitle mcat" data-menu="gato" aria-haspopup="true" aria-expanded="false" aria-label="Menú del gato" data-tl-aria><svg class="cat" viewBox="0 0 15 12" width="19" height="15" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z" fill="#000"/></svg></button>
+    <button type="button" role="menuitem" class="mtitle" data-menu="archivo" aria-haspopup="true" aria-expanded="false" data-tl>Archivo</button>
+    <button type="button" role="menuitem" class="mtitle m-opt" data-menu="edicion" aria-haspopup="true" aria-expanded="false" data-tl>Edición</button>
+    <button type="button" role="menuitem" class="mtitle" data-menu="ver" aria-haspopup="true" aria-expanded="false" data-tl>Ver</button>
+    <button type="button" role="menuitem" class="mtitle" data-menu="proyectos" aria-haspopup="true" aria-expanded="false" data-tl>Proyectos</button>
+    <button type="button" role="menuitem" class="mtitle" data-menu="ayuda" aria-haspopup="true" aria-expanded="false" data-tl>Ayuda</button>
     <div class="spacer"></div>
-    <div class="item m-owner">Escritorio de Mery Villena</div>
+    <div class="item m-owner" data-tl>Escritorio de Mery Villena</div>
+    <button type="button" class="mlang" aria-label="Idioma / Language" title="Idioma / Language" onclick="__setLang(__LANG==='en'?'es':'en')"></button>
     <div class="item" id="clock"></div>
   </div>
   </div>
@@ -495,6 +524,19 @@
 </noscript>
 
 <script>
+/* ===== IDIOMA ===== tl(«texto en español») devuelve su traducción; si falta, el español. */
+const LANG = window.__LANG || "es";
+const I18N = (LANG === "en" && window.I18N_EN) || null;
+const tl = (s) => (I18N && Object.prototype.hasOwnProperty.call(I18N, s)) ? I18N[s] : s;
+const CVURL = LANG === "en" ? "cv/en.html" : "cv/index.html"; // el CV en inglés se genera con i18n/herramientas/cv_en.py
+const CVPDF = LANG === "en" ? "cv/CV-Mery-Villena-EN.pdf" : "cv/CV-Mery-Villena.pdf";
+const BOARD = LANG === "en" ? "sistema-diseno-board-en.html" : "sistema-diseno-board.html"; // tablero del sistema de diseño (la versión inglesa se genera con i18n/herramientas/board_en.py)
+const langSwitchHtml = () => '<span' + (LANG === "es" ? ' class="on"' : '') + '>ES</span> / <span' + (LANG === "en" ? ' class="on"' : '') + '>EN</span>';
+document.querySelectorAll(".mlang").forEach((b) => { b.innerHTML = langSwitchHtml(); });
+document.querySelectorAll("[data-tl]").forEach((el) => { el.textContent = tl(el.textContent); });
+document.querySelectorAll("[data-tl-content]").forEach((el) => { el.setAttribute("content", tl(el.getAttribute("content"))); });
+if (LANG === "en") { const lc = document.querySelector('meta[property="og:locale"]'); if (lc) lc.setAttribute("content", "en_US"); }
+document.querySelectorAll("[data-tl-aria]").forEach((el) => { el.setAttribute("aria-label", tl(el.getAttribute("aria-label"))); });
 /* ============================================================
    ICONOS (base64). El diseño fino de iconos se refina aparte.
    ============================================================ */
@@ -517,9 +559,9 @@ ICONS.trashFull = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAAB
    ============================================================ */
 // TIPO: qué clase de proyecto es. ESTADO: qué se puede abrir ahora.
 const TIPOS = {
-  real:     { label: "Proyecto real",   bg: "#d6f0d3", bd: "#2f7a2b" },
-  concepto: { label: "Concepto",        bg: "#fbeecb", bd: "#a9791a" },
-  visual:   { label: "Trabajo visual",  bg: "#f7d9e0", bd: "#bf5a72" },
+  real:     { label: tl("Proyecto real"),   bg: "#d6f0d3", bd: "#2f7a2b" },
+  concepto: { label: tl("Concepto"),        bg: "#fbeecb", bd: "#a9791a" },
+  visual:   { label: tl("Trabajo visual"),  bg: "#f7d9e0", bd: "#bf5a72" },
 };
 
 /* ============================================================
@@ -528,20 +570,20 @@ const TIPOS = {
 // Carpetas anidadas (sub-colecciones que se abren desde otra ventana)
 const NESTED = {
   "personal-arte": {
-    id: "personal-arte", title: "Personal · Arte", color: "#eba0ac",
-    intro: "Lo que hago cuando nadie me lo pide. Collages, calendario y experimentos.",
+    id: "personal-arte", title: tl("Personal · Arte"), color: "#eba0ac",
+    intro: tl("Lo que hago cuando nadie me lo pide. Collages, calendario y experimentos."),
     cards: [
-      { kind: "project", title: "Collages", tipo: "visual", estado: "Próximamente", desc: "Serie de collages personales.", href: null, pausa: true },
-      { kind: "project", title: "Calendario", tipo: "visual", estado: "Próximamente", desc: "Proyecto de calendario ilustrado.", href: null, pausa: true },
+      { kind: "project", title: "Collages", tipo: "visual", estado: tl("Próximamente"), desc: tl("Serie de collages personales."), href: null, pausa: true },
+      { kind: "project", title: tl("Calendario"), tipo: "visual", estado: tl("Próximamente"), desc: tl("Proyecto de calendario ilustrado."), href: null, pausa: true },
     ],
   },
   "trabajo-grafico": {
-    id: "trabajo-grafico", title: "Trabajo gráfico", color: "#f0c766",
-    intro: "Piezas gráficas de encargo a lo largo de los años.",
+    id: "trabajo-grafico", title: tl("Trabajo gráfico"), color: "#f0c766",
+    intro: tl("Piezas gráficas de encargo a lo largo de los años."),
     cards: [
-      { kind: "project", title: "Piezas de diseño", tipo: "visual", estado: "Próximamente", desc: "Diseños para McDonald's sobre todo, y algunas piezas más.", href: null, pausa: true },
-      { kind: "project", title: "Talavera", tipo: "visual", estado: "Próximamente", desc: "Proyecto gráfico Talavera.", href: null, pausa: true },
-      { kind: "project", title: "Promos", tipo: "visual", estado: "Próximamente", desc: "Material promocional.", href: null, pausa: true },
+      { kind: "project", title: tl("Piezas de diseño"), tipo: "visual", estado: tl("Próximamente"), desc: tl("Diseños para McDonald's sobre todo, y algunas piezas más."), href: null, pausa: true },
+      { kind: "project", title: "Talavera", tipo: "visual", estado: tl("Próximamente"), desc: tl("Proyecto gráfico Talavera."), href: null, pausa: true },
+      { kind: "project", title: "Promos", tipo: "visual", estado: tl("Próximamente"), desc: tl("Material promocional."), href: null, pausa: true },
     ],
   },
 };
@@ -549,61 +591,61 @@ const NESTED = {
 // Elementos del escritorio, en orden (los 2 comerciales arriba del todo)
 const DESKTOP = [
   {
-    id: "leeme", kind: "file", icon: ICONS.favorites, title: "Léeme primero",
-    win: { title: "Léeme primero", type: "text", html:
-      '<span class="tag" style="background:#ffe08a">Empieza por aquí</span>' +
-      "<p>Soy una apasionada de los sistemas de diseño: esa disciplina de construir interfaces coherentes, pieza a pieza, con reglas claras. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —<a href=\"#\" onclick=\"openWindow('case-portfolio');return false\">un sistema de diseño antes de que existiera esa palabra</a>.</p>" +
-      "<p>Las carpetas organizan mis proyectos por categorías: haz clic para abrirlas y mira dentro. Puedes mover las carpetas por la pantalla si quieres reordenarlas.</p>" +
-      "<p>Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em> —ahí está lo que más cuenta.</p>" +
-      "<p class=\"small\">Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.</p>" +
-      "<p>Si quieres saber quién hay detrás de todo esto, abre <em>Sobre mí</em>.</p>"
+    id: "leeme", kind: "file", icon: ICONS.favorites, title: tl("Léeme primero"),
+    win: { title: tl("Léeme primero"), type: "text", html:
+      '<span class="tag" style="background:#ffe08a">' + tl("Empieza por aquí") + '</span>' +
+      "<p>" + tl("Soy una apasionada de los sistemas de diseño: esa disciplina de construir interfaces coherentes, pieza a pieza, con reglas claras. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —<a href=\"#\" onclick=\"openWindow('case-portfolio');return false\">un sistema de diseño antes de que existiera esa palabra</a>.") + "</p>" +
+      "<p>" + tl("Las carpetas organizan mis proyectos por categorías: haz clic para abrirlas y mira dentro. Puedes mover las carpetas por la pantalla si quieres reordenarlas.") + "</p>" +
+      "<p>" + tl("Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em> —ahí está lo que más cuenta.") + "</p>" +
+      "<p class=\"small\">" + tl("Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.") + "</p>" +
+      "<p>" + tl("Si quieres saber quién hay detrás de todo esto, abre <em>Sobre mí</em>.") + "</p>"
     },
   },
   {
-    id: "soluciones", kind: "folder", icon: ICONS.directory, title: "Soluciones de negocio", color: "#7fbf7a",
-    intro: "Identidades y webs que captan clientes.",
+    id: "soluciones", kind: "folder", icon: ICONS.directory, title: tl("Soluciones de negocio"), color: "#7fbf7a",
+    intro: tl("Identidades y webs que captan clientes."),
     cards: [
-      { kind: "project", title: "Shiatsu", tipo: "concepto", estado: "Prototipo navegable", desc: "Identidad y web para un servicio de shiatsu y facial japonés.", href: "wellness/index.html", thumb: '<img src="wellness/case/miniatura.jpg" width="640" height="400" alt="Web de Eme Pérez, shiatsu" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Puti Di Madre", tipo: "concepto", estado: "Prototipo navegable", desc: "Pizzería de barrio, solo recogida: recuperar el margen que se llevan las apps de reparto.", caseStudy: "case-puti", thumb: '<img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt="Portada de la web de Puti Di Madre" loading="lazy" decoding="async">' },
-      { kind: "project", title: "La Mezcaloteca", tipo: "concepto", estado: "Próximamente", desc: "Rediseño para convertir: web + email marketing.", href: null, pausa: true },
+      { kind: "project", title: "Shiatsu", tipo: "concepto", estado: tl("Prototipo navegable"), desc: tl("Identidad y web para un servicio de shiatsu y facial japonés."), href: "wellness/index.html", thumb: '<img src="wellness/case/miniatura.jpg" width="640" height="400" alt="' + tl("Web de Eme Pérez, shiatsu") + '" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Puti Di Madre", tipo: "concepto", estado: tl("Prototipo navegable"), desc: tl("Pizzería de barrio, solo recogida: recuperar el margen que se llevan las apps de reparto."), caseStudy: "case-puti", thumb: '<img src="putidimadre/case/miniatura.jpg" width="480" height="300" alt="' + tl("Portada de la web de Puti Di Madre") + '" loading="lazy" decoding="async">' },
+      { kind: "project", title: "La Mezcaloteca", tipo: "concepto", estado: tl("Próximamente"), desc: tl("Rediseño para convertir: web + email marketing."), href: null, pausa: true },
     ],
   },
   {
-    id: "herramientas", kind: "folder", icon: ICONS.directory, title: "Herramientas y operaciones", color: "#8fb4ec",
-    intro: "Apps no-code que usan equipos reales cada día.",
+    id: "herramientas", kind: "folder", icon: ICONS.directory, title: tl("Herramientas y operaciones"), color: "#8fb4ec",
+    intro: tl("Apps no-code que usan equipos reales cada día."),
     cards: [
-      { kind: "project", title: "Presupuestar sin echar la tarde", tipo: "real", estado: "En uso", desc: "Del PDF del fabricante al presupuesto del cliente, de cerca de una hora a unos 10 minutos.", caseStudy: "case-presupuestos", thumb: '<img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt="El presupuesto de Luz Norte en la herramienta" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Gestión de grupos", tipo: "real", estado: "En uso", desc: "Herramienta no-code para restaurantes y eventos.", href: null, pausa: true, mostrar: true, disabledLabel: "Caso próximamente" },
-      { kind: "project", title: "Gestión de delivery", tipo: "real", estado: "En desarrollo", desc: "Control de incidencias y facturación para restaurantes.", href: null, pausa: true, mostrar: true, disabledLabel: "Caso próximamente" },
+      { kind: "project", title: tl("Presupuestar sin echar la tarde"), tipo: "real", estado: tl("En uso"), desc: tl("Del PDF del fabricante al presupuesto del cliente, de cerca de una hora a unos 10 minutos."), caseStudy: "case-presupuestos", thumb: '<img src="generador-de-presupuestos/img/miniatura.jpg" width="640" height="400" alt="' + tl("El presupuesto de Luz Norte en la herramienta") + '" loading="lazy" decoding="async">' },
+      { kind: "project", title: tl("Gestión de grupos"), tipo: "real", estado: tl("En uso"), desc: tl("Herramienta no-code para restaurantes y eventos."), href: null, pausa: true, mostrar: true, disabledLabel: tl("Caso próximamente") },
+      { kind: "project", title: tl("Gestión de delivery"), tipo: "real", estado: tl("En desarrollo"), desc: tl("Control de incidencias y facturación para restaurantes."), href: null, pausa: true, mostrar: true, disabledLabel: tl("Caso próximamente") },
     ],
   },
   {
-    id: "exploracion", kind: "folder", icon: ICONS.directory, title: "Exploración de producto", color: "#f0c766",
-    intro: "Conceptos de UI y producto que exploro por mi cuenta.",
+    id: "exploracion", kind: "folder", icon: ICONS.directory, title: tl("Exploración de producto"), color: "#f0c766",
+    intro: tl("Conceptos de UI y producto que exploro por mi cuenta."),
     cards: [
-      { kind: "project", title: "Spotify Now Playing", tipo: "concepto", estado: "Prototipo navegable", desc: "Descubre clubs por su música. Ya online.", caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt="Clubs cerca de ti en Spotify Now Playing" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Respira", tipo: "concepto", estado: "Prototipo navegable", desc: "App de respiración guiada, gratuita y sin cuenta. Una luna que respira contigo.", caseStudy: "case-respira", thumb: '<img src="respira/case/miniatura.jpg" width="600" height="200" alt="La luna de Respira" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Spotify Now Playing", tipo: "concepto", estado: tl("Prototipo navegable"), desc: tl("Descubre clubs por su música. Ya online."), caseStudy: "case-spotify", thumb: '<img src="spotify/capturas/miniatura.jpg" width="390" height="500" alt="' + tl("Clubs cerca de ti en Spotify Now Playing") + '" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Respira", tipo: "concepto", estado: tl("Prototipo navegable"), desc: tl("App de respiración guiada, gratuita y sin cuenta. Una luna que respira contigo."), caseStudy: "case-respira", thumb: '<img src="respira/case/miniatura.jpg" width="600" height="200" alt="' + tl("La luna de Respira") + '" loading="lazy" decoding="async">' },
     ],
   },
   {
-    id: "vozvisual", kind: "folder", icon: ICONS.directory, title: "Voz visual", color: "#eba0ac",
-    intro: "Lo más personal: la parte que da personalidad a todo lo demás.",
+    id: "vozvisual", kind: "folder", icon: ICONS.directory, title: tl("Voz visual"), color: "#eba0ac",
+    intro: tl("Lo más personal: la parte que da personalidad a todo lo demás."),
     cards: [
-      { kind: "project", title: "Evolución del depredador", tipo: "visual", estado: "Caso disponible", desc: "Scrollytelling true-crime.", caseStudy: "case-depredador", thumb: '<img src="depredador/case/miniatura.jpg" width="640" height="400" alt="Portada de Evolución del depredador" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Mesa de lectura", tipo: "concepto", estado: "Prototipo navegable", desc: "Tarot interactivo de la vida freelance: 12 cartas ilustradas, física al barajar y una lectura que se escribe sola.", href: "mesa-de-lectura/index.html", thumb: '<img src="mesa-de-lectura/case/miniatura.jpg" width="640" height="400" alt="Mesa de lectura, tarot con física" loading="lazy" decoding="async">' },
-      { kind: "project", title: "Este escritorio", tipo: "concepto", estado: "Caso disponible", desc: "El porqué de este portfolio.", caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" width="640" height="400" alt="El escritorio de este portfolio" loading="lazy" decoding="async">' },
-      { kind: "folder", ref: "personal-arte", title: "Personal · Arte", desc: "Collages, calendario y experimentos." },
+      { kind: "project", title: "Evolución del depredador", tipo: "visual", estado: tl("Caso disponible"), desc: tl("Scrollytelling true-crime."), caseStudy: "case-depredador", thumb: '<img src="depredador/case/miniatura.jpg" width="640" height="400" alt="' + tl("Portada de Evolución del depredador") + '" loading="lazy" decoding="async">' },
+      { kind: "project", title: "Mesa de lectura", tipo: "concepto", estado: tl("Prototipo navegable"), desc: tl("Tarot interactivo de la vida freelance: 12 cartas ilustradas, física al barajar y una lectura que se escribe sola."), href: "mesa-de-lectura/index.html", thumb: '<img src="mesa-de-lectura/case/miniatura.jpg" width="640" height="400" alt="' + tl("Mesa de lectura, tarot con física") + '" loading="lazy" decoding="async">' },
+      { kind: "project", title: tl("Este escritorio"), tipo: "concepto", estado: tl("Caso disponible"), desc: tl("El porqué de este portfolio."), caseStudy: "case-portfolio", thumb: '<img src="este-escritorio/miniatura.jpg" width="640" height="400" alt="' + tl("El escritorio de este portfolio") + '" loading="lazy" decoding="async">' },
+      { kind: "folder", ref: "personal-arte", title: tl("Personal · Arte"), desc: tl("Collages, calendario y experimentos.") },
     ],
   },
   {
-    id: "sobremi", kind: "folder", icon: ICONS.disk, title: "Sobre mí",
+    id: "sobremi", kind: "folder", icon: ICONS.disk, title: tl("Sobre mí"),
     win: { type: "about" },
   },
   {
-    id: "contacto", kind: "file", icon: ICONS.mail, title: "Contacto",
-    win: { title: "Hablemos", type: "contact" },
+    id: "contacto", kind: "file", icon: ICONS.mail, title: tl("Contacto"),
+    win: { title: tl("Hablemos"), type: "contact" },
   },
-  { id: "trash", kind: "trash", icon: ICONS.trashEmpty, title: "Papelera" },
+  { id: "trash", kind: "trash", icon: ICONS.trashEmpty, title: tl("Papelera") },
 ];
 
 /* ============================================================
@@ -621,9 +663,9 @@ function visible(c) {
 }
 
 function buildThumb(card) {
-  if (card.href || card.caseStudy) return '<div class="thumb">captura pendiente</div>'; // proyecto real sin imagen aún: nunca "en construcción"
+  if (card.href || card.caseStudy) return '<div class="thumb">' + tl("captura pendiente") + '</div>'; // proyecto real sin imagen aún: nunca "en construcción"
   const pausa = card.pausa;
-  return '<div class="thumb build' + (pausa ? " pause" : "") + '"><span>' + "En construcción" + "</span></div>";
+  return '<div class="thumb build' + (pausa ? " pause" : "") + '"><span>' + tl("En construcción") + "</span></div>";
 }
 
 // Una carpeta cuyo contenido es todo "en construcción" (sin proyecto abrible) no se abre: así nadie navega en vano.
@@ -638,32 +680,32 @@ const IMGDIM = {"depredador/case/miniatura.jpg":[640,400],"este-escritorio/minia
 function imgDim(src) { const d = IMGDIM[src]; return d ? ' width="' + d[0] + '" height="' + d[1] + '"' : ""; }
 
 // Nombre accesible propio para cada «Abrir proyecto →» (si no, un lector oye 10 botones iguales)
-function labelAbrir(card) { return ' aria-label="Abrir proyecto ' + String(card.title).replace(/[★"<>&]/g, "").trim() + '"'; }
+function labelAbrir(card) { return ' aria-label="' + tl("Abrir proyecto") + ' ' + String(card.title).replace(/[★"<>&]/g, "").trim() + '"'; }
 
 function cardHtml(card) {
   if (card.kind === "folder" && isEmptyFolder(card.ref)) {
     return '<article class="case-card">' +
-      '<div class="thumb build pause"><span>En construcción</span></div>' +
+      '<div class="thumb build pause"><span>' + tl("En construcción") + '</span></div>' +
       '<div class="cbody">' +
-        '<span class="type-tag" style="background:#f6f0dc;border-color:#a9791a;color:#a9791a">carpeta</span>' +
+        '<span class="type-tag" style="background:#f6f0dc;border-color:#a9791a;color:#a9791a">' + tl("carpeta") + '</span>' +
         "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" +
-        '<span class="btn disabled">En construcción</span>' +
+        '<span class="btn disabled">' + tl("En construcción") + '</span>' +
       "</div></article>";
   }
   if (card.kind === "folder") {
     return '<article class="case-card">' +
       '<div class="thumb folder">📁</div>' +
       '<div class="cbody">' +
-        '<span class="type-tag" style="background:#f6f0dc;border-color:#a9791a;color:#a9791a">carpeta</span>' +
+        '<span class="type-tag" style="background:#f6f0dc;border-color:#a9791a;color:#a9791a">' + tl("carpeta") + '</span>' +
         "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" +
-        '<button class="btn" onclick="openWindow(\'' + card.ref + '\')">Abrir carpeta →</button>' +
+        '<button class="btn" onclick="openWindow(\'' + card.ref + '\')">' + tl("Abrir carpeta →") + '</button>' +
       "</div></article>";
   }
   const btn = card.caseStudy
-    ? '<button class="btn"' + labelAbrir(card) + ' onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>'
+    ? '<button class="btn"' + labelAbrir(card) + ' onclick="openWindow(\'' + card.caseStudy + '\')">' + tl("Abrir proyecto →") + '</button>'
     : card.href
-    ? '<a class="btn"' + labelAbrir(card) + ' href="' + card.href + '">Abrir proyecto →</a>'
-    : '<span class="btn disabled">' + (card.disabledLabel || (card.pausa ? "En construcción" : "Próximamente")) + "</span>";
+    ? '<a class="btn"' + labelAbrir(card) + ' href="' + card.href + '">' + tl("Abrir proyecto →") + '</a>'
+    : '<span class="btn disabled">' + (card.disabledLabel || (card.pausa ? tl("En construcción") : tl("Próximamente"))) + "</span>";
   return '<article class="case-card">' +
     (card.thumb ? '<div class="thumb">' + card.thumb + "</div>" : buildThumb(card)) +
     '<div class="cbody">' + tagsHtml(card) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + btn + "</div>" +
@@ -678,27 +720,27 @@ function folderHtml(entry) {
 }
 
 function aboutHtml() {
-  return "<h2>Sobre mí</h2>" +
-    "<p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar o Lancôme. Desde 2018 trabajo en la gestión de varios restaurantes McDonald’s, coordinando proveedores, procesos internos, administración y acciones de marketing local.</p>" +
-    "<p>Ahora diseño, construyo y pongo en marcha productos digitales para negocios pequeños, desde lo que ve el cliente hasta lo que necesita el equipo para trabajar. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas útiles, fáciles de usar y visualmente cuidadas.</p>" +
-    '<div class="chips"><span>8 años en operaciones</span><span>no-code</span><span>diseño</span></div>' +
-    '<p><a class="btn" href="cv/index.html" target="_blank" rel="noopener">Ver mi CV →</a></p>' +
-    (visible({ kind: "folder", ref: "trabajo-grafico" }) ? '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: "Trabajo gráfico", desc: "Piezas de diseño, Talavera, promos y más." }) + "</div>" : "");
+  return "<h2>" + tl("Sobre mí") + "</h2>" +
+    "<p>" + tl("Llevo más de 20 años trabajando en publicidad, marketing y operaciones. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar o Lancôme. Desde 2018 trabajo en la gestión de varios restaurantes McDonald’s, coordinando proveedores, procesos internos, administración y acciones de marketing local.") + "</p>" +
+    "<p>" + tl("Ahora diseño, construyo y pongo en marcha productos digitales para negocios pequeños, desde lo que ve el cliente hasta lo que necesita el equipo para trabajar. Me gusta encontrar soluciones a problemas cotidianos, simplificar procesos y crear herramientas útiles, fáciles de usar y visualmente cuidadas.") + "</p>" +
+    '<div class="chips"><span>' + tl("8 años en operaciones") + '</span><span>no-code</span><span>' + tl("diseño") + '</span></div>' +
+    '<p><a class="btn" href="' + CVURL + '" target="_blank" rel="noopener">' + tl("Ver mi CV →") + '</a></p>' +
+    (visible({ kind: "folder", ref: "trabajo-grafico" }) ? '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: tl("Trabajo gráfico"), desc: tl("Piezas de diseño, Talavera, promos y más.") }) + "</div>" : "");
 }
 
 function contactHtml(idSuffix) {
   const s = idSuffix || "";
-  return "<h2>¿Tienes un negocio que merece verse mejor?</h2>" +
+  return "<h2>" + tl("¿Tienes un negocio que merece verse mejor?") + "</h2>" +
     '<div id="contact-body' + s + '">' +
       '<form class="contact-form" id="contact-form' + s + '">' +
-        '<input type="email" id="contact-email' + s + '" placeholder="tu@correo.com" aria-label="Tu correo" required>' +
-        '<textarea id="contact-msg' + s + '" rows="4" placeholder="Cuéntame de tu proyecto…" aria-label="Tu mensaje"></textarea>' +
+        '<input type="email" id="contact-email' + s + '" placeholder="' + tl("tu@correo.com") + '" aria-label="' + tl("Tu correo") + '" required>' +
+        '<textarea id="contact-msg' + s + '" rows="4" placeholder="' + tl("Cuéntame de tu proyecto…") + '" aria-label="' + tl("Tu mensaje") + '"></textarea>' +
         '<div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true"><input type="text" id="contact-web' + s + '" tabindex="-1" autocomplete="off"></div>' +
-        '<button class="btn" type="submit" id="contact-send' + s + '">Enviar →</button>' +
+        '<button class="btn" type="submit" id="contact-send' + s + '">' + tl("Enviar →") + '</button>' +
         '<div class="small" id="contact-err' + s + '" role="status" style="color:#b3261e;min-height:14px"></div>' +
       "</form>" +
     "</div>" +
-    '<p class="small">Tu mensaje me llega por correo; no lo guardo en ninguna base de datos. O escríbeme directamente a <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a></p>';
+    '<p class="small">' + tl("Tu mensaje me llega por correo; no lo guardo en ninguna base de datos. O escríbeme directamente a") + ' <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a></p>';
 }
 
 /* ============================================================
@@ -712,7 +754,7 @@ let trashedIds = [];
 
 function clockTick() {
   const d = new Date();
-  const days = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+  const days = LANG === "en" ? ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"] : ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
   let h = d.getHours(), ampm = h >= 12 ? "PM" : "AM";
   h = h % 12; if (h === 0) h = 12;
   const m = String(d.getMinutes()).padStart(2, "0");
@@ -726,7 +768,7 @@ function makeIcon(id, label, iconSrc, x, y) {
   el.className = "icon";
   el.style.left = x + "px"; el.style.top = y + "px";
   el.dataset.id = id;
-  el.setAttribute("aria-label", label + " — abrir");
+  el.setAttribute("aria-label", label + " — " + tl("abrir"));
   el.innerHTML = '<img src="' + iconSrc + '" alt=""><span>' + label + "</span>";
   desktop.appendChild(el);
 
@@ -864,7 +906,7 @@ function showTrashBalloon(tx, ty) {
   b.className = "balloon";
   b.style.left = Math.max(8, tx - 190) + "px";
   b.style.top = (ty - 92) + "px";
-  b.innerHTML = '<span class="balloon-close" role="button" tabindex="0">✕</span>Si un proyecto no te gusta, arrástralo aquí. Clic en la Papelera y todo vuelve a su lugar.';
+  b.innerHTML = '<span class="balloon-close" role="button" tabindex="0">✕</span>' + tl("Si un proyecto no te gusta, arrástralo aquí. Clic en la Papelera y todo vuelve a su lugar.");
   desktop.appendChild(b);
   requestAnimationFrame(() => b.classList.add("show"));
   const remove = () => { b.classList.remove("show"); setTimeout(() => b.remove(), 300); };
@@ -880,9 +922,9 @@ function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
   el.setAttribute("role", "dialog"); el.setAttribute("aria-labelledby", "wt-" + id);
   el.innerHTML =
     '<div class="titlebar">' +
-      '<div class="box close" role="button" tabindex="0" aria-label="Cerrar ' + title.replace(/"/g, "&quot;") + '">×</div>' +
+      '<div class="box close" role="button" tabindex="0" aria-label="' + tl("Cerrar") + ' ' + title.replace(/"/g, "&quot;") + '">×</div>' +
       '<div class="title" id="wt-' + id + '">' + (iconSrc ? '<img src="' + iconSrc + '" style="height:12px;vertical-align:-2px;margin-right:4px;" alt="">' : "") + title + "</div>" +
-      '<div class="box zoom" aria-hidden="true" title="Cerrar"></div>' +
+      '<div class="box zoom" aria-hidden="true" title="' + tl("Cerrar") + '"></div>' +
     "</div>" +
     '<div class="content">' + contentHtml + "</div>";
   desktop.appendChild(el);
@@ -1132,49 +1174,49 @@ function caseSpotifyHtml() {
   return `<div class="cs-toolbar">
       <div class="cs-tfont">Chicago&nbsp;▾</div>
       <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
-      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
-      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="${tl("Negrita")}">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="${tl("Cursiva")}">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="${tl("Subrayado")}">
       <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Alinear izquierda">
-      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centrar">
-      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Alinear derecha">
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="${tl("Alinear izquierda")}">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="${tl("Centrar")}">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="${tl("Alinear derecha")}">
     </div>
     <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
     <div class="cs-paper">
-      <div class="cs-cta-row"><a class="btn" href="spotify/index.html" target="_blank" rel="noopener">Ver la maqueta en vivo →</a></div>
-      <h2 class="cs-title">Spotify Now Playing</h2>
-      <p class="cs-sub">Descubre clubs por su música en tiempo real</p>
-      <div class="cs-meta">Exploración de producto · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;Figma · Spotify API · Prototipo interactivo</div>
-      <figure class="cs-fig"><img src="spotify/capturas/00-portada.jpg" width="1600" height="1000" alt="Tres pantallas de la demo: clubs cerca de ti, ficha de Sala Bardot y cola compartida" loading="lazy"><figcaption>Clubs cerca de ti con su % Match, la ficha del club y la cola compartida dentro de la sala.</figcaption></figure>
+      <div class="cs-cta-row"><a class="btn" href="spotify/index.html" target="_blank" rel="noopener">${tl(`Ver la maqueta en vivo →`)}</a></div>
+      <h2 class="cs-title">${tl(`Spotify Now Playing`)}</h2>
+      <p class="cs-sub">${tl(`Descubre clubs por su música en tiempo real`)}</p>
+      <div class="cs-meta">${tl(`Exploración de producto · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Julio 2026&nbsp;&nbsp;·&nbsp;&nbsp;Figma · Spotify API · Prototipo interactivo`)}</div>
+      <figure class="cs-fig"><img src="spotify/capturas/00-portada.jpg" width="1600" height="1000" alt="${tl("Tres pantallas de la demo: clubs cerca de ti, ficha de Sala Bardot y cola compartida")}" loading="lazy"><figcaption>${tl(`Clubs cerca de ti con su % Match, la ficha del club y la cola compartida dentro de la sala.`)}</figcaption></figure>
 
-      <h3>El insight</h3>
-      <p>Cuando entras a un bar nuevo, lo primero que percibes —antes que la carta, la decoración o la gente— es la música. En tres segundos decides si ese sitio va contigo. Ninguna plataforma de descubrimiento captura eso: Google Maps, Instagram y Foursquare muestran datos fríos. <strong>La música es el indicador más honesto del ambiente de un local, y nadie lo está aprovechando digitalmente.</strong></p>
-      <p>Este insight no viene de una tendencia de diseño. Viene de años trabajando en hostelería y gestión de operaciones, donde aprendí algo más: un hostelero no compra tecnología porque sea bonita — la compra si entiende en cinco minutos cómo le hace ganar o retener clientes.</p>
+      <h3>${tl(`El insight`)}</h3>
+      <p>${tl(`Cuando entras a un bar nuevo, lo primero que percibes —antes que la carta, la decoración o la gente— es la música. En tres segundos decides si ese sitio va contigo. Ninguna plataforma de descubrimiento captura eso: Google Maps, Instagram y Foursquare muestran datos fríos. <strong>La música es el indicador más honesto del ambiente de un local, y nadie lo está aprovechando digitalmente.</strong>`)}</p>
+      <p>${tl(`Este insight no viene de una tendencia de diseño. Viene de años trabajando en hostelería y gestión de operaciones, donde aprendí algo más: un hostelero no compra tecnología porque sea bonita — la compra si entiende en cinco minutos cómo le hace ganar o retener clientes.`)}</p>
 
-      <h3>De jukebox a mapa: el pivot</h3>
-      <p>La idea original era una jukebox social: un tótem en el bar donde los clientes ponen música de forma colectiva pagando una microtarifa. El valor era la retención — nadie se va del bar si su canción suena en 10 minutos.</p>
-      <p>Antes de seguir diseñando, analicé la viabilidad y encontré tres barreras estructurales: el hardware exige una red de <em>field service</em> que Spotify no tiene ni quiere (descontinuó el Car Thing en 2022), las licencias de streaming personal no cubren la reproducción pública en locales, y una transacción de 0,10 € no soporta las comisiones de pasarela.</p>
-      <p>Pero el problema de fondo era otro: <strong>la jukebox resuelve el problema del bar, no el del usuario. El usuario no quiere poner una canción — quiere encontrar un sitio donde quiera estar.</strong> Ese insight fue el pivot.</p>
+      <h3>${tl(`De jukebox a mapa: el pivot`)}</h3>
+      <p>${tl(`La idea original era una jukebox social: un tótem en el bar donde los clientes ponen música de forma colectiva pagando una microtarifa. El valor era la retención — nadie se va del bar si su canción suena en 10 minutos.`)}</p>
+      <p>${tl(`Antes de seguir diseñando, analicé la viabilidad y encontré tres barreras estructurales: el hardware exige una red de <em>field service</em> que Spotify no tiene ni quiere (descontinuó el Car Thing en 2022), las licencias de streaming personal no cubren la reproducción pública en locales, y una transacción de 0,10 € no soporta las comisiones de pasarela.`)}</p>
+      <p>${tl(`Pero el problema de fondo era otro: <strong>la jukebox resuelve el problema del bar, no el del usuario. El usuario no quiere poner una canción — quiere encontrar un sitio donde quiera estar.</strong> Ese insight fue el pivot.`)}</p>
 
-      <h3>La solución</h3>
-      <p>Una pestaña nativa en Spotify con un mapa en tiempo real de los locales cercanos y lo que suena en cada uno. Dos modos del mismo producto:</p>
-      <div class="cs-pair"><figure class="cs-fig"><img src="spotify/capturas/01-inicio.jpg" width="600" height="1298" alt="Pantalla de inicio de Spotify con la entrada a Clubs" loading="lazy"><figcaption>Entrada desde Inicio: «Clubs» es una pestaña más, no una app aparte.</figcaption></figure><figure class="cs-fig"><img src="spotify/capturas/04-unirse-jam.jpg" width="600" height="1298" alt="Pantalla para unirse a la Jam del club" loading="lazy"><figcaption>Dentro del local: escaneas el QR y te unes a la Jam.</figcaption></figure></div>
-      <p><strong>Descubrimiento (antes de entrar).</strong> Cada local muestra la canción exacta que suena ahora, el historial de las últimas 2 horas y un <strong>% Match</strong> calculado cruzando tu historial de escucha con el hilo musical del bar. Eliges el club por su ambiente antes de cruzar la puerta.</p>
-      <p><strong>Participación (ya dentro).</strong> Escaneas el QR del local y entras en la cola compartida: ves qué suena, qué viene después y quién lo pincha, y puedes añadir hasta 5 canciones tuyas — siempre dentro del ADN musical que el local permite.</p>
-      <p><strong>Panel B2B (el local).</strong> El hostelero mantiene el control editorial: define los géneros permitidos, elimina o veta canciones de la cola y configura cada cuánto puede repetirse un tema. A cambio ve el ROI en directo: personas viendo su ficha, pulsaciones de «cómo llegar», match medio de quien está dentro y los temas que más han conectado esa noche.</p>
-      <figure class="cs-fig"><img src="spotify/capturas/06-panel-local.jpg" width="1300" height="1460" alt="Panel del local: género permitido, cola de la sala y repetición de temas" loading="lazy"><figcaption>El panel del local: ADN musical permitido, cola moderable, temas que más conectan y control de repetición.</figcaption></figure>
+      <h3>${tl(`La solución`)}</h3>
+      <p>${tl(`Una pestaña nativa en Spotify con un mapa en tiempo real de los locales cercanos y lo que suena en cada uno. Dos modos del mismo producto:`)}</p>
+      <div class="cs-pair"><figure class="cs-fig"><img src="spotify/capturas/01-inicio.jpg" width="600" height="1298" alt="${tl("Pantalla de inicio de Spotify con la entrada a Clubs")}" loading="lazy"><figcaption>${tl(`Entrada desde Inicio: «Clubs» es una pestaña más, no una app aparte.`)}</figcaption></figure><figure class="cs-fig"><img src="spotify/capturas/04-unirse-jam.jpg" width="600" height="1298" alt="${tl("Pantalla para unirse a la Jam del club")}" loading="lazy"><figcaption>${tl(`Dentro del local: escaneas el QR y te unes a la Jam.`)}</figcaption></figure></div>
+      <p>${tl(`<strong>Descubrimiento (antes de entrar).</strong> Cada local muestra la canción exacta que suena ahora, el historial de las últimas 2 horas y un <strong>% Match</strong> calculado cruzando tu historial de escucha con el hilo musical del bar. Eliges el club por su ambiente antes de cruzar la puerta.`)}</p>
+      <p>${tl(`<strong>Participación (ya dentro).</strong> Escaneas el QR del local y entras en la cola compartida: ves qué suena, qué viene después y quién lo pincha, y puedes añadir hasta 5 canciones tuyas — siempre dentro del ADN musical que el local permite.`)}</p>
+      <p>${tl(`<strong>Panel B2B (el local).</strong> El hostelero mantiene el control editorial: define los géneros permitidos, elimina o veta canciones de la cola y configura cada cuánto puede repetirse un tema. A cambio ve el ROI en directo: personas viendo su ficha, pulsaciones de «cómo llegar», match medio de quien está dentro y los temas que más han conectado esa noche.`)}</p>
+      <figure class="cs-fig"><img src="spotify/capturas/06-panel-local.jpg" width="1300" height="1460" alt="${tl("Panel del local: género permitido, cola de la sala y repetición de temas")}" loading="lazy"><figcaption>${tl(`El panel del local: ADN musical permitido, cola moderable, temas que más conectan y control de repetición.`)}</figcaption></figure>
 
-      <h3>Decisiones de diseño clave</h3>
-      <p><strong>Historial de 2 horas, no más.</strong> Suficiente para validar la línea editorial del local sin contaminar con el contexto de la tarde. Además demuestra consistencia: valida que el Match es estructural, no casual.</p>
-      <p><strong>El pin del mapa codifica género, no distancia.</strong> El género es la variable de decisión; la distancia se infiere del propio mapa. Y el % Match va en el pin, no solo en la ficha: el usuario decide sin tener que abrir 14 locales.</p>
-      <p><strong>El CTA principal es «guardar canción», no «comprar entrada».</strong> La conversión nocturna de tickets de 50 € es baja; el guardado es instantáneo, emocional y sin fricción. La entrada existe, pero como paso secundario.</p>
-      <p><strong>No inventar infraestructura que ya existe.</strong> Spotify Connect para la reproducción, la cuenta de Spotify como autenticación, Apple Pay para pagos. No diseñé un producto nuevo: diseñé el tejido conectivo entre ecosistemas que ya tienen masa crítica.</p>
+      <h3>${tl(`Decisiones de diseño clave`)}</h3>
+      <p>${tl(`<strong>Historial de 2 horas, no más.</strong> Suficiente para validar la línea editorial del local sin contaminar con el contexto de la tarde. Además demuestra consistencia: valida que el Match es estructural, no casual.`)}</p>
+      <p>${tl(`<strong>El pin del mapa codifica género, no distancia.</strong> El género es la variable de decisión; la distancia se infiere del propio mapa. Y el % Match va en el pin, no solo en la ficha: el usuario decide sin tener que abrir 14 locales.`)}</p>
+      <p>${tl(`<strong>El CTA principal es «guardar canción», no «comprar entrada».</strong> La conversión nocturna de tickets de 50 € es baja; el guardado es instantáneo, emocional y sin fricción. La entrada existe, pero como paso secundario.`)}</p>
+      <p>${tl(`<strong>No inventar infraestructura que ya existe.</strong> Spotify Connect para la reproducción, la cuenta de Spotify como autenticación, Apple Pay para pagos. No diseñé un producto nuevo: diseñé el tejido conectivo entre ecosistemas que ya tienen masa crítica.`)}</p>
 
-      <h3>Modelo de negocio</h3>
-      <p>Tres fases: gratuito para locales con cuenta comercial (construir el efecto red), suscripción SaaS con perfil verificado y panel de analítica (el ROI visible justifica la cuota), y promoción premium segmentada por % Match (una sala puede destacar su sesión de house en el feed de usuarios cercanos que escuchan house). El activo real del modelo son <strong>los datos</strong>: qué se escucha en qué barrios, a qué hora y con qué correlación con asistencia a eventos — un <em>data layer</em> entre el ocio nocturno y la industria musical.</p>
+      <h3>${tl(`Modelo de negocio`)}</h3>
+      <p>${tl(`Tres fases: gratuito para locales con cuenta comercial (construir el efecto red), suscripción SaaS con perfil verificado y panel de analítica (el ROI visible justifica la cuota), y promoción premium segmentada por % Match (una sala puede destacar su sesión de house en el feed de usuarios cercanos que escuchan house). El activo real del modelo son <strong>los datos</strong>: qué se escucha en qué barrios, a qué hora y con qué correlación con asistencia a eventos — un <em>data layer</em> entre el ocio nocturno y la industria musical.`)}</p>
 
-      <div class="cs-cta-row bottom"><a class="btn" href="spotify/index.html" target="_blank" rel="noopener">Ver la maqueta en vivo →</a></div>
+      <div class="cs-cta-row bottom"><a class="btn" href="spotify/index.html" target="_blank" rel="noopener">${tl(`Ver la maqueta en vivo →`)}</a></div>
     </div>`;
 }
 (function(){ var w = makeWindow("case-spotify", "Spotify Now Playing.doc", ICONS.doc, caseSpotifyHtml(), 130, 55, 680); if (w) w.classList.add("docwin"); })();
@@ -1186,57 +1228,57 @@ function caseRespiraHtml() {
   return `<div class="cs-toolbar">
       <div class="cs-tfont">Chicago&nbsp;▾</div>
       <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
-      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
-      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="${tl("Negrita")}">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="${tl("Cursiva")}">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="${tl("Subrayado")}">
       <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Alinear izquierda">
-      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centrar">
-      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Alinear derecha">
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="${tl("Alinear izquierda")}">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="${tl("Centrar")}">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="${tl("Alinear derecha")}">
     </div>
     <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
     <div class="cs-paper">
-      <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir Respira →</a></div>
-      <h2 class="cs-title">Respira</h2>
-      <p class="cs-sub">Una app de respiración guiada, gratuita y sin cuenta, para parar cinco minutos en mitad del día. La diseñé y la programé yo, y la regalo.</p>
-      <div class="cs-meta">Exploración de producto · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
+      <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">${tl(`Abrir Respira →`)}</a></div>
+      <h2 class="cs-title">${tl(`Respira`)}</h2>
+      <p class="cs-sub">${tl(`Una app de respiración guiada, gratuita y sin cuenta, para parar cinco minutos en mitad del día. La diseñé y la programé yo, y la regalo.`)}</p>
+      <div class="cs-meta">${tl(`Exploración de producto · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador`)}</div>
 
-      ${fig("01-portada", "Pantalla de inicio de Respira: una luna de color lavanda y tres accesos", "La pantalla de inicio: una luna y tres caminos.")}
+      ${fig("01-portada", tl("Pantalla de inicio de Respira: una luna de color lavanda y tres accesos"), tl("La pantalla de inicio: una luna y tres caminos."))}
 
-      <h3>Por qué la hice</h3>
-      <p>Todo va un poco más rápido, y la IA también ha acelerado mi forma de trabajar. Quería hacer algo que fuera lo contrario: abrir, respirar cinco minutos y cerrar.</p>
-      <p>Respira no pide cuenta, ni suscripción, ni lleva anuncios. Es además la forma más directa que tengo de enseñar cómo trabajo: un producto pequeño, terminado, que cualquiera puede abrir desde el móvil.</p>
+      <h3>${tl(`Por qué la hice`)}</h3>
+      <p>${tl(`Todo va un poco más rápido, y la IA también ha acelerado mi forma de trabajar. Quería hacer algo que fuera lo contrario: abrir, respirar cinco minutos y cerrar.`)}</p>
+      <p>${tl(`Respira no pide cuenta, ni suscripción, ni lleva anuncios. Es además la forma más directa que tengo de enseñar cómo trabajo: un producto pequeño, terminado, que cualquiera puede abrir desde el móvil.`)}</p>
 
-      <h3>Qué hace</h3>
-      <p>Tiene tres caminos desde el inicio:</p>
+      <h3>${tl(`Qué hace`)}</h3>
+      <p>${tl(`Tiene tres caminos desde el inicio:`)}</p>
       <ul class="cs-list">
-        <li><strong>¿Qué te pide el cuerpo?</strong> Dos preguntas y la app propone una respiración.</li>
-        <li><strong>Técnicas.</strong> Diez formas de respirar, cada una explicada paso a paso, con la duración que tú elijas.</li>
-        <li><strong>Tu cielo.</strong> Cada sesión enciende una estrella.</li>
+        <li>${tl(`<strong>¿Qué te pide el cuerpo?</strong> Dos preguntas y la app propone una respiración.`)}</li>
+        <li>${tl(`<strong>Técnicas.</strong> Diez formas de respirar, cada una explicada paso a paso, con la duración que tú elijas.`)}</li>
+        <li>${tl(`<strong>Tu cielo.</strong> Cada sesión enciende una estrella.`)}</li>
       </ul>
-      ${fig("02-test-ficha-sesion", "Tres pantallas: el test, la ficha de la técnica Suspiro y la sesión en marcha", "Del test a la sesión: elegir lo que necesitas, ajustar la duración y empezar.")}
+      ${fig("02-test-ficha-sesion", tl("Tres pantallas: el test, la ficha de la técnica Suspiro y la sesión en marcha"), tl("Del test a la sesión: elegir lo que necesitas, ajustar la duración y empezar."))}
 
-      <h3>Una luna en lugar de un cronómetro</h3>
-      <p>Durante la sesión casi no hay texto que leer. Una luna crece al inhalar y se encoge al soltar el aire, y debajo aparece una frase corta, como «Suelta por la boca».</p>
-      <p>En las técnicas que alternan fosas nasales, la pantalla muestra dos lunas. Al final, la luna vuelve a su sitio y la app dice «Vuelve despacio».</p>
-      ${fig("03-pausa-lunas-final", "Tres momentos de una sesión: pausa, dos lunas y cierre", "Pausa, dos lunas para alternar fosas nasales y el cierre.")}
+      <h3>${tl(`Una luna en lugar de un cronómetro`)}</h3>
+      <p>${tl(`Durante la sesión casi no hay texto que leer. Una luna crece al inhalar y se encoge al soltar el aire, y debajo aparece una frase corta, como «Suelta por la boca».`)}</p>
+      <p>${tl(`En las técnicas que alternan fosas nasales, la pantalla muestra dos lunas. Al final, la luna vuelve a su sitio y la app dice «Vuelve despacio».`)}</p>
+      ${fig("03-pausa-lunas-final", tl("Tres momentos de una sesión: pausa, dos lunas y cierre"), tl("Pausa, dos lunas para alternar fosas nasales y el cierre."))}
 
-      <h3>Cómo se decidió</h3>
-      <p><strong>Quité los «viajes».</strong> La primera versión tenía recorridos temáticos. No les encontraba sentido y les faltaba trabajo de UX. La app se quedó con el test y las técnicas, y mejoró.</p>
-      <p><strong>Un solo color.</strong> Lavanda por defecto. Se cambia únicamente en Ajustes, para que la pantalla de respirar no compita con nada. No hay botón de play: se empieza tocando la luna.</p>
-      <p><strong>Las técnicas avanzadas están bloqueadas.</strong> El Viaje del Chamán y El Despertar de la Kundalini se abren con 3 y 6 horas de práctica acumulada. Al desbloquearlas, la app explica qué hacen y por qué pueden marear, y pide marcar una casilla antes de empezar.</p>
-      ${fig("04-avanzadas", "Lista de técnicas con las avanzadas bloqueadas, y la ficha de El Viaje del Chamán con su aviso", "Las avanzadas, con su progreso y su aviso de seguridad.")}
-      <p><strong>Tu cielo es mi respuesta al scroll.</strong> Quería competir con Instagram con una gamificación suave. Cada respiración añade una estrella y las estrellas acaban formando constelaciones. Todo se guarda solo en el dispositivo.</p>
-      ${fig("05-tu-cielo", "Pantalla de cierre de sesión, pantalla de Tu cielo y pantalla de inicio con constelaciones", "Cada sesión enciende una estrella nueva.")}
+      <h3>${tl(`Cómo se decidió`)}</h3>
+      <p>${tl(`<strong>Quité los «viajes».</strong> La primera versión tenía recorridos temáticos. No les encontraba sentido y les faltaba trabajo de UX. La app se quedó con el test y las técnicas, y mejoró.`)}</p>
+      <p>${tl(`<strong>Un solo color.</strong> Lavanda por defecto. Se cambia únicamente en Ajustes, para que la pantalla de respirar no compita con nada. No hay botón de play: se empieza tocando la luna.`)}</p>
+      <p>${tl(`<strong>Las técnicas avanzadas están bloqueadas.</strong> El Viaje del Chamán y El Despertar de la Kundalini se abren con 3 y 6 horas de práctica acumulada. Al desbloquearlas, la app explica qué hacen y por qué pueden marear, y pide marcar una casilla antes de empezar.`)}</p>
+      ${fig("04-avanzadas", tl("Lista de técnicas con las avanzadas bloqueadas, y la ficha de El Viaje del Chamán con su aviso"), tl("Las avanzadas, con su progreso y su aviso de seguridad."))}
+      <p>${tl(`<strong>Tu cielo es mi respuesta al scroll.</strong> Quería competir con Instagram con una gamificación suave. Cada respiración añade una estrella y las estrellas acaban formando constelaciones. Todo se guarda solo en el dispositivo.`)}</p>
+      ${fig("05-tu-cielo", tl("Pantalla de cierre de sesión, pantalla de Tu cielo y pantalla de inicio con constelaciones"), tl("Cada sesión enciende una estrella nueva."))}
 
-      <h3>Cómo está hecha</h3>
-      <p>Es una sola página HTML, CSS y JavaScript, sin servidor ni base de datos. La luna se dibuja en el navegador y los datos de Tu cielo se quedan en el móvil de quien la usa. Se puede compartir con un enlace y, en los móviles que lo permiten, instalar.</p>
+      <h3>${tl(`Cómo está hecha`)}</h3>
+      <p>${tl(`Es una sola página HTML, CSS y JavaScript, sin servidor ni base de datos. La luna se dibuja en el navegador y los datos de Tu cielo se quedan en el móvil de quien la usa. Se puede compartir con un enlace y, en los móviles que lo permiten, instalar.`)}</p>
 
-      <h3>Pruébala</h3>
-      <p>Ábrela desde el móvil si puedes. Con tres minutos te da tiempo a hacer una sesión.</p>
-      <p>Si quieres algo parecido a medida, para tu negocio o para ti, cuéntamelo.</p>
+      <h3>${tl(`Pruébala`)}</h3>
+      <p>${tl(`Ábrela desde el móvil si puedes. Con tres minutos te da tiempo a hacer una sesión.`)}</p>
+      <p>${tl(`Si quieres algo parecido a medida, para tu negocio o para ti, cuéntamelo.`)}</p>
 
-      <div class="cs-cta-row bottom"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir Respira →</a></div>
+      <div class="cs-cta-row bottom"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">${tl(`Abrir Respira →`)}</a></div>
     </div>`;
 }
 (function(){ var w = makeWindow("case-respira", "Respira.doc", ICONS.doc, caseRespiraHtml(), 170, 75, 680); if (w) w.classList.add("docwin"); })();
@@ -1291,58 +1333,58 @@ function casePresupuestosHtml() {
   return `<div class="cs-toolbar">
       <div class="cs-tfont">Chicago&nbsp;▾</div>
       <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
-      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
-      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="${tl("Negrita")}">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="${tl("Cursiva")}">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="${tl("Subrayado")}">
       <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Alinear izquierda">
-      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centrar">
-      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Alinear derecha">
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="${tl("Alinear izquierda")}">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="${tl("Centrar")}">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="${tl("Alinear derecha")}">
     </div>
     <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
     <div class="cs-paper">
-      <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
-      <h2 class="cs-title">Presupuestar sin echar la tarde</h2>
-      <p class="cs-sub">Diseñé y construí una herramienta para que un instalador de ventanas de Madrid prepare en unos 10 minutos lo que antes le llevaba cerca de una hora. Con su marca, su margen y sin que el PDF salga de su dispositivo.</p>
-      <div class="cs-meta">Herramientas y operaciones · proyecto real · en uso&nbsp;&nbsp;·&nbsp;&nbsp;Septiembre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador</div>
+      <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">${tl(`Abrir la demo →`)}</a></div>
+      <h2 class="cs-title">${tl(`Presupuestar sin echar la tarde`)}</h2>
+      <p class="cs-sub">${tl(`Diseñé y construí una herramienta para que un instalador de ventanas de Madrid prepare en unos 10 minutos lo que antes le llevaba cerca de una hora. Con su marca, su margen y sin que el PDF salga de su dispositivo.`)}</p>
+      <div class="cs-meta">${tl(`Herramientas y operaciones · proyecto real · en uso&nbsp;&nbsp;·&nbsp;&nbsp;Septiembre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Diseño y desarrollo · HTML/JS · todo en el navegador`)}</div>
 
-      <h3>El problema</h3>
-      <p>Cada presupuesto empezaba con otro: el PDF de su fabricante, con ventanas, medidas, planos y precios de coste. Para enviárselo al cliente, borraba el logo y cambiaba los precios uno a uno, sentado al ordenador. A veces quedaba algún dato que revelaba quién fabricaba las ventanas.</p>
+      <h3>${tl(`El problema`)}</h3>
+      <p>${tl(`Cada presupuesto empezaba con otro: el PDF de su fabricante, con ventanas, medidas, planos y precios de coste. Para enviárselo al cliente, borraba el logo y cambiaba los precios uno a uno, sentado al ordenador. A veces quedaba algún dato que revelaba quién fabricaba las ventanas.`)}</p>
       <div class="cs-pair">
-        ${fig("02-antes-original-korvel", "Presupuesto del fabricante, con sus datos y sus precios de coste", "Antes: el presupuesto del fabricante.")}
-        ${fig("03-despues-luz-norte", "El mismo presupuesto convertido, con la marca y el margen del instalador", "Después: las mismas ventanas, con su marca y sus precios.")}
+        ${fig("02-antes-original-korvel", tl("Presupuesto del fabricante, con sus datos y sus precios de coste"), tl("Antes: el presupuesto del fabricante."))}
+        ${fig("03-despues-luz-norte", tl("El mismo presupuesto convertido, con la marca y el margen del instalador"), tl("Después: las mismas ventanas, con su marca y sus precios."))}
       </div>
 
-      <h3>Qué hace</h3>
-      <p>Abre el PDF y la herramienta extrae las ventanas, sus medidas, descripciones y planos. Aplica un margen general o por ventana y permite corregir textos, precios y medidas sobre el propio documento, también desde el móvil, en la obra.</p>
-      <p>De ese trabajo salen dos archivos:</p>
-      ${fig("08-pdf-generado", "El PDF que recibe el cliente", "El PDF para el cliente: marca propia, precios de venta y planos, sin datos del fabricante.")}
-      ${fig("09-copia-excel", "La copia en Excel con costes y márgenes", "El Excel del instalador: costes, márgenes y lo que gana.")}
-      <p>El Excel, junto con el PDF original, permite recuperar el presupuesto otro día y seguir donde lo dejó.</p>
+      <h3>${tl(`Qué hace`)}</h3>
+      <p>${tl(`Abre el PDF y la herramienta extrae las ventanas, sus medidas, descripciones y planos. Aplica un margen general o por ventana y permite corregir textos, precios y medidas sobre el propio documento, también desde el móvil, en la obra.`)}</p>
+      <p>${tl(`De ese trabajo salen dos archivos:`)}</p>
+      ${fig("08-pdf-generado", tl("El PDF que recibe el cliente"), tl("El PDF para el cliente: marca propia, precios de venta y planos, sin datos del fabricante."))}
+      ${fig("09-copia-excel", tl("La copia en Excel con costes y márgenes"), tl("El Excel del instalador: costes, márgenes y lo que gana."))}
+      <p>${tl(`El Excel, junto con el PDF original, permite recuperar el presupuesto otro día y seguir donde lo dejó.`)}</p>
 
-      <h3>Cómo se decidió</h3>
-      <p>No le prometí que leyera bien todos los PDF del mundo. Le prometí que <strong>nunca le daría un presupuesto mal sin avisarle</strong>.</p>
-      <p>La herramienta suma los importes extraídos y los compara con la base imponible del fabricante. Si coinciden, muestra «Cuentas comprobadas». Si no, señala la diferencia y, cuando puede, qué revisar: una ventana sin precio o un salto en la numeración. Permite corregir y continuar; cuando las cuentas cuadran, el aviso pasa a verde.</p>
-      <p>Esta comprobación detectó dos errores de dinero que las pruebas anteriores no habían encontrado.</p>
-      <p>También descarté dos opciones:</p>
+      <h3>${tl(`Cómo se decidió`)}</h3>
+      <p>${tl(`No le prometí que leyera bien todos los PDF del mundo. Le prometí que <strong>nunca le daría un presupuesto mal sin avisarle</strong>.`)}</p>
+      <p>${tl(`La herramienta suma los importes extraídos y los compara con la base imponible del fabricante. Si coinciden, muestra «Cuentas comprobadas». Si no, señala la diferencia y, cuando puede, qué revisar: una ventana sin precio o un salto en la numeración. Permite corregir y continuar; cuando las cuentas cuadran, el aviso pasa a verde.`)}</p>
+      <p>${tl(`Esta comprobación detectó dos errores de dinero que las pruebas anteriores no habían encontrado.`)}</p>
+      <p>${tl(`También descarté dos opciones:`)}</p>
       <ul class="cs-list">
-        <li><strong>Leer los PDF con una IA externa.</strong> Podía facilitar la lectura de más formatos, pero exigía enviar los documentos fuera. Y que no salgan es parte de lo que el instalador ofrece: los precios de su fabricante no los ve nadie más.</li>
-        <li><strong>Detectar automáticamente todas las medidas de los planos.</strong> El prototipo encontraba un tercio de los números e interpretaba algunos incorrectamente. Lo sustituí por una corrección manual: tocar la medida y escribir la buena.</li>
+        <li>${tl(`<strong>Leer los PDF con una IA externa.</strong> Podía facilitar la lectura de más formatos, pero exigía enviar los documentos fuera. Y que no salgan es parte de lo que el instalador ofrece: los precios de su fabricante no los ve nadie más.`)}</li>
+        <li>${tl(`<strong>Detectar automáticamente todas las medidas de los planos.</strong> El prototipo encontraba un tercio de los números e interpretaba algunos incorrectamente. Lo sustituí por una corrección manual: tocar la medida y escribir la buena.`)}</li>
       </ul>
 
-      <h3>En uso</h3>
-      <p>El instalador la utiliza desde septiembre de 2026 para todos sus presupuestos: diez o más por semana.</p>
-      <p>Según sus estimaciones, ha pasado de cerca de una hora a unos 10 minutos por presupuesto. Con diez semanales, son unas ocho horas recuperadas: <strong>una jornada entera cada semana</strong>.</p>
-      <p>Siete presupuestos reales de tres fabricantes y más de 370 comprobaciones automáticas ayudan a revisar cada cambio. La demo tiene además una comprobación para evitar que se publiquen datos reales.</p>
+      <h3>${tl(`En uso`)}</h3>
+      <p>${tl(`El instalador la utiliza desde septiembre de 2026 para todos sus presupuestos: diez o más por semana.`)}</p>
+      <p>${tl(`Según sus estimaciones, ha pasado de cerca de una hora a unos 10 minutos por presupuesto. Con diez semanales, son unas ocho horas recuperadas: <strong>una jornada entera cada semana</strong>.`)}</p>
+      <p>${tl(`Siete presupuestos reales de tres fabricantes y más de 370 comprobaciones automáticas ayudan a revisar cada cambio. La demo tiene además una comprobación para evitar que se publiquen datos reales.`)}</p>
 
-      <h3>Pruébala</h3>
-      <p>Recorre la herramienta en dos minutos con un presupuesto de ejemplo. Luz Norte y Korvel Systems son nombres inventados para esta demo. No se sube ni se descarga nada: los documentos se muestran en pantalla.</p>
-      ${fig("12-recorrido-margen", "El recorrido guiado señalando el margen", "Ajusta el margen y mira cuánto queda para el instalador.")}
+      <h3>${tl(`Pruébala`)}</h3>
+      <p>${tl(`Recorre la herramienta en dos minutos con un presupuesto de ejemplo. Luz Norte y Korvel Systems son nombres inventados para esta demo. No se sube ni se descarga nada: los documentos se muestran en pantalla.`)}</p>
+      ${fig("12-recorrido-margen", tl("El recorrido guiado señalando el margen"), tl("Ajusta el margen y mira cuánto queda para el instalador."))}
 
-      <div class="cs-cta-row bottom"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
+      <div class="cs-cta-row bottom"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">${tl(`Abrir la demo →`)}</a></div>
     </div>`;
 }
-(function(){ var w = makeWindow("case-presupuestos", "Presupuestar sin echar la tarde.doc", ICONS.doc, casePresupuestosHtml(), 150, 65, 680); if (w) w.classList.add("docwin"); })();
+(function(){ var w = makeWindow("case-presupuestos", tl("Presupuestar sin echar la tarde.doc"), ICONS.doc, casePresupuestosHtml(), 150, 65, 680); if (w) w.classList.add("docwin"); })();
 
 // ===== CASE STUDY: Puti Di Madre =====
 function casePutiHtml() {
@@ -1351,64 +1393,64 @@ function casePutiHtml() {
   return `<div class="cs-toolbar">
       <div class="cs-tfont">Chicago&nbsp;▾</div>
       <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
-      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
-      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="${tl("Negrita")}">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="${tl("Cursiva")}">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="${tl("Subrayado")}">
       <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Alinear izquierda">
-      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centrar">
-      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Alinear derecha">
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="${tl("Alinear izquierda")}">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="${tl("Centrar")}">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="${tl("Alinear derecha")}">
     </div>
     <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
     <div class="cs-paper">
-      <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
-      <h2 class="cs-title">Una pizzería que le gana margen a las apps de reparto</h2>
-      <p class="cs-sub">Diseñé y construí el canal de pedido directo de una pizzería de barrio: una web solo para recoger y el panel del turno. El objetivo, que el local se quede con más de cada pizza en vez de regalarle el 30 % a las apps de reparto. El negocio es inventado; el problema, no.</p>
-      <div class="cs-meta">Soluciones de negocio · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Agosto–octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Estrategia, UX, copy, identidad y prototipo · HTML/JS</div>
+      <div class="cs-cta-row"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">${tl(`Abrir la demo →`)}</a></div>
+      <h2 class="cs-title">${tl(`Una pizzería que le gana margen a las apps de reparto`)}</h2>
+      <p class="cs-sub">${tl(`Diseñé y construí el canal de pedido directo de una pizzería de barrio: una web solo para recoger y el panel del turno. El objetivo, que el local se quede con más de cada pizza en vez de regalarle el 30 % a las apps de reparto. El negocio es inventado; el problema, no.`)}</p>
+      <div class="cs-meta">${tl(`Soluciones de negocio · concepto&nbsp;&nbsp;·&nbsp;&nbsp;Agosto–octubre 2026&nbsp;&nbsp;·&nbsp;&nbsp;Estrategia, UX, copy, identidad y prototipo · HTML/JS`)}</div>
 
-      <h3>El problema</h3>
-      <p>Partí de una pizzería pequeña que conozco en Lavapiés: buena reputación, cola en la puerta y dos personas dentro. No le faltan clientes. Le falta margen, porque una parte de sus pedidos llega por las apps de reparto.</p>
-      <p>Con una comisión del 30 %, una pizza de 12 € deja unos 3 € de margen si se pide por la app y unos 7 € si el cliente la recoge en el local.</p>
-      <p>Vender más no era la respuesta. Con un horno y dos personas, más pedidos solo alargan la espera. La pregunta era otra: <strong>cómo ganar más con los mismos pedidos sin colapsar el horno</strong>. Y la cola daba la pista: es demanda sin programar.</p>
-      <p><em>Las cifras son una simulación con comisión del 30 %, coste de producto del 30 % y envase estimado. No son las cuentas de ningún local.</em></p>
+      <h3>${tl(`El problema`)}</h3>
+      <p>${tl(`Partí de una pizzería pequeña que conozco en Lavapiés: buena reputación, cola en la puerta y dos personas dentro. No le faltan clientes. Le falta margen, porque una parte de sus pedidos llega por las apps de reparto.`)}</p>
+      <p>${tl(`Con una comisión del 30 %, una pizza de 12 € deja unos 3 € de margen si se pide por la app y unos 7 € si el cliente la recoge en el local.`)}</p>
+      <p>${tl(`Vender más no era la respuesta. Con un horno y dos personas, más pedidos solo alargan la espera. La pregunta era otra: <strong>cómo ganar más con los mismos pedidos sin colapsar el horno</strong>. Y la cola daba la pista: es demanda sin programar.`)}</p>
+      <p>${tl(`<em>Las cifras son una simulación con comisión del 30 %, coste de producto del 30 % y envase estimado. No son las cuentas de ningún local.</em>`)}</p>
 
-      <h3>Qué hace</h3>
-      <p>Son dos pantallas sobre el mismo sistema. En la web, el cliente ve la carta del día, llena su caja, elige la hora de recogida y sigue el pedido hasta que está listo. Paga al recoger: la web no cobra nada.</p>
-      ${fig("01-web", "La portada de la web de Puti Di Madre, con el indicador del horno", "La web: la voz de la marca y, desde la portada, cuánto aguanta el horno.")}
-      <p>En el panel del turno, el local ve la carga del horno de los próximos cuartos de hora y mueve los pedidos. Desde ahí también marca agotados, pausa la web y cambia precios, descuentos y horario. Lo que se cambia en el panel aparece en la web al recargar.</p>
-      ${fig("02-panel", "El panel del turno, con la carga del horno y los pedidos por estado", "El panel del turno: carga del horno y pedidos, sin la marca.")}
+      <h3>${tl(`Qué hace`)}</h3>
+      <p>${tl(`Son dos pantallas sobre el mismo sistema. En la web, el cliente ve la carta del día, llena su caja, elige la hora de recogida y sigue el pedido hasta que está listo. Paga al recoger: la web no cobra nada.`)}</p>
+      ${fig("01-web", tl("La portada de la web de Puti Di Madre, con el indicador del horno"), tl("La web: la voz de la marca y, desde la portada, cuánto aguanta el horno."))}
+      <p>${tl(`En el panel del turno, el local ve la carga del horno de los próximos cuartos de hora y mueve los pedidos. Desde ahí también marca agotados, pausa la web y cambia precios, descuentos y horario. Lo que se cambia en el panel aparece en la web al recargar.`)}</p>
+      ${fig("02-panel", tl("El panel del turno, con la carga del horno y los pedidos por estado"), tl("El panel del turno: carga del horno y pedidos, sin la marca."))}
 
-      <h3>Cómo se decidió</h3>
-      <p><strong>La web solo ofrece horas que el horno puede cumplir.</strong> La capacidad del horno se reparte en franjas de quince minutos. Una pizza consume una unidad; un calzone, una y media; una bebida, un cuarto, porque alguien tiene que cogerla y meterla en la bolsa. Cada franja admite seis unidades y la web solo puede reservar una parte: tres en hora punta, para no dejar sin pizza a quien espera en la puerta.</p>
-      <p>Un pedido no se parte entre franjas: si no cabe entero, se ofrece la siguiente. Por eso, además de «Horno lleno», existe «No cabe tu pedido».</p>
+      <h3>${tl(`Cómo se decidió`)}</h3>
+      <p>${tl(`<strong>La web solo ofrece horas que el horno puede cumplir.</strong> La capacidad del horno se reparte en franjas de quince minutos. Una pizza consume una unidad; un calzone, una y media; una bebida, un cuarto, porque alguien tiene que cogerla y meterla en la bolsa. Cada franja admite seis unidades y la web solo puede reservar una parte: tres en hora punta, para no dejar sin pizza a quien espera en la puerta.`)}</p>
+      <p>${tl(`Un pedido no se parte entre franjas: si no cabe entero, se ofrece la siguiente. Por eso, además de «Horno lleno», existe «No cabe tu pedido».`)}</p>
       <div class="cs-pair">
-        ${fig("03-franjas-punta", "Selector de hora en hora punta, con franjas casi llenas y una llena", "Un viernes a las 20:40: las 22:15 están llenas y las 21:30 y 21:45, casi.")}
-        ${fig("04-franjas-valle", "Selector de hora a las 18:30, con descuentos en las primeras franjas", "A las 18:30: las horas más vacías llevan descuento.")}
+        ${fig("03-franjas-punta", tl("Selector de hora en hora punta, con franjas casi llenas y una llena"), tl("Un viernes a las 20:40: las 22:15 están llenas y las 21:30 y 21:45, casi."))}
+        ${fig("04-franjas-valle", tl("Selector de hora a las 18:30, con descuentos en las primeras franjas"), tl("A las 18:30: las horas más vacías llevan descuento."))}
       </div>
-      <p><strong>Las promos mueven pedidos, no bajan precios.</strong> Un descuento general llenaría el horno con menos margen, justo lo contrario de lo que busca el proyecto. Por eso toda promo lleva condición: un 10 % de 19:00 a 19:45, cuando el horno acaba de arrancar, y un 5 % hasta las 20:15. En hora punta, nada. La caja solo anuncia el descuento si queda alguna hora que lo tenga.</p>
-      <p>La fidelización va en una cartilla de cartón que se sella al recoger, sin cuentas ni datos guardados. Al séptimo pedido se regala la bolsa de tela de la casa y no una pizza: regalar pizza en hora punta es regalar justo lo que falta.</p>
-      <p><strong>El panel no lleva la marca.</strong> La web tiene voz, ilustraciones y tipografía de cartel. El panel es blanco y negro, sin nada de eso: es una herramienta para un viernes a las nueve, y lo que importa es ver de un vistazo qué entra al horno. Saber cuándo no aplicar la identidad también es diseñar.</p>
-      <p>Dejé fuera de esta versión el pago online, las cuentas de cliente y el reparto propio. El reparto sigue en las apps, para quien vive lejos.</p>
+      <p>${tl(`<strong>Las promos mueven pedidos, no bajan precios.</strong> Un descuento general llenaría el horno con menos margen, justo lo contrario de lo que busca el proyecto. Por eso toda promo lleva condición: un 10 % de 19:00 a 19:45, cuando el horno acaba de arrancar, y un 5 % hasta las 20:15. En hora punta, nada. La caja solo anuncia el descuento si queda alguna hora que lo tenga.`)}</p>
+      <p>${tl(`La fidelización va en una cartilla de cartón que se sella al recoger, sin cuentas ni datos guardados. Al séptimo pedido se regala la bolsa de tela de la casa y no una pizza: regalar pizza en hora punta es regalar justo lo que falta.`)}</p>
+      <p>${tl(`<strong>El panel no lleva la marca.</strong> La web tiene voz, ilustraciones y tipografía de cartel. El panel es blanco y negro, sin nada de eso: es una herramienta para un viernes a las nueve, y lo que importa es ver de un vistazo qué entra al horno. Saber cuándo no aplicar la identidad también es diseñar.`)}</p>
+      <p>${tl(`Dejé fuera de esta versión el pago online, las cuentas de cliente y el reparto propio. El reparto sigue en las apps, para quien vive lejos.`)}</p>
 
-      <h3>Hasta dónde llego</h3>
-      <p>El prototipo funciona entero en el navegador y tiene más de 300 comprobaciones automáticas. Para recibir pedidos reales hace falta un servidor: base de datos, reservas de franja sin duplicados, acceso al panel con contraseña y alguien que responda si algo falla.</p>
-      <p>Esa parte no la asumo sola. <strong>Hay una diferencia entre escribir código y responder de un sistema</strong> un viernes a las 21:30 con quince pedidos en marcha. La dejé documentada para un perfil de backend: entre 40 y 70 horas, unos 2.000–4.000 € orientativos.</p>
-      <p>Mientras tanto, hay dos versiones que sí puedo sostener:</p>
+      <h3>${tl(`Hasta dónde llego`)}</h3>
+      <p>${tl(`El prototipo funciona entero en el navegador y tiene más de 300 comprobaciones automáticas. Para recibir pedidos reales hace falta un servidor: base de datos, reservas de franja sin duplicados, acceso al panel con contraseña y alguien que responda si algo falla.`)}</p>
+      <p>${tl(`Esa parte no la asumo sola. <strong>Hay una diferencia entre escribir código y responder de un sistema</strong> un viernes a las 21:30 con quince pedidos en marcha. La dejé documentada para un perfil de backend: entre 40 y 70 horas, unos 2.000–4.000 € orientativos.`)}</p>
+      <p>${tl(`Mientras tanto, hay dos versiones que sí puedo sostener:`)}</p>
       <ul class="cs-list">
-        <li><strong>Sin servidor.</strong> La misma web, con el pedido saliendo por WhatsApp con el mensaje ya escrito. No cuesta nada, pero la disponibilidad es orientativa: si en hora punta dos personas piden la misma franja, el local lo resuelve a mano.</li>
-        <li><strong>Con una plataforma de pedidos.</strong> Marca, carta y experiencia propias sobre un motor ya hecho, por algo más de un 4 % por pedido. Se pierde control sobre la lógica del horno.</li>
+        <li>${tl(`<strong>Sin servidor.</strong> La misma web, con el pedido saliendo por WhatsApp con el mensaje ya escrito. No cuesta nada, pero la disponibilidad es orientativa: si en hora punta dos personas piden la misma franja, el local lo resuelve a mano.`)}</li>
+        <li>${tl(`<strong>Con una plataforma de pedidos.</strong> Marca, carta y experiencia propias sobre un motor ya hecho, por algo más de un 4 % por pedido. Se pierde control sobre la lógica del horno.`)}</li>
       </ul>
-      <p>Lo sensato es empezar por una de las dos, medir unos meses y pagar el servidor con lo que se ahorre en comisiones.</p>
+      <p>${tl(`Lo sensato es empezar por una de las dos, medir unos meses y pagar el servidor con lo que se ahorre en comisiones.`)}</p>
 
-      <h3>Pruébala</h3>
-      <p>Pide una pizza y elige hora. Después abre el panel desde la barra de arriba, cambia un precio o marca algo agotado, y recarga la web. La demo empieza un viernes por la noche; el panel de demo permite cambiar el día y la hora.</p>
+      <h3>${tl(`Pruébala`)}</h3>
+      <p>${tl(`Pide una pizza y elige hora. Después abre el panel desde la barra de arriba, cambia un precio o marca algo agotado, y recarga la web. La demo empieza un viernes por la noche; el panel de demo permite cambiar el día y la hora.`)}</p>
       <div class="cs-pair">
-        ${fig("05-confirmacion", "Pantalla de pedido confirmado con hora y dirección de recogida", "La confirmación: a qué hora y dónde.")}
-        ${fig("06-seguimiento", "Pantalla de seguimiento del pedido por pasos", "El seguimiento, hasta que está lista.")}
+        ${fig("05-confirmacion", tl("Pantalla de pedido confirmado con hora y dirección de recogida"), tl("La confirmación: a qué hora y dónde."))}
+        ${fig("06-seguimiento", tl("Pantalla de seguimiento del pedido por pasos"), tl("El seguimiento, hasta que está lista."))}
       </div>
-      <p>Puti Di Madre, sus reseñas, sus fotos y las dos personas de «Quiénes somos» son inventadas. No se envía ni se guarda nada.</p>
+      <p>${tl(`Puti Di Madre, sus reseñas, sus fotos y las dos personas de «Quiénes somos» son inventadas. No se envía ni se guarda nada.`)}</p>
 
-      <div class="cs-cta-row bottom"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">Abrir la demo →</a></div>
+      <div class="cs-cta-row bottom"><a class="btn" href="${DEMO}" target="_blank" rel="noopener">${tl(`Abrir la demo →`)}</a></div>
     </div>`;
 }
 (function(){ var w = makeWindow("case-puti", "Puti Di Madre.doc", ICONS.doc, casePutiHtml(), 140, 60, 680); if (w) w.classList.add("docwin"); })();
@@ -1418,50 +1460,50 @@ function casePortfolioHtml() {
   return `<div class="cs-toolbar">
       <div class="cs-tfont">Chicago&nbsp;▾</div>
       <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="Negrita">
-      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="Cursiva">
-      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="Subrayado">
+      <img class="cs-tibtn" src="${CS_ICONS.bold}" alt="${tl("Negrita")}">
+      <img class="cs-tibtn" src="${CS_ICONS.italic}" alt="${tl("Cursiva")}">
+      <img class="cs-tibtn" src="${CS_ICONS.underline}" alt="${tl("Subrayado")}">
       <div class="cs-sep"></div>
-      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="Izquierda">
-      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="Centro">
-      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="Derecha">
+      <img class="cs-tibtn" src="${CS_ICONS.alignL}" alt="${tl("Izquierda")}">
+      <img class="cs-tibtn" src="${CS_ICONS.alignC}" alt="${tl("Centro")}">
+      <img class="cs-tibtn" src="${CS_ICONS.alignR}" alt="${tl("Derecha")}">
     </div>
     <div class="cs-ruler"><span class="cs-mk l"></span><span class="cs-mk r"></span></div>
     <div class="cs-paper">
-      <div class="cs-cta-row"><a class="btn" href="sistema-diseno-board.html" target="_blank" rel="noopener">Ver el sistema de diseño →</a></div>
-      <h2 class="cs-title">Este escritorio</h2>
-      <p class="cs-sub">Un portfolio con forma de Mac de los 90.</p>
-      <div class="cs-meta">Meta · sobre el propio portfolio&nbsp;&nbsp;·&nbsp;&nbsp;sistema de diseño</div>
-      <figure class="cs-fig"><img src="este-escritorio/portada.jpg" width="1400" height="946" alt="Fotografía antigua en blanco y negro de una niña sentada en una terraza" loading="lazy"></figure>
+      <div class="cs-cta-row"><a class="btn" href="${BOARD}" target="_blank" rel="noopener">${tl(`Ver el sistema de diseño →`)}</a></div>
+      <h2 class="cs-title">${tl(`Este escritorio`)}</h2>
+      <p class="cs-sub">${tl(`Un portfolio con forma de Mac de los 90.`)}</p>
+      <div class="cs-meta">${tl(`Meta · sobre el propio portfolio&nbsp;&nbsp;·&nbsp;&nbsp;sistema de diseño`)}</div>
+      <figure class="cs-fig"><img src="este-escritorio/portada.jpg" width="1400" height="946" alt="${tl("Fotografía antigua en blanco y negro de una niña sentada en una terraza")}" loading="lazy"></figure>
 
-      <h3>Empezó en el Mac de mi tía Elvira</h3>
-      <p>Antes de saber qué era un “sistema de diseño”, ya usaba uno sin enterarme. De pequeña, mi tía Elvira me sentaba delante de su Macintosh y me enseñaba a mover el ratón: clic, arrastrar, soltar. Carpetas que se abrían, una papelera que devolvía lo que tirabas, iconos que hacían justo lo que prometían. Me parecía magia, pero en realidad era orden. Creo que ahí, sin darme cuenta, empecé a querer el diseño.</p>
+      <h3>${tl(`Empezó en el Mac de mi tía Elvira`)}</h3>
+      <p>${tl(`Antes de saber qué era un “sistema de diseño”, ya usaba uno sin enterarme. De pequeña, mi tía Elvira me sentaba delante de su Macintosh y me enseñaba a mover el ratón: clic, arrastrar, soltar. Carpetas que se abrían, una papelera que devolvía lo que tirabas, iconos que hacían justo lo que prometían. Me parecía magia, pero en realidad era orden. Creo que ahí, sin darme cuenta, empecé a querer el diseño.`)}</p>
 
-      <h3>Una conexión que me hizo ilusión</h3>
-      <p>Leyendo sobre sistemas de diseño me topé con algo bonito: aunque el término es reciente, su raíz es antigua — las <em>Human Interface Guidelines</em> de Apple (1987), hechas para el Mac. Consistencia, componentes que se repiten, cuidar a quien lo usa. Me hizo ilusión pensar que aquello que me enseñaba mi tía y lo que intento hacer ahora vienen del mismo sitio. Así que, cuando tocó montar mi portfolio, tiré de ahí.</p>
+      <h3>${tl(`Una conexión que me hizo ilusión`)}</h3>
+      <p>${tl(`Leyendo sobre sistemas de diseño me topé con algo bonito: aunque el término es reciente, su raíz es antigua — las <em>Human Interface Guidelines</em> de Apple (1987), hechas para el Mac. Consistencia, componentes que se repiten, cuidar a quien lo usa. Me hizo ilusión pensar que aquello que me enseñaba mi tía y lo que intento hacer ahora vienen del mismo sitio. Así que, cuando tocó montar mi portfolio, tiré de ahí.`)}</p>
 
-      <h3>Por qué un escritorio</h3>
-      <p>Podía hacer otra cuadrícula de proyectos, como todo el mundo. Pero me apetecía algo que se pareciera a mí y que me hiciera ilusión abrir. Un sitio para curiosear: carpetas por categoría, ventanas que abres, una papelera para tirar lo que no te guste (y recuperarlo). No sé si es lo más práctico del mundo, pero es honesto: si sabes usar un Mac, sabes usar esto.</p>
+      <h3>${tl(`Por qué un escritorio`)}</h3>
+      <p>${tl(`Podía hacer otra cuadrícula de proyectos, como todo el mundo. Pero me apetecía algo que se pareciera a mí y que me hiciera ilusión abrir. Un sitio para curiosear: carpetas por categoría, ventanas que abres, una papelera para tirar lo que no te guste (y recuperarlo). No sé si es lo más práctico del mundo, pero es honesto: si sabes usar un Mac, sabes usar esto.`)}</p>
 
-      <h3>Lo que hay por debajo</h3>
-      <p>Aunque parezca un juego, intenté que por dentro fuera un sistema de verdad, no un adorno. Poco a poco fui atando lo básico: unos colores (el gris Platinum, uno por categoría), tres tipografías con su función —Chicago para titulares, Geneva para leer, Monaco para lo técnico— y piezas que se repiten (ventanas, tarjetas, botones) para que lo nuevo encaje con lo de antes.</p>
+      <h3>${tl(`Lo que hay por debajo`)}</h3>
+      <p>${tl(`Aunque parezca un juego, intenté que por dentro fuera un sistema de verdad, no un adorno. Poco a poco fui atando lo básico: unos colores (el gris Platinum, uno por categoría), tres tipografías con su función —Chicago para titulares, Geneva para leer, Monaco para lo técnico— y piezas que se repiten (ventanas, tarjetas, botones) para que lo nuevo encaje con lo de antes.`)}</p>
 
-      <h3>Cositas que cuidé</h3>
+      <h3>${tl(`Cositas que cuidé`)}</h3>
       <ul>
-        <li>Los case studies <strong>se abren como documentos</strong>, con su regla y su tipo de editor: leer sobre un proyecto también tenía que sentirse Mac.</li>
-        <li>En móvil <strong>no quise rendirme a una lista sosa</strong>: mantuve el escritorio como pude.</li>
-        <li><strong>Sin frameworks ni programas raros:</strong> es un archivo que subo tal cual. Me gusta que sea sencillo y mío.</li>
-        <li>La papelera no borra nada — es un guiño, no un susto.</li>
+        <li>${tl(`Los case studies <strong>se abren como documentos</strong>, con su regla y su tipo de editor: leer sobre un proyecto también tenía que sentirse Mac.`)}</li>
+        <li>${tl(`En móvil <strong>no quise rendirme a una lista sosa</strong>: mantuve el escritorio como pude.`)}</li>
+        <li>${tl(`<strong>Sin frameworks ni programas raros:</strong> es un archivo que subo tal cual. Me gusta que sea sencillo y mío.`)}</li>
+        <li>${tl(`La papelera no borra nada — es un guiño, no un susto.`)}</li>
       </ul>
 
-      <h3>Por qué lo cuento</h3>
-      <p>No es el portfolio más impresionante del mundo, pero es el más mío. Y si dice algo de cómo trabajo, es esto: me gusta partir de algo con raíz, cuidar los detalles y no perder mi voz por el camino. Empezó con mi tía enseñándome a mover un ratón. Supongo que sigo en las mismas — intentando que la tecnología se sienta un poco más cercana.</p>
-      <p style="font-style:italic;color:#5a534a;">Gracias, tía Elvira.</p>
+      <h3>${tl(`Por qué lo cuento`)}</h3>
+      <p>${tl(`No es el portfolio más impresionante del mundo, pero es el más mío. Y si dice algo de cómo trabajo, es esto: me gusta partir de algo con raíz, cuidar los detalles y no perder mi voz por el camino. Empezó con mi tía enseñándome a mover un ratón. Supongo que sigo en las mismas — intentando que la tecnología se sienta un poco más cercana.`)}</p>
+      <p style="font-style:italic;color:#5a534a;">${tl(`Gracias, tía Elvira.`)}</p>
 
-      <div class="cs-cta-row bottom"><a class="btn" href="sistema-diseno-board.html" target="_blank" rel="noopener">Ver el sistema de diseño →</a></div>
+      <div class="cs-cta-row bottom"><a class="btn" href="${BOARD}" target="_blank" rel="noopener">${tl(`Ver el sistema de diseño →`)}</a></div>
     </div>`;
 }
-(function(){ var w = makeWindow("case-portfolio", "Este escritorio.doc", ICONS.doc, casePortfolioHtml(), 195, 100, 680); if (w) w.classList.add("docwin"); })();
+(function(){ var w = makeWindow("case-portfolio", tl("Este escritorio.doc"), ICONS.doc, casePortfolioHtml(), 195, 100, 680); if (w) w.classList.add("docwin"); })();
 
 // Formulario de contacto (escritorio)
 attachContact("");
@@ -1477,21 +1519,21 @@ function attachContact(s) {
     const msg = ((document.getElementById("contact-msg" + s) || {}).value || "").trim();
     const err = document.getElementById("contact-err" + s), btn = document.getElementById("contact-send" + s);
     const cuerpo = document.getElementById("contact-body" + s);
-    if (document.getElementById("contact-web" + s).value) { cuerpo.innerHTML = '<p class="thanks">Enviado ✓</p>'; return; } // robots
-    if (!email.includes("@")) { err.textContent = "Escribe tu correo para que pueda responderte."; return; }
-    if (!msg) { err.textContent = "Cuéntame algo en el mensaje."; return; }
+    if (document.getElementById("contact-web" + s).value) { cuerpo.innerHTML = '<p class="thanks">' + tl("Enviado ✓") + '</p>'; return; } // robots
+    if (!email.includes("@")) { err.textContent = tl("Escribe tu correo para que pueda responderte."); return; }
+    if (!msg) { err.textContent = tl("Cuéntame algo en el mensaje."); return; }
     err.textContent = ""; btn.disabled = true;
     const planB = () => {
-      window.open("mailto:meryvillena@proton.me?subject=" + encodeURIComponent("Contacto desde el portfolio") + "&body=" + encodeURIComponent(msg + "\n\nMi correo: " + email), "_blank");
-      cuerpo.innerHTML = '<p class="thanks">He abierto tu correo en otra pestaña con el mensaje ya escrito: pulsa Enviar allí y me llegará. Si no se abre, escríbeme a <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a>. ✦</p>';
+      window.open("mailto:meryvillena@proton.me?subject=" + encodeURIComponent(tl("Contacto desde el portfolio")) + "&body=" + encodeURIComponent(msg + "\n\n" + tl("Mi correo:") + " " + email), "_blank");
+      cuerpo.innerHTML = '<p class="thanks">' + tl("He abierto tu correo en otra pestaña con el mensaje ya escrito: pulsa Enviar allí y me llegará. Si no se abre, escríbeme a") + ' <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a>. ✦</p>';
     };
     try {
       const r = await fetch(API + "/rpc/enviar_contacto", { method: "POST", headers: { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json" }, body: JSON.stringify({ p_email: email, p_mensaje: msg }) });
-      if (r.ok) { cuerpo.innerHTML = '<p class="thanks">Enviado ✓ Te respondo en cuanto pueda. ✦</p>'; return; }
+      if (r.ok) { cuerpo.innerHTML = '<p class="thanks">' + tl("Enviado ✓ Te respondo en cuanto pueda. ✦") + '</p>'; return; }
       const t = await r.text();
-      if (/demasiados/.test(t)) { err.textContent = "Ahora mismo hay mucho movimiento. Prueba en un rato o escríbeme a meryvillena@proton.me."; btn.disabled = false; return; }
-      if (/correo_invalido/.test(t)) { err.textContent = "Revisa tu correo: no parece válido."; btn.disabled = false; return; }
-      if (/mensaje_invalido/.test(t)) { err.textContent = "El mensaje debe tener entre 1 y 1.000 caracteres."; btn.disabled = false; return; }
+      if (/demasiados/.test(t)) { err.textContent = tl("Ahora mismo hay mucho movimiento. Prueba en un rato o escríbeme a meryvillena@proton.me."); btn.disabled = false; return; }
+      if (/correo_invalido/.test(t)) { err.textContent = tl("Revisa tu correo: no parece válido."); btn.disabled = false; return; }
+      if (/mensaje_invalido/.test(t)) { err.textContent = tl("El mensaje debe tener entre 1 y 1.000 caracteres."); btn.disabled = false; return; }
       planB();                                  // la función aún no existe o falla: abre el correo
     } catch (x) { planB(); }
   });
@@ -1573,7 +1615,7 @@ desktop.addEventListener("mousedown", (e) => {
 
   // Iconos y reloj: los mismos del escritorio.
   $("#icons").innerHTML = ESCRITORIO.map((e) => '<div class="ico"><img src="' + (e[1] || "") + '" alt=""><span>' + esc(e[0]) + "</span></div>").join("");
-  const reloj = () => { const d = new Date(), dia = d.toLocaleDateString("es-ES", { weekday: "short" }).replace(".", ""); let h = d.getHours(); const ap = h >= 12 ? "PM" : "AM"; h = h % 12 || 12; $("#clk").textContent = dia.charAt(0).toUpperCase() + dia.slice(1) + " " + h + ":" + String(d.getMinutes()).padStart(2, "0") + " " + ap; };
+  const reloj = () => { const d = new Date(), dia = d.toLocaleDateString(LANG === "en" ? "en-US" : "es-ES", { weekday: "short" }).replace(".", ""); let h = d.getHours(); const ap = h >= 12 ? "PM" : "AM"; h = h % 12 || 12; $("#clk").textContent = dia.charAt(0).toUpperCase() + dia.slice(1) + " " + h + ":" + String(d.getMinutes()).padStart(2, "0") + " " + ap; };
   reloj();
 
   function reset() {
@@ -1660,7 +1702,7 @@ desktop.addEventListener("mousedown", (e) => {
   addEventListener("keydown", (e) => { if (e.key === "Escape" && host.classList.contains("show")) cerrar(); });
   window.showWelcome = mostrar;
   // Primera visita: presentación. Después, directo al escritorio. ?presentacion la fuerza; ?quitar= la salta.
-  if (/[?&]presentacion\b/.test(location.search) || (!/[?&]quitar=/.test(location.search) && !yaVista())) mostrar();
+  if (/[?&]presentacion\b/.test(location.search) || (LANG === "es" && !/[?&]quitar=/.test(location.search) && !yaVista())) mostrar();
 })();
 /* @@PRESENTACION-FIN@@ */
 
@@ -1673,6 +1715,7 @@ desktop.addEventListener("mousedown", (e) => {
   const KEY = "sb_publishable_dvbsiyx_AbASse779owKag_C90Mx13i"; // clave pública: solo puede crear y leer
   const HDR = { apikey: KEY, Authorization: "Bearer " + KEY };
   const COLORES = { amarillo: "#fff3a3", rosa: "#ffc4d6", azul: "#bfe0ff", verde: "#c7f0c0" };
+  const NCOL = { amarillo: tl("amarillo"), rosa: tl("rosa"), azul: tl("azul"), verde: tl("verde") };
   const LS_OCULTOS = "mvm_postits_ocultos", LS_ULTIMO = "mvm_postit_ultimo", LS_POS = "mvm_postits_pos";
   let zNota = 50;
   const LINK = /(https?:|www\.|[a-z0-9-]+\.(com|es|net|org|io|app|dev|co|eu|me|ly|xyz)\b)/i;
@@ -1722,14 +1765,14 @@ desktop.addEventListener("mousedown", (e) => {
     const d = document.createElement("div"); d.className = "postit nuevo" + (celda ? "" : " in");
     d.style.setProperty("--pc", COLORES.amarillo);
     d.innerHTML =
-      '<textarea maxlength="140" placeholder="Escribe aquí…" aria-label="Tu mensaje"></textarea>' +
-      '<input type="text" maxlength="30" placeholder="tu nombre (opcional)" aria-label="Tu nombre o alias (opcional)" autocomplete="off">' +
+      '<textarea maxlength="140" placeholder="' + tl("Escribe aquí…") + '" aria-label="' + tl("Tu mensaje") + '"></textarea>' +
+      '<input type="text" maxlength="30" placeholder="' + tl("tu nombre (opcional)") + '" aria-label="' + tl("Tu nombre o alias (opcional)") + '" autocomplete="off">' +
       '<div class="pn-trap" aria-hidden="true"><input type="text" tabindex="-1" autocomplete="off" aria-hidden="true"></div>' +
       '<div class="pi-bar"><div class="dots">' +
-        Object.keys(COLORES).map((c, i) => '<label title="' + c + '"><input type="radio" name="pi-c" value="' + c + '"' + (i === 0 ? " checked" : "") + '><span style="--dc:' + COLORES[c] + '"></span></label>').join("") +
-      '</div><span class="pi-count">0/140</span><button type="button" class="pi-ok">Pegar</button><button type="button" class="pi-no" aria-label="Cancelar">×</button></div>' +
+        Object.keys(COLORES).map((c, i) => '<label title="' + NCOL[c] + '"><input type="radio" name="pi-c" value="' + c + '"' + (i === 0 ? " checked" : "") + '><span style="--dc:' + COLORES[c] + '"></span></label>').join("") +
+      '</div><span class="pi-count">0/140</span><button type="button" class="pi-ok">' + tl("Pegar") + '</button><button type="button" class="pi-no" aria-label="' + tl("Cancelar") + '">×</button></div>' +
       '<div class="pi-err" role="status"></div>' +
-      '<div class="pi-nota">Se publica al momento y lo ve todo el mundo. No guardo tu correo ni tu dirección. Sin enlaces.</div>';
+      '<div class="pi-nota">' + tl("Se publica al momento y lo ve todo el mundo. No guardo tu correo ni tu dirección. Sin enlaces.") + '</div>';
     const ta = d.querySelector("textarea"), al = d.querySelector('input[type=text]'), trap = d.querySelector(".pn-trap input"), err = d.querySelector(".pi-err"), ok = d.querySelector(".pi-ok"), cnt = d.querySelector(".pi-count");
     if (celda) { colocar(d, celda, null); desktop.appendChild(d); } else host.insertBefore(d, host.firstChild);
     editor = d; if (ghost) ghost.style.visibility = "hidden";
@@ -1742,17 +1785,17 @@ desktop.addEventListener("mousedown", (e) => {
       const texto = ta.value.trim(), alias = al.value.trim();
       const color = (d.querySelector("input[name=pi-c]:checked") || {}).value || "amarillo";
       if (trap.value) { cerrarEditor(); return; }                       // trampa para robots
-      if (!texto) { err.textContent = "Escribe algo en el post-it."; return; }
-      if (LINK.test(texto) || LINK.test(alias)) { err.textContent = "Sin enlaces, por favor."; return; }
-      if (Date.now() - leer(LS_ULTIMO, 0) < 30000) { err.textContent = "Espera medio minuto para pegar otro."; return; }
+      if (!texto) { err.textContent = tl("Escribe algo en el post-it."); return; }
+      if (LINK.test(texto) || LINK.test(alias)) { err.textContent = tl("Sin enlaces, por favor."); return; }
+      if (Date.now() - leer(LS_ULTIMO, 0) < 30000) { err.textContent = tl("Espera medio minuto para pegar otro."); return; }
       ok.disabled = true; err.textContent = "";
       try {
         const cuerpo = { mensaje: texto, color }; if (alias) cuerpo.alias = alias;
         const r = await fetch(API + "/postits", { method: "POST", headers: { ...HDR, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify(cuerpo) });
         if (r.ok) { guardar(LS_ULTIMO, Date.now()); cerrarEditor(); pintarEscritorio(); pintarMuro(); return; }
         const t = await r.text();
-        err.textContent = /Demasiados/.test(t) ? "Hay mucho movimiento. Prueba en un rato." : /sin_url/.test(t) ? "Sin enlaces, por favor." : /largo/.test(t) ? "Entre 1 y 140 caracteres." : "No he podido pegarlo. Prueba otra vez.";
-      } catch (e) { err.textContent = "No he podido conectar. Prueba otra vez."; }
+        err.textContent = /Demasiados/.test(t) ? tl("Hay mucho movimiento. Prueba en un rato.") : /sin_url/.test(t) ? tl("Sin enlaces, por favor.") : /largo/.test(t) ? tl("Entre 1 y 140 caracteres.") : tl("No he podido pegarlo. Prueba otra vez.");
+      } catch (e) { err.textContent = tl("No he podido conectar. Prueba otra vez."); }
       ok.disabled = false;
     });
     ta.focus();
@@ -1765,8 +1808,8 @@ desktop.addEventListener("mousedown", (e) => {
     if (!grande()) return;
     const cs = celdas();
     ghost = document.createElement("button"); ghost.type = "button"; ghost.className = "postit ghost";
-    ghost.innerHTML = '<span class="plus" aria-hidden="true">+</span><span>Deja tu post-it</span>';
-    ghost.setAttribute("aria-label", "Deja tu post-it");
+    ghost.innerHTML = '<span class="plus" aria-hidden="true">+</span><span>' + tl("Deja tu post-it") + '</span>';
+    ghost.setAttribute("aria-label", tl("Deja tu post-it"));
     colocar(ghost, cs[0], null);
     ghost.addEventListener("click", (e) => { e.stopPropagation(); abrirEditor(null, cs[0]); });
     desktop.appendChild(ghost);
@@ -1791,20 +1834,20 @@ desktop.addEventListener("mousedown", (e) => {
           if (movido) { const g = leer(LS_POS, {}); g[r.id] = [n.offsetLeft, n.offsetTop]; guardar(LS_POS, g); } };
         n.addEventListener("pointermove", mv); n.addEventListener("pointerup", up); n.addEventListener("pointercancel", up);
       });
-      const x = document.createElement("button"); x.type = "button"; x.className = "pi-x"; x.textContent = "×"; x.setAttribute("aria-label", "Ocultar este post-it");
+      const x = document.createElement("button"); x.type = "button"; x.className = "pi-x"; x.textContent = "×"; x.setAttribute("aria-label", tl("Ocultar este post-it"));
       x.addEventListener("click", (e) => { e.stopPropagation(); const o = leer(LS_OCULTOS, []); o.push(r.id); guardar(LS_OCULTOS, o); pintarEscritorio(); });
       n.appendChild(x); desktop.appendChild(n); pegados.push(n);
     });
   };
 
   // ---- Ventana "Muro": todos los post-its (y la única forma de escribir en móvil)
-  const w = makeWindow("muro", "Muro de post-its", ICON, '<p class="intro" id="muro-intro">Cargando…</p><p><button class="btn" type="button" id="muro-nuevo">Dejar un post-it</button></p><div class="muro-grid" id="muro-grid"></div>', 150, 70, 520);
+  const w = makeWindow("muro", tl("Muro de post-its"), ICON, '<p class="intro" id="muro-intro">' + tl("Cargando…") + '</p><p><button class="btn" type="button" id="muro-nuevo">' + tl("Dejar un post-it") + '</button></p><div class="muro-grid" id="muro-grid"></div>', 150, 70, 520);
   const pintarMuro = async () => {
     const g = document.getElementById("muro-grid"), i = document.getElementById("muro-intro");
-    let filas; try { filas = await pedir(200); } catch (e) { i.textContent = "No he podido cargar el muro ahora mismo."; return; }
+    let filas; try { filas = await pedir(200); } catch (e) { i.textContent = tl("No he podido cargar el muro ahora mismo."); return; }
     g.querySelectorAll(".postit:not(.nuevo)").forEach((n) => n.remove());
     filas.forEach((r) => g.appendChild(nota(r, true)));
-    i.textContent = filas.length ? filas.length + (filas.length === 1 ? " post-it dejado por visitantes." : " post-its dejados por visitantes.") : "Todavía no hay ninguno. Deja el primero.";
+    i.textContent = filas.length ? filas.length + " " + (filas.length === 1 ? tl("post-it dejado por visitantes.") : tl("post-its dejados por visitantes.")) : tl("Todavía no hay ninguno. Deja el primero.");
   };
   document.getElementById("muro-nuevo").addEventListener("click", () => abrirEditor(document.getElementById("muro-grid"), null));
   new MutationObserver(() => { if (w.classList.contains("open")) pintarMuro(); }).observe(w, { attributes: true, attributeFilter: ["class"] });
@@ -1820,7 +1863,7 @@ desktop.addEventListener("mousedown", (e) => {
     const m = location.search.match(/[?&]quitar=([0-9a-f-]{36})/i);
     if (!m) return;
     const token = m[1];
-    const q = makeWindow("quitar", "Quitar un post-it", ICON, '<p id="q-txt">Has llegado desde el enlace de tu correo. ¿Quitas ese post-it del muro para todo el mundo?</p><p><button class="btn" type="button" id="q-si">Quitar este post-it</button> <button class="btn" type="button" id="q-no">No, dejarlo</button></p>', 120, 90, 380);
+    const q = makeWindow("quitar", tl("Quitar un post-it"), ICON, '<p id="q-txt">' + tl("Has llegado desde el enlace de tu correo. ¿Quitas ese post-it del muro para todo el mundo?") + '</p><p><button class="btn" type="button" id="q-si">' + tl("Quitar este post-it") + '</button> <button class="btn" type="button" id="q-no">' + tl("No, dejarlo") + '</button></p>', 120, 90, 380);
     openWindow("quitar");
     const limpiar = () => { try { history.replaceState(null, "", location.pathname); } catch (e) {} };
     document.getElementById("q-no").addEventListener("click", () => { limpiar(); q.querySelector(".close").click(); });
@@ -1829,9 +1872,9 @@ desktop.addEventListener("mousedown", (e) => {
       try {
         const r = await fetch(API + "/rpc/quitar_postit", { method: "POST", headers: { ...HDR, "Content-Type": "application/json" }, body: JSON.stringify({ p_token: token }) });
         const ok = r.ok && (await r.json()) === true;
-        t.textContent = ok ? "Hecho: el post-it ya no está en el muro." : "No he encontrado ese post-it: ya estaba quitado o el enlace no es válido.";
+        t.textContent = ok ? tl("Hecho: el post-it ya no está en el muro.") : tl("No he encontrado ese post-it: ya estaba quitado o el enlace no es válido.");
         if (ok) { pintarEscritorio(); pintarMuro(); }
-      } catch (e) { t.textContent = "No he podido conectar. Prueba otra vez."; }
+      } catch (e) { t.textContent = tl("No he podido conectar. Prueba otra vez."); }
       document.getElementById("q-si").remove(); limpiar();
     });
   })();
@@ -1847,9 +1890,9 @@ desktop.addEventListener("mousedown", (e) => {
   // Tres posiciones (NEG / UX / UI). Cada una abre su case study del escritorio.
   // val = cifra grande · pillA / pillC = texto de la etiqueta de color (abierta / cerrada)
   const filas = [
-    { sym: "NEG", name: "Presupuestos", val: "1 h → 10 min", pillC: "abrir", pillA: "−83%", det: "Presupuestar sin echar la tarde. Herramienta no-code en uso.", win: "case-presupuestos", dir: -1 },
-    { sym: "UX", name: "Spotify Now Playing", val: "app + B2B", pillC: "abrir", pillA: "abierta", det: "Descubrir música en locales, con el modelo de negocio incluido.", win: "case-spotify", dir: 1 },
-    { sym: "UI", name: "Respira", val: "desde cero", pillC: "abrir", pillA: "abierta", det: "HTML y JS sin plantillas ni cuentas. Una luna que respira contigo.", win: "case-respira", dir: 1 },
+    { sym: "NEG", name: tl("Presupuestos"), val: "1 h → 10 min", pillC: tl("abrir"), pillA: "−83%", det: tl("Presupuestar sin echar la tarde. Herramienta no-code en uso."), win: "case-presupuestos", dir: -1 },
+    { sym: "UX", name: "Spotify Now Playing", val: "app + B2B", pillC: tl("abrir"), pillA: tl("abierta"), det: tl("Descubrir música en locales, con el modelo de negocio incluido."), win: "case-spotify", dir: 1 },
+    { sym: "UI", name: "Respira", val: tl("desde cero"), pillC: tl("abrir"), pillA: tl("abierta"), det: tl("HTML y JS sin plantillas ni cuentas. Una luna que respira contigo."), win: "case-respira", dir: 1 },
   ];
   // Línea de mercado: salto al abrir, luego se asienta (como Stocks). Semilla fija: siempre sale igual.
   const W = 100, H = 36, N = 52;
@@ -1876,17 +1919,17 @@ desktop.addEventListener("mousedown", (e) => {
       '<polyline points="' + linea + '" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></svg>';
   };
   const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
-  const hoy = new Date().toLocaleDateString("es-ES", { day: "numeric", month: "long" });
+  const hoy = new Date().toLocaleDateString(LANG === "en" ? "en-US" : "es-ES", { day: "numeric", month: "long" });
   const html =
-    '<div class="bolsa-head"><div><h2>Mery Villena</h2><p>Negocio · UX · UI</p></div><span class="bolsa-fecha">' + esc(hoy) + '</span></div>' +
+    '<div class="bolsa-head"><div><h2>Mery Villena</h2><p>' + tl("Negocio · UX · UI") + '</p></div><span class="bolsa-fecha">' + esc(hoy) + '</span></div>' +
     filas.map((f, i) =>
       '<button type="button" class="bolsa-row down" data-i="' + i + '" aria-expanded="false"><div class="bolsa-top">' +
         '<span><span class="sym">' + f.sym + '</span><span class="nm">' + esc(f.name) + '</span></span>' +
         grafica(i * 977 + 31, f.dir, i) +
         '<span><span class="val">' + esc(f.val) + '</span><span class="pill"><span class="ar">▼</span> <span class="pt">' + f.pillC + '</span></span></span></div>' +
-        '<div class="bolsa-det">' + esc(f.det) + '<br><u>Ver caso →</u></div></button>').join("") +
-    '<div class="bolsa-cv"><a class="cv-main" href="cv/index.html" target="_blank" rel="noopener"><b>CV</b>Currículum ↗</a><a class="cv-dl" href="cv/CV-Mery-Villena.pdf" download aria-label="Descargar el CV en PDF">PDF ↓</a></div>';
-  const w = makeWindow("bolsa", "La Bolsa", null, html, 105, Math.max(40, Math.min(173, window.innerHeight - 400)), 400);
+        '<div class="bolsa-det">' + esc(f.det) + '<br><u>' + tl("Ver caso →") + '</u></div></button>').join("") +
+    '<div class="bolsa-cv"><a class="cv-main" href="' + CVURL + '" target="_blank" rel="noopener"><b>CV</b>' + tl("Currículum ↗") + '</a><a class="cv-dl" href="' + CVPDF + '" download aria-label="' + tl("Descargar el CV en PDF") + '">PDF ↓</a></div>';
+  const w = makeWindow("bolsa", tl("La Bolsa"), null, html, 105, Math.max(40, Math.min(173, window.innerHeight - 400)), 400);
   if (w) w.classList.add("bolsa");
   // Solo una abierta a la vez. Una fila ya abierta, al pulsarla de nuevo, abre su case study.
   const rows = w ? Array.from(w.querySelectorAll(".bolsa-row")) : [];
@@ -1990,34 +2033,34 @@ desktop.addEventListener("mousedown", (e) => {
 
   /* ---------- Ventana del Panel de control ---------- */
   const IMG = { centro: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAeElEQVR42q1TwQ3AIAh0BVdgBVdwFnZyBWdxpysVTPpoUoWanIcx3JkzJAApAt2EPLDeWbiWCfncH0jovbvwKvDluCVQDa0UDFbc9bbAaoQwWEJuytsCRAQu6ipKkjdjnLygzos8OduZTjIIhRj+xmOB8Cz8Mo0RXHncQqdyq9cZAAAAAElFTkSuQmCC", mosaico: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAYklEQVR42mP4//8/AyUYQgApcjBUL5hBFoAaRJ7tSBjCcAHimcbG/8+kQTCITYwc3ACQxH+gxP80oJdmQmhi5OAGpBlDTAaqBvou7f8ZJFvwyVEvDEYDkQJMcV6gSm6kBAMAfnfgcgv+cSsAAAAASUVORK5CYII=", off: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAAeElEQVR42tWVwQkAMQgEU216Si1pwZ722ANBxM8dayCCP5lBjGYAGJ35rfgtbxIQ3iYgeE7rETh8LegFEW4mFmQ4IBD4ICu4pAMCCGXuveFBuEyQw+GSIccOqrxDEIfsg5YJqmcaJW2L1rbJWXLnsTtyro98OH/zAfPRW7jdya+CAAAAAElFTkSuQmCC", on: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAUCAYAAACXtf2DAAAACXBIWXMAAAsTAAALEwEAmpwYAAAE9GlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgOS4xLWMwMDIgNzkuZGJhM2RhM2I1LCAyMDIzLzEyLzE1LTEwOjQyOjM3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjUuNiAoTWFjaW50b3NoKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjQtMDMtMjVUMTY6MDg6MTktMDU6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDI0LTA0LTA0VDIyOjMzOjA1LTA1OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI0LTA0LTA0VDIyOjMzOjA1LTA1OjAwIiBkYzpmb3JtYXQ9ImltYWdlL3BuZyIgcGhvdG9zaG9wOkNvbG9yTW9kZT0iMyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoyZDdiY2Y5NS03ZjBmLTQ0NjctOTQ2ZS1jZmEyZjMzNDdhNDQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MmQ3YmNmOTUtN2YwZi00NDY3LTk0NmUtY2ZhMmYzMzQ3YTQ0IiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MmQ3YmNmOTUtN2YwZi00NDY3LTk0NmUtY2ZhMmYzMzQ3YTQ0Ij4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDoyZDdiY2Y5NS03ZjBmLTQ0NjctOTQ2ZS1jZmEyZjMzNDdhNDQiIHN0RXZ0OndoZW49IjIwMjQtMDMtMjVUMTY6MDg6MTktMDU6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyNS42IChNYWNpbnRvc2gpIi8+IDwvcmRmOlNlcT4gPC94bXBNTTpIaXN0b3J5PiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pro8VN0AAAD1SURBVDiNtVXtDYQgDG0vt4CO4AreCM6CM8EsNwKuwgrvfpAaRD6Kyb2kURTe6ytFGQD9E6+Rycw8nI1a4Am5WoCZYYyvvp/nuSreFRDydV2rc0IIXBNpCqTkDf6mSFUgJy8JtEpzAsAZRAQJYzysBbwHgHiN03FZM00TWuN3LmhtTGpZvrRt8dlx3DMPIXBaGhl3HeTwPoa1VwdpprX7ogPnulUdwtBJFjRLkuHmYN/jOjlYpf5PyXtiFwcAWMK5DxERHfkOJ8jJS2LVEmlENGVq7oHWCVG9VN1NTkVGyYmIWPvDkc81AFX3CNRtOkosUDt4ih/00fyFDnXHswAAAABJRU5ErkJggg==" };   // iconos originales de la librería Mac OS 8 (icons_McOs_portfolio)
-  const COLORES = [["#b8b8b8", "Gris"], ["#e4e4e4", "Blanquecino"], ["#8a8a8a", "Gris oscuro"], ["#2b2b2b", "Negro suave"], ["#99b8e8", "Azul"], ["#a6d8a0", "Verde"], ["#f0b3cc", "Rosa"], ["#f2c28a", "Naranja"], ["#c3b3ea", "Violeta"]];
-  const ACENTOS = [["#99b8e8", "Azul Platinum"], ["#aab0b8", "Grafito"], ["#a6d8a0", "Verde"], ["#f0b3cc", "Rosa"], ["#f2c28a", "Naranja"], ["#c3b3ea", "Violeta"]];
+  const COLORES = [["#b8b8b8", tl("Gris")], ["#e4e4e4", tl("Blanquecino")], ["#8a8a8a", tl("Gris oscuro")], ["#2b2b2b", tl("Negro suave")], ["#99b8e8", tl("Azul")], ["#a6d8a0", tl("Verde")], ["#f0b3cc", tl("Rosa")], ["#f2c28a", tl("Naranja")], ["#c3b3ea", tl("Violeta")]];
+  const ACENTOS = [["#99b8e8", tl("Azul Platinum")], ["#aab0b8", tl("Grafito")], ["#a6d8a0", tl("Verde")], ["#f0b3cc", tl("Rosa")], ["#f2c28a", tl("Naranja")], ["#c3b3ea", tl("Violeta")]];
   const radios = (k, lista, iconos, col) => '<div class="pc-radios' + (col ? " col" : "") + '">' + lista.map((o) => '<label class="pc-radio"><input type="radio" name="pc-' + k + '" data-k="' + k + '" data-v="' + o[0] + '"><span class="r" aria-hidden="true"></span>' +
     (iconos ? (iconos[o[0]] ? '<img src="' + iconos[o[0]] + '" alt="">' : '<span class="sp"></span>') : o[2] ? '<span class="chip" style="--c:' + o[0] + '"></span>' : "") + "<span>" + o[1] + "</span></label>").join("") + "</div>";
-  const muestras = (k) => '<div class="pc-sw">' + COLORES.map((c) => '<button type="button" style="--c:' + c[0] + '" data-k="' + k + '" data-v="' + c[0] + '" aria-pressed="false" aria-label="' + c[1] + '" title="' + c[1] + '"></button>').join("") + '<label class="btn pc-otro">Otro…<input type="color" data-k="' + k + '" aria-label="Otro color"></label></div>';
+  const muestras = (k) => '<div class="pc-sw">' + COLORES.map((c) => '<button type="button" style="--c:' + c[0] + '" data-k="' + k + '" data-v="' + c[0] + '" aria-pressed="false" aria-label="' + c[1] + '" title="' + c[1] + '"></button>').join("") + '<label class="btn pc-otro">' + tl("Otro…") + '<input type="color" data-k="' + k + '" aria-label="' + tl("Otro color") + '"></label></div>';
   const rango = (k, titulo, min, max, ico) => '<div class="pc-rango">' + (ico ? '<img src="' + ico[0] + '" alt="">' : "") + '<input type="range" data-k="' + k + '" min="' + min + '" max="' + max + '" aria-label="' + titulo + '">' + (ico ? '<img src="' + ico[1] + '" alt="">' : "") + '<span data-out="' + k + '"></span></div>';
   const grupo = (titulo, cuerpo, solo) => '<fieldset class="pc-grupo"' + (solo ? ' data-solo="' + solo + '"' : "") + "><legend>" + titulo + "</legend>" + cuerpo + "</fieldset>";
   const TABS = [
-    ["fondo", "Fondo",
-      grupo("Fondo de pantalla", radios("fondo", [["liso", "Color liso"], ["gato", "Gato grande"], ["patron", "Gato repetido"]], { gato: IMG.centro, patron: IMG.mosaico }, true)) +
-      grupo("Color del escritorio", muestras("colorFondo")) +
-      grupo("Color del gato", muestras("colorGato"), "gato") +
-      grupo("Visibilidad del gato", rango("opac", "Visibilidad del gato", 10, 100), "gato") +
-      grupo("Tamaño del gato", rango("tam", "Tamaño del gato", 24, 120), "patron")],
-    ["colores", "Colores", grupo("Color de las barras de ventana", radios("acento", ACENTOS.map((a) => [a[0], a[1], true])))],
-    ["mov", "Movimiento",
-      grupo("Cómo se mueven las ventanas", radios("mov", [["controlada", "Controlada"], ["expresiva", "Expresiva"], ["caotica", "Caótica"]])) +
-      grupo("Efectos de movimiento", radios("efectos", [["true", "Activados"], ["false", "Desactivados"]]))],
-    ["sonidos", "Sonidos",
-      grupo("Sonidos del escritorio", radios("sonido", [["true", "Activados"], ["false", "Apagados"]])) +
-      grupo("Volumen", rango("volSonido", "Volumen de los sonidos", 0, 100, [IMG.off, IMG.on])) +
-      grupo("Probar", '<div class="pc-op">' + [["clic", "Clic"], ["abrir", "Abrir"], ["cerrar", "Cerrar"], ["papelera", "Papelera"], ["campanazo", "Campanazo"]].map((s) => '<button type="button" class="btn" data-snd="' + s[0] + '">' + s[1] + "</button>").join("") + "</div>")],
+    ["fondo", tl("Fondo"),
+      grupo(tl("Fondo de pantalla"), radios("fondo", [["liso", tl("Color liso")], ["gato", tl("Gato grande")], ["patron", tl("Gato repetido")]], { gato: IMG.centro, patron: IMG.mosaico }, true)) +
+      grupo(tl("Color del escritorio"), muestras("colorFondo")) +
+      grupo(tl("Color del gato"), muestras("colorGato"), "gato") +
+      grupo(tl("Visibilidad del gato"), rango("opac", tl("Visibilidad del gato"), 10, 100), "gato") +
+      grupo(tl("Tamaño del gato"), rango("tam", tl("Tamaño del gato"), 24, 120), "patron")],
+    ["colores", tl("Colores"), grupo(tl("Color de las barras de ventana"), radios("acento", ACENTOS.map((a) => [a[0], a[1], true])))],
+    ["mov", tl("Movimiento"),
+      grupo(tl("Cómo se mueven las ventanas"), radios("mov", [["controlada", tl("Controlada")], ["expresiva", tl("Expresiva")], ["caotica", tl("Caótica")]])) +
+      grupo(tl("Efectos de movimiento"), radios("efectos", [["true", tl("Activados")], ["false", tl("Desactivados")]]))],
+    ["sonidos", tl("Sonidos"),
+      grupo(tl("Sonidos del escritorio"), radios("sonido", [["true", tl("Activados")], ["false", tl("Apagados")]])) +
+      grupo(tl("Volumen"), rango("volSonido", tl("Volumen de los sonidos"), 0, 100, [IMG.off, IMG.on])) +
+      grupo(tl("Probar"), '<div class="pc-op">' + [["clic", tl("Clic")], ["abrir", tl("Abrir")], ["cerrar", tl("Cerrar")], ["papelera", tl("Papelera")], ["campanazo", tl("Campanazo")]].map((s) => '<button type="button" class="btn" data-snd="' + s[0] + '">' + s[1] + "</button>").join("") + "</div>")],
   ];
-  const html = '<div class="pc"><div class="pc-tabs" role="tablist" aria-label="Secciones del panel">' +
+  const html = '<div class="pc"><div class="pc-tabs" role="tablist" aria-label="' + tl("Secciones del panel") + '">' +
     TABS.map((t, i) => '<button type="button" role="tab" id="pc-t-' + t[0] + '" aria-controls="pc-p-' + t[0] + '" aria-selected="' + (i === 0) + '" tabindex="' + (i === 0 ? 0 : -1) + '">' + t[1] + "</button>").join("") + '</div><div class="pc-caja">' +
     TABS.map((t, i) => '<div class="pc-pane" role="tabpanel" id="pc-p-' + t[0] + '" aria-labelledby="pc-t-' + t[0] + '"' + (i ? " hidden" : "") + ">" + t[2] + "</div>").join("") +
-    '</div><div class="pc-pie"><span class="pc-nota">// se guarda solo en este navegador</span><button type="button" class="btn" id="pc-restaurar">Restaurar</button></div></div>';
-  makeWindow("panel", "Panel de control", null, html, 180, 70, 470);
+    '</div><div class="pc-pie"><span class="pc-nota">// ' + tl("se guarda solo en este navegador") + '</span><button type="button" class="btn" id="pc-restaurar">' + tl("Restaurar") + '</button></div></div>';
+  makeWindow("panel", tl("Panel de control"), null, html, 180, 70, 470);
   const pw = document.getElementById("win-panel");
 
   function refrescar() {
@@ -2050,10 +2093,10 @@ desktop.addEventListener("mousedown", (e) => {
 
   /* ---------- Reproductor de radio (SomaFM, streams https; piden atribución) ---------- */
   const EMISORAS = [
-    ["groovesalad", "Groove Salad", "Ambient y downtempo"], ["dronezone", "Drone Zone", "Ambient profundo"], ["deepspaceone", "Deep Space One", "Ambient espacial"],
-    ["lush", "Lush", "Voces suaves"], ["secretagent", "Secret Agent", "Lounge de espías"], ["illstreet", "Illinois Street Lounge", "Lounge clásico"],
-    ["bossa", "Bossa Beyond", "Bossa nova"], ["sonicuniverse", "Sonic Universe", "Jazz"], ["spacestation", "Space Station Soma", "Electrónica"],
-    ["fluid", "Fluid", "Hip hop instrumental"], ["u80s", "Underground 80s", "Synthpop de los 80"], ["seventies", "Left Coast 70s", "Rock de los 70"], ["indiepop", "Indie Pop Rocks!", "Indie pop"],
+    ["groovesalad", "Groove Salad", tl("Ambient y downtempo")], ["dronezone", "Drone Zone", tl("Ambient profundo")], ["deepspaceone", "Deep Space One", tl("Ambient espacial")],
+    ["lush", "Lush", tl("Voces suaves")], ["secretagent", "Secret Agent", tl("Lounge de espías")], ["illstreet", "Illinois Street Lounge", tl("Lounge clásico")],
+    ["bossa", "Bossa Beyond", "Bossa nova"], ["sonicuniverse", "Sonic Universe", "Jazz"], ["spacestation", "Space Station Soma", tl("Electrónica")],
+    ["fluid", "Fluid", tl("Hip hop instrumental")], ["u80s", "Underground 80s", tl("Synthpop de los 80")], ["seventies", "Left Coast 70s", tl("Rock de los 70")], ["indiepop", "Indie Pop Rocks!", "Indie pop"],
   ];
   const SERVIDORES = [1, 2, 4, 6];
   // SomaFM rechaza las peticiones que llegan desde localhost: solo para probar en local, sin referer
@@ -2063,25 +2106,25 @@ desktop.addEventListener("mousedown", (e) => {
   let quiere = false, intento = 0;
   const ICO_PANEL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADgUlEQVR4nL2XzUvjQBjGn7RxuwdX0YOIIiqIB7+iCAoKHoRQQRQET3pX8OrRy0LdP2AvoldBEC89ePAgSEEEEQ+tX6BVFAQRFVtLWVtrkuUNnTBJ0ya16gNDhnzM85v3fTOZCMhqYWFBi8fjOD4+hs/nS29vb//EN0hkHTKfnJxEc3Mzrq+vfQA0AF8OIgYCAS2VSuHk5AQPDw/o7e1FX18fDg4OvgVEVFUVi4uLWFtbw87ODu7v7zE1NYWenh50dXXh6OjoS0FEAkgkEhgbG8P09LQB8vT0pKeko6MD7e3tOD09zQGRZZn6TB+CEwnA6/VC0zQdZHR01AAJhUIGiCRJaG1tNdWI3+/Xz11cXHw4SiIBUCMAEh2fn58xMjKSAzI+Pq4btrS06CDUf319RV1dnXGuWBCRzJkYCGuPj4+QZdkA2d3dNUDI8O3tzXg2mUyipqYGDQ0NqKiowOHhobsIKIoCaryxtVFhDg8P54AMDg6ivr7eNCBFhCKRSCQoEimnKHiss87X6L7b21sMDQ1heXkZExMTOD8/x8bGhg5oFUEA8MmynCoJQFEUU2qof3Nzg4GBARNIMBjUo0IqKyvT00A14iSPkznJWqSsXV1dob+/3wSyubmJWCxmRCEWiwmuIqBybwNrzJwZ24GQyJhWUAayt7enF+X7+7v7CDDxs+fDzpvz0Px9Z2dn6O7uxurqKra2tkBLvJNEorSGnZ8lD2Utynypo8IkpdNpZwDNJudu3ohC15hcpUDlBuPDm2/2Tm8NL1cpULN5tJpZYazmfHHmg+BXyoIA6+vr+AxFo1HMzMwU9YzIiOfn50syZ1/VpqYm1NbWugdQsuFng9jJ4/HoR0EQjHRZtb+/n8/jnyRJv7PPK+FwOGACuLu7S3d2dtKHQ9fc3FzOCLTAMDia5ezsrO01J2ma5iUYHkSkr5Xf7zcqZ2lpyZixnWiVo+8Ak1tzOxAdwO4G66A060LXS5HID5ovjzRrl/n+GEA0Gk16vd7yTxu1WICVlZVfkiQ5rhqNjY1KZWXlz7a2ts/yV40URCKRH053RyIR2iOmXl5eNAKhbRrtA6urq00r5OXlpaOzIAiZcDj8x7YIC4nt8QgkGAyaQMrL3WWRmVO/aIBCIPQ3VVVV5dq8JAA7kFAopINYaiSez1w/VyqAVex3LbsvjGcymb9Z85xlmM7/B3o7qQV8BI5BAAAAAElFTkSuQmCC";
   const ICO_RADIO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADNklEQVR4nMWXzZGjMBCFBUUCOkwC+LRnUsApOAQ7BKdgh2CHgFMghOG8J0hgqkwI2noSD1ptgb21h+0qLPOn93Wr1RKZc878Tys+eWi320WUZVm+PDMMQ3Te9332Sd/ZVgQoTMG6rv1/a60/aOM4+gMQ1+s1uvcOJFsDgDiFj8djJAyxlBEEdjgcZpAtiCwFQHF4XFWVP9iZFNHiOiqIyOl08tfXIDINQPHz+Wzq2pphsC9jriG0OIyRAgSjkYLIU+K3282Lj2NpyjId7pSYPkdfOJqm8ec6mSMA6TlE4bm1g4cwpnsR1OHmuRSH928hnHN4wNV17S6Xi/t2zvV975z7ntvn8+lbabgW7seGa/KebJumcdZaOIpLXjuXMEg2+Dp6evs2ErSvr1/+gMFbHQG0iEyqfuR8iXO8mmQAcTfVKoROup+f3xEERdlymJBfMl9yWWwgaodhhkBLCIgDouuMLzY4Ho/HKoQUpWDoI4BTt5CJBdWxmiDKMoI42s6LozMM1TujaIhecCAVuZzht7YOV7xIgKgRvqnGU/ydIQoLRIgaWiJXpvIzjTOiCFR1wgMSB5BuGksYgFPWtu0cIYp2bKdodrPeNUTAvA0lsjokVSrzOeY0PDcmRNlqy7fEl7D9naVE0xPYLABabI2cwyDHWv43H4hKK+RLa+TIAxYRmcVSGOMPC8v2EOWRtnFsY4DRX6heRJnFTDxZ4XRO0HC/nQoaZ5CGwdSkZajLXISQnZKe/1lM1vYCepFC4ULtkBEFDArd2LbRZqVYCOHd4nWofq+rW8p71pIAgfvWHMvOt3NBm6rsIBzA/qDAz36/d+g07Hzi2i3FcY5nuODQ42V57qY9RIAI64ioquhHle88jMkwFxEpqsVTm47YwtaNGxlAyPXFik0rd0e5fJ1jnFpKlwVlaXVdX+CGGYJjj1YvXjMAaLil5hhLiK09nwSPIxFDQFx7H0VgC0LOAhmttQhICAyDFE9GYAti7TsgBaUtJa53xtnWd0GoDemPEb0R1RtVwG95TpDsky8jfqDojvRUhGE2MYpM6DUDxD9/G8rvwvv9Pg/bdn4stgmgQVImq+KWt2v2B+GPLLhNS9QHAAAAAElFTkSuQmCC";
-  const rhtml = '<div class="rd"><div class="ip-body"><button type="button" class="ip-x" id="rd-x" aria-label="Cerrar reproductor">×</button><button type="button" class="ip-grip" id="rd-grip" aria-label="Cambiar el tamaño del reproductor"></button><div class="ip-screen" role="status" aria-live="polite"><div class="ip-bar"><span id="rd-est"></span><span id="rd-volbar"></span></div><div class="ip-nom" id="rd-nom"><span></span></div><div class="ip-sub" id="rd-sub"></div>' +
-    '<div class="ip-lista" id="rd-lista" role="group" aria-label="Estilos de radio">' + EMISORAS.map((e) => '<button type="button" data-id="' + e[0] + '" aria-pressed="false" title="' + e[2] + '">' + e[1] + "</button>").join("") + "</div></div>" +
-    '<div class="ip-rueda"><button type="button" class="n" id="rd-prev" aria-label="Estilo anterior">▲</button><button type="button" class="s" id="rd-next" aria-label="Estilo siguiente">▼</button><button type="button" class="o" id="rd-menos" aria-label="Bajar volumen">−</button><button type="button" class="e" id="rd-mas" aria-label="Subir volumen">+</button><button type="button" class="centro" id="rd-play" aria-label="Reproducir" aria-pressed="false"></button></div>' +
+  const rhtml = '<div class="rd"><div class="ip-body"><button type="button" class="ip-x" id="rd-x" aria-label="' + tl("Cerrar reproductor") + '">×</button><button type="button" class="ip-grip" id="rd-grip" aria-label="' + tl("Cambiar el tamaño del reproductor") + '"></button><div class="ip-screen" role="status" aria-live="polite"><div class="ip-bar"><span id="rd-est"></span><span id="rd-volbar"></span></div><div class="ip-nom" id="rd-nom"><span></span></div><div class="ip-sub" id="rd-sub"></div>' +
+    '<div class="ip-lista" id="rd-lista" role="group" aria-label="' + tl("Estilos de radio") + '">' + EMISORAS.map((e) => '<button type="button" data-id="' + e[0] + '" aria-pressed="false" title="' + e[2] + '">' + e[1] + "</button>").join("") + "</div></div>" +
+    '<div class="ip-rueda"><button type="button" class="n" id="rd-prev" aria-label="' + tl("Estilo anterior") + '">▲</button><button type="button" class="s" id="rd-next" aria-label="' + tl("Estilo siguiente") + '">▼</button><button type="button" class="o" id="rd-menos" aria-label="' + tl("Bajar volumen") + '">−</button><button type="button" class="e" id="rd-mas" aria-label="' + tl("Subir volumen") + '">+</button><button type="button" class="centro" id="rd-play" aria-label="' + tl("Reproducir") + '" aria-pressed="false"></button></div>' +
     '<div class="rd-cred">Radio: <a href="https://somafm.com" target="_blank" rel="noopener">SomaFM.com</a></div></div></div>';
-  makeWindow("radio", "Reproductor de radio", null, rhtml, 560, 110, 310);
+  makeWindow("radio", tl("Reproductor de radio"), null, rhtml, 560, 110, 310);
   const rw = document.getElementById("win-radio");
   const $r = (s) => rw.querySelector(s);
   const emisora = () => EMISORAS.filter((e) => e[0] === A.radio)[0];
   let est = "parada";
-  function volBar() { const n = Math.round(A.volRadio / 12.5); $r("#rd-volbar").textContent = "VOL " + "█".repeat(n) + "░".repeat(8 - n); $r("#rd-volbar").setAttribute("aria-label", "Volumen " + A.volRadio + " %"); }
+  function volBar() { const n = Math.round(A.volRadio / 12.5); $r("#rd-volbar").textContent = "VOL " + "█".repeat(n) + "░".repeat(8 - n); $r("#rd-volbar").setAttribute("aria-label", tl("Volumen") + " " + A.volRadio + " %"); }
   function lcd(estado) {
     est = estado;
     const e = emisora(), nom = $r("#rd-nom"), lista = $r("#rd-lista");
-    $r("#rd-est").textContent = { parada: "■ PARADA", conectando: "… CONECTANDO", sonando: "▶\uFE0E EN DIRECTO", error: "× SIN SEÑAL" }[estado];
-    $r("#rd-nom span").textContent = estado === "error" ? "No he podido conectar" : e[1];
-    $r("#rd-sub").textContent = estado === "error" ? "Prueba otro estilo o pulsa ▶\uFE0E" : estado === "parada" ? "Elige un estilo y pulsa ▶\uFE0E" : e[2];
+    $r("#rd-est").textContent = { parada: "■ " + tl("PARADA"), conectando: "… " + tl("CONECTANDO"), sonando: "▶\uFE0E " + tl("EN DIRECTO"), error: "× " + tl("SIN SEÑAL") }[estado];
+    $r("#rd-nom span").textContent = estado === "error" ? tl("No he podido conectar") : e[1];
+    $r("#rd-sub").textContent = estado === "error" ? tl("Prueba otro estilo o pulsa") + " ▶\uFE0E" : estado === "parada" ? tl("Elige un estilo y pulsa") + " ▶\uFE0E" : e[2];
     nom.classList.toggle("largo", e[1].length > 20 && estado !== "error");
     const on = estado === "sonando" || estado === "conectando", play = $r("#rd-play");
-    play.setAttribute("aria-pressed", String(on)); play.setAttribute("aria-label", on ? "Parar" : "Reproducir");
+    play.setAttribute("aria-pressed", String(on)); play.setAttribute("aria-label", on ? tl("Parar") : tl("Reproducir"));
     lista.querySelectorAll("button").forEach((b) => { const s = b.dataset.id === A.radio; b.setAttribute("aria-pressed", String(s)); if (s) lista.scrollTop = Math.max(0, b.offsetTop - 17); });
     volBar();
   }
@@ -2155,8 +2198,8 @@ desktop.addEventListener("mousedown", (e) => {
 
   // Iconos del escritorio: en ordenador, el del panel a la izquierda de «Léeme primero» y el del reproductor debajo
   const pos = originalPos.leeme || { x: Math.max(120, window.innerWidth - 120), y: 40 };
-  makeIcon("panel", "Panel de control", ICO_PANEL, pos.x - 88, pos.y);
-  makeIcon("radio", "Reproductor de radio", ICO_RADIO, pos.x - 88, pos.y + 88);
+  makeIcon("panel", tl("Panel de control"), ICO_PANEL, pos.x - 88, pos.y);
+  makeIcon("radio", tl("Reproductor de radio"), ICO_RADIO, pos.x - 88, pos.y + 88);
   // en móvil (rejilla) quedan al final, después de Contacto y la Papelera: primero el panel y luego el reproductor
 
   aplicar(); refrescar();
@@ -2173,7 +2216,23 @@ desktop.addEventListener("mousedown", (e) => {
   const closeWin = (w) => { const c = w && w.querySelector(".close"); if (c) c.click(); };
   const projects = [];
   DESKTOP.forEach((d) => { if (d.kind === "folder" && d.cards) d.cards.forEach((c) => { if (c.kind === "project" && (c.caseStudy || c.href)) projects.push({ folder: d.title, c }); }); });
-  const openProject = (c) => { if (c.caseStudy) openWindow(c.caseStudy); else window.open(c.href, "_blank", "noopener"); };
+  // Solo en inglés: las páginas de proyecto siguen en español, se avisa al salir del escritorio.
+  const avisoEs = (() => {
+    if (LANG !== "en") return () => {};
+    let el, t;
+    return () => {
+      if (!el) { el = document.createElement("div"); el.className = "aviso-es"; el.setAttribute("role", "status"); el.textContent = "This project page is in Spanish."; document.body.appendChild(el); }
+      el.classList.add("show"); clearTimeout(t); t = setTimeout(() => el.classList.remove("show"), 4500);
+    };
+  })();
+  if (LANG === "en") document.addEventListener("click", (e) => {
+    const a = e.target.closest && e.target.closest('a[target="_blank"]');
+    if (!a) return;
+    const h = a.getAttribute("href") || "";
+    if (/^(mailto:|tel:)|^cv\/|sistema-diseno-board|somafm\.com|\.pdf$/i.test(h) || /^https?:\/\/(?!respira\.mvmmaison\.com)/i.test(h)) return;
+    avisoEs();
+  }, true);
+  const openProject = (c) => { if (c.caseStudy) openWindow(c.caseStudy); else { avisoEs(); window.open(c.href, "_blank", "noopener"); } };
   const tidy = () => document.querySelectorAll(".icon").forEach((el) => {
     const pos = originalPos[el.dataset.id]; if (!pos || el.style.display === "none") return;
     el.style.transition = "left .25s, top .25s"; el.style.left = pos.x + "px"; el.style.top = pos.y + "px";
@@ -2182,38 +2241,42 @@ desktop.addEventListener("mousedown", (e) => {
   const folders = DESKTOP.filter((d) => d.kind === "folder");
   const defs = {
     gato: [
-      { l: "Acerca de este escritorio…", f: () => openWindow("case-portfolio") },
-      { l: "Léeme primero", f: () => openWindow("leeme") },
-      { l: "Panel de control…", f: () => openWindow("panel") },
-      { l: "Reproductor de radio…", f: () => openWindow("radio") },
+      { l: tl("Acerca de este escritorio…"), f: () => openWindow("case-portfolio") },
+      { l: tl("Léeme primero"), f: () => openWindow("leeme") },
+      { l: tl("Panel de control…"), f: () => openWindow("panel") },
+      { l: tl("Reproductor de radio…"), f: () => openWindow("radio") },
       "-",
-      { l: "Dejar un post-it…", f: () => window.__postits.nueva() },
-      { l: "Ver la bienvenida otra vez", f: () => window.showWelcome() },
+      { l: tl("Dejar un post-it…"), f: () => window.__postits.nueva() },
+      { w: 1, l: tl("Ver la bienvenida otra vez"), f: () => window.showWelcome() },
     ],
     archivo: [
-      { h: "Abrir" },
+      { h: tl("Abrir") },
       ...folders.map((d) => ({ l: d.title, f: () => openWindow(d.id) })),
-      { l: "Contacto", f: () => openWindow("contacto") },
+      { l: tl("Contacto"), f: () => openWindow("contacto") },
       "-",
-      { l: "Cerrar ventana", f: () => closeWin(frontWindow()) },
-      { l: "Cerrar todas las ventanas", f: () => document.querySelectorAll(".window.open").forEach((w) => closeWin(w)) },
+      { l: tl("Cerrar ventana"), f: () => closeWin(frontWindow()) },
+      { l: tl("Cerrar todas las ventanas"), f: () => document.querySelectorAll(".window.open").forEach((w) => closeWin(w)) },
     ],
     edicion: [
-      { l: "Copiar mi email", f: () => { try { navigator.clipboard.writeText("meryvillena@proton.me"); } catch (e) {} } },
-      { l: "Escribirme un correo…", f: () => { window.location.href = "mailto:meryvillena@proton.me"; } },
+      { l: tl("Copiar mi email"), f: () => { try { navigator.clipboard.writeText("meryvillena@proton.me"); } catch (e) {} } },
+      { l: tl("Escribirme un correo…"), f: () => { window.location.href = "mailto:meryvillena@proton.me"; } },
     ],
     ver: [
-      { l: "Ordenar iconos y post-its", f: () => { tidy(); window.__postits.reordenar(); } },
-      { l: "Mostrar La Bolsa", f: () => openWindow("bolsa") },
-      { l: "Muro de post-its", f: () => openWindow("muro") },
-      { l: "Restaurar el escritorio", f: () => { restoreAll(); tidy(); window.__postits.reordenar(); } },
+      { l: tl("Ordenar iconos y post-its"), f: () => { tidy(); window.__postits.reordenar(); } },
+      { l: tl("Mostrar La Bolsa"), f: () => openWindow("bolsa") },
+      { l: tl("Muro de post-its"), f: () => openWindow("muro") },
+      { l: tl("Restaurar el escritorio"), f: () => { restoreAll(); tidy(); window.__postits.reordenar(); } },
     ],
     proyectos: (() => { const o = []; let last = ""; projects.forEach((p) => { if (p.folder !== last) { o.push({ h: p.folder }); last = p.folder; } o.push({ l: p.c.title, f: () => openProject(p.c) }); }); return o; })(),
     ayuda: [
-      { l: "Cómo se usa este escritorio", f: () => window.showWelcome() },
-      { l: "Sistema de diseño", f: () => window.open("sistema-diseno-board.html", "_blank", "noopener") },
+      { w: 1, l: tl("Cómo se usa este escritorio"), f: () => window.showWelcome() },
+      { l: tl("Sistema de diseño"), f: () => window.open(BOARD, "_blank", "noopener") },
     ],
   };
+  if (LANG !== "es") { // la presentación de entrada aún no está traducida: sin sus entradas de menú
+    defs.gato = defs.gato.filter((it) => !it.w);
+    defs.ayuda = defs.ayuda.filter((it) => !it.w);
+  }
   Object.keys(defs).forEach((k) => {
     const d = document.createElement("div"); d.className = "mdrop"; d.setAttribute("role", "menu"); d.dataset.for = k;
     defs[k].forEach((it) => {
@@ -2259,12 +2322,12 @@ desktop.addEventListener("mousedown", (e) => {
    ============================================================ */
 (function buildMobile() {
   const m = document.getElementById("mobile-view");
-  let h = '<div class="m-head"><h1>Mery Villena</h1><p>Diseño de producto digital · no-code · operaciones</p></div>';
+  let h = '<div class="m-head"><button type="button" class="m-lang" aria-label="Idioma / Language" onclick="__setLang(__LANG===\'en\'?\'es\':\'en\')">' + langSwitchHtml() + '</button><h1>Mery Villena</h1><p>' + tl("Diseño de producto digital · no-code · operaciones") + '</p></div>';
 
   const mCard = (card) => {
     if (card.kind === "folder") return ""; // las anidadas se expanden aparte
     if (!visible(card)) return "";
-    const link = card.caseStudy ? '<button class="btn"' + labelAbrir(card) + ' onclick="openWindow(\'' + card.caseStudy + '\')">Abrir proyecto →</button>' : card.href ? '<a class="btn"' + labelAbrir(card) + ' href="' + card.href + '">Abrir proyecto →</a>' : '<span class="btn disabled">' + (card.disabledLabel || "Próximamente") + "</span>";
+    const link = card.caseStudy ? '<button class="btn"' + labelAbrir(card) + ' onclick="openWindow(\'' + card.caseStudy + '\')">' + tl("Abrir proyecto →") + '</button>' : card.href ? '<a class="btn"' + labelAbrir(card) + ' href="' + card.href + '">' + tl("Abrir proyecto →") + '</a>' : '<span class="btn disabled">' + (card.disabledLabel || tl("Próximamente")) + "</span>";
     return '<div class="m-card">' + tagsHtml(card) + "<h3>" + card.title + "</h3><p>" + card.desc + "</p>" + link + "</div>";
   };
 
@@ -2280,7 +2343,7 @@ desktop.addEventListener("mousedown", (e) => {
       });
       h += "</section>";
     } else if (item.id === "sobremi") {
-      h += "<section><h2>Sobre mí</h2><p>Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño, construyo y pongo en marcha productos digitales para negocios pequeños, desde lo que ve el cliente hasta lo que necesita el equipo para trabajar.</p><p><a class=\"btn\" href=\"cv/index.html\" target=\"_blank\" rel=\"noopener\">Ver mi CV →</a></p>";
+      h += "<section><h2>" + tl("Sobre mí") + "</h2><p>" + tl("Llevo más de 20 años trabajando en publicidad, marketing y operaciones, en agencias como Publicis, Wunderman y Havas, y desde 2018 en la gestión de varios restaurantes McDonald’s. Ahora diseño, construyo y pongo en marcha productos digitales para negocios pequeños, desde lo que ve el cliente hasta lo que necesita el equipo para trabajar.") + "</p><p><a class=\"btn\" href=\"" + CVURL + "\" target=\"_blank\" rel=\"noopener\">" + tl("Ver mi CV →") + "</a></p>";
       const n = NESTED["trabajo-grafico"];
       if (visible({ kind: "folder", ref: "trabajo-grafico" })) {
         h += '<div class="m-sub">' + n.title + "</div>";
@@ -2288,9 +2351,9 @@ desktop.addEventListener("mousedown", (e) => {
       }
       h += "</section>";
     } else if (item.id === "leeme") {
-      h += "<section><h2>Léeme primero</h2><p>Soy una apasionada de los sistemas de diseño. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —un sistema de diseño antes de que existiera esa palabra. Te recomiendo empezar por Soluciones de negocio o Herramientas.</p></section>";
+      h += "<section><h2>" + tl("Léeme primero") + "</h2><p>" + tl("Soy una apasionada de los sistemas de diseño. Por eso este escritorio está inspirado en la interfaz de los Mac de los años 90 —un sistema de diseño antes de que existiera esa palabra. Te recomiendo empezar por Soluciones de negocio o Herramientas.") + "</p></section>";
     } else if (item.id === "contacto") {
-      h += "<section><h2>Contacto</h2>" + contactHtml("-m") + "</section>";
+      h += "<section><h2>" + tl("Contacto") + "</h2>" + contactHtml("-m") + "</section>";
     }
   });
 
