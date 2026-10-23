@@ -187,6 +187,26 @@
   .window { transition: scale .15s ease, box-shadow .15s ease; }
   .window.agarrada { scale: 1.02; box-shadow: 9px 12px 0 rgba(0,0,0,0.22); }
   @media (prefers-reduced-motion: reduce) { .window.agarrada { scale: 1; } }
+  /* redimensionar: asas invisibles por fuera del borde + gripito abajo a la derecha */
+  .window .rz { position: absolute; z-index: 5; touch-action: none; }
+  .window .rz.n  { top: -4px; left: 12px; right: 12px; height: 8px; cursor: ns-resize; }
+  .window .rz.s  { bottom: -4px; left: 12px; right: 12px; height: 8px; cursor: ns-resize; }
+  .window .rz.e  { right: -4px; top: 12px; bottom: 12px; width: 8px; cursor: ew-resize; }
+  .window .rz.w  { left: -4px; top: 12px; bottom: 12px; width: 8px; cursor: ew-resize; }
+  .window .rz.ne { top: -5px; right: -5px; width: 16px; height: 16px; cursor: nesw-resize; }
+  .window .rz.sw { bottom: -5px; left: -5px; width: 16px; height: 16px; cursor: nesw-resize; }
+  .window .rz.nw { top: -5px; left: -5px; width: 16px; height: 16px; cursor: nwse-resize; }
+  .window .rz.se { bottom: -5px; right: -5px; width: 20px; height: 20px; cursor: nwse-resize; }
+  .window .rz.se::after { content: ""; position: absolute; right: 7px; bottom: 7px; width: 9px; height: 9px; opacity: .55;
+    background: linear-gradient(135deg, transparent 0 40%, #000 40% 50%, transparent 50% 66%, #000 66% 76%, transparent 76%); }
+  @media (max-width: 760px) { .window .rz { display: none; } }
+  .window.redim { max-width: none; }
+  .window.redim .content { max-height: none; flex: 1; min-height: 0; }
+  .window.redim .cs-paper { max-height: none; }
+  .window.anim { transition: left .2s ease, top .2s ease, width .2s ease, height .2s ease, scale .15s ease, box-shadow .15s ease; }
+  /* el contenido deja de crecer: la ventana puede ser enorme, pero el texto se queda centrado en un ancho cómodo */
+  .window:not(.docwin) .content { padding-left: max(16px, calc((100% - 640px) / 2)); padding-right: max(16px, calc((100% - 640px) / 2)); }
+  .window .cs-paper { padding-left: max(44px, calc((100% - 760px) / 2)); padding-right: max(44px, calc((100% - 760px) / 2)); }
   .window .titlebar { touch-action: none; user-select: none; -webkit-user-select: none; }
   .window .content { touch-action: pan-y; }
   .window .titlebar .box { position: relative; }
@@ -840,7 +860,7 @@ function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
   el.addEventListener("pointerdown", (e) => {
     if (e.button > 0) return;
     const enBarra = !!e.target.closest(".titlebar");
-    if (e.target.closest(".box, a, button, input, textarea, select, label, [contenteditable]")) return;
+    if (e.target.closest(".box, .rz, a, button, input, textarea, select, label, [contenteditable]")) return;
     const tactil = e.pointerType === "touch";
     if (!enBarra && movil() && !tactil) return;                // móvil: el contenido solo se "tira" con el dedo
     if (!enBarra) {
@@ -905,6 +925,44 @@ function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
   };
   el.addEventListener("pointerup", suelta);
   el.addEventListener("pointercancel", (e) => { if (g && e.pointerId === g.id) { g = null; vuelve(); } });
+
+  // ---- Redimensionar (escritorio): 4 lados y 4 esquinas; doble clic en la barra = maximizar / restaurar ----
+  ["n", "s", "e", "w", "ne", "nw", "se", "sw"].forEach((dir) => {
+    const h = document.createElement("div"); h.className = "rz " + dir; h.setAttribute("aria-hidden", "true"); el.appendChild(h);
+    let rs = null;
+    h.addEventListener("pointerdown", (e) => {
+      if (e.button > 0 || movil()) return;
+      e.stopPropagation(); e.preventDefault(); stopFx(); rot = 0; el.style.transform = ""; el.classList.remove("anim"); focusWindow(id);
+      rs = { id: e.pointerId, x0: e.clientX, y0: e.clientY, L: el.offsetLeft, T: el.offsetTop, W: el.offsetWidth, H: el.offsetHeight };
+      el.style.width = rs.W + "px"; el.style.height = rs.H + "px"; el.classList.add("redim", "agarrada");
+      try { h.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    h.addEventListener("pointermove", (e) => {
+      if (!rs || e.pointerId !== rs.id) return;
+      const dx = e.clientX - rs.x0, dy = e.clientY - rs.y0, VW = window.innerWidth, VH = window.innerHeight;
+      let L = rs.L, T = rs.T, Wd = rs.W, Ht = rs.H;
+      if (dir.includes("e")) Wd = clamp(rs.W + dx, 300, VW);
+      if (dir.includes("w")) { Wd = clamp(rs.W - dx, 300, VW); L = rs.L + (rs.W - Wd); }
+      if (dir.includes("s")) Ht = clamp(rs.H + dy, 170, VH - 24);
+      if (dir.includes("n")) { Ht = clamp(rs.H - dy, 170, VH - 24); T = rs.T + (rs.H - Ht); if (T < 24) { Ht -= 24 - T; T = 24; } }
+      el.style.left = L + "px"; el.style.top = T + "px"; el.style.width = Wd + "px"; el.style.height = Ht + "px";
+    });
+    const finRs = (e) => { if (!rs || e.pointerId !== rs.id) return; rs = null; el.classList.remove("agarrada"); try { h.releasePointerCapture(e.pointerId); } catch (_) {} };
+    h.addEventListener("pointerup", finRs); h.addEventListener("pointercancel", finRs);
+  });
+  titlebar.addEventListener("dblclick", (e) => {
+    if (movil() || e.target.closest(".box")) return;
+    stopFx(); el.style.transform = ""; el.classList.add("anim");
+    if (el._prev) {                                    // restaurar
+      const p = el._prev; el._prev = null;
+      el.style.left = p.L + "px"; el.style.top = p.T + "px"; el.style.width = p.W + "px"; el.style.height = p.H + "px";
+    } else {                                           // maximizar
+      el._prev = { L: el.offsetLeft, T: el.offsetTop, W: el.offsetWidth, H: el.offsetHeight };
+      el.style.width = window.innerWidth + "px"; el.style.height = (window.innerHeight - 22) + "px"; el.style.left = "0px"; el.style.top = "22px";
+      el.classList.add("redim");
+    }
+    setTimeout(() => el.classList.remove("anim"), 260);
+  });
   return el;
 }
 
