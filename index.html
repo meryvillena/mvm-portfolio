@@ -38,7 +38,7 @@
   if (L !== "en" && L !== "es") L = (!nl || /^es/i.test(nl)) ? "es" : "en";
   window.__LANG = L;
   document.documentElement.lang = L;
-  window.__setLang = function (l) { try { localStorage.setItem("mvm-lang", l); } catch (e) {} location.href = location.pathname + "?lang=" + l + location.hash; };
+  window.__setLang = function (l) { try { localStorage.setItem("mvm-lang", l); } catch (e) {} if (window.medir) medir("idioma/" + l); setTimeout(function () { location.href = location.pathname + "?lang=" + l + location.hash; }, 150); };
   if (L === "en") document.write('<script src="i18n/en.js"><\/script>');
 })();
 </script>
@@ -527,6 +527,45 @@
 </noscript>
 
 <script>
+/* ============================================================
+   MEDICIÓN (GoatCounter: sin cookies, sin datos personales). Ver MEDICION.md.
+   Apagada hasta que GC_CODIGO tenga valor (p. ej. "meryvillena" → meryvillena.goatcounter.com).
+   medir("nombre") apunta un suceso; en el panel de GoatCounter salen como «ev/nombre».
+   No mide en local ni si el navegador pide «no rastrear». No guarda lo que escribe el visitante.
+   ============================================================ */
+(function () {
+  var GC_CODIGO = "meryvillenaportfolio";
+  var listo = false, cola = [], t0 = Date.now(), interactuo = false;
+  window.__enPresentacion = false;
+  window.__medidas = [];
+  window.medir = function (n) {
+    try {
+      if (window.__enPresentacion && !/^intro\//.test(n)) return;
+      if (window.__medidas.length < 300) window.__medidas.push(n);
+      if (!GC_CODIGO) return;
+      if (listo && window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: "ev/" + n, title: n, event: true });
+      else if (cola.length < 50) cola.push(n);
+    } catch (e) {}
+  };
+  var local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  if (GC_CODIGO && !local && navigator.doNotTrack !== "1") {
+    var sc = document.createElement("script");
+    sc.async = true; sc.src = "//gc.zgo.at/count.js";
+    sc.setAttribute("data-goatcounter", "https://" + GC_CODIGO + ".goatcounter.com/count");
+    sc.onload = function () { listo = true; var c = cola; cola = []; c.forEach(window.medir); };
+    document.head.appendChild(sc);
+  } else { GC_CODIGO = ""; }
+  // ¿Se mueve algo dentro del escritorio o se va sin tocar nada?
+  var primera = function () {
+    if (interactuo) return; interactuo = true;
+    var s = (Date.now() - t0) / 1000;
+    window.medir("primera-interaccion/" + (s < 5 ? "menos-5s" : s < 15 ? "5-15s" : s < 60 ? "15-60s" : "mas-60s"));
+  };
+  addEventListener("pointerdown", primera, true); addEventListener("keydown", primera, true);
+  addEventListener("pagehide", function () { if (!interactuo) window.medir("sin-interaccion"); });
+})();
+</script>
+<script>
 /* ===== IDIOMA ===== tl(«texto en español») devuelve su traducción; si falta, el español. */
 const LANG = window.__LANG || "es";
 const I18N = (LANG === "en" && window.I18N_EN) || null;
@@ -802,7 +841,7 @@ function makeIcon(id, label, iconSrc, x, y) {
       if (overlap) {
         el.style.display = "none";
         el.classList.remove("selected");
-        if (!trashedIds.includes(id)) trashedIds.push(id);
+        if (!trashedIds.includes(id)) { trashedIds.push(id); medir("papelera/tirar/" + id); }
         updateTrashIcon();
         // Micro-acción: la Papelera hace un meneíto al recibir algo.
         trashEl.classList.remove("wobble");
@@ -854,7 +893,7 @@ function makeIcon(id, label, iconSrc, x, y) {
       el.style.transform = "scale(0.25)"; el.style.opacity = "0";
       setTimeout(() => {
         el.style.display = "none"; el.style.transform = ""; el.style.opacity = ""; el.style.transition = "";
-        if (!trashedIds.includes(id)) trashedIds.push(id);
+        if (!trashedIds.includes(id)) { trashedIds.push(id); medir("papelera/tirar/" + id); }
         updateTrashIcon();
       }, 180);
       trIcon.classList.remove("wobble"); void trIcon.offsetWidth; trIcon.classList.add("wobble");
@@ -1129,6 +1168,7 @@ function openWindow(id, opener) {
   const el = document.getElementById("win-" + id);
   if (!el) return;
   const yaAbierta = el.classList.contains("open") && !el.classList.contains("closing");
+  if (!yaAbierta) medir("abrir/" + id);
   el.classList.remove("closing");
   el.classList.add("open"); focusWindow(id);
   if (!yaAbierta && window.__snd) window.__snd("abrir");
@@ -1532,12 +1572,12 @@ function attachContact(s) {
     };
     try {
       const r = await fetch(API + "/rpc/enviar_contacto", { method: "POST", headers: { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json" }, body: JSON.stringify({ p_email: email, p_mensaje: msg }) });
-      if (r.ok) { cuerpo.innerHTML = '<p class="thanks">' + tl("Enviado ✓ Te respondo en cuanto pueda. ✦") + '</p>'; return; }
+      if (r.ok) { medir("contacto/enviado"); cuerpo.innerHTML = '<p class="thanks">' + tl("Enviado ✓ Te respondo en cuanto pueda. ✦") + '</p>'; return; }
       const t = await r.text();
       if (/demasiados/.test(t)) { err.textContent = tl("Ahora mismo hay mucho movimiento. Prueba en un rato o escríbeme a meryvillena@proton.me."); btn.disabled = false; return; }
       if (/correo_invalido/.test(t)) { err.textContent = tl("Revisa tu correo: no parece válido."); btn.disabled = false; return; }
       if (/mensaje_invalido/.test(t)) { err.textContent = tl("El mensaje debe tener entre 1 y 1.000 caracteres."); btn.disabled = false; return; }
-      planB();                                  // la función aún no existe o falla: abre el correo
+      medir("contacto/plan-b"); planB();        // la función aún no existe o falla: abre el correo
     } catch (x) { planB(); }
   });
 }
@@ -1606,7 +1646,7 @@ desktop.addEventListener("mousedown", (e) => {
   const ESCRITORIO = [[tl("Léeme primero"), IC.favorites], [tl("Soluciones de negocio"), IC.directory], [tl("Herramientas y operaciones"), IC.directory], [tl("Exploración de producto"), IC.directory], [tl("Voz visual"), IC.directory], [tl("Sobre mí"), IC.disk], [tl("Contacto"), IC.mail], [tl("Papelera"), IC.trashEmpty]];
   const $ = (s) => root.querySelector(s), $$ = (s) => [...root.querySelectorAll(s)];
   const DURACION = 36000;
-  let run = 0, t0 = 0, raf = 0;
+  let run = 0, t0 = 0, raf = 0, etapa = "nombre"; // etapa: dónde va la película (para medir dónde la dejan)
 
   // El escritorio real vive detrás de la presentación: la película lo toca de verdad (iconos, Panel de control, reproductor).
   const real = (sel) => document.querySelector(sel);
@@ -1696,21 +1736,25 @@ desktop.addEventListener("mousedown", (e) => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return final();
     try {
       // 1 · quién soy
+      etapa = "nombre";
       await wait(300, id);
       const h = $("#h1"); h.classList.add("on"); await typeTo(h, TEXTOS.nombre, id, 42); h.classList.remove("caret");
       const p = $("#hp"); p.classList.add("on"); await typeTo(p, TEXTOS.frase, id, 18); p.classList.remove("caret");
       await wait(600, id);
       h.classList.remove("on"); p.classList.remove("on"); await wait(300, id);
       // 2 · esto es un escritorio: el de verdad, que se ve por detrás. El cursor selecciona una carpeta real.
+      etapa = "escritorio";
       $("#veil").classList.remove("on"); await wait(700, id);
       caption(TEXTOS.c1);
       const carpeta = real('.icon[data-id="exploracion"]');
       if (carpeta) { const [cx, cy] = centro(carpeta.querySelector("img")); await cursor(cx, cy, true); seleccionar(carpeta); await wait(600, id); }
       // 3 · cuatro proyectos (sobre un velo claro: el escritorio se intuye detrás)
+      etapa = "proyectos";
       caption(TEXTOS.c2); $("#cursor").classList.remove("on"); $("#veil").classList.add("on"); await wait(800, id);
       for (const P of PROYECTOS) await escena(P, id);
       $("#veil").classList.remove("on"); seleccionar(null); await wait(600, id);
       // 4 · es tuyo: se abre el Panel de control real, se cambia el fondo y se abre el reproductor real
+      etapa = "panel";
       const iconoPanel = real('.icon[data-id="panel"]'), iconoRadio = real('.icon[data-id="radio"]');
       if (iconoPanel && iconoRadio && real("#win-panel") && real("#win-radio")) {
         caption(TEXTOS.c5); await wait(400, id);
@@ -1741,6 +1785,7 @@ desktop.addEventListener("mousedown", (e) => {
         restaurarAjustes(); await wait(900, id); // el escritorio vuelve a como lo tenía el visitante
       }
       // 5 · deja tu post-it (el cursor señala el botón real; la nota de ejemplo es de la presentación)
+      etapa = "postit";
       caption(TEXTOS.c4);
       const ghost = real(".postit.ghost");
       if (ghost) { const [px, py] = centro(ghost); await cursor(px, py, false); }
@@ -1749,8 +1794,9 @@ desktop.addEventListener("mousedown", (e) => {
       await typeTo(nota, TEXTOS.nota, id, 40); nota.classList.remove("caret"); await wait(600, id);
       nota.classList.add("out"); await wait(400, id);
       // 6 · entrar
+      etapa = "final";
       caption(TEXTOS.c3); $("#empieza").classList.add("on"); await wait(600, id);
-      cancelAnimationFrame(raf); $("#bar").style.width = "100%";
+      cancelAnimationFrame(raf); $("#bar").style.width = "100%"; medir("intro/completa");
     } catch (e) { if (e !== "cancel") throw e; }
   }
 
@@ -1759,12 +1805,12 @@ desktop.addEventListener("mousedown", (e) => {
   const marcarVista = () => { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} };
   const yaVista = () => { try { const t = +localStorage.getItem(KEY); return t > 0 && Date.now() - t < CADUCA_DIAS * 864e5; } catch (e) { return false; } };
   let prevFocus = null;
-  const cerrar = () => { run++; cancelAnimationFrame(raf); limpiarReal(); marcarVista(); host.classList.add("bye"); setTimeout(() => { host.classList.remove("show", "bye"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }, 500); };
-  const mostrar = () => { prevFocus = document.activeElement; host.classList.remove("bye"); host.classList.add("show"); play(); $("#skip").focus(); };
-  $("#skip").addEventListener("click", cerrar);
-  $("#entrar").addEventListener("click", cerrar);
-  addEventListener("keydown", (e) => { if (e.key === "Escape" && host.classList.contains("show")) cerrar(); });
-  addEventListener("pagehide", limpiarReal); // si el visitante cierra o recarga a mitad, su panel queda como estaba
+  const cerrar = (causa) => { medir("intro/" + (causa === "entrar" ? "entrar" : (causa || "cerrar") + "-en-" + etapa)); window.__enPresentacion = false; run++; cancelAnimationFrame(raf); limpiarReal(); marcarVista(); host.classList.add("bye"); setTimeout(() => { host.classList.remove("show", "bye"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }, 500); };
+  const mostrar = () => { medir("intro/ver"); window.__enPresentacion = true; etapa = "nombre"; prevFocus = document.activeElement; host.classList.remove("bye"); host.classList.add("show"); play(); $("#skip").focus(); };
+  $("#skip").addEventListener("click", () => cerrar("saltar"));
+  $("#entrar").addEventListener("click", () => cerrar("entrar"));
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && host.classList.contains("show")) cerrar("esc"); });
+  addEventListener("pagehide", () => { if (host.classList.contains("show")) medir("intro/abandono-en-" + etapa); limpiarReal(); }); // si el visitante cierra o recarga a mitad, su panel queda como estaba
   window.showWelcome = mostrar;
   // Primera visita: presentación. Después, directo al escritorio. ?presentacion la fuerza; ?quitar= la salta.
   if (/[?&]presentacion\b/.test(location.search) || (!/[?&]quitar=/.test(location.search) && !yaVista())) mostrar();
@@ -1857,7 +1903,7 @@ desktop.addEventListener("mousedown", (e) => {
       try {
         const cuerpo = { mensaje: texto, color }; if (alias) cuerpo.alias = alias;
         const r = await fetch(API + "/postits", { method: "POST", headers: { ...HDR, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify(cuerpo) });
-        if (r.ok) { guardar(LS_ULTIMO, Date.now()); cerrarEditor(); pintarEscritorio(); pintarMuro(); return; }
+        if (r.ok) { medir("postit/publicado"); guardar(LS_ULTIMO, Date.now()); cerrarEditor(); pintarEscritorio(); pintarMuro(); return; }
         const t = await r.text();
         err.textContent = /Demasiados/.test(t) ? tl("Hay mucho movimiento. Prueba en un rato.") : /sin_url/.test(t) ? tl("Sin enlaces, por favor.") : /largo/.test(t) ? tl("Entre 1 y 140 caracteres.") : tl("No he podido pegarlo. Prueba otra vez.");
       } catch (e) { err.textContent = tl("No he podido conectar. Prueba otra vez."); }
@@ -2139,12 +2185,12 @@ desktop.addEventListener("mousedown", (e) => {
     pw.querySelectorAll('input[type="color"][data-k]').forEach((i) => { i.value = A[i.dataset.k]; });
     pw.querySelectorAll("[data-solo]").forEach((f) => { f.hidden = f.dataset.solo === "gato" ? A.fondo === "liso" : A.fondo !== "patron"; });
   }
-  function poner(k, v) { A[k] = v === "true" ? true : v === "false" ? false : v; aplicar(); guardar(); refrescar(); }
+  function poner(k, v) { medir("panel/" + k); A[k] = v === "true" ? true : v === "false" ? false : v; aplicar(); guardar(); refrescar(); }
   pw.addEventListener("click", (e) => {
     const b = e.target.closest("button"); if (!b) return;
     if (b.dataset.k && b.dataset.v) poner(b.dataset.k, b.dataset.v);
     else if (b.dataset.snd) sonar(b.dataset.snd, true);
-    else if (b.id === "pc-restaurar") { Object.keys(DEF).forEach((k) => { if (k !== "radio" && k !== "volRadio") A[k] = DEF[k]; }); aplicar(); guardar(); refrescar(); sonar("papelera"); }
+    else if (b.id === "pc-restaurar") { medir("panel/restaurar"); Object.keys(DEF).forEach((k) => { if (k !== "radio" && k !== "volRadio") A[k] = DEF[k]; }); aplicar(); guardar(); refrescar(); sonar("papelera"); }
   });
   pw.addEventListener("change", (e) => { const i = e.target; if (i.type === "radio" && i.checked) poner(i.dataset.k, i.dataset.v); });
   pw.addEventListener("input", (e) => {
@@ -2198,7 +2244,7 @@ desktop.addEventListener("mousedown", (e) => {
     volBar();
   }
   const urlDe = (id, i) => "https://ice" + SERVIDORES[i % SERVIDORES.length] + ".somafm.com/" + id + "-128-mp3";
-  function tocar() { quiere = true; intento = 0; audioEl.src = urlDe(A.radio, 0); lcd("conectando"); const p = audioEl.play(); if (p && p.catch) p.catch(() => { if (quiere && audioEl.error) fallo(); }); }
+  function tocar() { medir("radio/play"); quiere = true; intento = 0; audioEl.src = urlDe(A.radio, 0); lcd("conectando"); const p = audioEl.play(); if (p && p.catch) p.catch(() => { if (quiere && audioEl.error) fallo(); }); }
   function parar() { quiere = false; audioEl.pause(); audioEl.removeAttribute("src"); audioEl.load(); lcd("parada"); }
   function fallo() {
     if (!quiere) return;
@@ -2294,6 +2340,11 @@ desktop.addEventListener("mousedown", (e) => {
       el.classList.add("show"); clearTimeout(t); t = setTimeout(() => el.classList.remove("show"), 4500);
     };
   })();
+  document.addEventListener("click", (e) => { // medición: a dónde se va desde el escritorio
+    const a = e.target.closest && e.target.closest("a[href]"); if (!a) return;
+    const h = a.getAttribute("href") || ""; if (/^#|^javascript:/i.test(h)) return;
+    medir("enlace/" + (/^mailto:/i.test(h) ? "correo" : h.replace(/^https?:\/\/(www\.)?/i, "").replace(/[?#].*$/, "").slice(0, 80)));
+  }, true);
   if (LANG === "en") document.addEventListener("click", (e) => {
     const a = e.target.closest && e.target.closest('a[target="_blank"]');
     if (!a) return;
