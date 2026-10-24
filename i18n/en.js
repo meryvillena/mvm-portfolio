@@ -31,7 +31,7 @@ window.I18N_EN = {
   "Las carpetas organizan mis proyectos por categorías: haz clic para abrirlas y mira dentro. Puedes mover las carpetas por la pantalla si quieres reordenarlas.": "The folders organize my projects by category: click to open them and look inside. You can drag the folders around the screen if you want to rearrange them.",
   "Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em> —ahí está lo que más cuenta.": "I recommend starting with <em>Business solutions</em> or <em>Tools</em> —that's where most of the story is.",
   "Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.": "Tip: drag anything you don't like to the Trash. Click the Trash = everything goes back to its place.",
-  "Si quieres saber quién hay detrás de todo esto, abre <em>Sobre mí</em>.": "If you want to know who's behind all this, open <em>About me</em>.",
+  "Si quieres saber quién hay detrás de todo esto, abre <a href=\"#\" onclick=\"openWindow('sobremi');return false\"><em>Sobre mí</em></a>.": "If you want to know who's behind all this, open <a href=\"#\" onclick=\"openWindow('sobremi');return false\"><em>About me</em></a>.",
   "Soluciones de negocio": "Business solutions",
   "Identidades y webs que captan clientes.": "Identities and websites that bring in clients.",
   "Prototipo navegable": "Clickable prototype",

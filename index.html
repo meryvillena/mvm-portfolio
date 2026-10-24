@@ -234,6 +234,9 @@
   .window .content { touch-action: pan-y; }
   .window .titlebar .box { position: relative; }
   .window .titlebar .box::after { content: ""; position: absolute; inset: -6px; }
+  /* La X de cerrar se dibuja (el carácter × queda descentrado según la tipografía); el texto sigue ahí para lectores de pantalla */
+  .window .titlebar .box.close { font-size: 0; color: transparent;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1 1L9 9M9 1L1 9' stroke='%23000' stroke-width='1.4' stroke-linecap='square'/%3E%3C/svg%3E") center / 56% no-repeat; }
   .window .titlebar .box.zoom { border-color: transparent; background: transparent; cursor: pointer; } /* esquina derecha: cierra, pero sin dibujar nada */
   @media (max-width: 760px) {
     .window .titlebar { height: 34px; }
@@ -598,7 +601,7 @@ const DESKTOP = [
       "<p>" + tl("Las carpetas organizan mis proyectos por categorías: haz clic para abrirlas y mira dentro. Puedes mover las carpetas por la pantalla si quieres reordenarlas.") + "</p>" +
       "<p>" + tl("Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em> —ahí está lo que más cuenta.") + "</p>" +
       "<p class=\"small\">" + tl("Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.") + "</p>" +
-      "<p>" + tl("Si quieres saber quién hay detrás de todo esto, abre <em>Sobre mí</em>.") + "</p>"
+      "<p>" + tl("Si quieres saber quién hay detrás de todo esto, abre <a href=\"#\" onclick=\"openWindow('sobremi');return false\"><em>Sobre mí</em></a>.") + "</p>"
     },
   },
   {
