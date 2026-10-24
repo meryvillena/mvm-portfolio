@@ -127,7 +127,7 @@ window.I18N_EN = {
   "Grafito": "Graphite",
   "Otro…": "Other…",
   "Otro color": "Other color",
-  "Fondo": "Background",
+  "Fondo": "Desktop",
   "Fondo de pantalla": "Desktop picture",
   "Color liso": "Solid color",
   "Gato grande": "Big cat",
