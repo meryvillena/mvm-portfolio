@@ -1561,7 +1561,7 @@ desktop.addEventListener("mousedown", (e) => {
    ============================================================ */
 /* @@PRESENTACION-INICIO@@ */
 /* ============================================================
-   PRESENTACIÓN DE ENTRADA (~27 s). Sustituye al popup de bienvenida.
+   PRESENTACIÓN DE ENTRADA (~36 s). Sustituye al popup de bienvenida.
    NO editar aquí: la fuente está en _taller-intro/ (intro.css, intro.html, intro.js)
    y se copia con:  python3 _taller-intro/build.py
    Vive en un Shadow DOM para que sus estilos no se mezclen con los del escritorio.
@@ -1569,52 +1569,72 @@ desktop.addEventListener("mousedown", (e) => {
    ============================================================ */
 (function presentacion() {
   const host = document.createElement("div");
-  host.id = "intro-host"; host.setAttribute("role", "dialog"); host.setAttribute("aria-modal", "true"); host.setAttribute("aria-label", "Presentación del portfolio");
+  host.id = "intro-host"; host.setAttribute("role", "dialog"); host.setAttribute("aria-modal", "true"); host.setAttribute("aria-label", tl("Presentación del portfolio"));
   const root = host.attachShadow({ mode: "open" });
-  root.innerHTML = "<style>" + "  /* Presentaci\u00f3n de entrada. Usa los tokens del sistema de dise\u00f1o del portfolio (SISTEMA-DE-DISENO-PORTFOLIO.md):\n     escritorio #b8b8b8, ventanas Platinum, Geneva / Chicago / Monaco, etiquetas .tag / .type-tag, bot\u00f3n .btn. */\n  :host { position: fixed; inset: 0; z-index: 40000; display: none; font-family: \"Geneva\",\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size: 12px; color: #000; opacity: 1; transition: opacity .5s ease; --mono: ui-monospace, \"SF Mono\", Menlo, Consolas, \"Liberation Mono\", monospace; }\n  :host(.show) { display: block; } :host(.bye) { opacity: 0; }\n  * { box-sizing: border-box; }\n  #stage { position: absolute; inset: 0; background: #b8b8b8; overflow: hidden; user-select: none; }\n  .fade { opacity: 0; transition: opacity .5s ease; } .fade.on { opacity: 1; }\n\n  /* barra de men\u00fas (la del escritorio) */\n  #menubar { position: absolute; top: 0; left: 0; right: 0; height: 22px; background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #ddd 2px); border-bottom: 1px solid #000; display: flex; align-items: center; padding: 0 8px; font-size: 13px; font-weight: bold; transform: translateY(-24px); transition: transform .5s ease; z-index: 30; }\n  #menubar.on { transform: none; }\n  #menubar .mt { height: 22px; padding: 0 9px; display: flex; align-items: center; }\n  #menubar .mt.cat { padding: 0 7px; }\n  #menubar .sp { flex: 1; } #menubar .own { font-weight: normal; color: rgba(0,0,0,.6); margin-left: 14px; } #menubar .clk { margin-left: 14px; white-space: nowrap; }\n  @media (max-width: 900px) { #menubar .own { display: none; } } @media (max-width: 600px) { #menubar .m-opt, #menubar .clk { display: none; } }\n\n  /* iconos del escritorio (los del portfolio) */\n  #icons { position: absolute; top: 30px; right: 14px; bottom: 56px; display: flex; flex-direction: column; flex-wrap: wrap-reverse; align-content: flex-start; gap: 2px; transition: opacity .5s ease; }\n  #icons.dim { opacity: 0; }\n  .ico { width: 82px; padding: 4px 2px; display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0; transform: translateY(8px) scale(.9); transition: opacity .35s ease, transform .35s ease; }\n  .ico.on { opacity: 1; transform: none; }\n  .ico img { width: 32px; height: 32px; image-rendering: pixelated; }\n  .ico span { font-size: 11px; text-align: center; line-height: 1.2; padding: 1px 3px; }\n  .ico.sel span { background: #000; color: #fff; }\n\n  /* ventana Platinum */\n  .win { background: #ECECEC; border: 1px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,.45); display: flex; flex-direction: column; }\n  .win .tb { height: 20px; background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #99b8e8 2px); border-bottom: 1px solid #000; display: flex; align-items: center; padding: 0 4px; gap: 6px; flex-shrink: 0; }\n  .win .tb u { width: 13px; height: 13px; border: 1px solid #000; background: #fff; flex-shrink: 0; text-decoration: none; }\n  .win .tb span { flex: 1; text-align: center; font-weight: bold; font-size: 12px; margin-right: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n\n  /* ---------- escena de proyecto ---------- */\n  #pj { --h: clamp(190px, min(40vh, 62vw), 380px); position: absolute; inset: 22px 0 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 18px 40px; pointer-events: none; }\n  #pj .tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; }\n  #pj .tags > * { opacity: 0; transform: translateY(8px); transition: opacity .3s ease, transform .35s ease; }\n  #pj .tags > *.on { opacity: 1; transform: none; }\n  #pj .cat { display: inline-block; font-size: 13px; font-weight: bold; letter-spacing: .05em; text-transform: uppercase; padding: 4px 10px; border: 1px solid #000; border-radius: 3px; }\n  #pj .tipo { font-family: var(--mono); font-size: 11px; letter-spacing: .02em; text-transform: uppercase; padding: 3px 7px; border: 1px solid; border-radius: 3px; }\n  #pj .tipo.real { background: #d6f0d3; color: #2f7a2b; } #pj .tipo.concepto { background: #fbeecb; color: #a9791a; }\n  #pj .est { font-family: var(--mono); font-size: 12px; color: rgba(0,0,0,.6); } #pj .est::before { content: \"// \"; }\n  #pj h2 { margin: 0; text-align: center; font: normal clamp(22px, 4.2vw, 40px)/1.15 \"ChicagoCS\",\"Geneva\",sans-serif; max-width: 780px; }\n  #pj h2 .w { display: inline-block; opacity: 0; transform: translateY(.5em); transition: opacity .3s ease, transform .4s ease; margin: 0 .14em; }\n  #pj h2 .w.on { opacity: 1; transform: none; }\n  #pj .fig { font: normal clamp(17px, 2.5vw, 24px) \"MonacoCS\", var(--mono); background: #fff; border: 1px solid #000; box-shadow: 2px 2px 0 rgba(0,0,0,.3); padding: 5px 14px; opacity: 0; transform: translateY(6px); transition: opacity .3s ease, transform .35s ease; }\n  #pj .fig.on { opacity: 1; transform: none; } #pj .fig s { color: rgba(0,0,0,.5); margin-right: 8px; }\n  #pj .sub { font-size: clamp(12px, 1.7vw, 15px); margin: 0; text-align: center; max-width: 540px; color: rgba(0,0,0,.75); opacity: 0; transition: opacity .4s ease; }\n  #pj .sub.on { opacity: 1; }\n  #pj .scrbox { position: relative; width: 100%; height: calc(var(--h) + 26px); margin-top: 6px; }\n  #pj .scr { position: absolute; left: 50%; top: 0; max-width: 92vw; opacity: 0; transform: translateX(calc(-50% + 60px)); transition: opacity .3s ease, transform .5s ease; }\n  #pj .scr.on { opacity: 1; transform: translateX(-50%); }\n  #pj .scr.off { opacity: 0; transform: translateX(calc(-50% - 60px)); }\n  #pj .scr img { display: block; height: var(--h); width: auto; max-width: 92vw; background: #ddd; }\n  #pj .moon { position: relative; height: var(--h); aspect-ratio: 390 / 844; overflow: hidden; background: radial-gradient(120% 70% at 50% 28%, #35305f 0%, #231f46 55%, #181533 100%); }\n  #pj .moon::before { content: \"\"; position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 12% 18%, #fff8 50%, transparent 52%), radial-gradient(1px 1px at 82% 12%, #fff7 50%, transparent 52%), radial-gradient(1px 1px at 70% 40%, #fff6 50%, transparent 52%), radial-gradient(1px 1px at 22% 62%, #fff6 50%, transparent 52%), radial-gradient(1px 1px at 88% 74%, #fff7 50%, transparent 52%), radial-gradient(1px 1px at 40% 88%, #fff5 50%, transparent 52%); }\n  #pj .moon img { position: absolute; left: 50%; top: 31%; width: 74%; height: auto !important; max-width: none !important; transform: translate(-50%, -50%) scale(.72); mix-blend-mode: screen; filter: brightness(1.3) saturate(1.15); -webkit-mask-image: radial-gradient(circle, #000 52%, transparent 71%); mask-image: radial-gradient(circle, #000 52%, transparent 71%); animation: breathe 3s ease-in-out infinite; }\n  #pj .moon .tx { position: absolute; left: 0; right: 0; bottom: 14%; text-align: center; font: italic 20px/1.2 \"Cormorant Garamond\", Georgia, serif; color: #e9e3ff; }\n  #pj .moon .tx span { position: absolute; left: 0; right: 0; opacity: 0; animation: txin 3s ease-in-out infinite; } #pj .moon .tx span + span { animation-name: txout; }\n  @keyframes breathe { 0%, 100% { transform: translate(-50%, -50%) scale(.72); } 50% { transform: translate(-50%, -50%) scale(1.3); } }\n  @keyframes txin { 0%, 8% { opacity: 0; } 20%, 42% { opacity: 1; } 55%, 100% { opacity: 0; } }\n  @keyframes txout { 0%, 55% { opacity: 0; } 68%, 92% { opacity: 1; } 100% { opacity: 0; } }\n  #pj .dots { position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%); display: flex; gap: 6px; }\n  #pj .dots s { width: 8px; height: 8px; border: 1px solid #000; background: #fff; } #pj .dots s.on { background: #000; }\n  #pj.out > * { opacity: 0 !important; transform: translateY(-18px) !important; transition: opacity .3s ease, transform .35s ease !important; }\n\n  /* post-it (los del muro) */\n  #pibtn { position: absolute; top: 34px; left: 24px; width: 150px; min-height: 100px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: rgba(255,243,163,.6); border: 2px dashed rgba(0,0,0,.5); transform: rotate(-2deg); font-size: 12px; font-weight: bold; color: rgba(0,0,0,.7); text-align: center; opacity: 0; transition: opacity .35s ease; }\n  #pibtn b { font-size: 44px; font-weight: normal; line-height: 1; } #pibtn.on { opacity: 1; }\n  #pinote { position: absolute; left: 50%; top: 50%; width: 200px; min-height: 130px; padding: 16px 14px 12px; background: #fff3a3; border: 1px solid rgba(0,0,0,.45); box-shadow: 2px 2px 0 rgba(0,0,0,.3); font-size: 15px; line-height: 1.3; color: #111; transform: translate(-130%, -140%) rotate(-8deg) scale(.4); opacity: 0; transition: transform .6s ease, opacity .3s ease; transform-origin: top left; }\n  #pinote.on { opacity: 1; transform: translate(-50%, -50%) rotate(-2deg); }\n  #pinote.out { opacity: 0; transform: translate(-50%, -50%) rotate(-2deg) scale(.94); transition: opacity .35s ease, transform .35s ease; }\n\n  /* botones (.btn del sistema) */\n  .btn { font-family: inherit; font-size: 12px; font-weight: bold; padding: 5px 12px; border: 1px solid #000; background: #ddd; color: #111; cursor: pointer; border-radius: 0; }\n  .btn:hover { background: #cfcfcf; } .btn:active { background: #bbb; }\n  .btn:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }\n  #empieza { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }\n  #entrar { font-size: 15px; padding: 10px 30px; }\n  #skip { position: absolute; bottom: 14px; right: 14px; z-index: 60; }\n  #bar { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: #2b5fd6; z-index: 60; }\n\n  /* texto grande inicial */\n  #hero { position: absolute; left: 0; right: 0; top: 36%; text-align: center; padding: 0 22px; }\n  #hero h1 { margin: 0; font: normal clamp(30px, 6.5vw, 58px)/1.1 \"ChicagoCS\",\"Geneva\",sans-serif; }\n  #hero p { margin: 16px auto 0; max-width: 580px; font-size: clamp(15px, 2.4vw, 20px); line-height: 1.4; min-height: 2.8em; }\n  .caret::after { content: \"\"; display: inline-block; width: .55em; height: 1em; margin-left: 2px; background: #000; vertical-align: -2px; animation: blink .8s steps(1) infinite; }\n  @keyframes blink { 50% { opacity: 0; } }\n\n  /* subt\u00edtulo inferior */\n  #cap { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); max-width: 86vw; background: #fff; border: 1px solid #000; box-shadow: 2px 2px 0 rgba(0,0,0,.3); padding: 8px 14px; font-size: 13px; text-align: center; z-index: 20; }\n\n  /* cursor */\n  #cursor { position: absolute; left: 0; top: 0; width: 18px; height: 24px; z-index: 50; transition: transform .8s cubic-bezier(.45,.05,.2,1); pointer-events: none; opacity: 0; }\n  #cursor.on { opacity: 1; } #cursor svg { display: block; }\n  #cursor.click svg { animation: tap .25s; } @keyframes tap { 50% { transform: scale(.82); } }\n  @media (prefers-reduced-motion: reduce) { * { transition-duration: .01s !important; animation-duration: .01s !important; } }\n" + "</style>" + "<div id=\"stage\">\n  <div id=\"menubar\"><span class=\"mt cat\"><svg viewBox=\"0 0 15 12\" width=\"19\" height=\"15\" shape-rendering=\"crispEdges\" aria-hidden=\"true\"><path d=\"M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z\" fill=\"#000\"/></svg></span><span class=\"mt\">Archivo</span><span class=\"mt m-opt\">Edici\u00f3n</span><span class=\"mt\">Ver</span><span class=\"mt\">Proyectos</span><span class=\"mt\">Ayuda</span><span class=\"sp\"></span><span class=\"own\">Escritorio de Mery Villena</span><span class=\"clk\" id=\"clk\"></span></div>\n  <div id=\"icons\" aria-hidden=\"true\"></div>\n\n  <div id=\"hero\"><h1 class=\"fade\" id=\"h1\"></h1><p class=\"fade\" id=\"hp\"></p></div>\n  <div id=\"pj\" aria-hidden=\"true\"></div>\n\n  <div id=\"pibtn\" aria-hidden=\"true\"><b>+</b>Deja tu post-it</div>\n  <div id=\"pinote\" aria-hidden=\"true\"></div>\n  <div id=\"empieza\" class=\"fade\"><button id=\"entrar\" class=\"btn\" type=\"button\">Entrar</button></div>\n\n  <div id=\"cap\" class=\"fade\" role=\"status\"></div>\n  <div id=\"cursor\"><svg width=\"18\" height=\"24\" viewBox=\"0 0 18 24\"><path d=\"M1 1v19l5-4.5 3.2 7.5 3-1.3-3.2-7.4H16z\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/></svg></div>\n  <button id=\"skip\" class=\"btn\" type=\"button\">Saltar \u203a</button>\n  <div id=\"bar\"></div>\n</div>\n";
+  root.innerHTML = "<style>" + "  /* Presentaci\u00f3n de entrada. Usa los tokens del sistema de dise\u00f1o del portfolio (SISTEMA-DE-DISENO-PORTFOLIO.md):\n     escritorio #b8b8b8, ventanas Platinum, Geneva / Chicago / Monaco, etiquetas .tag / .type-tag, bot\u00f3n .btn. */\n  :host { position: fixed; inset: 0; z-index: 40000; display: none; font-family: \"Geneva\",\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size: 12px; color: #000; opacity: 1; transition: opacity .5s ease; --mono: ui-monospace, \"SF Mono\", Menlo, Consolas, \"Liberation Mono\", monospace; }\n  :host(.show) { display: block; } :host(.bye) { opacity: 0; }\n  * { box-sizing: border-box; }\n  #stage { position: absolute; inset: 0; background: #b8b8b8; overflow: hidden; user-select: none; }\n  .fade { opacity: 0; transition: opacity .5s ease; } .fade.on { opacity: 1; }\n\n  /* barra de men\u00fas (la del escritorio) */\n  #menubar { position: absolute; top: 0; left: 0; right: 0; height: 22px; background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #ddd 2px); border-bottom: 1px solid #000; display: flex; align-items: center; padding: 0 8px; font-size: 13px; font-weight: bold; transform: translateY(-24px); transition: transform .5s ease; z-index: 30; }\n  #menubar.on { transform: none; }\n  #menubar .mt { height: 22px; padding: 0 9px; display: flex; align-items: center; }\n  #menubar .mt.cat { padding: 0 7px; }\n  #menubar .sp { flex: 1; } #menubar .own { font-weight: normal; color: rgba(0,0,0,.6); margin-left: 14px; } #menubar .clk { margin-left: 14px; white-space: nowrap; }\n  @media (max-width: 900px) { #menubar .own { display: none; } } @media (max-width: 600px) { #menubar .m-opt, #menubar .clk { display: none; } }\n\n  /* iconos del escritorio (los del portfolio) */\n  #icons { position: absolute; top: 30px; right: 14px; bottom: 56px; display: flex; flex-direction: column; flex-wrap: wrap-reverse; align-content: flex-start; gap: 2px; transition: opacity .5s ease; }\n  #icons.dim { opacity: 0; }\n  .ico { width: 82px; padding: 4px 2px; display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0; transform: translateY(8px) scale(.9); transition: opacity .35s ease, transform .35s ease; }\n  .ico.on { opacity: 1; transform: none; }\n  .ico img { width: 32px; height: 32px; image-rendering: pixelated; }\n  .ico span { font-size: 11px; text-align: center; line-height: 1.2; padding: 1px 3px; }\n  .ico.sel span { background: #000; color: #fff; }\n\n  /* ventana Platinum */\n  .win { background: #ECECEC; border: 1px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,.45); display: flex; flex-direction: column; }\n  .win .tb { height: 20px; background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #99b8e8 2px); border-bottom: 1px solid #000; display: flex; align-items: center; padding: 0 4px; gap: 6px; flex-shrink: 0; }\n  .win .tb u { width: 13px; height: 13px; border: 1px solid #000; background: #fff; flex-shrink: 0; text-decoration: none; }\n  .win .tb span { flex: 1; text-align: center; font-weight: bold; font-size: 12px; margin-right: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n\n  /* ---------- escena de proyecto ---------- */\n  #pj { --h: clamp(190px, min(40vh, 62vw), 380px); position: absolute; inset: 22px 0 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 18px 40px; pointer-events: none; }\n  #pj .tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; }\n  #pj .tags > * { opacity: 0; transform: translateY(8px); transition: opacity .3s ease, transform .35s ease; }\n  #pj .tags > *.on { opacity: 1; transform: none; }\n  #pj .cat { display: inline-block; font-size: 13px; font-weight: bold; letter-spacing: .05em; text-transform: uppercase; padding: 4px 10px; border: 1px solid #000; border-radius: 3px; }\n  #pj .tipo { font-family: var(--mono); font-size: 11px; letter-spacing: .02em; text-transform: uppercase; padding: 3px 7px; border: 1px solid; border-radius: 3px; }\n  #pj .tipo.real { background: #d6f0d3; color: #2f7a2b; } #pj .tipo.concepto { background: #fbeecb; color: #a9791a; }\n  #pj .est { font-family: var(--mono); font-size: 12px; color: rgba(0,0,0,.6); } #pj .est::before { content: \"// \"; }\n  #pj h2 { margin: 0; text-align: center; font: normal clamp(22px, 4.2vw, 40px)/1.15 \"ChicagoCS\",\"Geneva\",sans-serif; max-width: 780px; }\n  #pj h2 .w { display: inline-block; opacity: 0; transform: translateY(.5em); transition: opacity .3s ease, transform .4s ease; margin: 0 .14em; }\n  #pj h2 .w.on { opacity: 1; transform: none; }\n  #pj .fig { font: normal clamp(17px, 2.5vw, 24px) \"MonacoCS\", var(--mono); background: #fff; border: 1px solid #000; box-shadow: 2px 2px 0 rgba(0,0,0,.3); padding: 5px 14px; opacity: 0; transform: translateY(6px); transition: opacity .3s ease, transform .35s ease; }\n  #pj .fig.on { opacity: 1; transform: none; } #pj .fig s { color: rgba(0,0,0,.5); margin-right: 8px; }\n  #pj .sub { font-size: clamp(12px, 1.7vw, 15px); margin: 0; text-align: center; max-width: 540px; color: rgba(0,0,0,.75); opacity: 0; transition: opacity .4s ease; }\n  #pj .sub.on { opacity: 1; }\n  #pj .scrbox { position: relative; width: 100%; height: calc(var(--h) + 26px); margin-top: 6px; }\n  #pj .scr { position: absolute; left: 50%; top: 0; max-width: 92vw; opacity: 0; transform: translateX(calc(-50% + 60px)); transition: opacity .3s ease, transform .5s ease; }\n  #pj .scr.on { opacity: 1; transform: translateX(-50%); }\n  #pj .scr.off { opacity: 0; transform: translateX(calc(-50% - 60px)); }\n  #pj .scr img { display: block; height: var(--h); width: auto; max-width: 92vw; background: #ddd; }\n  #pj .moon { position: relative; height: var(--h); aspect-ratio: 390 / 844; overflow: hidden; background: radial-gradient(120% 70% at 50% 28%, #35305f 0%, #231f46 55%, #181533 100%); }\n  #pj .moon::before { content: \"\"; position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 12% 18%, #fff8 50%, transparent 52%), radial-gradient(1px 1px at 82% 12%, #fff7 50%, transparent 52%), radial-gradient(1px 1px at 70% 40%, #fff6 50%, transparent 52%), radial-gradient(1px 1px at 22% 62%, #fff6 50%, transparent 52%), radial-gradient(1px 1px at 88% 74%, #fff7 50%, transparent 52%), radial-gradient(1px 1px at 40% 88%, #fff5 50%, transparent 52%); }\n  #pj .moon img { position: absolute; left: 50%; top: 31%; width: 74%; height: auto !important; max-width: none !important; transform: translate(-50%, -50%) scale(.72); mix-blend-mode: screen; filter: brightness(1.3) saturate(1.15); -webkit-mask-image: radial-gradient(circle, #000 52%, transparent 71%); mask-image: radial-gradient(circle, #000 52%, transparent 71%); animation: breathe 3s ease-in-out infinite; }\n  #pj .moon .tx { position: absolute; left: 0; right: 0; bottom: 14%; text-align: center; font: italic 20px/1.2 \"Cormorant Garamond\", Georgia, serif; color: #e9e3ff; }\n  #pj .moon .tx span { position: absolute; left: 0; right: 0; opacity: 0; animation: txin 3s ease-in-out infinite; } #pj .moon .tx span + span { animation-name: txout; }\n  @keyframes breathe { 0%, 100% { transform: translate(-50%, -50%) scale(.72); } 50% { transform: translate(-50%, -50%) scale(1.3); } }\n  @keyframes txin { 0%, 8% { opacity: 0; } 20%, 42% { opacity: 1; } 55%, 100% { opacity: 0; } }\n  @keyframes txout { 0%, 55% { opacity: 0; } 68%, 92% { opacity: 1; } 100% { opacity: 0; } }\n  #pj .dots { position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%); display: flex; gap: 6px; }\n  #pj .dots s { width: 8px; height: 8px; border: 1px solid #000; background: #fff; } #pj .dots s.on { background: #000; }\n  #pj.out > * { opacity: 0 !important; transform: translateY(-18px) !important; transition: opacity .3s ease, transform .35s ease !important; }\n\n  /* post-it (los del muro) */\n  #pibtn { position: absolute; top: 34px; left: 24px; width: 150px; min-height: 100px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: rgba(255,243,163,.6); border: 2px dashed rgba(0,0,0,.5); transform: rotate(-2deg); font-size: 12px; font-weight: bold; color: rgba(0,0,0,.7); text-align: center; opacity: 0; transition: opacity .35s ease; }\n  #pibtn b { font-size: 44px; font-weight: normal; line-height: 1; } #pibtn.on { opacity: 1; }\n  #pinote { position: absolute; left: 50%; top: 50%; width: 200px; min-height: 130px; padding: 16px 14px 12px; background: #fff3a3; border: 1px solid rgba(0,0,0,.45); box-shadow: 2px 2px 0 rgba(0,0,0,.3); font-size: 15px; line-height: 1.3; color: #111; transform: translate(-130%, -140%) rotate(-8deg) scale(.4); opacity: 0; transition: transform .6s ease, opacity .3s ease; transform-origin: top left; }\n  #pinote.on { opacity: 1; transform: translate(-50%, -50%) rotate(-2deg); }\n  #pinote.out { opacity: 0; transform: translate(-50%, -50%) rotate(-2deg) scale(.94); transition: opacity .35s ease, transform .35s ease; }\n\n  /* botones (.btn del sistema) */\n  .btn { font-family: inherit; font-size: 12px; font-weight: bold; padding: 5px 12px; border: 1px solid #000; background: #ddd; color: #111; cursor: pointer; border-radius: 0; }\n  .btn:hover { background: #cfcfcf; } .btn:active { background: #bbb; }\n  .btn:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }\n  #empieza { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }\n  #entrar { font-size: 15px; padding: 10px 30px; }\n  #skip { position: absolute; bottom: 14px; right: 14px; z-index: 60; }\n  #bar { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: #2b5fd6; z-index: 60; }\n\n  /* texto grande inicial */\n  #hero { position: absolute; left: 0; right: 0; top: 36%; text-align: center; padding: 0 22px; }\n  #hero h1 { margin: 0; font: normal clamp(30px, 6.5vw, 58px)/1.1 \"ChicagoCS\",\"Geneva\",sans-serif; }\n  #hero p { margin: 16px auto 0; max-width: 580px; font-size: clamp(15px, 2.4vw, 20px); line-height: 1.4; min-height: 2.8em; }\n  .caret::after { content: \"\"; display: inline-block; width: .55em; height: 1em; margin-left: 2px; background: #000; vertical-align: -2px; animation: blink .8s steps(1) infinite; }\n  @keyframes blink { 50% { opacity: 0; } }\n\n  /* subt\u00edtulo inferior */\n  #cap { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); max-width: 86vw; background: #fff; border: 1px solid #000; box-shadow: 2px 2px 0 rgba(0,0,0,.3); padding: 8px 14px; font-size: 13px; text-align: center; z-index: 20; }\n\n  /* cursor */\n  #cursor { position: absolute; left: 0; top: 0; width: 18px; height: 24px; z-index: 50; transition: transform .8s cubic-bezier(.45,.05,.2,1); pointer-events: none; opacity: 0; }\n  #cursor.on { opacity: 1; } #cursor svg { display: block; }\n  #cursor.click svg { animation: tap .25s; } @keyframes tap { 50% { transform: scale(.82); } }\n  @media (prefers-reduced-motion: reduce) { * { transition-duration: .01s !important; animation-duration: .01s !important; } }\n\n  /* El escritorio real se ve por detr\u00e1s: la presentaci\u00f3n solo pone un velo claro cuando hace falta leer */\n  #stage { background: transparent; }\n  #menubar, #icons, #pibtn { display: none !important; }\n  #veil { position: absolute; inset: 0; background: rgba(228,228,228,.95); opacity: 0; transition: opacity .6s ease; }\n  #veil.on { opacity: 1; }\n\n  /* carrusel de capturas: se agranda entero, flota y vuelve */\n  #pj .scrbox.big { z-index: 6; transition: transform .7s cubic-bezier(.3,.1,.2,1); }\n  #pj .scrbox.big .scr { box-shadow: 6px 8px 0 rgba(0,0,0,.35); }\n  #pj.foco > *:not(.scrbox) { opacity: .1 !important; transition: opacity .4s ease; }\n  #pj .scrbox.flota .scr > img, #pj .scrbox.flota .scr > .moon { animation: flota 3.4s ease-in-out infinite; }\n  @keyframes flota { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-4px) rotate(.3deg); } }\n  @media (prefers-reduced-motion: reduce) { #pj .scrbox.flota .scr > img, #pj .scrbox.flota .scr > .moon { animation: none; } }\n" + "</style>" + "<div id=\"stage\">\n  <div id=\"veil\" aria-hidden=\"true\"></div>\n  <div id=\"menubar\"><span class=\"mt cat\"><svg viewBox=\"0 0 15 12\" width=\"19\" height=\"15\" shape-rendering=\"crispEdges\" aria-hidden=\"true\"><path d=\"M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z\" fill=\"#000\"/></svg></span><span class=\"mt\">Archivo</span><span class=\"mt m-opt\">Edici\u00f3n</span><span class=\"mt\">Ver</span><span class=\"mt\">Proyectos</span><span class=\"mt\">Ayuda</span><span class=\"sp\"></span><span class=\"own\">Escritorio de Mery Villena</span><span class=\"clk\" id=\"clk\"></span></div>\n  <div id=\"icons\" aria-hidden=\"true\"></div>\n\n  <div id=\"hero\"><h1 class=\"fade\" id=\"h1\"></h1><p class=\"fade\" id=\"hp\"></p></div>\n  <div id=\"pj\" aria-hidden=\"true\"></div>\n\n  <div id=\"pibtn\" aria-hidden=\"true\"><b>+</b>Deja tu post-it</div>\n  <div id=\"pinote\" aria-hidden=\"true\"></div>\n  <div id=\"empieza\" class=\"fade\"><button id=\"entrar\" class=\"btn\" type=\"button\">Entrar</button></div>\n\n  <div id=\"cap\" class=\"fade\" role=\"status\"></div>\n  <div id=\"cursor\"><svg width=\"18\" height=\"24\" viewBox=\"0 0 18 24\"><path d=\"M1 1v19l5-4.5 3.2 7.5 3-1.3-3.2-7.4H16z\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/></svg></div>\n  <button id=\"skip\" class=\"btn\" type=\"button\">Saltar \u203a</button>\n  <div id=\"bar\"></div>\n</div>\n";
   document.body.appendChild(host);
   /* ---- Textos ---- */
   const TEXTOS = {
     nombre: "Mery Villena",
-    frase: "Diseño de producto digital y UI, con experiencia en operaciones.",
-    c1: "Esto es mi portfolio. Un escritorio donde todo se abre con un clic.",
-    c2: "Operaciones, diseño de producto y UI.",
-    c3: "Navega por el escritorio y descubre más proyectos.",
-    c4: "Deja tus comentarios por el escritorio.",
-    nota: "Déjame tus comentarios aquí",
+    frase: tl("Diseño de producto digital y UI, con experiencia en operaciones."),
+    c1: tl("Esto es mi portfolio. Un escritorio donde todo se abre con un clic."),
+    c2: tl("Operaciones, diseño de producto y UI."),
+    c3: tl("Navega por el escritorio y descubre más proyectos."),
+    c4: tl("Deja tus comentarios por el escritorio."),
+    c5: tl("Y es tuyo: cambia el fondo, los colores y pon música."),
+    nota: tl("Déjame tus comentarios aquí"),
   };
   // Carpetas del escritorio, con su color de categoría (sistema de diseño).
-  const CATS = { negocio: ["Soluciones de negocio", "#7fbf7a"], operaciones: ["Herramientas y operaciones", "#8fb4ec"], producto: ["Exploración de producto", "#f0c766"] };
+  const CATS = { negocio: [tl("Soluciones de negocio"), "#7fbf7a"], operaciones: [tl("Herramientas y operaciones"), "#8fb4ec"], producto: [tl("Exploración de producto"), "#f0c766"] };
   // Cada proyecto: carpeta, tipo y estado reales (como en sus tarjetas), el gancho, la cifra y tres pantallas reales.
   const PROYECTOS = [
-    { cat: "negocio", tipo: "concepto", estado: "Prototipo navegable", head: "Una pizzería que le gana margen a las apps de reparto", fig: { texto: "pedidos que el horno cumple" },
-      sub: "Operaciones y diseño de producto: la web solo ofrece las horas que el horno puede cumplir, y el panel ordena el turno.",
-      shots: [["La web", "putidimadre/case/01-web.jpg"], ["El panel del turno", "putidimadre/case/02-panel.jpg"], ["Elegir la hora", "putidimadre/case/03-franjas-punta.jpg"]] },
-    { cat: "operaciones", tipo: "real", estado: "En uso", head: "Presupuestar sin echar la tarde", fig: { antes: "1 h", de: 60, a: 10, suf: " min" },
-      sub: "Del PDF del fabricante al presupuesto del cliente, en un solo paso.",
-      shots: [["Original del fabricante", "generador-de-presupuestos/img/02-antes-original-korvel.jpg"], ["Presupuesto del cliente", "generador-de-presupuestos/img/03-despues-luz-norte.jpg"], ["PDF generado", "generador-de-presupuestos/img/08-pdf-generado.jpg"]] },
-    { cat: "producto", tipo: "concepto", estado: "Prototipo navegable", head: "Descubre música en el local donde estás", fig: { texto: "app + negocio" },
-      sub: "Diseño de producto: la ficha del club, la cola compartida y el panel del local, en un mismo producto.",
-      shots: [["Clubs cerca", "spotify/capturas/02-clubs-cerca.jpg"], ["Ficha del club", "spotify/capturas/03-ficha-club.jpg"], ["Panel del local", "spotify/capturas/06-panel-local.jpg"]] },
-    { cat: "producto", tipo: "concepto", estado: "Prototipo navegable", head: "Una luna que respira contigo", fig: { texto: "desde cero" },
-      sub: "UI diseñada y programada desde cero: una app de respiración guiada, gratuita y sin cuenta.",
-      shots: [["La luna que respira", "luna", 2200], ["El inicio de la app", "respira/case/intro-home.jpg"], ["Los ajustes", "respira/case/intro-ajustes.jpg"]] },
+    { cat: "negocio", tipo: "concepto", estado: tl("Prototipo navegable"), head: tl("Una pizzería que le gana margen a las apps de reparto"), fig: { texto: tl("pedidos que el horno cumple") },
+      sub: tl("Operaciones y diseño de producto: la web solo ofrece las horas que el horno puede cumplir, y el panel ordena el turno."),
+      shots: [[tl("La web"), "putidimadre/case/01-web.jpg"], [tl("El panel del turno"), "putidimadre/case/02-panel.jpg"], [tl("Elegir la hora"), "putidimadre/case/03-franjas-punta.jpg"]] },
+    { cat: "operaciones", tipo: "real", estado: tl("En uso"), head: tl("Presupuestar sin echar la tarde"), fig: { antes: "1 h", de: 60, a: 10, suf: " min" },
+      sub: tl("Del PDF del fabricante al presupuesto del cliente, en un solo paso."),
+      shots: [[tl("Original del fabricante"), "generador-de-presupuestos/img/02-antes-original-korvel.jpg"], [tl("Presupuesto del cliente"), "generador-de-presupuestos/img/03-despues-luz-norte.jpg"], [tl("PDF generado"), "generador-de-presupuestos/img/08-pdf-generado.jpg"]] },
+    { cat: "producto", tipo: "concepto", estado: tl("Prototipo navegable"), head: tl("Descubre música en el local donde estás"), fig: { texto: tl("app + negocio") },
+      sub: tl("Diseño de producto: la ficha del club, la cola compartida y el panel del local, en un mismo producto."),
+      shots: [[tl("Clubs cerca"), "spotify/capturas/02-clubs-cerca.jpg"], [tl("Ficha del club"), "spotify/capturas/03-ficha-club.jpg"], [tl("Panel del local"), "spotify/capturas/06-panel-local.jpg"]] },
+    { cat: "producto", tipo: "concepto", estado: tl("Prototipo navegable"), head: tl("Una luna que respira contigo"), fig: { texto: tl("desde cero") },
+      sub: tl("UI diseñada y programada desde cero: una app de respiración guiada, gratuita y sin cuenta."),
+      shots: [[tl("La luna que respira"), "luna", 2200], [tl("El inicio de la app"), "respira/case/intro-home.jpg"], [tl("Los ajustes"), "respira/case/intro-ajustes.jpg"]] },
   ];
-  const TIPOS = { real: "Proyecto real", concepto: "Concepto" };
+  const TIPOS = { real: tl("Proyecto real"), concepto: tl("Concepto") };
   const IC = typeof ICONS !== "undefined" ? ICONS : {};
-  const ESCRITORIO = [["Léeme primero", IC.favorites], ["Soluciones de negocio", IC.directory], ["Herramientas y operaciones", IC.directory], ["Exploración de producto", IC.directory], ["Voz visual", IC.directory], ["Sobre mí", IC.disk], ["Contacto", IC.mail], ["Papelera", IC.trashEmpty]];
-  const SEL = 3; // "Exploración de producto": la que pulsa el cursor
+  const ESCRITORIO = [[tl("Léeme primero"), IC.favorites], [tl("Soluciones de negocio"), IC.directory], [tl("Herramientas y operaciones"), IC.directory], [tl("Exploración de producto"), IC.directory], [tl("Voz visual"), IC.directory], [tl("Sobre mí"), IC.disk], [tl("Contacto"), IC.mail], [tl("Papelera"), IC.trashEmpty]];
   const $ = (s) => root.querySelector(s), $$ = (s) => [...root.querySelectorAll(s)];
-  const DURACION = 27000;
+  const DURACION = 36000;
   let run = 0, t0 = 0, raf = 0;
 
-  const wait = (ms, id) => new Promise((res, rej) => { setTimeout(() => (id === run ? res() : rej("cancel")), ms); });
+  // El escritorio real vive detrás de la presentación: la película lo toca de verdad (iconos, Panel de control, reproductor).
+  const real = (sel) => document.querySelector(sel);
+  const seleccionar = (el) => { document.querySelectorAll(".icon.selected").forEach((i) => i.classList.remove("selected")); if (el) el.classList.add("selected"); };
+  let orig = null; const abiertas = { panel: false, radio: false, exploracion: false };
+  // Deja el Panel y el escritorio como los tenía el visitante (también si cierra la presentación a mitad).
+  const restaurarAjustes = () => {
+    if (!orig) return;
+    orig.els.forEach((el) => { if (el) el.click(); });
+    const t = real('#win-panel input[data-k="tam"]'); if (t && orig.tam != null) { t.value = orig.tam; t.dispatchEvent(new Event("input", { bubbles: true })); }
+    orig = null;
+  };
+  const limpiarReal = () => {
+    restaurarAjustes(); seleccionar(null);
+    for (const [k, id] of [["panel", "#win-panel"], ["radio", "#win-radio"], ["exploracion", "#win-exploracion"]]) { if (abiertas[k]) { const x = real(id + " .close"); if (x) x.click(); abiertas[k] = false; } }
+  };
+  const RITMO = 0.8; // 1 = ritmo original; menos = más rápida (todas las esperas se multiplican por esto)
+  const wait = (ms, id, real) => new Promise((res, rej) => { setTimeout(() => (id === run ? res() : rej("cancel")), real ? ms : ms * RITMO); }); // real: sin aplicar RITMO (para lo que hay que poder leer)
   const ok = (id) => { if (id !== run) throw "cancel"; };
   const typeTo = async (el, text, id, v = 38) => { el.classList.add("caret"); el.textContent = ""; for (const ch of text) { ok(id); el.textContent += ch; await wait(v, id); } };
   const caption = (txt) => { const c = $("#cap"); c.classList.remove("on"); setTimeout(() => { c.textContent = txt; c.classList.add("on"); }, 220); };
-  const cursor = (x, y, click) => new Promise((res) => { const c = $("#cursor"); c.classList.add("on"); c.style.transform = "translate(" + x + "px," + y + "px)"; setTimeout(() => { if (click) { c.classList.add("click"); setTimeout(() => c.classList.remove("click"), 260); } res(); }, 850); });
+  const cursor = (x, y, click) => new Promise((res) => { const c = $("#cursor"); c.classList.add("on"); c.style.transform = "translate(" + x + "px," + y + "px)"; setTimeout(() => { if (click) { c.classList.add("click"); setTimeout(() => c.classList.remove("click"), 260); } res(); }, 560); });
   const centro = (el) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2 - 4, r.top + r.height / 2 - 2]; };
   const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+  // Textos fijos del HTML, traducidos aquí.
+  $$("#menubar .mt:not(.cat), #menubar .own").forEach((e) => { e.textContent = tl(e.textContent.trim()); });
+  $("#skip").textContent = tl("Saltar ›"); $("#entrar").textContent = tl("Entrar"); $("#pibtn").innerHTML = "<b>+</b>" + esc(tl("Deja tu post-it"));
 
   // Iconos y reloj: los mismos del escritorio.
   $("#icons").innerHTML = ESCRITORIO.map((e) => '<div class="ico"><img src="' + (e[1] || "") + '" alt=""><span>' + esc(e[0]) + "</span></div>").join("");
@@ -1626,11 +1646,11 @@ desktop.addEventListener("mousedown", (e) => {
     $("#h1").textContent = ""; $("#hp").textContent = ""; $("#menubar").classList.remove("on");
     $$(".ico").forEach((i) => i.classList.remove("on", "sel")); $("#icons").classList.remove("dim");
     $("#pj").className = ""; $("#pj").innerHTML = "";
-    $("#pibtn").classList.remove("on"); $("#pinote").classList.remove("on", "out"); $("#pinote").textContent = ""; $("#cursor").classList.remove("on");
+    $("#pibtn").classList.remove("on"); $("#pinote").classList.remove("on", "out"); $("#pinote").textContent = ""; $("#cursor").classList.remove("on"); limpiarReal(); $("#veil").classList.add("on");
     $("#cursor").style.transform = "translate(" + innerWidth * .6 + "px," + innerHeight * .7 + "px)";
   }
   function final() {
-    reset(); $("#menubar").classList.add("on"); $$(".ico").forEach((i) => i.classList.add("on"));
+    reset(); $("#veil").classList.remove("on");
     $("#cap").textContent = TEXTOS.c3; $("#cap").classList.add("on"); $("#empieza").classList.add("on");
     $("#bar").style.width = "100%";
   }
@@ -1638,13 +1658,13 @@ desktop.addEventListener("mousedown", (e) => {
 
   // Una escena de proyecto: etiquetas del sistema (carpeta, tipo, estado), gancho palabra a palabra,
   // cifra que cuenta y tres pantallas reales, de una en una y enteras.
-  const shots_ms = (P, i) => P.shots[i][2] || (i ? 650 : 750);
+  const shots_ms = (P, i) => (P.shots[i][2] ? 1300 : (i ? 1000 : 700)); // cuánto se ve cada captura del carrusel (la luna, algo más)
   async function escena(P, id) {
-    const pj = $("#pj"); pj.className = ""; const C = CATS[P.cat];
+    const pj = $("#pj"); pj.className = ""; const C = CATS[P.cat]; const SH = P.shots.slice(0, 2); // dos capturas por proyecto en el carrusel (con tres, +4 s en total)
     pj.innerHTML = '<div class="tags"><span class="cat" style="background:' + C[1] + '">' + esc(C[0]) + '</span><span class="tipo ' + P.tipo + '">' + TIPOS[P.tipo] + '</span><span class="est">' + esc(P.estado.toLowerCase()) + "</span></div>" +
       "<h2>" + P.head.split(" ").map((w) => '<span class="w">' + esc(w) + "</span>").join(" ") + "</h2>" +
       '<div class="fig"></div><p class="sub">' + esc(P.sub) + "</p>" +
-      '<div class="scrbox">' + P.shots.map((s) => '<div class="win scr"><div class="tb"><u></u><span>' + esc(s[0]) + "</span></div>" + (s[1] === "luna" ? '<div class="moon"><img src="respira/case/intro-luna.jpg" alt=""><div class="tx"><span>Inhala</span><span>Exhala</span></div></div>' : '<img src="' + s[1] + '" alt="" onerror="if(this.src.indexOf(\'putidimadre-pizzeria\')<0)this.src=this.src.replace(\'putidimadre/case/\',\'putidimadre-pizzeria/putidimadre/case/\')">') + "</div>").join("") + '<div class="dots">' + P.shots.map(() => "<s></s>").join("") + "</div></div>";
+      '<div class="scrbox">' + SH.map((s) => '<div class="win scr"><div class="tb"><u></u><span>' + esc(s[0]) + "</span></div>" + (s[1] === "luna" ? '<div class="moon"><img src="respira/case/intro-luna.jpg" alt=""><div class="tx"><span>' + esc(tl("Inhala")) + '</span><span>' + esc(tl("Exhala")) + '</span></div></div>' : '<img src="' + s[1] + '" alt="" onerror="if(this.src.indexOf(\'putidimadre-pizzeria\')<0)this.src=this.src.replace(\'putidimadre/case/\',\'putidimadre-pizzeria/putidimadre/case/\')">') + "</div>").join("") + '<div class="dots">' + SH.map(() => "<s></s>").join("") + "</div></div>";
     const tags = $$("#pj .tags > *"), words = $$("#pj h2 .w"), fig = $("#pj .fig"), sub = $("#pj .sub"), shots = $$("#pj .scr"), dots = $$("#pj .dots s");
     for (const c of tags) { c.classList.add("on"); await wait(90, id); }
     for (const w of words) { w.classList.add("on"); await wait(55, id); }
@@ -1653,10 +1673,20 @@ desktop.addEventListener("mousedown", (e) => {
     else { fig.innerHTML = "<s>" + P.fig.antes + "</s> " + P.fig.de + P.fig.suf; const n0 = performance.now(), dur = 650; await new Promise((res) => { const f = () => { if (id !== run) return res(); const k = Math.min(1, (performance.now() - n0) / dur), v = Math.round(P.fig.de + (P.fig.a - P.fig.de) * (1 - Math.pow(1 - k, 3))); fig.innerHTML = "<s>" + P.fig.antes + "</s> " + v + P.fig.suf; k < 1 ? requestAnimationFrame(f) : res(); }; f(); }); ok(id); }
     sub.classList.add("on");
     await wait(150, id);
+    // El carrusel entero se agranda hasta ocupar casi toda la pantalla, flota mientras pasan las capturas y vuelve a su sitio.
+    const box = $("#pj .scrbox");
+    shots[0].classList.add("on"); dots.forEach((d, k) => d.classList.toggle("on", k === 0)); await wait(250, id);
+    const bb = box.getBoundingClientRect(), anchoMax = Math.max(1, ...shots.map((el) => el.getBoundingClientRect().width));
+    const zoom = Math.min(3.2, innerWidth * .92 / anchoMax, (innerHeight - 80) * .88 / bb.height);
+    pj.classList.add("foco"); box.classList.add("big");
+    box.style.transform = "translateY(" + (innerHeight * .47 - (bb.top + bb.height / 2)) + "px) scale(" + zoom + ")";
     for (let i = 0; i < shots.length; i++) {
-      if (i) shots[i - 1].classList.replace("on", "off");
-      shots[i].classList.add("on"); dots.forEach((d, k) => d.classList.toggle("on", k === i)); await wait(shots_ms(P, i), id);
+      if (i) { shots[i - 1].classList.replace("on", "off"); shots[i].classList.add("on"); dots.forEach((d, k) => d.classList.toggle("on", k === i)); }
+      if (i === 0) { await wait(700, id, true); box.classList.add("flota"); }
+      await wait(shots_ms(P, i), id, true);
     }
+    box.classList.remove("flota"); box.style.transform = ""; pj.classList.remove("foco"); await wait(600, id, true);
+    box.classList.remove("big");
     await wait(150, id);
     pj.classList.add("out"); await wait(380, id);
   }
@@ -1667,27 +1697,58 @@ desktop.addEventListener("mousedown", (e) => {
     try {
       // 1 · quién soy
       await wait(300, id);
-      const h = $("#h1"); h.classList.add("on"); await typeTo(h, TEXTOS.nombre, id, 55); h.classList.remove("caret");
-      const p = $("#hp"); p.classList.add("on"); await typeTo(p, TEXTOS.frase, id, 28); p.classList.remove("caret");
-      await wait(900, id);
-      h.classList.remove("on"); p.classList.remove("on"); await wait(450, id);
-      // 2 · esto es un escritorio
-      $("#menubar").classList.add("on"); await wait(250, id);
-      for (const i of $$(".ico")) { i.classList.add("on"); await wait(110, id); }
+      const h = $("#h1"); h.classList.add("on"); await typeTo(h, TEXTOS.nombre, id, 42); h.classList.remove("caret");
+      const p = $("#hp"); p.classList.add("on"); await typeTo(p, TEXTOS.frase, id, 18); p.classList.remove("caret");
+      await wait(600, id);
+      h.classList.remove("on"); p.classList.remove("on"); await wait(300, id);
+      // 2 · esto es un escritorio: el de verdad, que se ve por detrás. El cursor selecciona una carpeta real.
+      $("#veil").classList.remove("on"); await wait(700, id);
       caption(TEXTOS.c1);
-      const ico = $$(".ico")[SEL]; const [cx, cy] = centro(ico.querySelector("img"));
-      await cursor(cx, cy, true); ico.classList.add("sel"); await wait(600, id);
-      // 3 · cuatro proyectos
-      caption(TEXTOS.c2); $("#cursor").classList.remove("on"); $("#icons").classList.add("dim");
+      const carpeta = real('.icon[data-id="exploracion"]');
+      if (carpeta) { const [cx, cy] = centro(carpeta.querySelector("img")); await cursor(cx, cy, true); seleccionar(carpeta); await wait(600, id); }
+      // 3 · cuatro proyectos (sobre un velo claro: el escritorio se intuye detrás)
+      caption(TEXTOS.c2); $("#cursor").classList.remove("on"); $("#veil").classList.add("on"); await wait(800, id);
       for (const P of PROYECTOS) await escena(P, id);
-      $("#icons").classList.remove("dim"); $$(".ico").forEach((i) => i.classList.remove("sel"));
-      // 4 · deja tu post-it
-      caption(TEXTOS.c4); $("#pibtn").classList.add("on"); await wait(350, id);
-      const [px, py] = centro($("#pibtn")); await cursor(px, py, true);
+      $("#veil").classList.remove("on"); seleccionar(null); await wait(600, id);
+      // 4 · es tuyo: se abre el Panel de control real, se cambia el fondo y se abre el reproductor real
+      const iconoPanel = real('.icon[data-id="panel"]'), iconoRadio = real('.icon[data-id="radio"]');
+      if (iconoPanel && iconoRadio && real("#win-panel") && real("#win-radio")) {
+        caption(TEXTOS.c5); await wait(400, id);
+        const toca = async (el, abrir) => { const [x, y] = centro(el); await cursor(x, y, true); abrir(); };
+        await toca(iconoPanel, () => { seleccionar(iconoPanel); real("#win-panel").classList.contains("open") || (abiertas.panel = true); iconoPanel.click(); });
+        await wait(900, id);
+        const pf = (k, v) => real('#win-panel [data-k="' + k + '"][data-v="' + v + '"]');
+        const marcado = (k) => real('#win-panel input[data-k="' + k + '"]:checked'), pulsado = (k) => real('#win-panel button[data-k="' + k + '"][aria-pressed="true"]');
+        const tam = real('#win-panel input[data-k="tam"]');
+        orig = { els: [marcado("fondo"), pulsado("colorFondo"), pulsado("colorGato")], tam: tam ? tam.value : null };
+        // Cambio loco: gato repetido pequeño y rosa sobre escritorio azul
+        const pulsa = async (k, v, pestana) => {
+          if (pestana) { const t = real(pestana); if (t) { await toca(t, () => t.click()); await wait(350, id); } }
+          const el = pf(k, v); if (!el) return;
+          await toca(el.closest("label") || el, () => el.click()); await wait(350, id);
+        };
+        await pulsa("fondo", "patron");
+        if (tam) { await toca(tam, () => { tam.value = 26; tam.dispatchEvent(new Event("input", { bubbles: true })); }); await wait(650, id); }
+        await pulsa("colorGato", "#f0b3cc");
+        await pulsa("colorFondo", "#99b8e8");
+        seleccionar(null);
+        const x1 = real("#win-panel .close"); if (x1) { await toca(x1, () => x1.click()); abiertas.panel = false; }
+        $("#cursor").classList.remove("on"); await wait(1000, id); // se ve el escritorio transformado
+        await toca(iconoRadio, () => { seleccionar(iconoRadio); real("#win-radio").classList.contains("open") || (abiertas.radio = true); iconoRadio.click(); });
+        await wait(1100, id);
+        const x2 = real("#rd-x"); if (x2) { await toca(x2, () => x2.click()); abiertas.radio = false; }
+        seleccionar(null); $("#cursor").classList.remove("on"); await wait(400, id);
+        restaurarAjustes(); await wait(900, id); // el escritorio vuelve a como lo tenía el visitante
+      }
+      // 5 · deja tu post-it (el cursor señala el botón real; la nota de ejemplo es de la presentación)
+      caption(TEXTOS.c4);
+      const ghost = real(".postit.ghost");
+      if (ghost) { const [px, py] = centro(ghost); await cursor(px, py, false); }
+      await wait(350, id);
       const nota = $("#pinote"); nota.classList.add("on"); $("#cursor").classList.remove("on"); await wait(650, id);
-      await typeTo(nota, TEXTOS.nota, id, 55); nota.classList.remove("caret"); await wait(800, id);
-      nota.classList.add("out"); $("#pibtn").classList.remove("on"); await wait(400, id);
-      // 5 · entrar
+      await typeTo(nota, TEXTOS.nota, id, 40); nota.classList.remove("caret"); await wait(600, id);
+      nota.classList.add("out"); await wait(400, id);
+      // 6 · entrar
       caption(TEXTOS.c3); $("#empieza").classList.add("on"); await wait(600, id);
       cancelAnimationFrame(raf); $("#bar").style.width = "100%";
     } catch (e) { if (e !== "cancel") throw e; }
@@ -1698,14 +1759,15 @@ desktop.addEventListener("mousedown", (e) => {
   const marcarVista = () => { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} };
   const yaVista = () => { try { const t = +localStorage.getItem(KEY); return t > 0 && Date.now() - t < CADUCA_DIAS * 864e5; } catch (e) { return false; } };
   let prevFocus = null;
-  const cerrar = () => { run++; cancelAnimationFrame(raf); marcarVista(); host.classList.add("bye"); setTimeout(() => { host.classList.remove("show", "bye"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }, 500); };
+  const cerrar = () => { run++; cancelAnimationFrame(raf); limpiarReal(); marcarVista(); host.classList.add("bye"); setTimeout(() => { host.classList.remove("show", "bye"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }, 500); };
   const mostrar = () => { prevFocus = document.activeElement; host.classList.remove("bye"); host.classList.add("show"); play(); $("#skip").focus(); };
   $("#skip").addEventListener("click", cerrar);
   $("#entrar").addEventListener("click", cerrar);
   addEventListener("keydown", (e) => { if (e.key === "Escape" && host.classList.contains("show")) cerrar(); });
+  addEventListener("pagehide", limpiarReal); // si el visitante cierra o recarga a mitad, su panel queda como estaba
   window.showWelcome = mostrar;
   // Primera visita: presentación. Después, directo al escritorio. ?presentacion la fuerza; ?quitar= la salta.
-  if (/[?&]presentacion\b/.test(location.search) || (LANG === "es" && !/[?&]quitar=/.test(location.search) && !yaVista())) mostrar();
+  if (/[?&]presentacion\b/.test(location.search) || (!/[?&]quitar=/.test(location.search) && !yaVista())) mostrar();
 })();
 /* @@PRESENTACION-FIN@@ */
 
@@ -2280,10 +2342,6 @@ desktop.addEventListener("mousedown", (e) => {
       { l: tl("Sistema de diseño"), f: () => window.open(BOARD, "_blank", "noopener") },
     ],
   };
-  if (LANG !== "es") { // la presentación de entrada aún no está traducida: sin sus entradas de menú
-    defs.gato = defs.gato.filter((it) => !it.w);
-    defs.ayuda = defs.ayuda.filter((it) => !it.w);
-  }
   Object.keys(defs).forEach((k) => {
     const d = document.createElement("div"); d.className = "mdrop"; d.setAttribute("role", "menu"); d.dataset.for = k;
     defs[k].forEach((it) => {
