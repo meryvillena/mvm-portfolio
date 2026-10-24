@@ -425,11 +425,8 @@ window.I18N_EN = {
   "Panel del local": "Venue dashboard",
   "Una luna que respira contigo": "A moon that breathes with you",
   "UI diseñada y programada desde cero: una app de respiración guiada, gratuita y sin cuenta.": "UI designed and coded from scratch: a guided breathing app, free and with no account.",
-  "La luna que respira": "The breathing moon",
   "El inicio de la app": "The app's home screen",
   "Los ajustes": "Settings",
   "Saltar ›": "Skip ›",
-  "Entrar": "Enter",
-  "Inhala": "Inhale",
-  "Exhala": "Exhale"
+  "Entrar": "Enter"
 };
