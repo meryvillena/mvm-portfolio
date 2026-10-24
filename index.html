@@ -1805,7 +1805,7 @@ desktop.addEventListener("mousedown", (e) => {
   const marcarVista = () => { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} };
   const yaVista = () => { try { const t = +localStorage.getItem(KEY); return t > 0 && Date.now() - t < CADUCA_DIAS * 864e5; } catch (e) { return false; } };
   let prevFocus = null;
-  const cerrar = (causa) => { medir("intro/" + (causa === "entrar" ? "entrar" : (causa || "cerrar") + "-en-" + etapa)); run++; cancelAnimationFrame(raf); limpiarReal(); window.__enPresentacion = false; // primero se deshacen los ajustes del panel (no cuentan como gestos del visitante) marcarVista(); host.classList.add("bye"); setTimeout(() => { host.classList.remove("show", "bye"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }, 500); };
+  const cerrar = (causa) => { medir("intro/" + (causa === "entrar" ? "entrar" : (causa || "cerrar") + "-en-" + etapa)); run++; cancelAnimationFrame(raf); limpiarReal(); window.__enPresentacion = false; /* primero se deshacen los ajustes del panel: no cuentan como gestos */ marcarVista(); host.classList.add("bye"); setTimeout(() => { host.classList.remove("show", "bye"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }, 500); };
   const mostrar = () => { medir("intro/ver"); window.__enPresentacion = true; etapa = "nombre"; prevFocus = document.activeElement; host.classList.remove("bye"); host.classList.add("show"); play(); $("#skip").focus(); };
   $("#skip").addEventListener("click", () => cerrar("saltar"));
   $("#entrar").addEventListener("click", () => cerrar("entrar"));
