@@ -31,8 +31,8 @@ button{font:inherit;color:inherit}
 .kicker{margin:0 0 var(--space-6)}
 
 /* Navigation */
-.nav{position:fixed;inset:0 0 auto;z-index:30;/* El cristal va aquí y no en .nav-scrolled: se ve desde el arranque, no a partir de la segunda sección. Y con bastante transparencia, para que el desenfoque se aprecie. 21-08-2026 */background:rgba(242,238,229,.62);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:var(--space-6) var(--layout-margin);border-bottom:var(--border-hairline);font-size:var(--type-ui);line-height:var(--leading-ui);letter-spacing:var(--tracking-ui);text-transform:uppercase;transform:translate3d(0,0,0);transition:transform var(--motion-base) var(--ease-organic),background-color var(--motion-base),border-color var(--motion-base);will-change:transform}
-.nav.nav-scrolled{border-color:rgba(52,50,45,.24)}
+.nav{position:fixed;inset:0 0 auto;z-index:30;/* El cristal va aquí y no en .nav-scrolled: se ve desde el arranque, no a partir de la segunda sección. Y con bastante transparencia, para que el desenfoque se aprecie. 21-08-2026 */background:var(--papel-62);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:var(--space-6) var(--layout-margin);border-bottom:var(--border-hairline);font-size:var(--type-ui);line-height:var(--leading-ui);letter-spacing:var(--tracking-ui);text-transform:uppercase;transform:translate3d(0,0,0);transition:transform var(--motion-base) var(--ease-organic),background-color var(--motion-base),border-color var(--motion-base);will-change:transform}
+.nav.nav-scrolled{border-color:var(--color-linea)}
 .nav.nav-hidden{transform:translate3d(0,-110%,0)}
 .wordmark{font:700 var(--type-lead)/1 var(--font-editorial);letter-spacing:-.02em}
 /* La rejilla era 1fr auto 1fr: las columnas de los extremos salían iguales, así
@@ -232,7 +232,7 @@ button{font:inherit;color:inherit}
   font:400 var(--type-lead)/var(--leading-lead) var(--font-editorial);font-style:italic}
 
 /* Apilados, no en fila: dos botones de talla normal (320) no caben uno al lado del otro dentro de la ficha (648px útiles). Antes cabían porque eran de talla pequeña, y por eso el orientador tenía botones más chicos que el resto de la página sin ninguna razón. 21-08-2026 */
-.guide-actions{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-5);margin-top:var(--space-8)}.guide-note{margin:var(--space-6) 0 0;padding:var(--space-5);border-left:2px solid var(--accent);background:rgba(242,238,229,.06);font-size:var(--type-body-small);line-height:var(--leading-body-small)}.guide-qa{margin:var(--space-6) 0;padding:0;list-style:none;border-top:var(--border-inverse)}.guide-qa li{padding:var(--space-4) 0;border-bottom:var(--border-inverse)}.guide-qa strong{display:block;margin-bottom:var(--space-2);font-family:var(--font-editorial)}.guide-qa p{margin:0;font-size:var(--type-body-small);line-height:var(--leading-body-small)}
+.guide-actions{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-5);margin-top:var(--space-8)}.guide-note{margin:var(--space-6) 0 0;padding:var(--space-5);border-left:2px solid var(--accent);background:var(--papel-06);font-size:var(--type-body-small);line-height:var(--leading-body-small)}.guide-qa{margin:var(--space-6) 0;padding:0;list-style:none;border-top:var(--border-inverse)}.guide-qa li{padding:var(--space-4) 0;border-bottom:var(--border-inverse)}.guide-qa strong{display:block;margin-bottom:var(--space-2);font-family:var(--font-editorial)}.guide-qa p{margin:0;font-size:var(--type-body-small);line-height:var(--leading-body-small)}
 /* Footer */
 footer{padding:var(--space-8) var(--layout-margin);display:flex;justify-content:space-between;align-items:flex-end;border-top:var(--border-hairline)}footer p{max-width:var(--content-footer);margin:0;font-size:var(--type-micro);line-height:var(--leading-body-small);text-align:right}
 
@@ -266,21 +266,21 @@ footer{padding:var(--space-8) var(--layout-margin);display:flex;justify-content:
 .archive-tabs{position:relative;z-index:6;display:flex;flex-direction:column;padding:var(--space-5) 0 0}
 .archive-tabs>button{--folder-fill:var(--chalk);--folder-tab-x:0%;position:relative;z-index:1;width:100%;height:58px;margin:-6px 0 0;padding:0 var(--space-5);display:grid;grid-template-columns:52px 1fr auto;align-items:center;overflow:visible;border:var(--border-hairline);border-bottom:0;background:var(--folder-fill);color:var(--ink);text-align:left;cursor:pointer;transform:none;transition:height .65s cubic-bezier(.33,1,.68,1),background var(--motion-base),color var(--motion-base),box-shadow var(--motion-base)}
 .archive-tabs>button[data-guide-choice="tension"]{margin-top:0}
-.archive-tabs>button::before{content:"";position:absolute;z-index:-1;left:var(--folder-tab-x);top:-18px;width:clamp(152px,33%,220px);height:24px;border:var(--border-hairline);border-bottom:0;border-radius:22px 22px 0 0;background:var(--folder-fill);transition:background var(--motion-base),transform var(--motion-base) var(--ease-organic)}
+.archive-tabs>button::before{content:"";position:absolute;z-index:-1;left:var(--folder-tab-x);top:-18px;width:clamp(210px,40%,280px);height:24px;border:var(--border-hairline);border-bottom:0;border-radius:22px 22px 0 0;background:var(--folder-fill);transition:background var(--motion-base),transform var(--motion-base) var(--ease-organic)}
 .archive-tabs>button[data-guide-choice="tension"]{--folder-fill:var(--paper);--folder-tab-x:0%;z-index:4;background:var(--folder-fill);color:var(--ink)}
-.archive-tabs>button[data-guide-choice="equilibrio"]{--folder-fill:var(--chalk);--folder-tab-x:18%;z-index:5;background:var(--folder-fill);color:var(--ink)}
-.archive-tabs>button[data-guide-choice="rostro"]{--folder-fill:var(--sand);--folder-tab-x:38%;z-index:6;background:var(--folder-fill);color:var(--ink)}
-.archive-tabs>button[data-guide-choice="metodo"]{--folder-fill:var(--mortar);--folder-tab-x:62%;z-index:7;background:var(--folder-fill);color:var(--ink)}
-.archive-tabs>button:hover,.archive-tabs>button:focus-visible{width:100%;outline:0;box-shadow:0 -8px 20px rgba(52,50,45,.08)}
-.archive-tabs>button:focus-visible{outline:0;box-shadow:0 -8px 20px rgba(52,50,45,.08)}
+.archive-tabs>button[data-guide-choice="equilibrio"]{--folder-fill:var(--chalk);--folder-tab-x:15%;z-index:5;background:var(--folder-fill);color:var(--ink)}
+.archive-tabs>button[data-guide-choice="rostro"]{--folder-fill:var(--sand);--folder-tab-x:30%;z-index:6;background:var(--folder-fill);color:var(--ink)}
+.archive-tabs>button[data-guide-choice="metodo"]{--folder-fill:var(--accent);--folder-tab-x:45%;z-index:7;background:var(--folder-fill);color:var(--paper)}
+.archive-tabs>button[data-guide-choice="metodo"]>span{color:var(--paper)}
+.archive-tabs>button:hover,.archive-tabs>button:focus-visible{width:100%;outline:0;box-shadow:0 -8px 20px var(--tinta-08)}
+.archive-tabs>button:focus-visible{outline:0;box-shadow:0 -8px 20px var(--tinta-08)}
 .archive-tabs>button:focus-visible::before{box-shadow:inset 0 2px 0 var(--accent),inset 2px 0 0 var(--accent),inset -2px 0 0 var(--accent)}
-.archive-tabs>button[aria-pressed="true"]{--folder-fill:var(--accent);z-index:10;width:100%;transform:none;background:var(--folder-fill);color:var(--paper);box-shadow:0 -12px 26px rgba(52,50,45,.16)}
-.archive-tabs>button[aria-pressed="true"]:focus-visible{box-shadow:0 -12px 26px rgba(52,50,45,.16)}
-.archive-tabs>button[aria-pressed="true"]:focus-visible::before{box-shadow:inset 0 2px 0 rgba(242,238,229,.8),inset 2px 0 0 rgba(242,238,229,.8),inset -2px 0 0 rgba(242,238,229,.8)}
+.archive-tabs>button[aria-pressed="true"]{z-index:10;width:100%;transform:none;box-shadow:0 -12px 26px var(--tinta-16)}
+.archive-tabs>button[aria-pressed="true"]:focus-visible{box-shadow:0 -12px 26px var(--tinta-16)}
+.archive-tabs>button[aria-pressed="true"]:focus-visible::before{box-shadow:inset 0 2px 0 var(--accent),inset 2px 0 0 var(--accent),inset -2px 0 0 var(--accent)}
 .archive-tabs>button>span{align-self:auto;color:var(--accent);font-size:var(--type-micro)}
-.archive-tabs>button[aria-pressed="true"]>span{color:var(--paper)}
 .archive-tabs>button>strong{font:400 var(--type-body-small)/1 var(--font-editorial);writing-mode:horizontal-tb}
-.archive-tabs>button>b{position:absolute;left:calc(var(--folder-tab-x) + var(--space-5));top:-12px;max-width:calc(clamp(152px,33%,220px) - 40px);font-size:var(--type-nano);font-weight:400;line-height:1;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;writing-mode:horizontal-tb}
+.archive-tabs>button>b{position:absolute;left:calc(var(--folder-tab-x) + var(--space-5));top:-12px;max-width:calc(clamp(210px,40%,280px) - 40px);font-size:var(--type-nano);font-weight:400;line-height:1;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;writing-mode:horizontal-tb}
 .archive-preview{position:absolute;left:calc(52px + var(--space-5));right:var(--space-5);bottom:var(--space-5);font-style:normal;font-size:var(--type-ui);line-height:var(--leading-ui);letter-spacing:var(--tracking-ui);text-transform:uppercase;opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .32s ease,transform .65s cubic-bezier(.33,1,.68,1)}
 @media(hover:hover) and (pointer:fine){.archive-tabs>button:not([aria-pressed="true"]):hover,.archive-tabs>button:not([aria-pressed="true"]):focus-visible{height:112px;transform:none}.archive-tabs>button:not([aria-pressed="true"]):hover .archive-preview,.archive-tabs>button:not([aria-pressed="true"]):focus-visible .archive-preview{opacity:1;transform:none}}
 .archive-tabs .archive-sheet{position:relative;z-index:2;min-height:660px;margin:-6px 0 0;padding:var(--space-panel);overflow:visible;border:var(--border-hairline);border-top:0;background:var(--paper);color:var(--ink);box-shadow:0 26px 48px rgba(0,0,0,.15);transform-origin:50% 0%;transition:none;will-change:transform}
@@ -319,14 +319,14 @@ footer{padding:var(--space-8) var(--layout-margin);display:flex;justify-content:
   .archive-stage{padding-top:0}
   .archive-tabs{position:relative;inset:auto;display:flex;padding-top:var(--space-4)}
   .archive-tabs>button{height:54px;padding:0 var(--space-4);grid-template-columns:40px 1fr auto;border-left:var(--border-hairline);border-bottom:0;align-items:center}
-  .archive-tabs>button::before{top:-15px;width:46%;height:21px;border-radius:18px 18px 0 0}
+  .archive-tabs>button::before{top:-15px;width:64%;height:21px;border-radius:18px 18px 0 0}
   .archive-tabs>button[data-guide-choice="tension"]{--folder-tab-x:0%}
-  .archive-tabs>button[data-guide-choice="equilibrio"]{--folder-tab-x:17%}
-  .archive-tabs>button[data-guide-choice="rostro"]{--folder-tab-x:34%}
-  .archive-tabs>button[data-guide-choice="metodo"]{--folder-tab-x:51%}
+  .archive-tabs>button[data-guide-choice="equilibrio"]{--folder-tab-x:11%}
+  .archive-tabs>button[data-guide-choice="rostro"]{--folder-tab-x:22%}
+  .archive-tabs>button[data-guide-choice="metodo"]{--folder-tab-x:33%}
   .archive-tabs>button:hover,.archive-tabs>button:focus-visible,.archive-tabs>button[aria-pressed="true"]{width:100%;transform:none}
   .archive-tabs>button>strong{font-size:var(--type-body-small)}
-  .archive-tabs>button>b{display:block;left:calc(var(--folder-tab-x) + var(--space-3));top:-10px;max-width:calc(46% - 24px);font-size:var(--type-nano)}
+  .archive-tabs>button>b{display:block;left:calc(var(--folder-tab-x) + var(--space-3));top:-10px;max-width:calc(64% - 24px);font-size:var(--type-nano)}
   .archive-preview{display:none}
   .archive-tabs .archive-sheet{min-height:680px;padding:var(--space-7)}
   .archive-sheet .guide-result .guide-topline{margin-bottom:var(--space-8)}
@@ -335,6 +335,13 @@ footer{padding:var(--space-8) var(--layout-margin);display:flex;justify-content:
   .archive-instruction{align-items:flex-end;gap:var(--space-4)}
   .archive-sheet .guide-selection{min-height:610px}
 }
+
+
+/* Fichas de papel (25-oct-2026): cada ficha tiene UN color y lo conserva abierta o cerrada.
+   La hoja toma el color de su pestaña. Cuerpo: crema · Ritmo: tiza · Rostro: arena · Método: azul. */
+.archive-tabs .archive-sheet[data-ficha="equilibrio"]{background:var(--chalk)}
+.archive-tabs .archive-sheet[data-ficha="rostro"]{background:var(--sand)}
+.archive-tabs .archive-sheet[data-ficha="metodo"]{--ink:var(--color-cal);--paper:var(--color-pizarra);--accent:var(--color-arena-humeda);--line:rgba(242,238,229,.32);--chalk:rgba(242,238,229,.08)}
 
 @media(prefers-reduced-motion:reduce){.archive-tabs>button,.archive-preview{transition:none}.guide-art-visual img{transition:none}}
 
@@ -350,7 +357,7 @@ footer{padding:var(--space-8) var(--layout-margin);display:flex;justify-content:
 @media(prefers-reduced-motion:reduce){}
 
 /* Primera sesión · confianza + dudas prácticas */
-.first-visit{min-height:100svh;padding:var(--layout-section-y) var(--layout-margin);display:grid;grid-template-columns:var(--layout-columns);column-gap:var(--layout-gutter);row-gap:var(--layout-block-y);border-bottom:var(--border-hairline);background:linear-gradient(180deg,var(--paper),var(--chalk));scroll-margin-top:72px;overflow:hidden}
+.first-visit{min-height:100svh;padding:var(--layout-section-y) var(--layout-margin);display:grid;grid-template-columns:var(--layout-columns);column-gap:var(--layout-gutter);row-gap:var(--layout-block-y);border-bottom:var(--border-hairline);background:linear-gradient(180deg,var(--paper),var(--chalk));scroll-margin-top:var(--nav-h);overflow:hidden}
 .first-visit-heading{grid-column:1/7;align-self:center}.first-visit-heading h2{max-width:8ch;margin:var(--space-7) 0 0;font:700 var(--type-display-xl)/var(--leading-display-xl) var(--font-editorial);letter-spacing:var(--tracking-display-xl)}.first-visit-heading h2 em{color:var(--accent)}.first-visit-heading>p:last-child{max-width:var(--content-lead);margin:var(--space-10) 0 0;font-size:var(--type-lead);line-height:var(--leading-lead)}
 /* Primera sesión sólo añade: su sitio y el tratamiento oscuro de su lámina. */
 .first-visit-archive{grid-column:8/13}
@@ -368,12 +375,12 @@ footer{padding:var(--space-8) var(--layout-margin);display:flex;justify-content:
 
 .services-closing{min-height:78svh;padding:var(--layout-section-y) var(--layout-margin);display:grid;grid-template-columns:var(--layout-columns);column-gap:var(--layout-gutter);align-content:center;background:var(--ink);color:var(--paper)}.services-closing>.kicker{grid-column:1/-1}.services-closing h2{grid-column:1/8;margin:var(--space-7) 0 0;font:700 var(--type-display-xl)/var(--leading-display-xl) var(--font-editorial);letter-spacing:var(--tracking-display-xl)}.services-closing h2 em{color:var(--sand)}.services-closing-copy{grid-column:9/-1;align-self:end}.services-closing-copy>p{max-width:var(--content-reading);margin:0;font-size:var(--type-lead);line-height:var(--leading-lead)}.services-closing-copy>div{margin-top:var(--space-10);display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-7)}
 
-.direct-booking{min-height:100svh;padding:var(--layout-section-y) var(--layout-margin);display:grid;grid-template-columns:var(--layout-columns);column-gap:var(--layout-gutter);align-items:start;background:var(--paper);scroll-margin-top:72px}.direct-booking-heading{grid-column:1/7;position:sticky;top:var(--space-16);min-width:0}.direct-booking-heading h2{max-width:10ch;margin:var(--space-7) 0 0;font:700 var(--type-heading-l)/var(--leading-heading-l) var(--font-editorial);letter-spacing:-.045em}.direct-booking-heading h2 em{color:var(--accent)}.direct-booking-heading>p{max-width:var(--content-reading);margin:var(--space-8) 0 0;font-size:var(--type-lead);line-height:var(--leading-lead)}.direct-booking-assurance{max-width:var(--content-reading);margin-top:var(--space-12);border-top:2px solid var(--accent)}.direct-booking-assurance>div{padding:var(--space-4) 0;display:grid;grid-template-columns:var(--space-10) minmax(0,1fr);gap:var(--space-4);border-bottom:var(--border-hairline)}.direct-booking-assurance span{color:var(--accent);font-size:var(--type-micro);letter-spacing:var(--tracking-micro)}.direct-booking-assurance p{margin:0;font-size:var(--type-body-small);line-height:var(--leading-body-small)}.direct-booking-panel{grid-column:8/13;min-width:0;padding:var(--space-8);border:var(--border-hairline);background:var(--chalk);box-shadow:var(--shadow-lamina)}.direct-booking-summary{min-width:0;padding-bottom:var(--space-7);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--space-3);border-bottom:2px solid var(--accent)}.direct-booking-summary span,.direct-booking-summary small{font-size:var(--type-micro);line-height:var(--leading-micro);letter-spacing:var(--tracking-micro);text-transform:uppercase}.direct-booking-summary strong{grid-column:1/-1;min-width:0;font:400 var(--type-heading-m)/1.2 var(--font-editorial);text-wrap:balance}.direct-booking-form{min-width:0;display:grid;gap:var(--space-6);margin-top:var(--space-8)}.direct-booking-form[hidden]{display:none}.direct-booking-form label{min-width:0;display:grid;gap:var(--space-2);font-size:var(--type-micro);letter-spacing:var(--tracking-micro);text-transform:uppercase}.direct-booking-form input,.direct-booking-form textarea,.direct-booking-form select{min-width:0;width:100%;padding:var(--space-4);border:0;border-bottom:var(--border-hairline);background:var(--paper);color:var(--ink);font:inherit;border-radius:0}.direct-booking-form textarea{resize:vertical}.direct-booking-form select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 12px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}.direct-booking-form input:focus,.direct-booking-form textarea:focus,.direct-booking-form select:focus{outline:2px solid var(--accent);outline-offset:2px}.direct-booking-form .service-cta{max-width:100%;margin-top:var(--space-4);cursor:pointer}.direct-booking-confirmation{min-height:360px;padding:var(--space-10) 0;display:flex;flex-direction:column;justify-content:center}.direct-booking-confirmation[hidden]{display:none}.direct-booking-confirmation h3{margin:0;font:700 var(--type-heading-l)/1 var(--font-editorial)}.direct-booking-confirmation>p:not(.kicker){max-width:36ch;margin:var(--space-6) 0 var(--space-8);font-size:var(--type-body);line-height:var(--leading-body)}.direct-booking-ticket{margin-bottom:var(--space-8);border-top:2px solid var(--accent)}.direct-booking-ticket>div{padding:var(--space-4) 0;display:grid;grid-template-columns:112px minmax(0,1fr);gap:var(--space-4);border-bottom:var(--border-hairline)}.direct-booking-ticket>div[hidden]{display:none}.direct-booking-ticket span{color:var(--accent);font-size:var(--type-micro);line-height:var(--leading-micro);letter-spacing:var(--tracking-micro);text-transform:uppercase}.direct-booking-ticket strong{min-width:0;overflow-wrap:anywhere;font:400 var(--type-body-small)/var(--leading-body-small) var(--font-editorial)}.direct-booking-confirmation>.service-cta{max-width:100%;margin-bottom:var(--space-6)}.direct-booking-confirmation .services-secondary{max-width:100%;border-bottom:1px solid var(--ink)}
+.direct-booking{min-height:100svh;padding:var(--layout-section-y) var(--layout-margin);display:grid;grid-template-columns:var(--layout-columns);column-gap:var(--layout-gutter);align-items:start;background:var(--paper);scroll-margin-top:var(--nav-h)}.direct-booking-heading{grid-column:1/7;position:sticky;top:var(--space-16);min-width:0}.direct-booking-heading h2{max-width:10ch;margin:var(--space-7) 0 0;font:700 var(--type-heading-l)/var(--leading-heading-l) var(--font-editorial);letter-spacing:-.045em}.direct-booking-heading h2 em{color:var(--accent)}.direct-booking-heading>p{max-width:var(--content-reading);margin:var(--space-8) 0 0;font-size:var(--type-lead);line-height:var(--leading-lead)}.direct-booking-assurance{max-width:var(--content-reading);margin-top:var(--space-12);border-top:2px solid var(--accent)}.direct-booking-assurance>div{padding:var(--space-4) 0;display:grid;grid-template-columns:var(--space-10) minmax(0,1fr);gap:var(--space-4);border-bottom:var(--border-hairline)}.direct-booking-assurance span{color:var(--accent);font-size:var(--type-micro);letter-spacing:var(--tracking-micro)}.direct-booking-assurance p{margin:0;font-size:var(--type-body-small);line-height:var(--leading-body-small)}.direct-booking-panel{grid-column:8/13;min-width:0;padding:var(--space-8);border:var(--border-hairline);background:var(--chalk);box-shadow:var(--shadow-lamina)}.direct-booking-summary{min-width:0;padding-bottom:var(--space-7);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--space-3);border-bottom:2px solid var(--accent)}.direct-booking-summary span,.direct-booking-summary small{font-size:var(--type-micro);line-height:var(--leading-micro);letter-spacing:var(--tracking-micro);text-transform:uppercase}.direct-booking-summary strong{grid-column:1/-1;min-width:0;font:400 var(--type-heading-m)/1.2 var(--font-editorial);text-wrap:balance}.direct-booking-form{min-width:0;display:grid;gap:var(--space-6);margin-top:var(--space-8)}.direct-booking-form[hidden]{display:none}.direct-booking-form label{min-width:0;display:grid;gap:var(--space-2);font-size:var(--type-micro);letter-spacing:var(--tracking-micro);text-transform:uppercase}.direct-booking-form input,.direct-booking-form textarea,.direct-booking-form select{min-width:0;width:100%;padding:var(--space-4);border:0;border-bottom:var(--border-hairline);background:var(--paper);color:var(--ink);font:inherit;border-radius:0}.direct-booking-form textarea{resize:vertical}.direct-booking-form select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 12px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}.direct-booking-form input:focus,.direct-booking-form textarea:focus,.direct-booking-form select:focus{outline:2px solid var(--accent);outline-offset:2px}.direct-booking-form .service-cta{max-width:100%;margin-top:var(--space-4);cursor:pointer}.direct-booking-confirmation{min-height:360px;padding:var(--space-10) 0;display:flex;flex-direction:column;justify-content:center}.direct-booking-confirmation[hidden]{display:none}.direct-booking-confirmation h3{margin:0;font:700 var(--type-heading-l)/1 var(--font-editorial)}.direct-booking-confirmation>p:not(.kicker){max-width:36ch;margin:var(--space-6) 0 var(--space-8);font-size:var(--type-body);line-height:var(--leading-body)}.direct-booking-ticket{margin-bottom:var(--space-8);border-top:2px solid var(--accent)}.direct-booking-ticket>div{padding:var(--space-4) 0;display:grid;grid-template-columns:112px minmax(0,1fr);gap:var(--space-4);border-bottom:var(--border-hairline)}.direct-booking-ticket>div[hidden]{display:none}.direct-booking-ticket span{color:var(--accent);font-size:var(--type-micro);line-height:var(--leading-micro);letter-spacing:var(--tracking-micro);text-transform:uppercase}.direct-booking-ticket strong{min-width:0;overflow-wrap:anywhere;font:400 var(--type-body-small)/var(--leading-body-small) var(--font-editorial)}.direct-booking-confirmation>.service-cta{max-width:100%;margin-bottom:var(--space-6)}.direct-booking-confirmation .services-secondary{max-width:100%;border-bottom:1px solid var(--ink)}
 .direct-booking-heading>.kicker{max-width:none;margin:0 0 var(--space-6);font-size:var(--type-micro);line-height:var(--leading-micro)}
 .direct-booking-confirmation .service-cta[aria-disabled="true"]{opacity:.5;cursor:not-allowed}
 @media(min-width:801px) and (max-width:1024px){.direct-booking-heading{grid-column:1/6}.direct-booking-heading h2{font-size:var(--type-heading-l)}.direct-booking-panel{grid-column:6/13;padding:var(--space-6)}}
 @media(max-width:800px){.services-closing{display:flex;min-height:auto;flex-direction:column}.services-closing-copy{margin-top:var(--space-10)}.direct-booking{display:flex;min-height:auto;flex-direction:column;gap:var(--space-16)}.direct-booking-heading{position:static}.direct-booking-panel{width:100%}}
-@media(max-width:600px){.services-closing h2{font-size:var(--type-display-xl)}.services-closing .service-cta,.direct-booking-panel{padding:var(--space-6)}.direct-booking-form }
+@media(max-width:600px){.services-closing h2{font-size:var(--type-display-xl)}.services-closing .service-cta,.direct-booking-panel{padding:var(--space-6)}.direct-booking-form,.direct-booking-form label{grid-template-columns:minmax(0,1fr)}}
 .first-visit-heading[data-reveal],.first-visit-archive[data-reveal]{transform:translate3d(0,24px,0)}
 .first-visit-heading[data-reveal].visible,.first-visit-archive[data-reveal].visible{transform:none}
 .first-visit-steps article{opacity:0;transform:translate3d(0,24px,0)}
@@ -531,7 +538,7 @@ body.scroll-system-ready .guide-art,body.scroll-system-ready .guide-panel{will-c
 /* Cerrar */
 .option-detail-close{position:sticky;top:0;float:right;z-index:2;
   width:40px;height:40px;display:grid;place-items:center;
-  background:rgba(242,238,229,.10);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  background:var(--papel-10);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
   border:var(--border-hairline);border-radius:50%;
   font-size:var(--type-lead);cursor:pointer;transition:background var(--motion-fast)}
 .option-detail-close:hover{background:var(--accent);color:var(--paper)}
@@ -611,8 +618,8 @@ body.detail-open{overflow:hidden}
    El disco de papel además resuelve el contraste: sobre zona clara se ve el
    carmín, sobre zona oscura se ve el disco. Sin él, el punto del hombro se
    pierde en la figura de espalda. */
-.atlas-point::before{content:"";position:absolute;left:50%;top:50%;width:19px;height:19px;margin:-9.5px 0 0 -9.5px;border-radius:50%;background:var(--paper);box-shadow:0 2px 5px rgba(52,50,45,.38),0 1px 1px rgba(52,50,45,.22);transition:transform var(--motion-fast) var(--ease-organic)}
-.atlas-point::after{content:"";position:absolute;left:50%;top:50%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:50%;background:radial-gradient(circle at 34% 28%,#7a97ae 0%,var(--accent) 52%,#293743 100%);box-shadow:inset 0 -1px 2px rgba(0,0,0,.3),0 1px 2px rgba(52,50,45,.4);transition:transform var(--motion-fast) var(--ease-organic)}
+.atlas-point::before{content:"";position:absolute;left:50%;top:50%;width:19px;height:19px;margin:-9.5px 0 0 -9.5px;border-radius:50%;background:var(--paper);box-shadow:0 2px 5px var(--tinta-38),0 1px 1px var(--tinta-22);transition:transform var(--motion-fast) var(--ease-organic)}
+.atlas-point::after{content:"";position:absolute;left:50%;top:50%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:50%;background:radial-gradient(circle at 34% 28%,var(--color-pizarra-clara) 0%,var(--accent) 52%,var(--color-pizarra-honda) 100%);box-shadow:inset 0 -1px 2px rgba(0,0,0,.3),0 1px 2px var(--tinta-40);transition:transform var(--motion-fast) var(--ease-organic)}
 .atlas-halo{position:absolute;left:50%;top:50%;width:44px;height:44px;border:1px solid var(--accent);border-radius:50%;transform:translate(-50%,-50%);animation:pulse 4.5s ease-in-out infinite;pointer-events:none}
 .atlas-point:nth-of-type(2) .atlas-halo{animation-delay:.6s}
 .atlas-point:nth-of-type(3) .atlas-halo{animation-delay:1.2s}
@@ -635,7 +642,7 @@ body.detail-open{overflow:hidden}
 .atlas-viewport.is-hovered .atlas-cursor{opacity:1}
 .atlas-cursor-ring{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border:1px solid var(--accent);border-radius:50%;animation:atlas-breath 3.6s ease-in-out infinite}
 /* El punto de mira no late nunca: es la referencia para apuntar. */
-.atlas-cursor-dot{position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px rgba(242,238,229,.55)}
+.atlas-cursor-dot{position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--papel-55)}
 .atlas-viewport.is-pressing .atlas-cursor-ring{animation:none;transform:scale(.68)}
 @keyframes atlas-breath{0%,100%{transform:scale(.84)}50%{transform:scale(1.16)}}
 
@@ -666,6 +673,7 @@ body.detail-open{overflow:hidden}
 
 /* --- móvil: sin arrastre, lámina entera y fichas al pie --- */
 @media(max-width:800px){
+  .pressure-stage.atlas{margin-inline:calc(var(--layout-margin)*-1)}
   .atlas-viewport{width:100%;height:auto;cursor:auto;touch-action:auto}
   .atlas-canvas{position:static;width:100%;transform:none}
   .atlas-cursor,.atlas-hint{display:none}
@@ -700,7 +708,7 @@ body.detail-open{overflow:hidden}
    (135px arriba y abajo), el encabezado en fila propia (158) y el hueco
    entre filas (72), sobraban 381px sobre un viewport de 900. Aquí el
    relleno es propio y más corto. 21-08-2026 */
-.perfil{min-height:100svh;padding:clamp(40px,6vh,56px) var(--layout-margin);display:grid;grid-template-columns:var(--layout-columns);column-gap:var(--layout-gutter);row-gap:var(--space-8);align-content:center;background:var(--accent);color:var(--paper);scroll-margin-top:72px}
+.perfil{min-height:100svh;padding:clamp(40px,6vh,56px) var(--layout-margin);display:grid;grid-template-columns:var(--layout-columns);column-gap:var(--layout-gutter);row-gap:var(--space-8);align-content:center;background:var(--accent);color:var(--paper);scroll-margin-top:var(--nav-h)}
 .perfil .kicker{color:var(--paper)}
 .perfil-encabezado{grid-column:1/7;grid-row:1;align-self:end}
 /* Igual que el resto de titulares de sección (hero, Shiatsu, sesiones,
@@ -747,3 +755,23 @@ body.detail-open{overflow:hidden}
   .perfil-retrato{padding:var(--space-4)}
   .perfil-ficha>div{grid-template-columns:100px 1fr}
 }
+
+/* Iconos propios (flechas y cerrar) · 19-10-2026
+   Antes eran glifos de texto (↘ ↗ ↓ ← → ✕). PT Sans Narrow no los trae y en móvil
+   el sistema los sustituía por el emoji. Ahora son máscaras SVG: toman el color
+   del texto (currentColor) y se ven igual en todos los dispositivos. */
+.ico{display:inline-block;width:1em;height:1em;flex:none;vertical-align:-.12em;background:currentColor;
+  -webkit-mask:var(--ico) center/contain no-repeat;mask:var(--ico) center/contain no-repeat}
+.ico--e,.ico--w,.ico--s,.ico--se,.ico--ne{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h16M14 6l6 6-6 6'/%3E%3C/svg%3E")}
+.ico--w{transform:rotate(180deg)}
+.ico--s{transform:rotate(90deg)}
+.ico--se{transform:rotate(45deg)}
+.ico--ne{transform:rotate(-45deg)}
+.ico--x{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E")}
+.btn b{display:inline-flex;align-items:center}
+.options-arrow .ico{width:18px;height:18px}
+
+.skip-link{position:fixed;left:var(--space-4);top:var(--space-4);z-index:100;padding:var(--space-3) var(--space-5);background:var(--ink);color:var(--paper);transform:translateY(-200%)}.skip-link:focus{transform:none;outline:2px solid var(--accent);outline-offset:3px}
+
+/* Móviles muy estrechos (320 px): el titular mínimo de 58 px no cabía con palabras largas («experiencia») */
+@media(max-width:340px){:root{--type-display-xl:clamp(44px,15vw,52px)}}

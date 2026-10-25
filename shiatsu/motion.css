@@ -1,0 +1,66 @@
+/* Shiatsu · movimiento (25-oct-2026)
+   Todo cuelga de la clase .mo, que añade motion.js solo si la persona no ha pedido
+   «reducir movimiento». Sin esa clase la página se ve exactamente igual que antes.
+   Para quitar todo el movimiento: borrar la línea de motion.css y motion.js en index.html. */
+
+/* ---------- 1 · Titulares: cada palabra sube desde una máscara ---------- */
+.mw{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .05em .14em;margin:0 -.05em -.14em}
+.mw-i{display:inline-block}
+.mo .mw-i{transform:translate3d(0,112%,0);transition:transform 1000ms var(--ease-organic);transition-delay:calc(var(--i,0)*60ms + var(--d,0ms))}
+.mo [data-split].is-in .mw-i{transform:none}
+/* El titular ya se anima palabra a palabra: se quita el desvanecido de su contenedor */
+.mo .hero-title[data-reveal],.mo h2[data-split][data-reveal]{opacity:1;transform:none}
+
+/* ---------- 2 · Portada: la lámina se descubre y se asienta ---------- */
+@keyframes mo-lamina{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes mo-asentar{from{transform:scale(1.14)}to{transform:scale(var(--foto-zoom,1))}}
+.mo .hero-art .specimen-window{animation:mo-lamina 1500ms var(--ease-organic) 250ms backwards}
+.mo .hero-art .specimen-window img{animation:mo-asentar 2200ms var(--ease-organic) 250ms backwards}
+
+/* ---------- 3 · Línea de progreso de lectura ---------- */
+.mo-progress{position:fixed;inset:0 0 auto;height:2px;z-index:40;pointer-events:none;background:transparent}
+.mo-progress i{display:block;height:100%;background:var(--accent);transform:scaleX(var(--p,0));transform-origin:0 50%}
+
+/* ---------- 4 · Tarjetas de sesión: inclinación y brillo con el ratón ---------- */
+@media(hover:hover) and (pointer:fine){
+  .mo .option-card{transform:perspective(1100px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) scale(calc(.84 + var(--card-focus)*.16))}
+  .mo .option-card.is-tilting{transition:transform 120ms linear,opacity 340ms var(--ease-organic),border-color var(--motion-base),background var(--motion-base),box-shadow var(--motion-base)}
+  .mo .option-card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity 400ms var(--ease-organic);background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.34),transparent 62%)}
+  .mo .option-card.is-tilting::after{opacity:1}
+}
+
+/* ---------- 5 · Cursor: un anillo que acompaña al ratón ---------- */
+.mo-cursor{position:fixed;left:0;top:0;width:30px;height:30px;margin:-15px 0 0 -15px;border:1px solid var(--accent);border-radius:50%;pointer-events:none;z-index:60;opacity:0;transition:opacity 250ms,width 300ms var(--ease-organic),height 300ms var(--ease-organic),margin 300ms var(--ease-organic),background 300ms}
+.mo-cursor.is-on{opacity:.75}
+.mo-cursor.is-hot{width:58px;height:58px;margin:-29px 0 0 -29px;background:rgba(74,94,112,.10)}
+.mo-cursor.is-off{opacity:0}
+
+/* ---------- 6 · Scroll con inercia (Lenis) ---------- */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+.lenis.lenis-stopped{overflow:clip}
+.lenis.lenis-scrolling iframe{pointer-events:none}
+
+/* ---------- 7 · Solo móvil y pantallas estrechas: la página respira al bajar ---------- */
+@media(max-width:800px){
+  .mo-m .m-up{opacity:0;transform:translate3d(0,28px,0);transition:opacity 850ms var(--ease-organic),transform 950ms var(--ease-organic);transition-delay:var(--md,0ms)}
+  .mo-m .m-up.m-in{opacity:1;transform:none}
+  .mo-m .m-img{opacity:0;clip-path:inset(14% 7% 0 7%);transform:scale(1.05);transition:opacity 700ms var(--ease-organic),clip-path 1300ms var(--ease-organic),transform 1500ms var(--ease-organic)}
+  .mo-m .m-img.m-in{opacity:1;clip-path:inset(0 0 0 0);transform:none}
+  .mo-m .sensory blockquote .qw{transition:opacity 120ms linear}
+}
+/* Feedback al tocar (solo pantallas táctiles): el botón se hunde un poco */
+@media(hover:none){
+  .mo .btn:active,.mo .options-arrow:active{scale:.965}
+  .mo .archive-tabs>button:active{filter:brightness(.96)}
+  .mo .option-card:active{scale:.985}
+  .mo a,.mo button{-webkit-tap-highlight-color:transparent}
+}
+
+/* ---------- 8 · Portada viva (hero-fx.js): el lienzo hace de imagen ---------- */
+.specimen-window canvas.hero-fx{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  mix-blend-mode:multiply;filter:saturate(.82) contrast(1.01);
+  transform:scale(var(--foto-zoom,1));transform-origin:center;will-change:transform}
+.specimen-window.fx-on>img{visibility:hidden}
+.mo .hero-art .specimen-window canvas.hero-fx{animation:mo-asentar 2200ms var(--ease-organic) 250ms backwards}

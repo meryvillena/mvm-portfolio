@@ -30,6 +30,11 @@
   var mx = 0.5, my = 0.5;       // dónde está el ratón, de 0 a 1
   var tx = 0,   ty = 0;         // dónde está la lámina
   var dentro = false, abierta = null, corriendo = false;
+  /* fijada: tras pinchar un punto, su ficha se queda abierta y la lámina deja de moverse,
+     para poder llevar el ratón a la ficha y leerla sin que se escape. Se suelta al pinchar
+     fuera, con Escape o al salir de la lámina. sobreFicha: el ratón está encima de una ficha. */
+  var fijada = false, sobreFicha = false;
+  var graciaHasta = 0;   /* al apartarte de un punto, su ficha espera 0,3 s con la lámina quieta: tiempo de llegar a ella */
 
   function limites() {
     var vw = viewport.clientWidth, vh = viewport.clientHeight;
@@ -60,6 +65,9 @@
     abierta.card.classList.remove('visible');
     abierta.point.classList.remove('is-active');
     abierta = null;
+    fijada = false;
+    sobreFicha = false;
+    graciaHasta = 0;
   }
 
   function abrir(point) {
@@ -79,7 +87,9 @@
     var L = limites();
     var objX = tx, objY = ty, frenando = false;
 
-    if (dentro) {
+    if (dentro && (fijada || sobreFicha || (graciaHasta && performance.now() < graciaHasta))) {
+      objX = tx; objY = ty;           /* congelada: la ficha no se escapa del ratón */
+    } else if (dentro) {
       var k = function (v) {
         return Math.max(0, Math.min(1, (v - MARGEN) / (1 - 2 * MARGEN)));
       };
@@ -119,7 +129,13 @@
         var s = enPantalla(p, L);
         if (Math.hypot(s.x - cx2, s.y - cy2) < TOQUE) encima = p;
       });
-      if (encima) abrir(encima); else if (abierta && !abierta.point.matches(':focus')) cerrar();
+      var ahora = performance.now();
+      if (fijada || sobreFicha) { graciaHasta = 0; }              /* la ficha fijada, o con el ratón encima, se queda */
+      else if (encima) { graciaHasta = 0; abrir(encima); }
+      else if (abierta && !abierta.point.matches(':focus')) {
+        if (!graciaHasta) graciaHasta = ahora + 320;
+        else if (ahora >= graciaHasta) cerrar();
+      }
       if (abierta) colocarFicha(abierta.point, abierta.card, L);
     }
 
@@ -161,13 +177,25 @@
       e.preventDefault();
       /* Igual que el tooltip del Ki: el click siempre abre, nunca alterna. */
       abrir(point);
+      if (!estatico()) fijada = true;     /* con ratón, el click además la fija */
     });
     point.addEventListener('focus', function () { abrir(point); });
     point.addEventListener('blur',  function () { if (!dentro) cerrar(); });
   });
 
+  Array.prototype.forEach.call(viewport.querySelectorAll('[data-atlas-card]'), function (card) {
+    card.addEventListener('pointerenter', function () { sobreFicha = true; });
+    card.addEventListener('pointerleave', function () { sobreFicha = false; });
+  });
+
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
   document.addEventListener('click', function (e) { if (!viewport.contains(e.target)) cerrar(); });
+  /* Pinchar dentro de la lámina pero fuera de un punto (o de su ficha) también cierra la ficha.
+     En táctil no hay bucle que la cierre al apartar el dedo, así que esto es lo que la cierra. */
+  viewport.addEventListener('click', function (e) {
+    if (e.target.closest('.atlas-point') || e.target.closest('.atlas-card')) return;
+    if (abierta) { abierta.point.blur(); cerrar(); }
+  });
 
   /* ---------- cambios de tamaño y de preferencias ---------- */
   var espera;

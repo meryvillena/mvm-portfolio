@@ -297,42 +297,42 @@ const guideData = {
      viven sólo en el carrusel. `service` ya no es el nombre de una sesión, es
      la zona que se trabaja; `details`, las condiciones prácticas. */
   tension: {
-    count: '01 / 04', caption: 'Lectura · Cuerpo', kicker: 'Cuando una zona lleva tiempo aguantando',
-    title: 'Donde el cuerpo<br><em>se agarra.</em>',
-    lead: 'Cervicales que no bajan, hombros subidos desde primera hora, una espalda que avisa antes de que acabe el día. Casi nunca es un músculo suelto: es una zona que lleva tiempo sosteniendo más de lo que le toca.',
-    body: 'Sobre esa zona el Shiatsu no empuja más fuerte: apoya mejor. La presión entra perpendicular, con el peso del cuerpo y no con la fuerza del brazo, y se sostiene el tiempo que el tejido necesita para ceder. Y luego pasa algo que casi nadie espera: te mueven. Brazos, piernas, cadera y cuello se llevan con calma hasta donde llegan, se rotan y se estiran. Presión y movimiento son las dos mitades del trabajo — una abre la zona, la otra le devuelve el recorrido.',
+    count: '01 / 04', caption: 'Lectura · Cuerpo', kicker: 'Cuando una zona pide espacio',
+    title: 'Equilibrio para el cuerpo.',
+    lead: 'Cuello con sensación de rigidez, hombros elevados desde primera hora, una espalda que pierde comodidad al final del día. La sesión atiende esa tensión para favorecer un movimiento más libre y equilibrado.',
+    body: 'La presión se aplica de forma estable y precisa, combinada con movilizaciones y estiramientos suaves. El objetivo es acompañar al cuerpo hacia una mayor amplitud de movimiento y una sensación renovada de bienestar.',
     service: 'Cuello, hombros, espalda y caderas', details: 'Con ropa cómoda · Sin agujas',
-    benefits: ['La presión se apoya, no empuja','Se estira y se moviliza: no solo se presiona','Nunca se fuerza: se ajusta contigo']
+    benefits: ['Presión manual consciente','Movilidad más fluida','Atención adaptada a cada cuerpo']
   },
   equilibrio: {
-    count: '02 / 04', caption: 'Lectura · Ritmo', kicker: 'Cuando no duele nada y aun así no puedes parar',
-    title: 'Volver al<br><em>centro.</em>',
-    lead: 'Duermes y no descansas. La mandíbula apretada al despertar, la respiración corta, la sensación de funcionar desde la cabeza y no desde el cuerpo. No hay una zona que duela: hay un sistema que no ha bajado de revoluciones.',
-    body: 'El Shiatsu lee el cuerpo por exceso y por falta: hay zonas que llevan de más y zonas que se han quedado sin fondo. Ante ese estado el trabajo se vuelve más lento y más amplio — menos insistencia en un punto y más recorrido, más tiempo en abdomen y respiración, más atención a lo que carga en silencio. Los estiramientos también cambian de forma: se vuelven largos y encadenados, abriendo el cuerpo por líneas enteras en lugar de por zonas. No se trata de soltar un músculo, sino de que el cuerpo recuerde cómo se baja el ritmo.',
+    count: '02 / 04', caption: 'Lectura · Ritmo', kicker: 'Cuando el cuerpo no consigue bajar',
+    title: 'Restablece tu ritmo.',
+    lead: 'Cuando el descanso no resulta reparador, la mandíbula permanece activa y la mente no desconecta, el cuerpo pide un cambio de ritmo. Esta sesión está pensada para favorecer calma, presencia y descanso profundo.',
+    body: 'La práctica se vuelve entonces más lenta y envolvente: espalda, abdomen, respiración y estiramientos encadenados. Un recorrido amplio para regular el ritmo interno y recuperar una sensación de equilibrio.',
     service: 'Abdomen, respiración y espalda', details: 'Recorrido amplio · Ritmo lento',
     /* La `note` de los 90 minutos se eliminó: hablaba de duración, y la
        duración vive ahora sólo en la tarjeta 02 del carrusel. */
-    benefits: ['Se lee lo que sobra y lo que falta','El ritmo lento es parte del trabajo','Los últimos minutos también son sesión']
+    benefits: ['Escucha integral del cuerpo','Un ritmo que favorece la calma','Un cierre para integrar la experiencia']
   },
   rostro: {
-    count: '03 / 04', caption: 'Lectura · Rostro', kicker: 'Belleza desde la estructura',
-    title: 'El rostro también<br>tiene <em>memoria.</em>',
-    lead: 'Lo que llamamos cara cansada casi nunca empieza en la piel. Empieza en la mandíbula que aprieta de noche, en el cuello que sostiene la pantalla y en unos hombros que no bajan.',
-    body: 'El rostro es músculo, y un músculo que trabaja todo el día sin descanso: gesticula, mastica, aprieta mientras duermes. El trabajo facial lo aborda como tal — presión, estimulación y maniobras rítmicas sobre esa musculatura, sin perder de vista la cadena que baja hasta las cervicales. Es la continuación del cuerpo, no un capítulo aparte.',
+    count: '03 / 04', caption: 'Lectura · Rostro', kicker: 'Rostro, cuello y expresión',
+    title: 'Bienestar que se refleja en el rostro.',
+    lead: 'La expresión de cansancio suele estar vinculada a la tensión de mandíbula, cuello y hombros. Al atender esta relación, el rostro recupera serenidad y una apariencia más descansada.',
+    body: 'El facial japonés trabaja rostro, mandíbula, sienes y cuello mediante maniobras manuales rítmicas y precisas. Una práctica que devuelve armonía a la expresión y bienestar al conjunto del rostro.',
     service: 'Rostro, mandíbula, sienes y cuello', details: 'Solo manos · Sin marcas',
-    benefits: ['La cara se trata como músculo, no como piel','El cuello entra siempre en el trabajo','Relajar la expresión, no congelarla']
+    benefits: ['Equilibrio en mandíbula y sienes','El cuello acompaña al rostro','Respeto por la expresión natural']
   },
   metodo: {
-    count: '04 / 04', caption: 'Lectura · Método', kicker: 'Antes de que empiece la sesión',
-    title: 'No hay dos sesiones<br><em>iguales.</em>',
-    lead: 'No existe una secuencia que se repita con todo el mundo. Cada sesión empieza mirando cómo llega el cuerpo ese día, y a partir de ahí se decide por dónde entrar, con qué presión y a qué ritmo.',
+    count: '04 / 04', caption: 'Lectura · Método', kicker: 'Antes de empezar',
+    title: 'Cada sesión parte de ti.',
+    lead: 'La práctica Shiatsu no responde a una secuencia fija. Cada sesión comienza con una escucha atenta para decidir el recorrido, la presión y el ritmo que mejor acompañan cómo estás ese día.',
     qa: [
-      ['¿Y si no sé qué me pasa?','Mejor. No hace falta llegar con un diagnóstico ni con el nombre de una técnica: basta con contar cómo estás. La lectura la hace Eme con las manos.'],
-      ['¿Siempre se hace lo mismo?','No. Dos personas con el mismo dolor de cuello reciben sesiones distintas, porque lo que sostiene ese cuello no es lo mismo en las dos.'],
-      ['¿Con una sesión basta?','Una sesión se nota. Que el cambio se sostenga pide continuidad, y eso se decide juntas después de la primera, nunca antes.']
+      ['¿Y si no sé explicarlo?','No necesitas llegar con un diagnóstico ni saber nombrar la técnica. Basta con contar cómo estás y qué notas. La sesión se va construyendo desde ahí.'],
+      ['¿Siempre se hace lo mismo?','No. Dos personas con una misma molestia pueden necesitar sesiones distintas. Se adapta el recorrido, la presión y el tiempo a cada cuerpo y a cada día.'],
+      ['¿Con una sesión basta?','Una primera sesión permite experimentar el enfoque Shiatsu: un cuerpo más disponible, una mente más serena y una sensación renovada de bienestar. La continuidad se valora después, desde esa experiencia.']
     ],
     /* La bisagra hacia el carrusel: es la única ficha que lo presenta. */
-    cierre: 'Por eso hay sesiones de distinta duración y de distinto alcance: para que la técnica pueda adaptarse de verdad.'
+    cierre: 'Una práctica que se adapta a tu momento.'
   }
 };
 
@@ -384,7 +384,8 @@ function resetArchiveMotion() {
   archiveSheet?.querySelectorAll('.archive-outgoing-view').forEach(view => view.remove());
   archiveStage?.classList.remove('is-animating');
   if (window.gsap && archiveSheet) {
-    gsap.set([archiveSheet, ...archiveTabs.querySelectorAll('[data-guide-choice]')], { clearProps: 'transform' });
+    gsap.set(archiveSheet, { clearProps: 'height,minHeight,overflow,paddingTop,paddingBottom,borderTopWidth,borderBottomWidth,opacity,transform' });
+    gsap.set(archiveTabs.querySelectorAll('[data-guide-choice]'), { clearProps: 'transform' });
   }
 }
 
@@ -460,72 +461,70 @@ function transitionGuideVisual(nextKey) {
   else nextImage.decode().catch(() => {}).then(startVisualTransition);
 }
 
+/* Orientador como un archivador (25-oct-2026).
+   Al pulsar una pestaña: la ficha que estaba abierta se pliega, la hoja pasa a colocarse justo
+   debajo de la pestaña pulsada y se despliega; las pestañas que quedan por debajo bajan y las
+   de arriba no se mueven. Es una animación de alto real (no de transformaciones), así que las
+   pestañas nunca se cruzan ni cambian de color por el camino. */
+const ARCHIVE_SHEET_PROPS = 'height,minHeight,overflow,paddingTop,paddingBottom,borderTopWidth,borderBottomWidth,opacity,transform';
 function beginArchiveTransition(nextKey, updateContent) {
   if (!archiveStage || !archiveTabs || !archiveSheet) return;
   resetArchiveMotion();
   const folderItems = [...archiveTabs.querySelectorAll('[data-guide-choice]')];
-  const movingItems = [...folderItems, archiveSheet];
-  const beforePositions = new Map(movingItems.map(item => [item, item.getBoundingClientRect()]));
-  const currentView = archiveSheet.querySelector('.guide-view:not([hidden])');
-  const outgoingView = currentView?.cloneNode(true);
-  if (outgoingView) {
-    outgoingView.removeAttribute('data-guide-selection');
-    outgoingView.removeAttribute('data-guide-result');
-    outgoingView.classList.add('archive-outgoing-view');
-    outgoingView.querySelectorAll('button,input,textarea').forEach(element => element.setAttribute('tabindex', '-1'));
-    archiveSheet.append(outgoingView);
-  }
-
-  updateContent?.();
-
   const targetFolder = archiveOrder.includes(nextKey)
     ? archiveTabs.querySelector(`[data-guide-choice="${nextKey}"]`)
     : null;
-  if (targetFolder) targetFolder.after(archiveSheet);
-  if (nextKey === null) archiveTabs.append(archiveSheet);
+  const place = () => { if (targetFolder) targetFolder.after(archiveSheet); else archiveTabs.append(archiveSheet); };
 
   if (!window.gsap || matchMedia('(prefers-reduced-motion:reduce)').matches) {
+    updateContent?.();
+    place();
     return;
   }
 
-  const movedItems = movingItems.filter(item => Math.abs(beforePositions.get(item).top - item.getBoundingClientRect().top) > 1);
-  const incomingView = archiveSheet.querySelector('.guide-view:not([hidden]):not(.archive-outgoing-view)');
-  const incomingContent = incomingView ? Array.from(incomingView.children) : [];
   archiveStage.classList.add('is-animating');
-  movedItems.forEach(item => {
-    const before = beforePositions.get(item);
-    const after = item.getBoundingClientRect();
-    gsap.set(item, { y: before.top - after.top });
-  });
-  if (incomingContent.length) gsap.set(incomingContent, { y: 14, opacity: 0 });
+  folderItems.forEach(button => button.setAttribute('aria-pressed', 'false'));   /* todas cerradas mientras se pliega */
 
-  archiveTimeline = gsap.timeline({
-    defaults: { overwrite: 'auto' },
-    onComplete: resetArchiveMotion
+  /* la pestaña pulsada se queda donde está aunque la ficha de arriba se pliegue */
+  const anchorTop = targetFolder ? targetFolder.getBoundingClientRect().top : null;
+  const keepTarget = () => {
+    if (anchorTop === null) return;
+    const drift = targetFolder.getBoundingClientRect().top - anchorTop;
+    if (Math.abs(drift) <= .5) return;
+    const lenis = window.lenisShiatsu;   /* con scroll con inercia, el salto se le da a Lenis para que no lo pelee */
+    if (lenis) lenis.scrollTo(window.scrollY + drift, { immediate: true, force: true });
+    else window.scrollBy(0, drift);
+  };
+  const finish = () => {
+    gsap.set(archiveSheet, { clearProps: ARCHIVE_SHEET_PROPS });
+    archiveSheet.querySelectorAll('.guide-view > *').forEach(el => gsap.set(el, { clearProps: 'transform,opacity' }));
+    archiveStage.classList.remove('is-animating');
+    archiveTimeline = null;
+  };
+
+  gsap.set(archiveSheet, { overflow: 'hidden', minHeight: 0, height: archiveSheet.offsetHeight });
+  archiveTimeline = gsap.timeline({ defaults: { overwrite: 'auto' } });
+  archiveTimeline.to(archiveSheet, {
+    height: 0, paddingTop: 0, paddingBottom: 0, borderTopWidth: 0, borderBottomWidth: 0, opacity: 0,
+    duration: .38, ease: 'power3.inOut', onUpdate: keepTarget
   });
-  archiveTimeline.to(movedItems, {
-    y: 0,
-    duration: .72,
-    ease: 'power3.inOut',
-    force3D: true
-  }, 0);
-  if (outgoingView) {
-    archiveTimeline.to(outgoingView, {
-      y: -8,
-      opacity: 0,
-      duration: .28,
-      ease: 'power2.in'
-    }, .2);
-  }
-  if (incomingContent.length) {
-    archiveTimeline.to(incomingContent, {
-      y: 0,
-      opacity: 1,
-      duration: .38,
-      stagger: .018,
-      ease: 'power2.out'
-    }, .38);
-  }
+  archiveTimeline.add(() => {
+    /* la hoja está plegada del todo: se cambia de sitio y de contenido sin que se vea */
+    place();
+    updateContent?.();
+    gsap.set(archiveSheet, { clearProps: 'height,minHeight,paddingTop,paddingBottom,borderTopWidth,borderBottomWidth,opacity' });
+    const cs = getComputedStyle(archiveSheet);
+    const full = {
+      height: archiveSheet.offsetHeight,
+      paddingTop: parseFloat(cs.paddingTop), paddingBottom: parseFloat(cs.paddingBottom),
+      borderTopWidth: parseFloat(cs.borderTopWidth), borderBottomWidth: parseFloat(cs.borderBottomWidth)
+    };
+    gsap.set(archiveSheet, { overflow: 'hidden', minHeight: 0, height: 0, paddingTop: 0, paddingBottom: 0, borderTopWidth: 0, borderBottomWidth: 0, opacity: 1 });
+    const incoming = [...archiveSheet.querySelectorAll('.guide-view:not([hidden]) > *')];
+    archiveTimeline = gsap.timeline({ onComplete: finish });
+    archiveTimeline.to(archiveSheet, { ...full, duration: .62, ease: 'power3.out' }, 0);
+    if (incoming.length) archiveTimeline.fromTo(incoming, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: .4, stagger: .02, ease: 'power2.out' }, .22);
+  });
 }
 
 function showGuideView(view) {
@@ -542,29 +541,34 @@ function renderGuideResult(key) {
   beginArchiveTransition(key, () => {
     document.querySelectorAll('[data-guide-choice]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.guideChoice === key)));
     if (archiveStatus) archiveStatus.textContent = `Ficha ${data.count.slice(0,2)} · Abierta`;
-    guideResult.innerHTML = `<div class="guide-topline"><span>Ficha ${data.count.slice(0,2)} · Lectura</span><span>${data.count}</span></div><p class="kicker">${data.kicker}</p><h2>${data.title}</h2><p class="guide-result-lead">${data.lead}</p>${content}${data.cierre ? `<p class="guide-cierre">${data.cierre}</p>` : ''}<div class="guide-actions"><a class="btn btn--fill magnetic guide-primary" href="#sesiones"><span>Ver las sesiones</span><b>↗</b></a><button class="btn btn--ghost magnetic guide-back" type="button" data-guide-back><span>Cerrar ficha</span><b>×</b></button></div>`;
+    archiveSheet.dataset.ficha = key;
+    guideResult.innerHTML = `<div class="guide-topline"><span>Ficha ${data.count.slice(0,2)} · Lectura</span><span>${data.count}</span></div><p class="kicker">${data.kicker}</p><h2>${data.title}</h2><p class="guide-result-lead">${data.lead}</p>${content}${data.cierre ? `<p class="guide-cierre">${data.cierre}</p>` : ''}<div class="guide-actions"><a class="btn btn--fill magnetic guide-primary" href="#sesiones"><span>Ver las sesiones</span><b><i class="ico ico--ne" aria-hidden="true"></i></b></a><button class="btn btn--ghost magnetic guide-back" type="button" data-guide-back><span>Cerrar ficha</span><b>×</b></button></div>`;
     bindMagneticButtons(guideResult);
     showGuideView(guideResult);
+    guideResult.querySelector('h2')?.focus({ preventScroll: true });
   });
   transitionGuideVisual(key);
-  guideResult.querySelector('h2')?.focus({ preventScroll: true });
+}
+
+function closeGuide() {
+  activeGuideTrigger?.focus({ preventScroll: true });
+  beginArchiveTransition(null, () => {
+    if (archiveStatus) archiveStatus.textContent = 'Archivo · 04 fichas';
+    document.querySelectorAll('[data-guide-choice]').forEach(button => button.setAttribute('aria-pressed', 'false'));
+    showGuideView(guideSelection);
+    delete archiveSheet.dataset.ficha;
+  });
+  transitionGuideVisual('default');
 }
 
 document.querySelectorAll('[data-guide-choice]').forEach(button => button.addEventListener('click', () => {
+  if (button.getAttribute('aria-pressed') === 'true') { closeGuide(); return; }
   activeGuideTrigger = button;
   renderGuideResult(button.dataset.guideChoice);
 }));
 
 guideResult?.addEventListener('click', event => {
-  if (event.target.closest('[data-guide-back]')) {
-    activeGuideTrigger?.focus({ preventScroll: true });
-    beginArchiveTransition(null, () => {
-      if (archiveStatus) archiveStatus.textContent = 'Archivo · 04 fichas';
-      document.querySelectorAll('[data-guide-choice]').forEach(button => button.setAttribute('aria-pressed', 'false'));
-      showGuideView(guideSelection);
-    });
-    transitionGuideVisual('default');
-  }
+  if (event.target.closest('[data-guide-back]')) closeGuide();
 });
 
 const directBookingName = document.querySelector('[data-direct-booking-name]');

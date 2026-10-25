@@ -29,6 +29,10 @@
   --color-sensorial:#171a16;      /* el negro de la pausa */
   --color-linea:rgba(52,50,45,.24);
   --color-linea-inversa:rgba(242,238,229,.3);
+  --color-pizarra-clara:#7a97ae;  /* brillo del punto del atlas */
+  --color-pizarra-honda:#293743;  /* sombra del punto del atlas */
+  --tinta-08:rgba(52,50,45,.08); --tinta-16:rgba(52,50,45,.16); --tinta-22:rgba(52,50,45,.22); --tinta-38:rgba(52,50,45,.38); --tinta-40:rgba(52,50,45,.4);
+  --papel-06:rgba(242,238,229,.06); --papel-10:rgba(242,238,229,.10); --papel-55:rgba(242,238,229,.55); --papel-62:rgba(242,238,229,.62); --papel-80:rgba(242,238,229,.8);
 
   /* ---------- SEMÁNTICOS · COLOR ------------------------------------------
      Estos son los que usa el CSS. Vivían en design.css, fuera de este archivo:
@@ -70,6 +74,7 @@
   --space-1:4px;   --space-2:8px;   --space-3:12px;  --space-4:16px;
   --space-5:20px;  --space-6:24px;  --space-7:28px;  --space-8:32px;
   --space-9:36px;  --space-10:40px; --space-12:48px; --space-16:64px;
+  --nav-h:72px;    /* alto de la cabecera fija: margen de anclas */
   --space-20:80px; --space-24:96px; --space-32:128px;
 
   /* ---------- REJILLA Y MEDIDAS DE LECTURA -------------------------------- */
