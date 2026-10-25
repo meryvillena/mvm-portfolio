@@ -6,6 +6,9 @@
 <title data-tl>Mery Villena — Diseño de producto digital, no-code y operaciones</title>
 <meta name="description" content="Portfolio de Mery Villena: diseño y desarrollo de productos digitales, herramientas no-code y soluciones operativas para negocios pequeños." data-tl-content>
 <link rel="canonical" href="https://meryvillena.com/">
+<link rel="alternate" hreflang="es" href="https://meryvillena.com/">
+<link rel="alternate" hreflang="en" href="https://meryvillena.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://meryvillena.com/">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
 <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
@@ -28,20 +31,22 @@
 <meta name="twitter:image" content="https://meryvillena.com/og-cover-2.jpg">
 <meta name="twitter:image:alt" content="Mery Villena — Diseño de producto digital, no-code y operaciones" data-tl-content>
 <script>
-/* Idioma: ?lang= → preferencia guardada → idioma del navegador → español. En inglés carga i18n/en.js (ver CHECKLIST-INGLES.md). */
+/* Idioma: /en/ (página generada, fuerza inglés) → ?lang= → preferencia guardada → idioma del navegador → español. Los robots ven siempre español en «/». En inglés carga i18n/en.js (ver CHECKLIST-INGLES.md). */
 (function () {
-  var L = "", q = "", nl = navigator.language || "";
+  var L = "", q = "", nl = navigator.language || "", F = window.__FORCE_LANG || "";
   try { q = new URLSearchParams(location.search).get("lang") || ""; } catch (e) {}
-  if (q === "en" || q === "es") {
+  if (F) {
+    L = F;
+  } else if (q === "en" || q === "es") {
     L = q;
     try { localStorage.setItem("mvm-lang", q); } catch (e) {}
     try { var u = new URL(location.href); u.searchParams.delete("lang"); history.replaceState(null, "", u.pathname + u.search + u.hash); } catch (e) {}
   }
   if (!L) { try { L = localStorage.getItem("mvm-lang") || ""; } catch (e) {} }
-  if (L !== "en" && L !== "es") L = (!nl || /^es/i.test(nl)) ? "es" : "en";
+  if (L !== "en" && L !== "es") L = (!nl || /^es/i.test(nl) || /bot|crawl|spider|slurp/i.test(navigator.userAgent || "")) ? "es" : "en";
   window.__LANG = L;
   document.documentElement.lang = L;
-  window.__setLang = function (l) { try { localStorage.setItem("mvm-lang", l); } catch (e) {} if (window.medir) medir("idioma/" + l); setTimeout(function () { location.href = location.pathname + "?lang=" + l + location.hash; }, 150); };
+  window.__setLang = function (l) { try { localStorage.setItem("mvm-lang", l); } catch (e) {} if (window.medir) medir("idioma/" + l); setTimeout(function () { location.href = (F ? "/" : location.pathname) + "?lang=" + l + location.hash; }, 150); };
   if (L === "en") document.write('<script src="i18n/en.js"><\/script>');
 })();
 </script>
