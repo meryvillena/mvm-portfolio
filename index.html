@@ -666,8 +666,7 @@ const DESKTOP = [
       '<span class="tag" style="background:#ffe08a">' + tl("Empieza por aquí") + '</span>' +
       "<p>" + tl("Este portfolio toma la forma de un escritorio porque los sistemas importan: ayudan a que lo complejo sea comprensible y utilizable. La interfaz de los Mac de los noventa es <a href=\"#\" onclick=\"openWindow('case-portfolio');return false\">una referencia temprana de esa idea</a>.") + "</p>" +
       "<p>" + tl("Ese es también el centro de mi trabajo: diseño productos digitales para quien visita una web, para quien usa una herramienta y para el negocio que necesita que ambas cosas estén conectadas.") + "</p>" +
-      "<p>" + tl("Combino más de 20 años en publicidad y marketing con ocho años de experiencia directa en operaciones. Esa perspectiva me permite diseñar con atención tanto a lo que se percibe como a lo que hace posible que un servicio funcione.") + "</p>" +
-      "<p>" + tl("Las carpetas organizan mis proyectos por categorías: haz clic para abrirlas y mira dentro. Puedes mover las carpetas por la pantalla si quieres reordenarlas.") + "</p>" +
+            "<p>" + tl("Las carpetas organizan mis proyectos por categorías: haz clic para abrirlas y mira dentro. Puedes mover las carpetas por la pantalla si quieres reordenarlas.") + "</p>" +
       "<p>" + tl("Te recomiendo empezar por <em>Soluciones de negocio</em> o <em>Herramientas</em> —ahí está lo que más cuenta.") + "</p>" +
       "<p class=\"small\">" + tl("Truco: arrastra a la Papelera lo que no te guste. Clic en la Papelera = todo vuelve a su lugar.") + "</p>" +
       "<p>" + tl("Si quieres saber quién hay detrás de todo esto, abre <a href=\"#\" onclick=\"openWindow('sobremi');return false\"><em>Sobre mí</em></a>.") + "</p>"
@@ -2513,7 +2512,7 @@ desktop.addEventListener("mousedown", (e) => {
       }
       h += "</section>";
     } else if (item.id === "leeme") {
-      h += "<section><h2>" + tl("Léeme primero") + "</h2><p>" + tl("Este portfolio toma la forma de un escritorio porque los sistemas importan: ayudan a que lo complejo sea comprensible y utilizable. La interfaz de los Mac de los noventa es <a href=\"#\" onclick=\"openWindow('case-portfolio');return false\">una referencia temprana de esa idea</a>.") + "</p><p>" + tl("Ese es también el centro de mi trabajo: diseño productos digitales para quien visita una web, para quien usa una herramienta y para el negocio que necesita que ambas cosas estén conectadas.") + "</p><p>" + tl("Combino más de 20 años en publicidad y marketing con ocho años de experiencia directa en operaciones. Esa perspectiva me permite diseñar con atención tanto a lo que se percibe como a lo que hace posible que un servicio funcione.") + "</p><p>" + tl("Te recomiendo empezar por Soluciones de negocio o Herramientas.") + "</p></section>";
+      h += "<section><h2>" + tl("Léeme primero") + "</h2><p>" + tl("Este portfolio toma la forma de un escritorio porque los sistemas importan: ayudan a que lo complejo sea comprensible y utilizable. La interfaz de los Mac de los noventa es <a href=\"#\" onclick=\"openWindow('case-portfolio');return false\">una referencia temprana de esa idea</a>.") + "</p><p>" + tl("Ese es también el centro de mi trabajo: diseño productos digitales para quien visita una web, para quien usa una herramienta y para el negocio que necesita que ambas cosas estén conectadas.") + "</p><p>" + tl("Te recomiendo empezar por Soluciones de negocio o Herramientas.") + "</p></section>";
     } else if (item.id === "contacto") {
       h += "<section><h2>" + tl("Contacto") + "</h2>" + contactHtml("-m") + "</section>";
     }
