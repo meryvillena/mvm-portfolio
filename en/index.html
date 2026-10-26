@@ -654,7 +654,7 @@ const NESTED = {
     id: "trabajo-grafico", title: tl("Trabajo gráfico"), color: "#f0c766",
     intro: tl("Piezas gráficas de encargo a lo largo de los años."),
     cards: [
-      { kind: "project", title: tl("Piezas de diseño gráfico"), tipo: "visual", estado: tl("Próximamente"), desc: tl("Todo el trabajo de diseño gráfico que he hecho para McDonald's, y algunas piezas más."), href: null, pausa: true },
+      { kind: "project", title: tl("Piezas de diseño gráfico"), tipo: "visual", estado: tl("Próximamente"), desc: tl("Todo el trabajo de diseño gráfico que he hecho para McDonald's®, y algunas piezas más."), href: null, pausa: true },
       { kind: "project", title: "Promos", tipo: "visual", estado: tl("Próximamente"), desc: tl("Material promocional."), href: null, pausa: true },
     ],
   },
@@ -802,7 +802,7 @@ function folderHtml(entry) {
 
 function aboutHtml() {
   return "<h2>" + tl("Sobre mí") + "</h2>" +
-    "<p>" + tl("Llevo más de 20 años trabajando en publicidad y marketing. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar y Lancôme. Desde 2018 gestiono varios restaurantes McDonald’s: coordino proveedores, procesos internos, administración y marketing local. De ahí vienen mis ocho años de experiencia directa en operaciones.") + "</p>" +
+    "<p>" + tl("Llevo más de 20 años trabajando en publicidad y marketing. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar y Lancôme. Desde 2018 gestiono varios restaurantes McDonald’s®: coordino proveedores, procesos internos, administración y marketing local. De ahí vienen mis ocho años de experiencia directa en operaciones.") + "</p>" +
     "<p>" + tl("Ahora diseño, construyo y pongo en marcha productos digitales para negocios: webs orientadas a cliente, herramientas internas y automatizaciones. Trabajo con diseño, no-code, HTML y JavaScript. Defino la dirección, el contenido y las decisiones de producto; utilizo IA como apoyo en tareas de redacción y desarrollo.") + "</p>" +
     '<div class="chips"><span>' + tl("20+ años en publicidad y marketing") + '</span><span>' + tl("8 años en operaciones") + '</span><span>' + tl("Producto digital") + '</span></div>' +
     '<p><a class="btn" href="' + CVURL + '" target="_blank" rel="noopener">' + tl("Ver mi CV →") + '</a></p>' +
@@ -2507,7 +2507,7 @@ desktop.addEventListener("mousedown", (e) => {
       });
       h += "</section>";
     } else if (item.id === "sobremi") {
-      h += "<section><h2>" + tl("Sobre mí") + "</h2><p>" + tl("Llevo más de 20 años trabajando en publicidad y marketing. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar y Lancôme. Desde 2018 gestiono varios restaurantes McDonald’s: coordino proveedores, procesos internos, administración y marketing local. De ahí vienen mis ocho años de experiencia directa en operaciones.") + "</p><p>" + tl("Ahora diseño, construyo y pongo en marcha productos digitales para negocios: webs orientadas a cliente, herramientas internas y automatizaciones. Trabajo con diseño, no-code, HTML y JavaScript. Defino la dirección, el contenido y las decisiones de producto; utilizo IA como apoyo en tareas de redacción y desarrollo.") + "</p><p><a class=\"btn\" href=\"" + CVURL + "\" target=\"_blank\" rel=\"noopener\">" + tl("Ver mi CV →") + "</a></p>";
+      h += "<section><h2>" + tl("Sobre mí") + "</h2><p>" + tl("Llevo más de 20 años trabajando en publicidad y marketing. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar y Lancôme. Desde 2018 gestiono varios restaurantes McDonald’s®: coordino proveedores, procesos internos, administración y marketing local. De ahí vienen mis ocho años de experiencia directa en operaciones.") + "</p><p>" + tl("Ahora diseño, construyo y pongo en marcha productos digitales para negocios: webs orientadas a cliente, herramientas internas y automatizaciones. Trabajo con diseño, no-code, HTML y JavaScript. Defino la dirección, el contenido y las decisiones de producto; utilizo IA como apoyo en tareas de redacción y desarrollo.") + "</p><p><a class=\"btn\" href=\"" + CVURL + "\" target=\"_blank\" rel=\"noopener\">" + tl("Ver mi CV →") + "</a></p>";
       const n = NESTED["trabajo-grafico"];
       if (visible({ kind: "folder", ref: "trabajo-grafico" })) {
         h += '<div class="m-sub">' + n.title + "</div>";
