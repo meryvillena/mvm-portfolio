@@ -514,6 +514,9 @@
   .cards.lista .case-card p { margin: 0 0 4px; flex: 0; }
   .cards.lista .case-card .btn { align-self: flex-start; }
 
+  /* Escritorio con ratón: el área que responde del menú superior llega a 24 px (WCAG 2.2 AA) sin cambiar lo que se ve */
+  #menubar .mtitle, #menubar .mlang { position: relative; }
+  #menubar .mtitle::after, #menubar .mlang::after { content: ""; position: absolute; left: 0; right: 0; top: -1px; bottom: -1px; }
   /* Zona táctil mínima de 44 px en móvil y tablet (barra de menús y cierre de ventana: crece solo el área que responde; botones y campos: crecen de verdad) */
   @media (max-width: 768px), (pointer: coarse) {
     #menubar .mtitle, #menubar .mlang { position: relative; }
@@ -538,7 +541,7 @@
     <button type="button" role="menuitem" class="mtitle" data-menu="ayuda" aria-haspopup="true" aria-expanded="false" data-tl>Ayuda</button>
     <div class="spacer"></div>
     <div class="item m-owner" role="none" data-tl>Escritorio de Mery Villena</div>
-    <button type="button" role="menuitem" class="mlang" aria-label="Idioma / Language" title="Idioma / Language" onclick="__setLang(__LANG==='en'?'es':'en')"></button>
+    <button type="button" role="menuitem" class="mlang" aria-label="ES / EN – Idioma / Language" title="Idioma / Language" onclick="__setLang(__LANG==='en'?'es':'en')"></button>
     <div class="item" id="clock" role="none"></div>
   </div>
   </div>
@@ -2483,7 +2486,7 @@ desktop.addEventListener("mousedown", (e) => {
    ============================================================ */
 (function buildMobile() {
   const m = document.getElementById("mobile-view");
-  let h = '<div class="m-head"><button type="button" class="m-lang" aria-label="Idioma / Language" onclick="__setLang(__LANG===\'en\'?\'es\':\'en\')">' + langSwitchHtml() + '</button><h1>Mery Villena</h1><p>' + tl("Producto digital · sistemas · operaciones") + '</p></div>';
+  let h = '<div class="m-head"><button type="button" class="m-lang" aria-label="ES / EN – Idioma / Language" onclick="__setLang(__LANG===\'en\'?\'es\':\'en\')">' + langSwitchHtml() + '</button><h1>Mery Villena</h1><p>' + tl("Producto digital · sistemas · operaciones") + '</p></div>';
 
   const mCard = (card) => {
     if (card.kind === "folder") return ""; // las anidadas se expanden aparte
