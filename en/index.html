@@ -220,6 +220,9 @@
   .window { transition: scale .15s ease, box-shadow .15s ease; }
   .window.agarrada { scale: 1.02; box-shadow: 9px 12px 0 rgba(0,0,0,0.22); }
   @media (prefers-reduced-motion: reduce) { .window.agarrada { scale: 1; } }
+  @media (prefers-reduced-motion: reduce) { .window.open, .window.closing, .icon.wobble img { animation: none; } .window.closing { display: none; } }
+  #menubar .mtitle:focus-visible { outline: 2px solid #2b5fd6; outline-offset: -2px; }
+  .window .titlebar .box:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }
   /* redimensionar: asas invisibles por fuera del borde + gripito abajo a la derecha */
   .window .rz { position: absolute; z-index: 5; touch-action: none; }
   .window .rz.n  { top: -4px; left: 12px; right: 12px; height: 8px; cursor: ns-resize; }
