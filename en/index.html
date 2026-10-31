@@ -139,7 +139,7 @@
   .bolsa-row { display: block; width: 100%; background: none; border: 0; border-bottom: 1px solid #1d1d1d; color: inherit; text-align: left; padding: 10px 14px; cursor: pointer; font: inherit; }
   .bolsa-row:hover { background: #161616; }
   .bolsa-row:focus-visible, .bolsa-cv a:focus-visible { outline: 2px solid #2b5fd6; outline-offset: -2px; }
-  .bolsa-top { display: grid; grid-template-columns: minmax(0,1fr) 100px 104px; align-items: center; gap: 10px; }
+  .bolsa-top { display: grid; grid-template-columns: minmax(0,1fr) 84px 88px; align-items: center; gap: 10px; }
   .bolsa-row .sym { display: block; font: bold 16px/1.1 "Geneva","Helvetica Neue",Helvetica,Arial,sans-serif; color: #fff; }
   .bolsa-row .nm { display: block; font-size: 11px; color: #8a8a8a; margin-top: 3px; }
   .bolsa-row .spark { width: 100px; height: 36px; display: block; }
@@ -184,7 +184,7 @@
   }
   .icon img { width: 32px; height: 32px; image-rendering: pixelated; pointer-events: none; }
   .icon span {
-    font-size: 11px; text-align: center; line-height: 1.2; color: #000;
+    font-size: 11px; text-align: center; line-height: 1.2; color: var(--txt-iconos, #000);
     padding: 1px 3px; pointer-events: none;
   }
   .icon.selected span { background: #000; color: #fff; }
@@ -229,9 +229,9 @@
   .window .rz.s  { bottom: -4px; left: 12px; right: 12px; height: 8px; cursor: ns-resize; }
   .window .rz.e  { right: -4px; top: 12px; bottom: 12px; width: 8px; cursor: ew-resize; }
   .window .rz.w  { left: -4px; top: 12px; bottom: 12px; width: 8px; cursor: ew-resize; }
-  .window .rz.ne { top: -5px; right: -5px; width: 16px; height: 16px; cursor: nesw-resize; }
+  .window .rz.ne { top: -5px; right: -5px; width: 9px; height: 9px; cursor: nesw-resize; }
   .window .rz.sw { bottom: -5px; left: -5px; width: 16px; height: 16px; cursor: nesw-resize; }
-  .window .rz.nw { top: -5px; left: -5px; width: 16px; height: 16px; cursor: nwse-resize; }
+  .window .rz.nw { top: -5px; left: -5px; width: 9px; height: 9px; cursor: nwse-resize; }
   .window .rz.se { bottom: -5px; right: -5px; width: 20px; height: 20px; cursor: nwse-resize; }
   .window .rz.se::after { content: ""; position: absolute; right: 7px; bottom: 7px; width: 9px; height: 9px; opacity: .55;
     background: linear-gradient(135deg, transparent 0 40%, #000 40% 50%, transparent 50% 66%, #000 66% 76%, transparent 76%); }
@@ -245,7 +245,7 @@
   .window .cs-paper { padding-left: max(44px, calc((100% - 760px) / 2)); padding-right: max(44px, calc((100% - 760px) / 2)); }
   .window .titlebar { touch-action: none; user-select: none; -webkit-user-select: none; }
   .window .content { touch-action: pan-y; }
-  .window .titlebar .box { position: relative; }
+  .window .titlebar .box { position: relative; z-index: 6; }
   .window .titlebar .box::after { content: ""; position: absolute; inset: -6px; }
   /* La X de cerrar se dibuja (el carácter × queda descentrado según la tipografía); el texto sigue ahí para lectores de pantalla */
   .window .titlebar .box.close { font-size: 0; color: transparent;
@@ -352,6 +352,9 @@
   .aviso-es.show { opacity: 1; transform: translate(-50%, 0); }
 
   /* ---------- PANEL DE CONTROL Y REPRODUCTOR DE RADIO ---------- */
+  .fv-txt { margin: 0 0 8px; font-size: 12px; } .fv-img { display: block; width: 100%; max-height: 52vh; object-fit: contain; border: 1px solid #000; background: #d8d8d8; image-rendering: auto; } .fv-pie { margin: 10px 0 0; text-align: right; } .fv-pie .btn { min-height: 32px; }
+  .flash-foto { position: fixed; inset: 0; z-index: 99990; background: #fff; pointer-events: none; opacity: 0; animation: flash-foto .65s ease-out; }
+  @keyframes flash-foto { 0% { opacity: 0; } 12% { opacity: .95; } 100% { opacity: 0; } }
   #fondo-capa { position: absolute; inset: 0; z-index: -1; pointer-events: none; background-position: center; }
   body.sin-efectos .window.open { animation: none; }
   .pc, .rd { font-size: 12px; }
@@ -459,6 +462,9 @@
     }
     .window[id^="win-"] .content { max-height: none; flex: 1; }
     .cards { grid-template-columns: 1fr; }
+    /* Panel de control como hoja inferior: deja ver el escritorio mientras se cambian los ajustes */
+    #win-panel.window[id^="win-"] { top: auto !important; height: 58vh; height: 58dvh; box-shadow: 0 -3px 0 rgba(0,0,0,0.35); }
+    #win-panel.window[id^="win-"] .content { overflow-y: auto; min-height: 0; }
   }
   #mobile-view .m-head { padding: 28px 0 8px; }
   #mobile-view .m-head h1 { font-size: 26px; margin: 0 0 4px; }
@@ -858,7 +864,7 @@ function makeIcon(id, label, iconSrc, x, y) {
   let dragging = false, moved = false, offX = 0, offY = 0, downX = 0, downY = 0;
   el.addEventListener("mousedown", (e) => {
     e.stopPropagation();
-    dragging = true; moved = false; downX = e.clientX; downY = e.clientY;
+    FX.para(el); dragging = true; moved = false; downX = e.clientX; downY = e.clientY;
     const r = el.getBoundingClientRect();
     offX = e.clientX - r.left; offY = e.clientY - r.top;
     el.classList.add("selected");
@@ -871,25 +877,31 @@ function makeIcon(id, label, iconSrc, x, y) {
     moved = true; el.classList.add("dragging");
     el.style.left = (e.clientX - offX) + "px";
     el.style.top = (e.clientY - offY - 22) + "px";
+    FX.mueve(el, e);
   });
   document.addEventListener("mouseup", () => {
     if (!dragging) return;
     dragging = false; el.classList.remove("dragging");
+    if (id === "trash" && moved) { resorteAlSitio(el); return; }
     if (id !== "trash" && moved && trashEl) {
-      const r = el.getBoundingClientRect();
-      const tr = trashEl.getBoundingClientRect();
-      const overlap = !(r.right < tr.left || r.left > tr.right || r.bottom < tr.top || r.top > tr.bottom);
-      if (overlap) {
-        el.style.display = "none";
-        el.classList.remove("selected");
-        if (!trashedIds.includes(id)) { trashedIds.push(id); medir("papelera/tirar/" + id); }
-        updateTrashIcon();
-        // Micro-acción: la Papelera hace un meneíto al recibir algo.
-        trashEl.classList.remove("wobble");
-        void trashEl.offsetWidth;
-        trashEl.classList.add("wobble");
-        setTimeout(function () { trashEl.classList.remove("wobble"); }, 460);
-      }
+      const alPapelera = () => {
+        const r = el.getBoundingClientRect();
+        const tr = trashEl.getBoundingClientRect();
+        const overlap = !(r.right < tr.left || r.left > tr.right || r.bottom < tr.top || r.top > tr.bottom);
+        if (overlap) {
+          el.style.display = "none";
+          el.classList.remove("selected");
+          if (!trashedIds.includes(id)) { trashedIds.push(id); medir("papelera/tirar/" + id); }
+          updateTrashIcon();
+          // Micro-acción: la Papelera hace un meneíto al recibir algo.
+          trashEl.classList.remove("wobble");
+          void trashEl.offsetWidth;
+          trashEl.classList.add("wobble");
+          setTimeout(function () { trashEl.classList.remove("wobble"); }, 460);
+        }
+        return overlap;
+      };
+      if (!alPapelera()) FX.suelta(el, { x0: 0, x1: window.innerWidth - 84, y0: 24, y1: window.innerHeight - 92 }, alPapelera);   // inercia; al pararse se vuelve a mirar si cayó en la Papelera
     }
   });
   // Un clic abre (y el doble clic también, porque abrir es idempotente).
@@ -958,6 +970,39 @@ function updateTrashIcon() {
 
 // Ventanas y post-its también se pueden tirar: cada uno registra aquí cómo volver.
 const trashExtras = [];
+/* Física de arrastre de iconos y post-its: la misma que las ventanas (ladeo al mover, inercia y rebote al soltar).
+   Depende de Panel de control > Movimiento (Controlada / Expresiva / Caótica) y de «Efectos». Sin efectos, en móvil o con reducir movimiento, no hace nada. */
+const FX = (() => {
+  const rots = new WeakMap(), raf = new WeakMap(), vel = new WeakMap();
+  const lim = (v, a, b) => Math.max(a, Math.min(b, v));
+  const sin = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.matchMedia("(max-width: 760px)").matches || !(MOV.e > 0 || MOV.l > 0);
+  const base = (el) => parseFloat(getComputedStyle(el).getPropertyValue("--pr")) || 0;
+  const aplica = (el, r) => { const b = base(el); el.style.transform = (b || Math.abs(r) > 0.05) ? "rotate(" + (b + r).toFixed(2) + "deg)" : ""; };
+  const para = (el) => { cancelAnimationFrame(raf.get(el)); raf.delete(el); vel.delete(el); if (rots.get(el)) { rots.set(el, 0); aplica(el, 0); } };
+  return {
+    para,
+    mueve(el, e) {
+      if (sin()) return;
+      const t = performance.now(), p = vel.get(el) || { x: e.clientX, y: e.clientY, t: t, vx: 0, vy: 0 }, dt = Math.max(1, t - p.t);
+      p.vx = p.vx * 0.6 + ((e.clientX - p.x) / dt) * 0.4; p.vy = p.vy * 0.6 + ((e.clientY - p.y) / dt) * 0.4; p.x = e.clientX; p.y = e.clientY; p.t = t; vel.set(el, p);
+      const r = (rots.get(el) || 0) + (lim(p.vx * 4 * MOV.l, -6 * MOV.l, 6 * MOV.l) - (rots.get(el) || 0)) * 0.25; rots.set(el, r); aplica(el, r);
+    },
+    suelta(el, caja, fin) {          // caja = límites de left/top; fin = qué hacer cuando se para
+      const p = vel.get(el); vel.delete(el);
+      const asienta = () => { let r = rots.get(el) || 0; const paso = () => { r *= 0.8; rots.set(el, r); aplica(el, r); if (Math.abs(r) >= 0.1) raf.set(el, requestAnimationFrame(paso)); else { rots.set(el, 0); aplica(el, 0); raf.delete(el); if (fin) fin(); } }; paso(); };
+      if (sin() || !p || performance.now() - p.t > 90 || Math.hypot(p.vx, p.vy) < 0.25) { if (sin()) { if (fin) fin(); return; } asienta(); return; }
+      let vx = p.vx, vy = p.vy, x = el.offsetLeft, y = el.offsetTop, r = rots.get(el) || 0;
+      const paso = () => {
+        vx *= MOV.f; vy *= MOV.f; r += (lim(vx * 0.9 * MOV.l, -7 * MOV.l, 7 * MOV.l) - r) * 0.2; x += vx * MOV.e; y += vy * MOV.e;
+        if (x < caja.x0) { x = caja.x0; vx *= -0.35; } else if (x > caja.x1) { x = caja.x1; vx *= -0.35; }
+        if (y < caja.y0) { y = caja.y0; vy *= -0.35; } else if (y > caja.y1) { y = caja.y1; vy *= -0.35; }
+        el.style.left = x + "px"; el.style.top = y + "px"; rots.set(el, r); aplica(el, r);
+        if (Math.hypot(vx, vy) > 0.02) raf.set(el, requestAnimationFrame(paso)); else asienta();
+      };
+      raf.set(el, requestAnimationFrame(paso));
+    },
+  };
+})();
 function pointOverTrash(x, y) {
   const t = document.querySelector('.icon[data-id="trash"]');
   if (!t) return false;
@@ -980,6 +1025,34 @@ function restoreAll() {
   trashedIds = [];
   trashExtras.splice(0).forEach((fn) => fn());
   updateTrashIcon();
+}
+
+// Clic en la Papelera: además de devolver lo que hay dentro, todas las carpetas y los post-its vuelven a su sitio (haya algo dentro o no).
+function devolverTodo() {
+  document.querySelectorAll(".icon").forEach((el) => {
+    const pos = originalPos[el.dataset.id]; if (!pos) return;
+    FX.para(el);
+    el.style.transition = "left .55s cubic-bezier(.3,1.3,.5,1), top .55s cubic-bezier(.3,1.3,.5,1)";
+    el.style.left = pos.x + "px"; el.style.top = pos.y + "px";
+    setTimeout(() => { el.style.transition = ""; }, 650);
+  });
+  if (window.__postits && window.__postits.reordenar) window.__postits.reordenar();
+}
+
+// La Papelera se puede estirar y mover por toda la pantalla, pero al soltarla siempre vuelve a su sitio con un rebote de muelle.
+function resorteAlSitio(el) {
+  const pos = originalPos.trash; if (!pos) return;
+  const sin = window.matchMedia("(prefers-reduced-motion: reduce)").matches || !(MOV.e > 0 || MOV.l > 0);
+  let x = el.offsetLeft, y = el.offsetTop, vx = 0, vy = 0;
+  if (sin) { el.style.transition = "left .25s ease-out, top .25s ease-out"; el.style.left = pos.x + "px"; el.style.top = pos.y + "px"; setTimeout(() => { el.style.transition = ""; }, 300); return; }
+  el.style.transition = ""; el.classList.add("dragging");
+  const paso = () => {
+    vx = (vx + (pos.x - x) * 0.09) * 0.86; vy = (vy + (pos.y - y) * 0.09) * 0.86; x += vx; y += vy;
+    el.style.left = x + "px"; el.style.top = y + "px"; el.style.transform = "rotate(" + Math.max(-9, Math.min(9, vx * 0.5)).toFixed(2) + "deg)";
+    if (Math.hypot(pos.x - x, pos.y - y) > 0.4 || Math.hypot(vx, vy) > 0.15) requestAnimationFrame(paso);
+    else { el.style.left = pos.x + "px"; el.style.top = pos.y + "px"; el.style.transform = ""; el.classList.remove("dragging"); }
+  };
+  requestAnimationFrame(paso);
 }
 
 function showTrashBalloon(tx, ty) {
@@ -1245,7 +1318,7 @@ DESKTOP.forEach((item) => {
   } else if (item.kind === "trash") {
     trashEl = document.querySelector('.icon[data-id="trash"]');
     // Clic en la Papelera = devolver todo a su sitio (no es borrado real).
-    trashEl.addEventListener("click", function (e) { e.stopPropagation(); if (window.__snd) window.__snd("papelera"); restoreAll(); });
+    trashEl.addEventListener("click", function (e) { e.stopPropagation(); if (window.__snd) window.__snd("papelera"); restoreAll(); devolverTodo(); });
   }
   iy += 88;
 });
@@ -1582,7 +1655,7 @@ function casePortfolioHtml() {
         <li>${tl(`En móvil <strong>no quise rendirme a una lista sosa</strong>: mantuve el escritorio como pude.`)}</li>
         <li>${tl(`<strong>Un Panel de control de verdad.</strong> Cambia el fondo, los colores de las ventanas, cómo se mueven y los sonidos. Se guarda solo en tu navegador, y «Restaurar» lo devuelve todo a su sitio.`)}</li>
         <li>${tl(`<strong>Un reproductor tipo iPod con radio.</strong> Suena la radio de SomaFM, pero nunca arranca sola: la pones tú.`)}</li>
-        <li>${tl(`<strong>Sonidos retro, apagados por defecto.</strong> Un clic, el papel arrugado de la papelera, un campanazo si falla la radio. Los genera el propio navegador, sin archivos de sonido.`)}</li>
+        <li>${tl(`<strong>Sonidos retro, apagados por defecto.</strong> Un clic, el papel arrugado de la papelera, un miau si falla la radio. Los genera el propio navegador, salvo el miau, que es una grabación de mi voz.`)}</li>
         <li>${tl(`<strong>En español y en inglés,</strong> con el mismo escritorio.`)}</li>
         <li>${tl(`<strong>Una presentación de entrada hecha con el propio escritorio,</strong> sin vídeo.`)}</li>
         <li>${tl(`<strong>Un muro de post-its</strong> para dejar un comentario.`)}</li>
@@ -1653,7 +1726,7 @@ desktop.addEventListener("mousedown", (e) => {
    ============================================================ */
 /* @@PRESENTACION-INICIO@@ */
 /* ============================================================
-   PRESENTACIÓN DE ENTRADA (~36 s). Sustituye al popup de bienvenida.
+   ENTRADA GUIADA: cartela inicial + guía de tres tareas sobre el escritorio real + etiqueta final.
    NO editar aquí: la fuente está en _taller-intro/ (intro.css, intro.html, intro.js)
    y se copia con:  python3 _taller-intro/build.py
    Vive en un Shadow DOM para que sus estilos no se mezclen con los del escritorio.
@@ -1661,208 +1734,410 @@ desktop.addEventListener("mousedown", (e) => {
    ============================================================ */
 (function presentacion() {
   const host = document.createElement("div");
-  host.id = "intro-host"; host.setAttribute("role", "dialog"); host.setAttribute("aria-modal", "true"); host.setAttribute("aria-label", tl("Presentación del portfolio"));
+  host.id = "intro-host"; host.setAttribute("role", "dialog"); host.setAttribute("aria-modal", "false"); host.setAttribute("aria-label", tl("Presentación del portfolio"));
   const root = host.attachShadow({ mode: "open" });
-  root.innerHTML = "<style>" + "  /* Presentaci\u00f3n de entrada. Usa los tokens del sistema de dise\u00f1o del portfolio (SISTEMA-DE-DISENO-PORTFOLIO.md):\n     escritorio #b8b8b8, ventanas Platinum, Geneva / Chicago / Monaco, etiquetas .tag / .type-tag, bot\u00f3n .btn. */\n  :host { position: fixed; inset: 0; z-index: 40000; display: none; font-family: \"Geneva\",\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size: 12px; color: #000; opacity: 1; transition: opacity .5s ease; --mono: ui-monospace, \"SF Mono\", Menlo, Consolas, \"Liberation Mono\", monospace; }\n  :host(.show) { display: block; } :host(.bye) { opacity: 0; }\n  * { box-sizing: border-box; }\n  #stage { position: absolute; inset: 0; background: #b8b8b8; overflow: hidden; user-select: none; }\n  .fade { opacity: 0; transition: opacity .5s ease; } .fade.on { opacity: 1; }\n\n  /* barra de men\u00fas (la del escritorio) */\n  #menubar { position: absolute; top: 0; left: 0; right: 0; height: 22px; background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #ddd 2px); border-bottom: 1px solid #000; display: flex; align-items: center; padding: 0 8px; font-size: 13px; font-weight: bold; transform: translateY(-24px); transition: transform .5s ease; z-index: 30; }\n  #menubar.on { transform: none; }\n  #menubar .mt { height: 22px; padding: 0 9px; display: flex; align-items: center; }\n  #menubar .mt.cat { padding: 0 7px; }\n  #menubar .sp { flex: 1; } #menubar .own { font-weight: normal; color: rgba(0,0,0,.6); margin-left: 14px; } #menubar .clk { margin-left: 14px; white-space: nowrap; }\n  @media (max-width: 900px) { #menubar .own { display: none; } } @media (max-width: 600px) { #menubar .m-opt, #menubar .clk { display: none; } }\n\n  /* iconos del escritorio (los del portfolio) */\n  #icons { position: absolute; top: 30px; right: 14px; bottom: 56px; display: flex; flex-direction: column; flex-wrap: wrap-reverse; align-content: flex-start; gap: 2px; transition: opacity .5s ease; }\n  #icons.dim { opacity: 0; }\n  .ico { width: 82px; padding: 4px 2px; display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0; transform: translateY(8px) scale(.9); transition: opacity .35s ease, transform .35s ease; }\n  .ico.on { opacity: 1; transform: none; }\n  .ico img { width: 32px; height: 32px; image-rendering: pixelated; }\n  .ico span { font-size: 11px; text-align: center; line-height: 1.2; padding: 1px 3px; }\n  .ico.sel span { background: #000; color: #fff; }\n\n  /* ventana Platinum */\n  .win { background: #ECECEC; border: 1px solid #000; box-shadow: 3px 3px 0 rgba(0,0,0,.45); display: flex; flex-direction: column; }\n  .win .tb { height: 20px; background: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, #99b8e8 2px); border-bottom: 1px solid #000; display: flex; align-items: center; padding: 0 4px; gap: 6px; flex-shrink: 0; }\n  .win .tb u { width: 13px; height: 13px; border: 1px solid #000; background: #fff; flex-shrink: 0; text-decoration: none; }\n  .win .tb span { flex: 1; text-align: center; font-weight: bold; font-size: 12px; margin-right: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n\n  /* ---------- escena de proyecto ---------- */\n  #pj { --h: clamp(190px, min(40vh, 62vw), 380px); position: absolute; inset: 22px 0 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 18px 40px; pointer-events: none; }\n  #pj .tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; }\n  #pj .tags > * { opacity: 0; transform: translateY(8px); transition: opacity .3s ease, transform .35s ease; }\n  #pj .tags > *.on { opacity: 1; transform: none; }\n  #pj .cat { display: inline-block; font-size: 13px; font-weight: bold; letter-spacing: .05em; text-transform: uppercase; padding: 4px 10px; border: 1px solid #000; border-radius: 3px; }\n  #pj .tipo { font-family: var(--mono); font-size: 11px; letter-spacing: .02em; text-transform: uppercase; padding: 3px 7px; border: 1px solid; border-radius: 3px; }\n  #pj .tipo.real { background: #d6f0d3; color: #2f7a2b; } #pj .tipo.concepto { background: #fbeecb; color: #a9791a; }\n  #pj .est { font-family: var(--mono); font-size: 12px; color: rgba(0,0,0,.6); } #pj .est::before { content: \"// \"; }\n  #pj h2 { margin: 0; text-align: center; font: normal clamp(22px, 4.2vw, 40px)/1.15 \"ChicagoCS\",\"Geneva\",sans-serif; max-width: 780px; }\n  #pj h2 .w { display: inline-block; opacity: 0; transform: translateY(.5em); transition: opacity .3s ease, transform .4s ease; margin: 0 .14em; }\n  #pj h2 .w.on { opacity: 1; transform: none; }\n  #pj .fig { font: normal clamp(17px, 2.5vw, 24px) \"MonacoCS\", var(--mono); background: #fff; border: 1px solid #000; box-shadow: 2px 2px 0 rgba(0,0,0,.3); padding: 5px 14px; opacity: 0; transform: translateY(6px); transition: opacity .3s ease, transform .35s ease; }\n  #pj .fig.on { opacity: 1; transform: none; } #pj .fig s { color: rgba(0,0,0,.5); margin-right: 8px; }\n  #pj .sub { font-size: clamp(12px, 1.7vw, 15px); margin: 0; text-align: center; max-width: 540px; color: rgba(0,0,0,.75); opacity: 0; transition: opacity .4s ease; }\n  #pj .sub.on { opacity: 1; }\n  @keyframes breathe { 0%, 100% { transform: translate(-50%, -50%) scale(.72); } 50% { transform: translate(-50%, -50%) scale(1.3); } }\n  #pj.out > * { opacity: 0 !important; transform: translateY(-18px) !important; transition: opacity .3s ease, transform .35s ease !important; }\n\n  /* post-it (los del muro) */\n  #pibtn { position: absolute; top: 34px; left: 24px; width: 150px; min-height: 100px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: rgba(255,243,163,.6); border: 2px dashed rgba(0,0,0,.5); transform: rotate(-2deg); font-size: 12px; font-weight: bold; color: rgba(0,0,0,.7); text-align: center; opacity: 0; transition: opacity .35s ease; }\n  #pibtn b { font-size: 44px; font-weight: normal; line-height: 1; } #pibtn.on { opacity: 1; }\n  #pinote { position: absolute; left: 50%; top: 50%; width: 200px; min-height: 130px; padding: 16px 14px 12px; background: #fff3a3; border: 1px solid rgba(0,0,0,.45); box-shadow: 2px 2px 0 rgba(0,0,0,.3); font-size: 15px; line-height: 1.3; color: #111; transform: translate(-130%, -140%) rotate(-8deg) scale(.4); opacity: 0; transition: transform .6s ease, opacity .3s ease; transform-origin: top left; }\n  #pinote.on { opacity: 1; transform: translate(-50%, -50%) rotate(-2deg); }\n  #pinote.out { opacity: 0; transform: translate(-50%, -50%) rotate(-2deg) scale(.94); transition: opacity .35s ease, transform .35s ease; }\n\n  /* botones (.btn del sistema) */\n  .btn { font-family: inherit; font-size: 12px; font-weight: bold; padding: 5px 12px; border: 1px solid #000; background: #ddd; color: #111; cursor: pointer; border-radius: 0; }\n  .btn:hover { background: #cfcfcf; } .btn:active { background: #bbb; }\n  .btn:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }\n  #empieza { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: min(92vw, 520px); }\n  #entrar, #destacado { font-size: 15px; padding: 10px 24px; min-height: 44px; }\n  #destacado { background: #fff; }\n  #skip { position: absolute; bottom: 14px; right: 14px; z-index: 60; }\n  #bar { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: #2b5fd6; z-index: 60; }\n\n  /* texto grande inicial */\n  #hero { position: absolute; left: 0; right: 0; top: 36%; text-align: center; padding: 0 22px; }\n  #hero h1 { margin: 0; font: normal clamp(30px, 6.5vw, 58px)/1.1 \"ChicagoCS\",\"Geneva\",sans-serif; }\n  #hero p { margin: 16px auto 0; max-width: 580px; font-size: clamp(15px, 2.4vw, 20px); line-height: 1.4; min-height: 2.8em; }\n  .caret::after { content: \"\"; display: inline-block; width: .55em; height: 1em; margin-left: 2px; background: #000; vertical-align: -2px; animation: blink .8s steps(1) infinite; }\n  @keyframes blink { 50% { opacity: 0; } }\n\n  /* subt\u00edtulo inferior */\n  #cap { position: absolute; left: 50%; bottom: 52px; transform: translateX(-50%); max-width: 86vw; background: #fff; border: 1px solid #000; box-shadow: 2px 2px 0 rgba(0,0,0,.3); padding: 8px 14px; font-size: 13px; text-align: center; z-index: 20; }\n\n  /* cursor */\n  #cursor { position: absolute; left: 0; top: 0; width: 18px; height: 24px; z-index: 50; transition: transform .8s cubic-bezier(.45,.05,.2,1); pointer-events: none; opacity: 0; }\n  #cursor.on { opacity: 1; } #cursor svg { display: block; }\n  #cursor.click svg { animation: tap .25s; } @keyframes tap { 50% { transform: scale(.82); } }\n  @media (prefers-reduced-motion: reduce) { * { transition-duration: .01s !important; animation-duration: .01s !important; } }\n\n  /* El escritorio real se ve por detr\u00e1s: la presentaci\u00f3n solo pone un velo claro cuando hace falta leer */\n  #stage { background: transparent; }\n  #menubar, #icons, #pibtn { display: none !important; }\n  #veil { position: absolute; inset: 0; background: rgba(228,228,228,.95); opacity: 0; transition: opacity .6s ease; }\n  #veil.on { opacity: 1; }\n\n  /* Capturas reales de cada proyecto, sueltas (sin ventana): aparecen grandes, flotan mientras pasan y se van.\n     Se dibujan ya a su tama\u00f1o final (no se escalan con transform) para que salgan n\u00edtidas. */\n  #pj.foco > *:not(.scrbox) { opacity: .1 !important; transition: opacity .4s ease; }\n  #pj .scrbox { position: fixed; inset: 22px 0 0 0; z-index: 6; pointer-events: none; opacity: 0; transform: scale(.6); transition: opacity .45s ease, transform .7s cubic-bezier(.3,.1,.2,1); }\n  #pj .scrbox.show { opacity: 1; transform: none; }\n  #pj .scr { position: absolute; left: 50%; top: 40%; width: auto; height: auto; max-width: 90vw; max-height: min(64vh, 720px); max-height: min(64svh, 720px); object-fit: contain; background: #fff; border: 1px solid #000; box-shadow: 6px 8px 0 rgba(0,0,0,.35); opacity: 0; transform: translate(calc(-50% + 70px), -50%); transition: opacity .35s ease, transform .55s ease; }\n  #pj .scr.on { opacity: 1; transform: translate(-50%, -50%); }\n  #pj .scr.off { opacity: 0; transform: translate(calc(-50% - 70px), -50%); }\n  #pj .scrbox.flota .scr.on { animation: flota 3.4s ease-in-out infinite; }\n  @keyframes flota { 0%, 100% { transform: translate(-50%, -50%) rotate(0); } 50% { transform: translate(-50%, calc(-50% - 5px)) rotate(.3deg); } }\n  #pj .dots { position: absolute; left: 50%; bottom: 66px; transform: translateX(-50%); display: flex; gap: 6px; }\n  #pj .dots s { width: 8px; height: 8px; border: 1px solid #000; background: #fff; } #pj .dots s.on { background: #000; }\n  @media (prefers-reduced-motion: reduce) { #pj .scrbox.flota .scr.on { animation: none; } }\n\n" + "</style>" + "<div id=\"stage\">\n  <div id=\"veil\" aria-hidden=\"true\"></div>\n  <div id=\"menubar\"><span class=\"mt cat\"><svg viewBox=\"0 0 15 12\" width=\"19\" height=\"15\" shape-rendering=\"crispEdges\" aria-hidden=\"true\"><path d=\"M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z\" fill=\"#000\"/></svg></span><span class=\"mt\">Archivo</span><span class=\"mt m-opt\">Edici\u00f3n</span><span class=\"mt\">Ver</span><span class=\"mt\">Proyectos</span><span class=\"mt\">Ayuda</span><span class=\"sp\"></span><span class=\"own\">Escritorio de Mery Villena</span><span class=\"clk\" id=\"clk\"></span></div>\n  <div id=\"icons\" aria-hidden=\"true\"></div>\n\n  <div id=\"hero\"><h1 class=\"fade\" id=\"h1\"></h1><p class=\"fade\" id=\"hp\"></p></div>\n  <div id=\"pj\" aria-hidden=\"true\"></div>\n\n  <div id=\"pibtn\" aria-hidden=\"true\"><b>+</b>Deja tu post-it</div>\n  <div id=\"pinote\" aria-hidden=\"true\"></div>\n  <div id=\"empieza\" class=\"fade\"><button id=\"destacado\" class=\"btn\" type=\"button\">Ver proyecto destacado</button><button id=\"entrar\" class=\"btn\" type=\"button\">Explorar escritorio</button></div>\n\n  <div id=\"cap\" class=\"fade\" role=\"status\"></div>\n  <div id=\"cursor\"><svg width=\"18\" height=\"24\" viewBox=\"0 0 18 24\"><path d=\"M1 1v19l5-4.5 3.2 7.5 3-1.3-3.2-7.4H16z\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/></svg></div>\n  <button id=\"skip\" class=\"btn\" type=\"button\">Saltar \u203a</button>\n  <div id=\"bar\"></div>\n</div>\n";
+  root.innerHTML = "<style>" + "  /* Entrada guiada. Tokens del sistema de dise\u00f1o (SISTEMA-DE-DISENO-PORTFOLIO.md): ventanas Platinum, Geneva / Chicago, bot\u00f3n .btn.\n     El host no bloquea clics: el escritorio real se toca de verdad. Solo la cartela (velo) y los globos reciben clics. */\n  :host { position: fixed; inset: 0; z-index: 40000; display: none; pointer-events: none; font-family: \"Geneva\",\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size: 13px; color: #000; opacity: 1; transition: opacity .25s ease; }\n  :host(.show) { display: block; } :host(.bye) { opacity: 0; }\n  * { box-sizing: border-box; }\n  #stage { position: absolute; inset: 0; overflow: hidden; user-select: none; -webkit-user-select: none; pointer-events: none; }\n  .fade { opacity: 0; transition: opacity .5s ease; } .fade.on { opacity: 1; }\n  button { touch-action: manipulation; }\n\n  /* velo de la cartela */\n  #veil { position: absolute; inset: 0; background: rgba(228,228,228,.96); clip-path: circle(0 at var(--mx) var(--my)); transition: clip-path .85s cubic-bezier(.7,0,.2,1); pointer-events: none; }\n  #veil.on { clip-path: circle(150% at var(--mx) var(--my)); pointer-events: auto; }\n\n  /* cartela: nombre + frase + invitaci\u00f3n */\n  #hero { position: absolute; left: 0; right: 0; top: 30%; text-align: center; padding: 0 22px; pointer-events: none; transition: opacity .5s ease; }\n  #hero.off { opacity: 0; transform: scale(.94); filter: blur(4px); transition: opacity .35s ease, transform .5s ease, filter .4s ease; }\n  #hero h1 { margin: 0; font: normal clamp(30px, 6.5vw, 58px)/1.1 \"ChicagoCS\",\"Geneva\",sans-serif; }\n  #hero p { margin: 16px auto 0; max-width: 580px; font-size: clamp(15px, 2.4vw, 20px); line-height: 1.4; min-height: 2.8em; }\n  /* \u00abPasa, te ense\u00f1o.\u00bb: el gato lo dice en un globo (mismo UI que los bocadillos) y el globo es el bot\u00f3n */\n  #pasa-fila { display: inline-flex; align-items: flex-end; gap: 14px; margin-top: 22px; }\n  #pasa-fila:not(.on) { visibility: hidden; }\n  #pasa-fila .gatito { width: 40px; height: 33px; flex: none; filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(2px 2px 0 var(--sombra)); }\n  #pasa-fila .gatito svg { width: 100%; height: 100%; fill: #000; display: block; opacity: .78; }\n  #pasa-fila.on .gatito { animation: gato-in .8s ease-out; }\n  #pasa { position: relative; flex: none; border: 0; border-radius: 14px; padding: 14px 22px 15px 26px; min-height: 48px; font: normal 14px/1.3 var(--maq); color: #000; background: transparent; cursor: pointer; pointer-events: auto; box-shadow: 4px 4px 0 var(--sombra); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); transform-origin: 0 90%; transition: transform .2s cubic-bezier(.3,1.6,.5,1), box-shadow .2s ease; }\n  #pasa-fila.on #pasa { animation: aparece .6s cubic-bezier(.3,1.4,.5,1); }\n  #pasa > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }\n  #pasa > svg path { vector-effect: non-scaling-stroke; }\n  #pasa .rel { fill: var(--papel); fill-opacity: 0; stroke: none; transition: fill-opacity .3s ease; }\n  #pasa .tr { fill: none; stroke: #000; stroke-width: 1.8px; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }\n  #pasa-fila.on #pasa .rel { fill-opacity: .58; } #pasa-fila.on #pasa .tr { stroke-dashoffset: 0; transition: stroke-dashoffset .38s ease-out; }\n  #pasa::before { content: \"\"; position: absolute; left: -8px; bottom: 14px; width: 14px; height: 14px; background: var(--vidrio); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); clip-path: polygon(0 0, 0 100%, 100% 100%); border-left: 1.7px solid #000; border-bottom: 1.7px solid #000; transform: rotate(45deg); border-bottom-left-radius: 3px; }\n  #pasa span { position: relative; }\n  #pasa:hover, #pasa:focus-visible { transform: translate(-2px, -3px); box-shadow: 7px 7px 0 var(--sombra); }\n  #pasa:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 4px; }\n  #pasa:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--sombra); }\n  .caret::after { content: \"\"; display: inline-block; width: .55em; height: 1em; margin-left: 2px; background: #000; vertical-align: -2px; animation: blink .8s steps(1) infinite; }\n  @keyframes blink { 50% { opacity: 0; } }\n\n  /* botones (.btn del sistema) */\n  .btn { font-family: inherit; font-size: 13px; font-weight: bold; padding: 5px 12px; border: 1px solid #000; background: #ddd; color: #111; cursor: pointer; border-radius: 0; }\n  .btn:hover { background: #cfcfcf; } .btn:active { background: #bbb; }\n  .btn:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }\n  #skip { position: absolute; right: 14px; bottom: 14px; z-index: 60; min-height: 44px; min-width: 44px; pointer-events: auto; }\n\n  /* un solo foco por paso: el resto se aten\u00faa */\n  #foco { position: absolute; left: 0; top: 0; width: 0; height: 0; border: 2px solid #fff; outline: 2px solid #000; box-shadow: 0 0 0 9999px rgba(0,0,0,.3); opacity: 0; transition: opacity .35s ease; pointer-events: none; z-index: 5; }\n  #foco.on { opacity: 1; }\n  #foco.entra { animation: foco-in .6s cubic-bezier(.3,1.5,.5,1); }\n  @keyframes foco-in { 0% { opacity: 0; transform: scale(1.5); } 55% { opacity: 1; transform: scale(.96); } 100% { transform: none; } }\n  #foco::after { content: \"\"; position: absolute; inset: -6px; border: 2px solid #fff; opacity: 0; }\n  #foco.entra::after { animation: late 1.1s ease-out .35s 2; }\n  @keyframes late { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.5); } }\n  .onda { position: absolute; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; opacity: .55; z-index: 4; pointer-events: none; animation: onda-c .95s cubic-bezier(.2,.6,.3,1) forwards; }\n  @keyframes onda-c { 0% { transform: scale(.2); opacity: .6; } 100% { transform: scale(90); opacity: 0; } }\n  /* Conversaci\u00f3n = globos que salen del gato del escritorio (papel y tinta de la Mesa de lectura, trazo a mano).\n     Elecci\u00f3n = fichas aparte, sin pico ni marco de globo. */\n  :host { --tinta: #000; --papel: #ececec; --vidrio: rgba(236,236,236,.58); --sombra: rgba(0,0,0,.4); --maq: \"Geneva\",\"Helvetica Neue\",Helvetica,Arial,sans-serif; --mano: \"ChicagoCS\",\"Geneva\",\"Helvetica Neue\",sans-serif; --mx: 12%; --my: 88%; }\n  /* el gato (quien habla) */\n  #dialogo { position: absolute; left: 0; top: 0; z-index: 20; display: flex; align-items: flex-end; gap: 14px; width: max-content; pointer-events: none; transition: left .65s cubic-bezier(.3,1.25,.45,1), top .65s cubic-bezier(.3,1.25,.45,1); }\n  #dialogo.sin-t { transition: none; } #dialogo.der { flex-direction: row-reverse; }\n  #gato { position: relative; flex: none; width: 40px; height: 33px; z-index: 22; opacity: 0; transform: translateY(70px) scale(.5); transform-origin: 50% 100%; pointer-events: none; cursor: pointer; filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(2px 2px 0 var(--sombra)); }\n  #gato svg { width: 100%; height: 100%; fill: var(--tinta); display: block; overflow: visible; opacity: .78; }\n  #gato.on { pointer-events: auto; opacity: 1; transform: none; animation: gato-in .8s ease-out; }\n  @keyframes gato-in { 0% { opacity: 0; transform: translateY(90px) scale(.5,.8) rotate(-14deg); } 45% { opacity: 1; transform: translateY(-26px) scale(.88,1.18) rotate(5deg); } 70% { transform: translateY(0) scale(1.14,.86); } 85% { transform: translateY(-5px) scale(.97,1.04); } 100% { transform: none; } }\n  #gato.habla { animation: habla .55s ease; } @keyframes habla { 25% { transform: translateY(-7px) rotate(-5deg); } 55% { transform: translateY(0) rotate(3deg); } 80% { transform: translateY(-3px) rotate(-1deg); } }\n  #gato.cosquillas { animation: cosquillas .6s cubic-bezier(.3,1.6,.5,1); }\n  @keyframes cosquillas { 0% { transform: none; } 20% { transform: translateY(-10px) rotate(-14deg) scale(1.18); } 45% { transform: translateY(0) rotate(12deg) scale(.92,1.08); } 70% { transform: translateY(-4px) rotate(-6deg) scale(1.06); } 100% { transform: none; } }\n  #gato .ch { position: absolute; left: 100%; top: 10%; width: 0; height: 0; }\n  #gato .ch i { position: absolute; width: 3px; height: 11px; margin: -5px 0 0 -1px; border-radius: 2px; background: var(--tinta); opacity: 0; transform: rotate(var(--a)) translateY(-12px); }\n  #gato .ch.on i { animation: chispa .65s ease-out forwards; } @keyframes chispa { 0% { opacity: 1; transform: rotate(var(--a)) translateY(-12px) scaleY(.6); } 100% { opacity: 0; transform: rotate(var(--a)) translateY(-52px) scaleY(1.2); } }\n\n  /* el globo */\n  #globo { position: relative; flex: none; z-index: 20; border-radius: 14px; box-shadow: 4px 4px 0 var(--sombra); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); width: 0; height: 0; opacity: 0; visibility: hidden; pointer-events: none; font-family: var(--maq); color: var(--tinta); transform-origin: 0 90%;\n    transition: width .32s cubic-bezier(.3,1.3,.5,1), height .32s cubic-bezier(.3,1.3,.5,1), opacity .22s ease, visibility 0s .22s; }\n  #dialogo.der #globo { transform-origin: 100% 90%; }\n  #dialogo.der #globo::before { left: auto; right: -8px; border-left: 0; border-right: 1.7px solid var(--tinta); clip-path: polygon(100% 0, 100% 100%, 0 100%); transform: rotate(-45deg); border-bottom-left-radius: 0; border-bottom-right-radius: 3px; }\n  #globo.on { opacity: 1; visibility: visible; transition-delay: 0s; animation: aparece .6s cubic-bezier(.3,1.4,.5,1); }\n  @keyframes aparece { 0% { transform: scale(.05) rotate(-10deg); } 50% { transform: scale(1.14) rotate(2.5deg); } 72% { transform: scale(.94) rotate(-1deg); } 88% { transform: scale(1.03); } 100% { transform: none; } }\n  #globo.pop { animation: pop .32s ease-out; } @keyframes pop { 40% { transform: scale(1.05) rotate(-.8deg); } 100% { transform: none; } }\n  #globo::before { content: \"\"; position: absolute; left: -8px; bottom: 14px; width: 14px; height: 14px; background: var(--vidrio); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); clip-path: polygon(0 0, 0 100%, 100% 100%); border-left: 1.7px solid var(--tinta); border-bottom: 1.7px solid var(--tinta); transform: rotate(45deg); z-index: 1; border-bottom-left-radius: 3px; }\n  #globo > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }\n  #globo > svg path { vector-effect: non-scaling-stroke; }\n  #globo .sombra { display: none; translate: 0 0; transition: translate .4s cubic-bezier(.3,1.6,.5,1) .3s; } #globo.on .sombra { translate: 5px 5px; } #globo .sombra path { fill: var(--sombra); stroke: var(--sombra); stroke-width: 1px; }\n  #globo .marco .rel { fill: var(--papel); fill-opacity: 0; stroke: none; transition: fill-opacity .3s ease; }\n  #globo .marco .tr { fill: none; stroke: var(--tinta); stroke-width: 1.8px; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .25s ease-in; }\n  #globo.on .marco .rel { fill-opacity: .58; } #globo.on .marco .tr { stroke-dashoffset: 0; transition: stroke-dashoffset .38s ease-out; }\n  .blq { position: absolute; left: 0; top: 0; z-index: 2; width: max-content; }\n  #b-msg { max-width: min(250px, calc(100vw - 90px)); padding: 10px 14px 10px 16px; }\n  #txt { font-size: 14px; line-height: 1.4; min-height: 1.4em; }\n  #txt .g { display: inline-block; white-space: pre-wrap; opacity: 0; transform: translateY(7px) rotate(-1.5deg); filter: blur(3px); transition: opacity .1s ease; }\n  #txt.on .g { opacity: 1; transform: none; filter: none; transition: opacity .25s ease calc(var(--i) * 60ms), transform .35s cubic-bezier(.3,1.5,.5,1) calc(var(--i) * 60ms), filter .3s ease calc(var(--i) * 60ms); }\n  #globo.titulo #txt { font-family: var(--mano); font-weight: normal; font-size: clamp(18px, 5vw, 21px); line-height: 1; transform: rotate(-1.5deg); transform-origin: left; }\n\n  /* barra de pasos y saltar: aparte de la conversaci\u00f3n */\n  #hud { position: absolute; left: 14px; bottom: 6px; z-index: 21; display: flex; align-items: center; gap: 6px; padding: 0 4px 0 12px; min-height: 44px; background: var(--vidrio); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); border: 1.5px solid var(--tinta); border-radius: 22px 18px 21px 19px; box-shadow: 3px 3px 0 var(--sombra); font-family: var(--maq); color: var(--tinta); opacity: 0; transform: translateY(14px); visibility: hidden; pointer-events: none; transition: opacity .25s ease, transform .35s cubic-bezier(.3,1.4,.5,1), visibility 0s .3s; }\n  #hud.on { opacity: 1; transform: none; visibility: visible; pointer-events: auto; transition-delay: .25s, .25s, 0s; }\n  #pasos { display: flex; align-items: center; gap: 10px; min-width: 0; }\n  .pa { position: relative; display: flex; align-items: center; gap: 5px; opacity: .45; transition: opacity .3s ease; }\n  .pa + .pa::before { content: \"\"; position: absolute; left: -9px; top: 50%; width: 8px; height: 2px; border-radius: 1px; background: rgba(0,0,0,.3); transition: background .4s ease; }\n  .pa.hecho + .pa::before { background: var(--tinta); }\n  .pa.ya { opacity: 1; } .pa.ya i { background: #fff; border-width: 2px; box-shadow: 0 0 0 3px rgba(0,0,0,.22); animation: late-paso 1.8s ease-in-out infinite; } .pa.ya b { font-weight: bold; }\n  @keyframes late-paso { 0%, 100% { box-shadow: 0 0 0 2px rgba(0,0,0,.28); } 50% { box-shadow: 0 0 0 6px rgba(0,0,0,.08); } }\n  .pa i { position: relative; width: 24px; height: 24px; border: 1.5px solid var(--tinta); border-radius: 50% 46% 52% 48%; background: transparent; display: flex; align-items: center; justify-content: center; font: normal 12px/1 var(--maq); flex: none; transition: background .3s ease, color .3s ease; }\n  .pa b { white-space: nowrap; font-size: 12px; font-weight: normal; display: none; }\n  @media (min-width: 400px) { .pa b { display: inline; } }\n  .pa.hecho { opacity: 1; } .pa.hecho i { background: var(--tinta); color: var(--papel); animation: sello .5s cubic-bezier(.3,1.6,.5,1); }\n  .pa.hecho i::after { content: \"\"; position: absolute; inset: -3px; border: 2px solid rgba(0,0,0,.4); border-radius: 50%; animation: onda .6s ease-out forwards; }\n  @keyframes sello { 0% { transform: scale(1.8) rotate(-30deg); } 100% { transform: none; } } @keyframes onda { 0% { opacity: 1; transform: scale(.8); } 100% { opacity: 0; transform: scale(2); } }\n  .pa[hidden] { display: none; }\n  #hud #skip, #opciones #skip { position: static; flex: none; min-height: 36px; min-width: 44px; margin: 4px 2px 4px 4px; padding: 0 14px; background: #fff; border: 1.5px solid var(--tinta); border-radius: 18px 15px 17px 16px; box-shadow: 2px 2px 0 var(--sombra); font: normal 13px var(--maq); color: var(--tinta); text-decoration: none; }\n  #hud #skip:hover, #opciones #skip:hover { background: var(--tinta); color: #fff; }\n\n  /* elecci\u00f3n: fichas sueltas, claramente distintas del globo */\n  #opciones { position: absolute; left: 50%; top: 42%; width: min(330px, calc(100vw - 28px)); translate: -50% -50%; z-index: 30; display: none; text-align: center; font-family: var(--maq); color: var(--tinta); }\n  #opciones.on { display: block; }\n  #opciones #fin-c { display: none !important; }\n  #fin-b { display: flex; flex-direction: column; gap: 12px; }\n  .op { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 52px; padding: 10px 16px; border: 2px solid var(--tinta); border-radius: 9px 13px 8px 12px; background: var(--vidrio); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); box-shadow: 4px 4px 0 var(--sombra); font: normal 14px/1.25 var(--maq); color: var(--tinta); text-align: left; cursor: pointer; opacity: 0; transform: translateY(60px) rotate(var(--r)) scale(.8); }\n  #opciones.on .op { animation: cae .65s cubic-bezier(.3,1.5,.5,1) calc(.15s + var(--k) * .12s) forwards; }\n  @keyframes cae { 0% { opacity: 0; transform: translateY(60px) rotate(calc(var(--r) * 3)) scale(.8); } 60% { opacity: 1; transform: translateY(-9px) rotate(var(--r)) scale(1.04); } 100% { opacity: 1; transform: rotate(var(--r)); } }\n  .op:hover, .op:focus-visible { transform: translate(-2px, -3px) rotate(0deg); box-shadow: 7px 7px 0 var(--sombra); }\n  .op:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--sombra); }\n  .op:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 3px; }\n  .op svg { flex: none; overflow: visible; } .op path { fill: none; stroke: var(--tinta); stroke-width: 1.8px; stroke-linecap: round; stroke-linejoin: round; }\n  #fin-c { display: none; margin: 16px 0 0; font: 600 21px/1.2 var(--mano); display: inline-block; padding: 6px 14px; background: var(--papel); border-radius: 12px 16px 11px 15px; opacity: 0; }\n  #opciones.on #fin-c { animation: asoma .5s ease .75s forwards; } @keyframes asoma { to { opacity: 1; } }\n  #opciones #skip { display: block; margin: 14px auto 0; }\n\n  /* carrusel de casos dentro de cada ficha */\n  .grupo { display: flex; flex-direction: column; pointer-events: auto; }\n  .op svg { transition: transform .3s cubic-bezier(.3,1.5,.5,1); } .grupo.abierto .op svg { transform: rotate(90deg); }\n  .car { display: none; margin: 10px 4px 4px; }\n  .grupo.abierto .car { display: block; animation: car-in .4s cubic-bezier(.3,1.4,.5,1); }\n  @keyframes car-in { from { opacity: 0; transform: translateY(-10px) scale(.96); } }\n  .car-v { position: relative; height: clamp(92px, 16vh, 140px); border: 2px solid var(--tinta); border-radius: 8px 12px 9px 11px; overflow: hidden; background: var(--papel); box-shadow: 4px 4px 0 var(--sombra); cursor: pointer; }\n  .car-t { display: flex; width: 100%; height: 100%; transform: translateX(calc(var(--i, 0) * -100%)); transition: transform .65s cubic-bezier(.3,1.18,.4,1); will-change: transform; }\n  .sl { position: relative; flex: 0 0 100%; height: 100%; margin: 0; pointer-events: none; }\n  .car-n button[disabled] { opacity: .35; cursor: default; box-shadow: none; } .car-n button[disabled]:hover { background: #fff; color: var(--tinta); }\n  .sl.on figcaption { animation: cap-in .55s cubic-bezier(.3,1.5,.5,1) .3s both; } @keyframes cap-in { from { transform: translateY(100%); } }\n  .car-v { touch-action: pan-y; }\n  .sl img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }\n  .sl figcaption { display: flex; justify-content: space-between; gap: 8px; position: absolute; left: 0; right: 0; bottom: 0; padding: 5px 10px 6px; text-align: left; font: normal 13px/1.2 var(--maq); background: var(--vidrio); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4); border-top: 1.5px solid var(--tinta); }\n  .car-n { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }\n  .car-n button { min-width: 44px; min-height: 36px; border: 1.5px solid var(--tinta); border-radius: 14px 12px 13px 12px; background: #fff; font: normal 13px var(--maq); color: var(--tinta); cursor: pointer; box-shadow: 2px 2px 0 var(--sombra); touch-action: manipulation; }\n  .car-n button { transition: transform .2s cubic-bezier(.3,1.6,.5,1), box-shadow .2s ease, background .15s ease, color .15s ease; }\n  .car-n button:not([disabled]):hover, .car-n button:focus-visible { background: var(--tinta); color: #fff; transform: translate(-2px, -3px); box-shadow: 5px 5px 0 var(--sombra); }\n  .car-n button:not([disabled]):active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--sombra); }\n  .car-v:hover { box-shadow: 7px 7px 0 var(--sombra); transform: translate(-2px, -2px); } .car-v { transition: transform .2s cubic-bezier(.3,1.6,.5,1), box-shadow .2s ease; }\n  .car-v:hover .sl img { transform: scale(1.05); } .sl img { transition: transform .6s ease; } .car-n .ver { flex: 1; max-width: 170px; padding: 0 12px; }\n  #hud.solo-saltar #pasos { display: none; } #hud.solo-saltar { padding: 0 4px; }\n  @media (prefers-reduced-motion: reduce) { * { transition-duration: .01s !important; transition-delay: 0s !important; animation-duration: .01s !important; } }\n" + "</style>" + "<div id=\"stage\">\n  <div id=\"veil\" class=\"on\" aria-hidden=\"true\"></div>\n  <div id=\"foco\" aria-hidden=\"true\"></div>\n\n  <div id=\"hero\"><h1 class=\"fade\" id=\"h1\"></h1><p class=\"fade\" id=\"hp\"></p><div id=\"pasa-fila\" class=\"fade\"><span class=\"gatito\" aria-hidden=\"true\"><svg viewBox=\"0 0 15 12\" shape-rendering=\"crispEdges\"><path d=\"M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z\"/></svg></span><button id=\"pasa\" type=\"button\"><svg viewBox=\"0 0 100 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path class=\"rel\" d=\"M4 3 Q30 1 52 2.2 T96.5 3 Q99 6 98.2 30 T98.6 94 Q97 98 92 97.4 T50 98.2 T6 97 Q2 96 2.4 90 T2 50 T3 7 Q3.5 4 7 2.6\"/><path class=\"tr\" pathLength=\"1\" d=\"M4 3 Q30 1 52 2.2 T96.5 3 Q99 6 98.2 30 T98.6 94 Q97 98 92 97.4 T50 98.2 T6 97 Q2 96 2.4 90 T2 50 T3 7 Q3.5 4 7 2.6\"/></svg><span id=\"pasa-t\"></span></button></div></div>\n\n  <div id=\"dialogo\">\n  <div id=\"gato\" aria-hidden=\"true\"><svg viewBox=\"0 0 15 12\" shape-rendering=\"crispEdges\"><path d=\"M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z\"/></svg><span class=\"ch\"></span></div>\n  <div id=\"globo\" role=\"status\" aria-live=\"polite\">\n    <svg class=\"sombra\" viewBox=\"0 0 100 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M4 3 Q30 1 52 2.2 T96.5 3 Q99 6 98.2 30 T98.6 94 Q97 98 92 97.4 T50 98.2 T6 97 Q2 96 2.4 90 T2 50 T3 7 Q3.5 4 7 2.6\"/></svg>\n    <svg class=\"marco\" viewBox=\"0 0 100 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path class=\"rel\" d=\"M4 3 Q30 1 52 2.2 T96.5 3 Q99 6 98.2 30 T98.6 94 Q97 98 92 97.4 T50 98.2 T6 97 Q2 96 2.4 90 T2 50 T3 7 Q3.5 4 7 2.6\"/><path class=\"tr\" pathLength=\"1\" d=\"M4 3 Q30 1 52 2.2 T96.5 3 Q99 6 98.2 30 T98.6 94 Q97 98 92 97.4 T50 98.2 T6 97 Q2 96 2.4 90 T2 50 T3 7 Q3.5 4 7 2.6\"/></svg>\n    <div id=\"b-msg\" class=\"blq\"><div id=\"txt\"></div></div>\n  </div>\n  </div>\n  <div id=\"hud\"><div id=\"pasos\"></div></div>\n  <div id=\"opciones\" role=\"group\" aria-labelledby=\"txt\"><div id=\"fin-b\"></div><p id=\"fin-c\"></p></div>\n\n  <button id=\"skip\" class=\"btn\" type=\"button\">Saltar \u203a</button>\n</div>\n";
   document.body.appendChild(host);
-  /* ---- Textos ---- */
-  const TEXTOS = {
+  /* ---- Textos (aprobados por Mery el 30-oct: TEXTOS-ENTRADA-GUIADA.md) ---- */
+  const TX = {
     nombre: "Mery Villena",
-    frase: tl("Diseño productos digitales para negocios: webs, herramientas internas y automatizaciones. Trabajo desde la experiencia del cliente hasta los procesos que permiten que un equipo opere mejor."),
-    c1: tl("Esto es mi portfolio. Un escritorio donde todo se abre con un clic."),
-    c2: tl("Operaciones, diseño de producto y UI."),
-    c3: tl("Navega por el escritorio y descubre más proyectos."),
-    c4: tl("Deja tus comentarios por el escritorio."),
-    c5: tl("Y es tuyo: cambia el fondo, los colores y pon música."),
-    nota: tl("Déjame tus comentarios aquí"),
+    frase: tl("Diseño webs y herramientas para que los negocios funcionen mejor."),
+    pasa: tl("Pasa, te enseño."),
+    saludo: tl("Un Mac de los 90. Yo, siempre a la última."),
+    panel: tl("Ponte a gusto. Abre el Panel de control: ¿qué color de fondo te apetece?"),
+    fondoOk: tl("Me gusta cómo queda. ¿Probamos otros iconos?"),
+    iconosOk: tl("Les sienta bien el cambio. Cierra el panel cuando quieras."),
+    postit: tl("Y ahora, tu post-it. Escribe lo que quieras… o nada."),
+    postitOk: tl("Por aquí hay más que post-its."),
+    hFondo: tl("Prueba un color de fondo. Está en el Panel de control."),
+    hIconos: tl("¿Y los iconos? Elige los que más te gusten."),
+    hPostit: tl("Toca «Deja tu post-it». Escribe lo que quieras, o nada."),
+    titulo: tl("Ya tiene tu toque."),
+    pregunta: tl("¿Qué te enseño?"),
+    b1: tl("Cómo diseño"), b2: tl("Cómo simplifico el trabajo"), b3: tl("Cómo experimento"),
+    cierre: tl("Mi escritorio es tu escritorio. Siéntete como en casa."),
+    abre: tl("Abre esta carpeta."), abreCaso: tl("Ahora ábrelo aquí."), casoOk: tl("Todo tuyo. Mira con calma."), ver: tl("Ver este caso"),
+    skip: tl("Saltar ›"), hecho: tl("hecho"),
   };
-  // Carpetas del escritorio, con su color de categoría (sistema de diseño).
-  const CATS = { negocio: [tl("Soluciones de negocio"), "#7fbf7a"], operaciones: [tl("Herramientas y operaciones"), "#8fb4ec"], producto: [tl("Exploración de producto"), "#f0c766"] };
-  // Cada proyecto: carpeta, tipo y estado reales (como en sus tarjetas), el gancho, la cifra y tres pantallas reales.
-  const PROYECTOS = [
-    { cat: "negocio", tipo: "concepto", estado: tl("Prototipo navegable"), head: tl("Una pizzería que le gana margen a las apps de reparto"), fig: { texto: tl("pedidos que el horno cumple") },
-      sub: tl("Operaciones y diseño de producto: la web solo ofrece las horas que el horno puede cumplir, y el panel ordena el turno."),
-      shots: [[tl("La web"), "putidimadre/case/01-web.jpg"], [tl("El panel del turno"), "putidimadre/case/02-panel.jpg"], [tl("Elegir la hora"), "putidimadre/case/03-franjas-punta.jpg"]] },
-    { cat: "operaciones", tipo: "real", estado: tl("En uso"), head: tl("Presupuestar sin echar la tarde"), fig: { antes: "1 h", de: 60, a: 10, suf: " min" },
-      sub: tl("Del PDF del fabricante al presupuesto del cliente, en un solo paso."),
-      shots: [[tl("Original del fabricante"), "generador-de-presupuestos/img/02-antes-original-korvel.jpg"], [tl("Presupuesto del cliente"), "generador-de-presupuestos/img/03-despues-luz-norte.jpg"], [tl("PDF generado"), "generador-de-presupuestos/img/08-pdf-generado.jpg"]] },
-    { cat: "producto", tipo: "concepto", estado: tl("Prototipo navegable"), head: tl("Descubre música en el local donde estás"), fig: { texto: tl("app + negocio") },
-      sub: tl("Diseño de producto: la ficha del club, la cola compartida y el panel del local, en un mismo producto."),
-      shots: [[tl("Clubs cerca"), "spotify/capturas/02-clubs-cerca.jpg"], [tl("Ficha del club"), "spotify/capturas/03-ficha-club.jpg"], [tl("Panel del local"), "spotify/capturas/06-panel-local.jpg"]] },
-    { cat: "producto", tipo: "concepto", estado: tl("Prototipo navegable"), head: tl("Una luna que respira contigo"), fig: { texto: tl("desde cero") },
-      sub: tl("UI diseñada y programada desde cero: una app de respiración guiada, gratuita y sin cuenta."),
-      shots: [[tl("El inicio de la app"), "respira/case/intro-home.jpg"], [tl("Los ajustes"), "respira/case/intro-ajustes.jpg"]] },
-  ];
-  const TIPOS = { real: tl("Proyecto real"), concepto: tl("Concepto") };
-  const IC = typeof ICONS !== "undefined" ? ICONS : {};
-  const ESCRITORIO = [[tl("Léeme primero"), IC.favorites], [tl("Soluciones de negocio"), IC.directory], [tl("Herramientas y operaciones"), IC.directory], [tl("Exploración de producto"), IC.directory], [tl("Voz visual"), IC.directory], [tl("Sobre mí"), IC.disk], [tl("Contacto"), IC.mail], [tl("Papelera"), IC.trashEmpty]];
-  const $ = (s) => root.querySelector(s), $$ = (s) => [...root.querySelectorAll(s)];
-  const DURACION = 36000;
-  let run = 0, t0 = 0, raf = 0, etapa = "nombre"; // etapa: dónde va la película (para medir dónde la dejan)
+  const PASOS = [["fondo", tl("Fondo")], ["iconos", tl("Iconos")], ["postit", tl("Post-it")]];
+  // Sentencias de un texto aprobado (para reaccionar solo con una parte sin inventar texto nuevo).
+  const partes = (s) => s.replace(/([.!?])\s+/g, "$1\n").split("\n");
 
-  // El escritorio real vive detrás de la presentación: la película lo toca de verdad (iconos, Panel de control, reproductor).
+  // Tipografías del sistema de diseño (las de la página): MonacoCS en globos, botón, fichas y pasos; ChicagoCS en el título final.
+  const $ = (s) => root.querySelector(s);
   const real = (sel) => document.querySelector(sel);
-  const seleccionar = (el) => { document.querySelectorAll(".icon.selected").forEach((i) => i.classList.remove("selected")); if (el) el.classList.add("selected"); };
-  let orig = null; const abiertas = { panel: false, radio: false, exploracion: false };
-  // Deja el Panel y el escritorio como los tenía el visitante (también si cierra la presentación a mitad).
-  const restaurarAjustes = () => {
-    if (!orig) return;
-    orig.els.forEach((el) => { if (el) el.click(); });
-    const t = real('#win-panel input[data-k="tam"]'); if (t && orig.tam != null) { t.value = orig.tam; t.dispatchEvent(new Event("input", { bubbles: true })); }
-    orig = null;
-  };
-  const limpiarReal = () => {
-    restaurarAjustes(); seleccionar(null);
-    for (const [k, id] of [["panel", "#win-panel"], ["radio", "#win-radio"], ["exploracion", "#win-exploracion"]]) { if (abiertas[k]) { const x = real(id + " .close"); if (x) x.click(); abiertas[k] = false; } }
-  };
-  const RITMO = 0.8; // 1 = ritmo original; menos = más rápida (todas las esperas se multiplican por esto)
-  const wait = (ms, id, real) => new Promise((res, rej) => { setTimeout(() => (id === run ? res() : rej("cancel")), real ? ms : ms * RITMO); }); // real: sin aplicar RITMO (para lo que hay que poder leer)
-  const ok = (id) => { if (id !== run) throw "cancel"; };
-  const typeTo = async (el, text, id, v = 38) => { el.classList.add("caret"); el.textContent = ""; for (const ch of text) { ok(id); el.textContent += ch; await wait(v, id); } };
-  const caption = (txt) => { const c = $("#cap"); c.classList.remove("on"); setTimeout(() => { c.textContent = txt; c.classList.add("on"); }, 220); };
-  const cursor = (x, y, click) => new Promise((res) => { const c = $("#cursor"); c.classList.add("on"); c.style.transform = "translate(" + x + "px," + y + "px)"; setTimeout(() => { if (click) { c.classList.add("click"); setTimeout(() => c.classList.remove("click"), 260); } res(); }, 560); });
-  const centro = (el) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2 - 4, r.top + r.height / 2 - 2]; };
+  const reducido = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  let run = 0, etapa = "cartela"; // etapa: dónde la dejan (para medir)
 
-  // Textos fijos del HTML, traducidos aquí.
-  $$("#menubar .mt:not(.cat), #menubar .own").forEach((e) => { e.textContent = tl(e.textContent.trim()); });
-  $("#skip").textContent = tl("Saltar ›"); $("#entrar").textContent = tl("Explorar el escritorio"); $("#destacado").textContent = tl("Ver caso destacado"); $("#pibtn").innerHTML = "<b>+</b>" + esc(tl("Deja tu post-it"));
+  const wait = (ms, id) => new Promise((res, rej) => { setTimeout(() => (id === run ? res() : rej("cancel")), ms); });
+  const ok = (id) => { if (id !== run) throw "cancel"; };
+  const typeTo = async (el, text, id, v) => { el.classList.add("caret"); el.textContent = ""; for (const ch of text) { ok(id); if (irAlFinal) { el.textContent = text; break; } el.textContent += ch; await wait(v, id); } el.classList.remove("caret"); };
 
-  // Iconos y reloj: los mismos del escritorio.
-  $("#icons").innerHTML = ESCRITORIO.map((e) => '<div class="ico"><img src="' + (e[1] || "") + '" alt=""><span>' + esc(e[0]) + "</span></div>").join("");
-  const reloj = () => { const d = new Date(), dia = d.toLocaleDateString(LANG === "en" ? "en-US" : "es-ES", { weekday: "short" }).replace(".", ""); let h = d.getHours(); const ap = h >= 12 ? "PM" : "AM"; h = h % 12 || 12; $("#clk").textContent = dia.charAt(0).toUpperCase() + dia.slice(1) + " " + h + ":" + String(d.getMinutes()).padStart(2, "0") + " " + ap; };
-  reloj();
+  // Textos fijos y estructura
+  $("#skip").textContent = TX.skip; $("#pasa-t").textContent = TX.pasa;
+  $("#pasos").innerHTML = PASOS.map((p, i) => '<span class="pa" data-p="' + p[0] + '" title="' + esc(p[1]) + '"><i>' + (i + 1) + "</i><b>" + esc(p[1]) + "</b></span>").join("");
+  $("#fin-c").textContent = TX.cierre;
+  // Cada ficha despliega un carrusel con sus casos (miniaturas de las tarjetas reales). Al elegir uno, el gato lleva hasta la carpeta y la tarjeta, y se retira.
+  const GRUPOS = [
+    [TX.b1, [["vozvisual", "mesa-de-lectura/index.html"], ["soluciones", "shiatsu/index.html"]]],
+    [TX.b2, [["herramientas", "case-presupuestos"], ["soluciones", "case-puti"]]],
+    [TX.b3, [["exploracion", "case-spotify"], ["exploracion", "case-respira"]]],
+  ];
+  const FL = '<svg width="30" height="14" viewBox="0 0 30 14" aria-hidden="true"><path d="M1 8 Q14 5.5 27 7 M21 2 L27.5 7 L21 12"/></svg>', ROT = ["-1.6deg", "1.2deg", "-.8deg"];
+  const casosDe = (g) => g[1].map((k) => { const d = DESKTOP.find((x) => x.id === k[0]), c = d && d.cards.find((x) => x.caseStudy === k[1] || x.href === k[1]); return c ? { d, c } : null; }).filter(Boolean);
+  const srcDe = (c) => { if (c.caseStudy === "case-spotify") return "spotify/capturas/00-portada.jpg"; const m = /src="([^"]+)"/.exec(c.thumb || ""); return m ? m[1] : ""; };
+  let abierto = -1, slide = [0, 0, 0], carT = 0;
+  function pintarCarrusel() {
+    $("#fin-b").innerHTML = GRUPOS.map((g, i) => {
+      const cs = casosDe(g);
+      return '<div class="grupo" data-g="' + i + '"><button class="op" type="button" aria-expanded="false" data-i="' + i + '" style="--k:' + i + ';--r:' + ROT[i] + '"><span>' + esc(g[0]) + "</span>" + FL + "</button>" +
+        '<div class="car"><div class="car-v" data-ver="1"><div class="car-t">' + cs.map((x, n) => '<figure class="sl' + (n ? "" : " on") + '" ><img src="' + esc(srcDe(x.c)) + '" alt="" loading="lazy" draggable="false"><figcaption><span>' + x.c.title + "</span><span>" + (n + 1) + " / " + cs.length + "</span></figcaption></figure>").join("") + "</div></div>" +
+        '<div class="car-n"><button type="button" data-d="-1" aria-label="&lsaquo;" disabled>&lsaquo;</button><button type="button" class="ver" data-ver="1">' + esc(TX.ver) + '</button><button type="button" data-d="1" aria-label="&rsaquo;">&rsaquo;</button></div></div></div>';
+    }).join("");
+  }
+  function verSlide(g, n) {
+    const gr = $("#fin-b").querySelector('.grupo[data-g="' + g + '"]'), cs = gr.querySelectorAll(".sl"); if (!cs.length) return;
+    slide[g] = Math.max(0, Math.min(cs.length - 1, n));
+    gr.querySelector(".car-t").style.setProperty("--i", slide[g]);
+    gr.querySelector('[data-d="-1"]').disabled = slide[g] === 0; gr.querySelector('[data-d="1"]').disabled = slide[g] === cs.length - 1;
+    cs.forEach((e, k) => e.classList.toggle("on", k === slide[g]));
+  }
+  function abrirGrupo(g) {
+    abierto = g === abierto ? -1 : g; clearInterval(carT);
+    $("#fin-b").querySelectorAll(".grupo").forEach((e, k) => { e.classList.toggle("abierto", k === abierto); e.querySelector(".op").setAttribute("aria-expanded", k === abierto ? "true" : "false"); });
+    // sin pase automático: solo se mueve cuando la persona pulsa una flecha o arrastra
+    setTimeout(() => { if (fin) colocar(); }, 60);
+  }
+  pintarCarrusel();
+  let arrastre = 0, x0 = null;
+  $("#fin-b").addEventListener("pointerdown", (e) => { x0 = e.target.closest(".car-v") ? e.clientX : null; });
+  $("#fin-b").addEventListener("pointerup", (e) => { const gr = e.target.closest(".grupo"); if (x0 === null || !gr) { x0 = null; return; } const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 35) { arrastre = Date.now(); clearInterval(carT); verSlide(+gr.dataset.g, slide[+gr.dataset.g] + (dx < 0 ? 1 : -1)); } });
+  $("#fin-b").addEventListener("click", (e) => {
+    const gr = e.target.closest(".grupo"); if (!gr) return; const g = +gr.dataset.g;
+    if (e.target.closest(".op")) { medir("intro/ficha-" + (g + 1)); return abrirGrupo(g); }
+    const f = e.target.closest("[data-d]"); if (f) { clearInterval(carT); return verSlide(g, slide[g] + +f.dataset.d); } // el pase automático se para en cuanto la persona toca
+    if (e.target.closest("[data-ver]") && Date.now() - arrastre > 400) { const x = casosDe(GRUPOS[g])[slide[g]]; if (x) verCaso(g, x); }
+  });
+  // Al elegir un caso: «Abre esta carpeta» (foco en el icono) → «Ahora ábrelo aquí» (foco en la tarjeta) → el gato se despide y se retira.
+  let caso = null, casoT = 0;
+  const abiertaV = (w) => !!w && w.classList.contains("open") && !w.classList.contains("closing");
+  function casoObjetivo() {
+    const w = real("#win-" + caso.d.id);
+    if (!abiertaV(w)) { caso.paso = "carpeta"; return { el: real('.icon[data-id="' + caso.d.id + '"]') }; }
+    caso.paso = "tarjeta";
+    const t = [...w.querySelectorAll(".case-card")].find((a) => { const h = a.querySelector("h3"); return h && h.textContent.trim() === String(caso.c.title).trim(); });
+    return { el: t || w };
+  }
+  function vigilaCaso() {
+    if (!caso || caso.listo) return;
+    if (caso.c.caseStudy && abiertaV(real("#win-" + caso.c.caseStudy))) return casoHecho();
+    const antes = caso.paso; objetivo = casoObjetivo();
+    if (caso.paso !== antes) { decir(caso.paso === "carpeta" ? TX.abre : TX.abreCaso); ultimaCaja = ""; if (objetivo.el) reinicia($("#foco"), "entra"); colocar(); chispas(); }
+  }
+  function verCaso(g, x) {
+    clearInterval(carT); medir("intro/caso-" + (x.c.caseStudy || x.c.href));
+    caso = { d: x.d, c: x.c, paso: "", listo: false };
+    $("#opciones").classList.remove("on"); $("#hud").classList.add("solo-saltar", "on"); $("#hud").appendChild($("#skip"));
+    $("#gato").classList.add("on"); $("#globo").classList.add("on"); ultimo = "";
+    vigilaCaso(); clearInterval(casoT); casoT = setInterval(vigilaCaso, 250);
+  }
+  function casoHecho() {
+    if (!caso || caso.listo) return; caso.listo = true; clearInterval(casoT); const id = run;
+    objetivo = null; $("#foco").classList.remove("on"); decir(TX.casoOk); chispas();
+    setTimeout(() => { if (id !== run) return; $("#gato").classList.remove("on"); $("#globo").classList.remove("on"); $("#hud").classList.remove("on"); setTimeout(() => { if (id === run) cerrar("caso"); }, 500); }, reducido() ? 1500 : 2200);
+  }
+  // Caso que se abre en otra pestaña (Shiatsu, Mesa de lectura): basta con pulsar su tarjeta.
+  document.addEventListener("click", (e) => { if (!caso || caso.listo || caso.paso !== "tarjeta" || caso.c.caseStudy) return; const a = e.target.closest && e.target.closest(".case-card"); const h = a && a.querySelector("h3"); if (h && h.textContent.trim() === String(caso.c.title).trim()) setTimeout(casoHecho, 150); }, true);
+
+  /* ---- Estado de la guía ---- */
+  const estado = { fondo: false, iconos: false, postit: false };
+  let pistasPostit = 0, saludo = false, guia = false, fin = false, tIni = 0, tmr = 0, idleT = 0, swapT = 0, ultimo = "", objetivo = null, raf = 0, tickT = 0, enlazado = false, avanzar = null;
+
+  const panelEl = () => real("#win-panel");
+  const panelAbierto = () => { const w = panelEl(); return !!w && w.classList.contains("open") && !w.classList.contains("closing"); };
+  const fantasma = () => { const g = document.querySelector(".postit.ghost"); return g && g.offsetWidth > 0 ? g : null; };
+  const editorAbierto = () => !!document.querySelector(".postit.nuevo");
+  // Solo se espera mientras la persona teclea de verdad: 4 s sin tocar el teclado y el recorrido sigue, haya texto o no.
+  let tTecla = 0;
+  const escribiendo = () => editorAbierto() && performance.now() - tTecla < 3000;
+  // Sin botón «Deja tu post-it» (móvil): esa tarea no se pide.
+  const postitNA = () => !estado.postit && !fantasma() && performance.now() - tIni > 4500;
+  const hecho = () => estado.fondo && estado.iconos && (estado.postit || postitNA());
+
+  // La cartela se reutiliza: cambia el texto (por grupos de palabras, con un pequeño rebote) y se ajusta a su contenido.
+  function ajustar() { const g = $("#globo"), b = $("#b-msg"); g.style.width = b.offsetWidth + "px"; g.style.height = b.offsetHeight + "px"; }
+  const reinicia = (el, cls) => { if (reducido()) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+  const chispas = () => { const c = $("#gato .ch"); if (!c.firstChild) c.innerHTML = [-80, -55, -30, -5, 20, 45, 70, 95, 120].map((a) => '<i style="--a:' + a + 'deg"></i>').join(""); reinicia(c, "on"); };
+  const decir = (txt, ya) => {
+    if (txt === ultimo) return; const primero = !ultimo; ultimo = txt;
+    const t = $("#txt"), g = $("#globo"); t.classList.remove("on"); clearTimeout(swapT);
+    const poner = () => {
+      const w = txt.split(" "); let h = "";
+      for (let i = 0; i < w.length; i += 2) h += '<span class="g" style="--i:' + i / 2 + '">' + esc(w.slice(i, i + 2).join(" ")) + (i + 2 < w.length ? " " : "") + "</span>";
+      t.innerHTML = h; g.classList.toggle("titulo", txt === TX.titulo); ajustar(); colocar(); void t.offsetWidth; t.classList.add("on");
+      if (!primero) reinicia(g, "pop"); reinicia($("#gato"), "habla");
+    };
+    if (ya || reducido()) poner(); else swapT = setTimeout(poner, 110);
+  };
+  const programar = (fn, ms) => { clearTimeout(tmr); tmr = setTimeout(() => { if (guia && !fin) fn(); }, ms); };
+
+  function pintarPasos() {
+    const na = postitNA();
+    const pend = $$pasos().filter((el) => !(el.dataset.p === "postit" && na) && !estado[el.dataset.p])[0]; let prev = true;
+    $$pasos().forEach((el) => {
+      const k = el.dataset.p; el.classList.toggle("hecho", estado[k]); el.classList.toggle("ya", el === pend); el.classList.toggle("tras", prev && !(k === "postit" && na)); if (!(k === "postit" && na)) prev = estado[k];
+      el.querySelector("i").textContent = estado[k] ? "✓" : String(PASOS.findIndex((q) => q[0] === k) + 1);
+      el.hidden = k === "postit" && na;
+      const lbl = PASOS.filter((p) => p[0] === k)[0][1]; el.setAttribute("aria-label", lbl + (estado[k] ? ", " + TX.hecho : ""));
+    });
+  }
+  const $$pasos = () => [...root.querySelectorAll(".pa")];
+
+  // Qué se le dice cuando toca pedir lo siguiente (sin reacción previa)
+  function invitar() {
+    if (fin) return;
+    const abierto = panelAbierto();
+    if (hecho()) { if (abierto) decir(partes(TX.iconosOk)[1]); else finalizar(); return; }
+    if (!estado.fondo) { if (!abierto) decir(TX.panel); return; }
+    if (!estado.iconos) { decir(TX.hIconos); return; }
+    decir(abierto ? partes(TX.iconosOk)[1] : TX.postit);
+  }
+  // Pista de repetición, con otras palabras, tras unos segundos sin tocar
+  function pista() {
+    if (!estado.fondo) decir(TX.hFondo);
+    else if (!estado.iconos) decir(TX.hIconos);
+    else if (panelAbierto()) decir(partes(TX.iconosOk)[1]);
+    else if (!estado.postit) decir(TX.hPostit);
+    reinicia($("#gato"), "habla");
+    medir("intro/pista");
+  }
+  function reiniciarIdle() { clearTimeout(idleT); idleT = setTimeout(() => { if (guia && !fin) {
+      if (!escribiendo()) { if (estado.fondo && estado.iconos && !estado.postit && !panelAbierto() && ++pistasPostit >= 2) return finalizar(); pista(); }
+      reiniciarIdle(); } }, (estado.fondo && estado.iconos && !estado.postit) ? 6000 : 9000); }
+
+  function alHacer(k) {
+    if (!guia || fin || estado[k]) return;
+    estado[k] = true; medir("intro/hecho-" + k); clearTimeout(tmr); saludoYa();
+    if (k === "postit") { // abrir el editor basta (escriba o no): el gato calla y el globo se retira hasta que se cierre, pegando o cancelando
+      $("#globo").classList.remove("on"); ultimo = ""; pintarPasos(); ponerFoco(); chispas(); esperarEditor(); reiniciarIdle(); return;
+    }
+    if (k === "fondo") decir(estado.iconos ? partes(TX.fondoOk)[0] + " " + partes(TX.iconosOk)[1] : TX.fondoOk);
+    else if (k === "iconos") decir(estado.fondo ? TX.iconosOk : TX.hFondo);
+    else if (!panelAbierto()) decir(TX.postitOk);
+    pintarPasos(); ponerFoco(); chispas();
+    if (hecho()) { if (panelAbierto()) { if (k === "postit") invitar(); } else programar(finalizar, k === "postit" ? 1800 : 1200); }
+    else if (k === "postit" && !panelAbierto()) programar(invitar, 2200);
+    reiniciarIdle();
+  }
+  // El saludo se dice casi en el centro; después el gato se va junto a la primera tarea con un globo nuevo.
+  function saludoYa() { if (!saludo) return; saludo = false; ponerFoco(); colocar(); const g = $("#globo"); if (!g.classList.contains("on")) { ultimo = ""; g.classList.add("on"); } }
+  function salirDeSaludo() {
+    if (!saludo || fin) return;
+    const g = $("#globo"), ms = reducido() ? 0 : 1;
+    g.classList.remove("on"); ultimo = ""; saludo = false;
+    setTimeout(() => { if (!guia || fin) return; ponerFoco(); colocar();
+      setTimeout(() => { if (!guia || fin) return; g.classList.add("on"); invitar(); if (!ultimo) pista(); }, 600 * ms); }, 280 * ms);
+  }
+  function esperarEditor() {
+    tTecla = performance.now();
+    const id = run, t = () => {
+      if (id !== run || !guia || fin) return;
+      if (editorAbierto() && escribiendo()) { setTimeout(t, 250); return; }
+      $("#globo").classList.add("on"); decir(TX.postitOk); programar(() => (hecho() ? finalizar() : invitar()), 1400);
+    };
+    setTimeout(t, 300);
+    setTimeout(() => { if (id === run && guia && !fin && hecho()) finalizar(); }, 12000); // red de seguridad: pase lo que pase, a los 12 s sigue (salvo que esté tecleando)
+  }
+  function alCambiarPanel() {
+    if (!guia || fin) return;
+    if (saludo) { clearTimeout(tmr); saludoYa(); }
+    ponerFoco(); reiniciarIdle();
+    if (panelAbierto()) { if (ultimo === TX.saludo || ultimo === TX.panel) { clearTimeout(tmr); decir(estado.fondo ? TX.hIconos : TX.hFondo); } }
+    else programar(hecho() ? finalizar : invitar, 500);
+  }
+
+  /* ---- Foco (el resto se atenúa) y flecha dibujada ---- */
+  const hijoVisible = (sel) => { const w = panelEl(); const e = w && w.querySelector(sel); const f = e && e.closest("fieldset"); return f && f.offsetWidth ? f : null; };
+  function calcularObjetivo() {
+    if (caso) return casoObjetivo();
+    if (!guia || fin || saludo) return null;
+    if (panelAbierto()) {
+      if (!estado.fondo) return { el: hijoVisible('[data-k="colorFondo"]') };
+      if (!estado.iconos) return { el: hijoVisible('input[data-k="fondo"]') };
+      return { el: panelEl().querySelector(".close") };
+    }
+    if (!estado.fondo || !estado.iconos) return { el: real('.icon[data-id="panel"]'), flecha: true };
+    if (!estado.postit) { const n = fantasma(); if (n) return { el: n, postit: true }; }
+    return null;
+  }
+  // El gato y su globo se colocan junto a lo que toca hacer (y se deslizan cuando cambia el objetivo).
+  function colocar(ya) {
+    const d = $("#dialogo"), bm = $("#b-msg"), w = 40 + 14 + bm.offsetWidth, h = Math.max(bm.offsetHeight, 33), W = innerWidth, H = innerHeight;
+    const abajo = () => ({ x: 14, y: H - h - 64, der: false });
+    let p;
+    if (saludo) p = { x: (W - w) / 2, y: Math.max(70, H * .4 - h / 2), der: false };
+    else if (fin && !caso) { const ro = $("#opciones").getBoundingClientRect(); p = { x: (W - w) / 2, y: Math.max(36, (ro.height ? ro.top : H * .42 - 150) - h - 14), der: false }; }
+    else if (W <= 760) p = abajo();
+    else {
+      const o = objetivo, r = o && o.el && o.el.getBoundingClientRect();
+      if (!r || !r.width) { if (d.dataset.p) return; p = abajo(); }
+      else {
+        const cy = r.top + r.height / 2, y = Math.max(32, Math.min(H - h - 72, cy - h / 2));
+        const dcha = { x: o.postit ? r.left + 250 : r.right + 16, y, der: false }, izda = { x: r.left - 16 - w, y, der: true };
+        const prim = r.left + r.width / 2 > W * .55 ? [izda, dcha] : [dcha, izda];
+        p = prim.filter((q) => q.x >= 8 && q.x + w <= W - 8)[0] || abajo();
+      }
+    }
+    d.dataset.p = "1"; d.classList.toggle("der", p.der);
+    if (ya) d.classList.add("sin-t");
+    d.style.left = Math.round(p.x) + "px"; d.style.top = Math.round(p.y) + "px";
+    if (ya) { void d.offsetWidth; d.classList.remove("sin-t"); }
+  }
+  let ultimaCaja = "";
+  function ponerFoco() { const antes = objetivo && objetivo.el; objetivo = calcularObjetivo(); ultimaCaja = ""; if (objetivo && objetivo.el && objetivo.el !== antes) reinicia($("#foco"), "entra"); if (!objetivo || !objetivo.el) { $("#foco").classList.remove("on"); } }
+  function bucle() {
+    cancelAnimationFrame(raf);
+    const f = $("#foco");
+    const paso = () => {
+      if (!guia) return;
+      const o = objetivo, el = o && o.el, r = el && el.getBoundingClientRect();
+      if (r && r.width > 0 && r.height > 0) {
+        const caja = [r.left, r.top, r.width, r.height].map(Math.round).join();
+        if (caja !== ultimaCaja) {
+          ultimaCaja = caja; const p = 4;
+          f.style.cssText = "left:" + (r.left - p) + "px;top:" + (r.top - p) + "px;width:" + (r.width + 2 * p) + "px;height:" + (r.height + 2 * p) + "px";
+          colocar();
+        }
+        f.classList.add("on");
+      } else { f.classList.remove("on"); if (o && el && !el.isConnected) ponerFoco(); }
+      raf = requestAnimationFrame(paso);
+    };
+    paso();
+  }
+  // Onda de color: al elegir un color, una onda sale del clic y recorre el escritorio.
+  function onda(c, e) {
+    if (reducido() || !guia) return;
+    const r = c.getBoundingClientRect(), x = e.clientX || r.left + r.width / 2, y = e.clientY || r.top + r.height / 2;
+    const col = c.dataset.v && /^#/.test(c.dataset.v) ? c.dataset.v : c.value && /^#/.test(c.value) ? c.value : "#b8b8b8";
+    const o = document.createElement("i"); o.className = "onda"; o.style.cssText = "left:" + x + "px;top:" + y + "px;background:" + col;
+    $("#stage").appendChild(o); setTimeout(() => o.remove(), 1000);
+  }
+
+  /* ---- Detectar las tres tareas en el escritorio real ---- */
+  function ligar() {
+    if (enlazado) return; enlazado = true;
+    const pw = panelEl();
+    const alPanel = (e) => {
+      if (!guia || !pw || !pw.contains(e.target)) return;
+      const c = e.target.closest && e.target.closest("[data-k]"); if (!c) return;
+      const k = c.dataset.k;
+      if (e.type === "click" && c.tagName === "INPUT") return; // el radio dispara también "change"
+      if (e.type !== "change" && c.type !== "color" && (k === "colorFondo" || k === "colorGato" || k === "colorTexto" || k === "fondo")) onda(c, e);
+      if (k === "colorFondo") alHacer("fondo");
+      else if (k === "fondo" || k === "colorGato" || k === "colorTexto" || k === "tam" || k === "opac") alHacer("iconos");
+    };
+    ["click", "change", "input"].forEach((t) => document.addEventListener(t, alPanel, true));
+    if (pw) new MutationObserver(alCambiarPanel).observe(pw, { attributes: true, attributeFilter: ["class"] });
+    // ajustes hechos con el mezclador «Otro…» (no tienen data-k propio): el Panel avisa
+    document.addEventListener("mv-ajuste", (e) => { if (!guia) return; const k = e.detail.k; if (k === "colorFondo") alHacer("fondo"); else if (k === "fondo" || k === "colorGato" || k === "colorTexto" || k === "tam" || k === "opac") alHacer("iconos"); });
+    document.addEventListener("input", (e) => { if (e.target.closest && e.target.closest(".postit.nuevo")) tTecla = performance.now(); }, true);
+    // dejar un post-it: basta con abrir el editor (escriba o no)
+    document.addEventListener("click", (e) => { if (guia && e.target.closest && e.target.closest(".postit.ghost")) alHacer("postit"); }, true);
+    ["pointerdown", "keydown", "wheel"].forEach((t) => document.addEventListener(t, () => { if (guia && !fin) reiniciarIdle(); }, true));
+    addEventListener("resize", () => { ultimaCaja = ""; colocar(); });
+  }
+
+  /* ---- Etiqueta final ---- */
+  function finalizar(saltado) {
+    if (fin || !guia) return;
+    if (escribiendo() && !saltado) { clearTimeout(tmr); tmr = setTimeout(finalizar, 800); return; }
+    fin = true; saludo = false; etapa = "final"; colocar(); clearTimeout(tmr); clearTimeout(idleT); medir("intro/completa");
+    objetivo = null; $("#foco").classList.remove("on"); $("#hud").classList.remove("on");
+    // 1) el gato dice la frase (solo si ha personalizado algo); 2) pregunta y, aparte, las fichas para elegir.
+    const hizo = estado.fondo || estado.iconos || estado.postit, id = run;
+    const mostrar = () => {
+      if (id !== run || !fin) return;
+      decir(TX.pregunta); $("#opciones").appendChild($("#skip")); $("#opciones").classList.add("on"); abrirGrupo(0);
+      const b = $("#fin-b .op"); if (b) b.focus({ preventScroll: true });
+    };
+    $("#gato").classList.add("on"); $("#globo").classList.add("on"); // por si el globo estaba retirado (p. ej. con el editor de post-it abierto)
+    $("#opciones").classList.toggle("sin-c", !!saltado);
+    // el gato cierra con la frase de bienvenida y, después, queda la pregunta con las fichas
+    const cierre = () => { if (id !== run || !fin) return; decir(TX.cierre); chispas(); setTimeout(mostrar, reducido() ? 1800 : 2400); };
+    if (!saltado && hizo) { decir(TX.titulo); chispas(); setTimeout(cierre, reducido() ? 900 : 1300); } else cierre();
+  }
 
   function reset() {
-    ["#h1", "#hp", "#cap", "#empieza"].forEach((s) => { $(s).classList.remove("on", "caret"); });
-    $("#h1").textContent = ""; $("#hp").textContent = ""; $("#menubar").classList.remove("on");
-    $$(".ico").forEach((i) => i.classList.remove("on", "sel")); $("#icons").classList.remove("dim");
-    $("#pj").className = ""; $("#pj").innerHTML = "";
-    $("#pibtn").classList.remove("on"); $("#pinote").classList.remove("on", "out"); $("#pinote").textContent = ""; $("#cursor").classList.remove("on"); limpiarReal(); $("#veil").classList.add("on");
-    $("#cursor").style.transform = "translate(" + innerWidth * .6 + "px," + innerHeight * .7 + "px)";
-  }
-  function final() {
-    reset(); $("#veil").classList.remove("on");
-    $("#cap").textContent = TEXTOS.c3; $("#cap").classList.add("on"); $("#empieza").classList.add("on");
-    $("#bar").style.width = "100%";
-  }
-  function progreso() { cancelAnimationFrame(raf); const tick = () => { const p = Math.min(1, (performance.now() - t0) / DURACION); $("#bar").style.width = p * 100 + "%"; if (p < 1) raf = requestAnimationFrame(tick); }; tick(); }
-
-  // Una escena de proyecto: etiquetas del sistema (carpeta, tipo, estado), gancho palabra a palabra,
-  // cifra que cuenta y tres pantallas reales, de una en una y enteras.
-  const shots_ms = (P, i) => (i ? 1100 : 900); // cuánto se ve cada captura (ms, tiempo real)
-  async function escena(P, id) {
-    const pj = $("#pj"); pj.className = ""; const C = CATS[P.cat]; const SH = P.shots.slice(0, 2); // dos capturas por proyecto en el carrusel (con tres, +4 s en total)
-    pj.innerHTML = '<div class="tags"><span class="cat" style="background:' + C[1] + '">' + esc(C[0]) + '</span><span class="tipo ' + P.tipo + '">' + TIPOS[P.tipo] + '</span><span class="est">' + esc(P.estado.toLowerCase()) + "</span></div>" +
-      "<h2>" + P.head.split(" ").map((w) => '<span class="w">' + esc(w) + "</span>").join(" ") + "</h2>" +
-      '<div class="fig"></div><p class="sub">' + esc(P.sub) + "</p>" +
-      '<div class="scrbox">' + SH.map((x) => '<img class="scr" src="' + x[1] + '" alt="' + esc(x[0]) + '" onerror="if(this.src.indexOf(\'putidimadre-pizzeria\')<0)this.src=this.src.replace(\'putidimadre/case/\',\'putidimadre-pizzeria/putidimadre/case/\')">').join("") + '<div class="dots">' + SH.map(() => "<s></s>").join("") + "</div></div>";
-    const tags = $$("#pj .tags > *"), words = $$("#pj h2 .w"), fig = $("#pj .fig"), sub = $("#pj .sub"), shots = $$("#pj .scr"), dots = $$("#pj .dots s");
-    for (const c of tags) { c.classList.add("on"); await wait(90, id); }
-    for (const w of words) { w.classList.add("on"); await wait(55, id); }
-    fig.classList.add("on");
-    if (P.fig.texto) { fig.textContent = P.fig.texto; await wait(350, id); }
-    else { fig.innerHTML = "<s>" + P.fig.antes + "</s> " + P.fig.de + P.fig.suf; const n0 = performance.now(), dur = 650; await new Promise((res) => { const f = () => { if (id !== run) return res(); const k = Math.min(1, (performance.now() - n0) / dur), v = Math.round(P.fig.de + (P.fig.a - P.fig.de) * (1 - Math.pow(1 - k, 3))); fig.innerHTML = "<s>" + P.fig.antes + "</s> " + v + P.fig.suf; k < 1 ? requestAnimationFrame(f) : res(); }; f(); }); ok(id); }
-    sub.classList.add("on");
-    await wait(150, id);
-    // Capturas reales, sueltas: salen grandes, flotan mientras pasan y se van (ya dibujadas a su tamaño final, para que salgan nítidas).
-    const box = $("#pj .scrbox");
-    pj.classList.add("foco"); box.classList.add("show");
-    shots[0].classList.add("on"); dots.forEach((d, k) => d.classList.toggle("on", k === 0));
-    await wait(700, id, true); box.classList.add("flota");
-    for (let i = 0; i < shots.length; i++) {
-      if (i) { shots[i - 1].classList.replace("on", "off"); shots[i].classList.add("on"); dots.forEach((d, k) => d.classList.toggle("on", k === i)); }
-      await wait(shots_ms(P, i), id, true);
-    }
-    box.classList.remove("flota", "show"); pj.classList.remove("foco"); await wait(650, id, true);
-    await wait(150, id);
-    pj.classList.add("out"); await wait(380, id);
+    run++; clearTimeout(tmr); clearTimeout(idleT); clearTimeout(swapT); cancelAnimationFrame(raf);
+    caso = null; clearInterval(casoT); clearInterval(carT); abierto = -1; slide = [0, 0, 0]; $("#hud").classList.remove("solo-saltar"); pintarCarrusel();
+    pistasPostit = 0; guia = fin = saludo = false; ultimo = ""; delete $("#dialogo").dataset.p; objetivo = null; estado.fondo = estado.iconos = estado.postit = false;
+    ["#h1", "#hp", "#pasa-fila"].forEach((s) => { $(s).classList.remove("on", "caret"); }); $("#h1").textContent = ""; $("#hp").textContent = ""; $("#hero").classList.remove("off");
+    $("#veil").classList.add("on"); $("#globo").classList.remove("on", "titulo"); $("#gato").classList.remove("on"); $("#hud").classList.remove("on"); $("#opciones").classList.remove("on"); $("#txt").classList.remove("on"); $("#txt").textContent = "";
+    $("#foco").classList.remove("on");
+    $("#stage").appendChild($("#skip")); pintarPasos();
   }
 
   async function play() {
-    const id = ++run; reset(); reloj(); t0 = performance.now(); progreso();
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return final();
+    reset(); const id = run; etapa = "cartela";
     try {
-      // 1 · quién soy
-      etapa = "nombre";
-      await wait(300, id);
-      const h = $("#h1"); h.classList.add("on"); await typeTo(h, TEXTOS.nombre, id, 42); h.classList.remove("caret");
-      const p = $("#hp"); p.classList.add("on"); await typeTo(p, TEXTOS.frase, id, 18); p.classList.remove("caret");
-      await wait(600, id);
-      h.classList.remove("on"); p.classList.remove("on"); await wait(300, id);
-      // 2 · esto es un escritorio: el de verdad, que se ve por detrás. El cursor selecciona una carpeta real.
-      etapa = "escritorio";
-      $("#veil").classList.remove("on"); await wait(700, id);
-      caption(TEXTOS.c1);
-      const carpeta = real('.icon[data-id="exploracion"]');
-      if (carpeta) { const [cx, cy] = centro(carpeta.querySelector("img")); await cursor(cx, cy, true); seleccionar(carpeta); await wait(600, id); }
-      // 3 · cuatro proyectos (sobre un velo claro: el escritorio se intuye detrás)
-      etapa = "proyectos";
-      caption(TEXTOS.c2); $("#cursor").classList.remove("on"); $("#veil").classList.add("on"); await wait(800, id);
-      for (const P of PROYECTOS) await escena(P, id);
-      $("#veil").classList.remove("on"); seleccionar(null); await wait(600, id);
-      // 4 · es tuyo: se abre el Panel de control real, se cambia el fondo y se abre el reproductor real
-      etapa = "panel";
-      const iconoPanel = real('.icon[data-id="panel"]'), iconoRadio = real('.icon[data-id="radio"]');
-      if (iconoPanel && iconoRadio && real("#win-panel") && real("#win-radio")) {
-        caption(TEXTOS.c5); await wait(1700, id, true); // se lee la frase y se quita: en móvil el Panel y el reproductor ocupan la pantalla
-        $("#cap").classList.remove("on");
-        const toca = async (el, abrir) => { const [x, y] = centro(el); await cursor(x, y, true); abrir(); };
-        await toca(iconoPanel, () => { seleccionar(iconoPanel); real("#win-panel").classList.contains("open") || (abiertas.panel = true); iconoPanel.click(); });
-        await wait(900, id);
-        const pf = (k, v) => real('#win-panel [data-k="' + k + '"][data-v="' + v + '"]');
-        const marcado = (k) => real('#win-panel input[data-k="' + k + '"]:checked'), pulsado = (k) => real('#win-panel button[data-k="' + k + '"][aria-pressed="true"]');
-        const tam = real('#win-panel input[data-k="tam"]');
-        orig = { els: [marcado("fondo"), pulsado("colorFondo"), pulsado("colorGato")], tam: tam ? tam.value : null };
-        // Cambio loco: gato repetido pequeño y rosa sobre escritorio azul
-        const pulsa = async (k, v, pestana) => {
-          if (pestana) { const t = real(pestana); if (t) { await toca(t, () => t.click()); await wait(350, id); } }
-          const el = pf(k, v); if (!el) return;
-          await toca(el.closest("label") || el, () => el.click()); await wait(350, id);
-        };
-        await pulsa("fondo", "patron");
-        if (tam) { await toca(tam, () => { tam.value = 26; tam.dispatchEvent(new Event("input", { bubbles: true })); }); await wait(650, id); }
-        await pulsa("colorGato", "#f0b3cc");
-        await pulsa("colorFondo", "#99b8e8");
-        seleccionar(null);
-        const x1 = real("#win-panel .close"); if (x1) { await toca(x1, () => x1.click()); abiertas.panel = false; }
-        $("#cursor").classList.remove("on"); await wait(1000, id); // se ve el escritorio transformado
-        await toca(iconoRadio, () => { seleccionar(iconoRadio); real("#win-radio").classList.contains("open") || (abiertas.radio = true); iconoRadio.click(); });
-        await wait(1100, id);
-        const x2 = real("#rd-x"); if (x2) { await toca(x2, () => x2.click()); abiertas.radio = false; }
-        seleccionar(null); $("#cursor").classList.remove("on"); await wait(400, id);
-        restaurarAjustes(); await wait(900, id); // el escritorio vuelve a como lo tenía el visitante
-      }
-      // 5 · deja tu post-it (el cursor señala el botón real; la nota de ejemplo es de la presentación)
-      etapa = "postit";
-      caption(TEXTOS.c4);
-      const ghost = real(".postit.ghost");
-      if (ghost) { const [px, py] = centro(ghost); await cursor(px, py, false); }
-      await wait(350, id);
-      const nota = $("#pinote"); nota.classList.add("on"); $("#cursor").classList.remove("on"); await wait(650, id);
-      await typeTo(nota, TEXTOS.nota, id, 40); nota.classList.remove("caret"); await wait(600, id);
-      nota.classList.add("out"); await wait(400, id);
-      // 6 · entrar
-      etapa = "final";
-      caption(TEXTOS.c3); $("#empieza").classList.add("on"); await wait(600, id);
-      cancelAnimationFrame(raf); $("#bar").style.width = "100%"; medir("intro/completa");
+      await wait(reducido() ? 0 : 300, id);
+      const h = $("#h1"), p = $("#hp"), b = $("#pasa-fila");
+      h.classList.add("on"); p.classList.add("on");
+      if (reducido()) { h.textContent = TX.nombre; p.textContent = TX.frase; }
+      else { await typeTo(h, TX.nombre, id, 42); await typeTo(p, TX.frase, id, 18); }
+      await wait(reducido() ? 0 : 350, id); b.classList.add("on");
+      // Se avanza con el botón o, sin reducir movimiento, solo tras unos segundos para dar tiempo a leer.
+      if (!irAlFinal) await Promise.race([new Promise((res) => { avanzar = res; }), reducido() ? new Promise(() => {}) : wait(3000, id)]);
+      ok(id); avanzar = null;
+      const saltando = irAlFinal; irAlFinal = false;
+      etapa = "guia"; window.__enPresentacion = false;
+      $("#hero").classList.add("off"); $("#veil").classList.remove("on");
+      $("#hud").appendChild($("#skip")); guia = true; tIni = performance.now(); ligarCuando(id);
+      if (saltando) { await wait(reducido() ? 0 : 500, id); $("#gato").classList.add("on"); $("#globo").classList.add("on"); finalizar(true); return; }
+      // el gato empieza casi en el centro con el saludo (colocado antes de aparecer)
+      saludo = true; pintarPasos(); decir(TX.saludo, true); ponerFoco(); colocar(true); bucle();
+      await wait(reducido() ? 0 : 520, id); $("#gato").classList.add("on"); $("#hud").classList.add("on"); await wait(reducido() ? 0 : 380, id);
+      $("#globo").classList.add("on"); chispas(); reiniciarIdle();
+      programar(salirDeSaludo, 3000);
+      programar2();
     } catch (e) { if (e !== "cancel") throw e; }
   }
+  // El Panel y los post-its se crean después de este script: se espera a que existan.
+  function ligarCuando(id, n = 0) { if (id !== run) return; if (panelEl() && real('.icon[data-id="panel"]')) { ligar(); ponerFoco(); } else if (n < 50) setTimeout(() => ligarCuando(id, n + 1), 100); }
+  // Pasados unos segundos se sabe si hay post-its que mover: se ajusta la barra y, si ya estaba todo lo demás, se cierra.
+  function programar2() { const id = run; setTimeout(() => { if (id === run && guia && !fin) { pintarPasos(); ponerFoco(); if (hecho() && !panelAbierto()) finalizar(); } }, 4700); }
 
   const KEY = "mery-presentacion-vista";
-  const CADUCA_DIAS = 30; // pasado este plazo, la presentación vuelve a salir sola
+  const CADUCA_DIAS = 30; // pasado este plazo, la entrada vuelve a salir sola
   const marcarVista = () => { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} };
   const yaVista = () => { try { const t = +localStorage.getItem(KEY); return t > 0 && Date.now() - t < CADUCA_DIAS * 864e5; } catch (e) { return false; } };
   let prevFocus = null;
-  const cerrar = (causa) => { medir("intro/" + (causa === "entrar" ? "entrar" : (causa || "cerrar") + "-en-" + etapa)); run++; cancelAnimationFrame(raf); limpiarReal(); window.__enPresentacion = false; /* primero se deshacen los ajustes del panel: no cuentan como gestos */ marcarVista(); host.classList.add("bye"); setTimeout(() => { host.classList.remove("show", "bye"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }, 500); };
-  const mostrar = () => { medir("intro/ver"); window.__enPresentacion = true; etapa = "nombre"; prevFocus = document.activeElement; host.classList.remove("bye"); host.classList.add("show"); play(); $("#skip").focus(); };
-  $("#skip").addEventListener("click", () => cerrar("saltar"));
-  $("#entrar").addEventListener("click", () => cerrar("entrar"));
-  $("#destacado").addEventListener("click", () => { cerrar("destacado"); setTimeout(() => { if (typeof openWindow === "function") openWindow("case-presupuestos"); }, 550); });
-  addEventListener("keydown", (e) => { if (e.key === "Escape" && host.classList.contains("show")) cerrar("esc"); });
-  addEventListener("pagehide", () => { if (host.classList.contains("show")) medir("intro/abandono-en-" + etapa); limpiarReal(); }); // si el visitante cierra o recarga a mitad, su panel queda como estaba
+  // Saltar o Esc: el escritorio queda tal como lo dejó la persona (nada se deshace).
+  const cerrar = (causa) => {
+    medir("intro/" + (causa === "boton" ? "boton" : (causa || "cerrar") + "-en-" + etapa));
+    caso = null; clearInterval(casoT); clearInterval(carT);
+    run++; guia = fin = false; clearTimeout(tmr); clearTimeout(idleT); cancelAnimationFrame(raf); window.__enPresentacion = false; marcarVista();
+    if (window.__abrirBolsaAlSalir) { window.__abrirBolsaAlSalir = false; if (causa !== "caso") setTimeout(() => { if (typeof openWindow === "function") openWindow("bolsa"); }, 450); }
+    host.classList.add("bye"); setTimeout(() => { host.classList.remove("show", "bye"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }, 300);
+  };
+  const mostrar = () => { medir("intro/ver"); window.__enPresentacion = true; prevFocus = document.activeElement; host.classList.remove("bye"); host.classList.add("show"); play(); $("#skip").focus({ preventScroll: true }); };
+  // Saltar: en vez de cerrar de golpe, el gato da el cierre (pregunta, fichas y frase final); con el cierre ya a la vista, cierra del todo.
+  let irAlFinal = false;
+  // El gato reacciona al ratón (y al toque): se menea y suelta unas chispas.
+  const gatoJuega = () => { if (!host.classList.contains("show")) return; const g = $("#gato"); if (window.__snd && (!g.dataset.m || Date.now() - +g.dataset.m > 1500)) { g.dataset.m = Date.now(); window.__snd("miau"); } if (reducido()) return; g.classList.remove("habla"); reinicia(g, "cosquillas"); if (!g.dataset.c || Date.now() - +g.dataset.c > 900) { g.dataset.c = Date.now(); chispas(); } };
+  $("#gato").addEventListener("pointerenter", gatoJuega); $("#gato").addEventListener("pointerdown", gatoJuega);
+  $("#skip").addEventListener("click", () => {
+    if (fin) return cerrar("saltar");
+    medir("intro/saltar-en-" + etapa);
+    if (guia) { clearTimeout(tmr); finalizar(true); } else { irAlFinal = true; if (avanzar) avanzar(); }
+  });
+  $("#pasa").addEventListener("click", () => { if (avanzar) avanzar(); });
+  $("#veil").addEventListener("click", () => { if (avanzar) avanzar(); });
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && host.classList.contains("show")) cerrar("esc"); }, true);
+  addEventListener("pagehide", () => { if (host.classList.contains("show")) medir("intro/abandono-en-" + etapa); });
   window.showWelcome = mostrar;
-  // Primera visita: presentación. Después, directo al escritorio. ?presentacion la fuerza; ?quitar= la salta.
+  // Primera visita: entrada guiada. Después, directo al escritorio. ?presentacion la fuerza; ?quitar= la salta.
   if (/[?&]presentacion\b/.test(location.search) || (!/[?&]quitar=/.test(location.search) && !yaVista())) mostrar();
 })();
 /* @@PRESENTACION-FIN@@ */
@@ -1931,7 +2206,7 @@ desktop.addEventListener("mousedown", (e) => {
       '<div class="pn-trap" aria-hidden="true"><input type="text" tabindex="-1" autocomplete="off" aria-hidden="true"></div>' +
       '<div class="pi-bar"><div class="dots">' +
         Object.keys(COLORES).map((c, i) => '<label title="' + NCOL[c] + '"><input type="radio" name="pi-c" value="' + c + '"' + (i === 0 ? " checked" : "") + '><span style="--dc:' + COLORES[c] + '"></span></label>').join("") +
-      '</div><span class="pi-count">0/140</span><button type="button" class="pi-ok">' + tl("Pegar") + '</button><button type="button" class="pi-no" aria-label="' + tl("Cancelar") + '">×</button></div>' +
+      '</div><span class="pi-count">0/140</span><button type="button" class="pi-no">' + tl("Cancelar") + '</button><button type="button" class="pi-ok">' + tl("Pegar") + '</button></div>' +
       '<div class="pi-err" role="status"></div>' +
       '<div class="pi-nota">' + tl("Se publica al momento y lo ve todo el mundo. No guardo tu correo ni tu dirección. Sin enlaces.") + '</div>';
     const ta = d.querySelector("textarea"), al = d.querySelector('input[type=text]'), trap = d.querySelector(".pn-trap input"), err = d.querySelector(".pi-err"), ok = d.querySelector(".pi-ok"), cnt = d.querySelector(".pi-count");
@@ -1964,7 +2239,7 @@ desktop.addEventListener("mousedown", (e) => {
 
   // ---- Escritorio: "+" y post-its repartidos
   const pintarEscritorio = async () => {
-    pegados.forEach((n) => n.remove()); pegados = [];
+    pegados.forEach((n) => { FX.para(n); n.remove(); }); pegados = [];
     if (ghost) { ghost.remove(); ghost = null; }
     if (!grande()) return;
     const cs = celdas();
@@ -1976,6 +2251,7 @@ desktop.addEventListener("mousedown", (e) => {
     desktop.appendChild(ghost);
     if (editor && !editor.classList.contains("in")) ghost.style.visibility = "hidden";
     let filas; try { filas = await pedir(80); } catch (e) { return; }
+    if (/[?&]restaurar-postits/.test(location.search)) { try { localStorage.removeItem(LS_OCULTOS); } catch (e) {} } // enlace de rescate: devuelve los post-its ocultos con la X
     const ocultos = leer(LS_OCULTOS, []);
     filas.filter((r) => !ocultos.includes(r.id)).slice(0, cs.length - 1).forEach((r, i) => {
       const n = nota(r, false); colocar(n, cs[i + 1], r.id);
@@ -1984,15 +2260,15 @@ desktop.addEventListener("mousedown", (e) => {
       n.addEventListener("pointerdown", (e) => {
         if (e.target.closest(".pi-x") || e.button > 0) return;
         const sx = e.clientX, sy = e.clientY, l0 = n.offsetLeft, t0 = n.offsetTop; let movido = false;
-        n.setPointerCapture(e.pointerId); n.style.zIndex = Math.min(++zNota, 95); n.classList.add("arrastrando");
-        const mv = (ev) => { movido = true; n.style.left = Math.max(0, Math.min(l0 + ev.clientX - sx, window.innerWidth - 60)) + "px"; n.style.top = Math.max(24, Math.min(t0 + ev.clientY - sy, window.innerHeight - 40)) + "px"; };
+        FX.para(n); n.setPointerCapture(e.pointerId); n.style.zIndex = Math.min(++zNota, 95); n.classList.add("arrastrando");
+        const mv = (ev) => { movido = true; n.style.left = Math.max(0, Math.min(l0 + ev.clientX - sx, window.innerWidth - 60)) + "px"; n.style.top = Math.max(24, Math.min(t0 + ev.clientY - sy, window.innerHeight - 40)) + "px"; FX.mueve(n, ev); };
         const up = (ev) => { n.removeEventListener("pointermove", mv); n.removeEventListener("pointerup", up); n.removeEventListener("pointercancel", up); n.classList.remove("arrastrando");
           if (movido && ev.type === "pointerup" && pointOverTrash(ev.clientX, ev.clientY)) {
             const o = leer(LS_OCULTOS, []); o.push(r.id); guardar(LS_OCULTOS, o);
             trashAccept(() => { guardar(LS_OCULTOS, leer(LS_OCULTOS, []).filter((i) => i !== r.id)); pintarEscritorio(); });
             pintarEscritorio(); return;
           }
-          if (movido) { const g = leer(LS_POS, {}); g[r.id] = [n.offsetLeft, n.offsetTop]; guardar(LS_POS, g); } };
+          if (movido) FX.suelta(n, { x0: 0, x1: window.innerWidth - 60, y0: 24, y1: window.innerHeight - 40 }, () => { if (!n.isConnected) return; const g = leer(LS_POS, {}); g[r.id] = [n.offsetLeft, n.offsetTop]; guardar(LS_POS, g); }); };
         n.addEventListener("pointermove", mv); n.addEventListener("pointerup", up); n.addEventListener("pointercancel", up);
       });
       const x = document.createElement("button"); x.type = "button"; x.className = "pi-x"; x.textContent = "×"; x.setAttribute("aria-label", tl("Ocultar este post-it"));
@@ -2039,7 +2315,7 @@ desktop.addEventListener("mousedown", (e) => {
       document.getElementById("q-si").remove(); limpiar();
     });
   })();
-  const reordenar = () => { try { localStorage.removeItem(LS_POS); } catch (e) {} pintarEscritorio(); };
+  const reordenar = () => { try { localStorage.removeItem(LS_POS); localStorage.removeItem(LS_OCULTOS); } catch (e) {} pintarEscritorio(); }; // también devuelve los que se ocultaron con la X
   window.__postits = { pintarEscritorio, pintarMuro, nueva, reordenar };
   pintarEscritorio();
 })();
@@ -2090,7 +2366,7 @@ desktop.addEventListener("mousedown", (e) => {
         '<span><span class="val">' + esc(f.val) + '</span><span class="pill"><span class="ar">▼</span> <span class="pt">' + f.pillC + '</span></span></span></div>' +
         '<div class="bolsa-det">' + esc(f.det) + '<br><u>' + tl("Ver caso →") + '</u></div></button>').join("") +
     '<div class="bolsa-cv"><a class="cv-main" href="' + CVURL + '" target="_blank" rel="noopener"><b>CV</b>' + tl("Currículum ↗") + '</a><a class="cv-dl" href="' + CVPDF + '" download aria-label="' + tl("Descargar el CV en PDF") + '">PDF ↓</a></div>';
-  const w = makeWindow("bolsa", tl("La Bolsa"), null, html, 105, Math.max(40, Math.min(173, window.innerHeight - 400)), 400);
+  const w = makeWindow("bolsa", tl("La Bolsa"), null, html, 10, Math.max(40, window.innerHeight - 395), 330);
   if (w) w.classList.add("bolsa");
   // Solo una abierta a la vez. Una fila ya abierta, al pulsarla de nuevo, abre su case study.
   const rows = w ? Array.from(w.querySelectorAll(".bolsa-row")) : [];
@@ -2103,7 +2379,7 @@ desktop.addEventListener("mousedown", (e) => {
     if (r.classList.contains("up")) { openWindow(filas[+r.dataset.i].win, r); return; }
     rows.forEach((x) => poner(x, x === r));
   }));
-  if (window.innerWidth > 760) openWindow("bolsa");
+  if (window.innerWidth > 760) { if (window.__enPresentacion) window.__abrirBolsaAlSalir = true; else openWindow("bolsa"); } // con la entrada guiada, La Bolsa espera a que termine
 })();
 
 /* ============================================================
@@ -2115,7 +2391,7 @@ desktop.addEventListener("mousedown", (e) => {
   const HEX = /^#[0-9a-f]{6}$/i;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const MOVS = { controlada: { f: 0.86, e: 10, l: 0.5 }, expresiva: { f: 0.94, e: 16, l: 1 }, caotica: { f: 0.975, e: 24, l: 1.8 } };
-  const DEF = { fondo: "gato", colorFondo: "#e4e4e4", colorGato: "#b8b8b8", tam: 48, opac: 60, acento: "#99b8e8", mov: "expresiva", efectos: true, sonido: false, volSonido: 60, radio: "groovesalad", volRadio: 70, escalaRadio: 1 };
+  const DEF = { fondo: "gato", colorFondo: "#e4e4e4", colorGato: "#b8b8b8", colorTexto: "#000000", tam: 48, opac: 60, acento: "#99b8e8", mov: "expresiva", efectos: true, sonido: false, volSonido: 60, radio: "groovesalad", volRadio: 70, escalaRadio: 1 };
   const A = Object.assign({}, DEF);
   try {
     const g = JSON.parse(localStorage.getItem(KEY) || "null");
@@ -2124,7 +2400,7 @@ desktop.addEventListener("mousedown", (e) => {
       Object.keys(DEF).forEach((k) => { if (typeof g[k] === typeof DEF[k]) A[k] = g[k]; });
     }
   } catch (e) {}
-  ["colorFondo", "colorGato", "acento"].forEach((k) => { if (!HEX.test(A[k])) A[k] = DEF[k]; });
+  ["colorFondo", "colorGato", "colorTexto", "acento"].forEach((k) => { if (!HEX.test(A[k])) A[k] = DEF[k]; });
   if (["liso", "gato", "patron"].indexOf(A.fondo) < 0) A.fondo = DEF.fondo;
   if (!MOVS[A.mov]) A.mov = DEF.mov;
   A.tam = clamp(A.tam, 24, 120); A.opac = clamp(A.opac, 10, 100); A.volSonido = clamp(A.volSonido, 0, 100); A.volRadio = clamp(A.volRadio, 0, 100); A.escalaRadio = clamp(A.escalaRadio, 0.55, 1);
@@ -2137,9 +2413,48 @@ desktop.addEventListener("mousedown", (e) => {
   const capa = document.createElement("div");
   capa.id = "fondo-capa"; capa.setAttribute("aria-hidden", "true");
   desktop.insertBefore(capa, desktop.firstChild);
+  // Guardar el fondo como imagen: solo el fondo (color + gato), sin carpetas ni post-its, con la marca de agua.
+  let ultimoFondo = null;
+  function pintarFondo() {
+    const W0 = window.innerWidth, H0 = window.innerHeight, k = Math.max(0.5, Math.min(Math.max(1, 1920 / W0), 4000 / Math.max(W0, H0)));
+    const W = Math.round(W0 * k), H = Math.round(H0 * k), c = document.createElement("canvas"); c.width = W; c.height = H;
+    const x = c.getContext("2d"); x.fillStyle = A.colorFondo; x.fillRect(0, 0, W, H);
+    const gato = new Path2D(GATO);
+    x.save(); x.globalAlpha = A.opac / 100; x.fillStyle = A.colorGato;
+    if (A.fondo === "gato") {
+      const w = Math.min(0.62 * Math.min(W0, H0), 560) * k, e = w / 15;
+      x.translate((W - w) / 2, (H - 12 * e) / 2); x.scale(e, e); x.fill(gato);
+    } else if (A.fondo === "patron") {
+      const w = A.tam * 38 / 15 * k, h = w * 32 / 38, e = w / 38;
+      for (let j = -1; j * h < H; j++) for (let i = 0; i * w < W; i++) {
+        [[2, 2], [21, 18]].forEach((o) => { x.save(); x.translate(i * w + o[0] * e, j * h + o[1] * e); x.scale(e, e); x.fill(gato); x.restore(); });
+      }
+    }
+    x.restore();
+    // marca de agua abajo a la derecha, en negro o blanco según el fondo
+    const h6 = A.colorFondo.replace("#", ""), lum = (parseInt(h6.slice(0, 2), 16) * 299 + parseInt(h6.slice(2, 4), 16) * 587 + parseInt(h6.slice(4, 6), 16) * 114) / 1000;
+    const fs = Math.max(16, Math.round(Math.min(W, H) * 0.022)); x.font = fs + "px ui-monospace, Menlo, Consolas, monospace"; x.textAlign = "right"; x.textBaseline = "bottom";
+    x.fillStyle = lum > 140 ? "rgba(0,0,0,.55)" : "rgba(255,255,255,.6)"; x.fillText("www.meryvillena.com", W - fs * 1.2, H - fs * 1.1);
+    return c;
+  }
+  // Vista previa antes de guardar: se abre una ventana con la imagen y el botón «Guardar imagen».
+  function vistaFondo() {
+    medir("panel/vista-fondo"); ultimoFondo = pintarFondo();
+    const im = document.getElementById("fondo-vista"); if (im) im.src = ultimoFondo.toDataURL("image/png");
+    openWindow("fondo");
+  }
+  function guardarFondo() {
+    medir("panel/guardar-fondo"); const c = ultimoFondo || pintarFondo();
+    c.toBlob((b) => { if (!b) return;
+      const tactil = window.matchMedia("(pointer: coarse)").matches, arch = window.File ? new File([b], "fondo-meryvillena.png", { type: "image/png" }) : null;
+      if (tactil && arch && navigator.canShare && navigator.canShare({ files: [arch] })) { navigator.share({ files: [arch] }).catch(() => {}); return; }   // móvil: hoja de compartir (Guardar imagen / Guardar en Fotos)
+      const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "fondo-meryvillena.png"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }, "image/png");
+  }
+  window.__guardarFondo = guardarFondo; window.__vistaFondo = vistaFondo;
   function aplicar() {
     const raiz = document.documentElement;
     raiz.style.setProperty("--escritorio", A.colorFondo);
+    raiz.style.setProperty("--txt-iconos", A.colorTexto);
     raiz.style.setProperty("--acento", A.acento);
     capa.style.opacity = A.fondo === "liso" ? "0" : String(A.opac / 100);
     if (A.fondo === "gato") {
@@ -2178,6 +2493,7 @@ desktop.addEventListener("mousedown", (e) => {
     s.buffer = b; f.type = "bandpass"; f.frequency.value = freq; f.Q.value = q; g.gain.value = vol;
     s.connect(f); f.connect(g); g.connect(master); s.start(t);
   }
+  const MIAU_B64 = "AAAAHGZ0eXBNNEEgAAAAAE00QSBtcDQyaXNvbQAAA4Jtb292AAAAbG12aGQAAAAA5wrfj+cK348AAKxEAABQAAABAAABAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAACFHRyYWsAAABcdGtoZAAAAAfnCt+P5wrfjwAAAAEAAAAAAABQAAAAAAAAAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAbBtZGlhAAAAIG1kaGQAAAAA5wrfj+cK348AAKxEAABQAAAAAAAAAAAiaGRscgAAAAAAAAAAc291bgAAAAAAAAAAAAAAAAAAAAABZm1pbmYAAAAQc21oZAAAAAAAAAAAAAAAJGRpbmYAAAAcZHJlZgAAAAAAAAABAAAADHVybCAAAAABAAABKnN0YmwAAAB2c3RzZAAAAAAAAAABAAAAZm1wNGEAAAAAAAAAAQAAAAAAAAAAAAIAEAAAAACsRAAAAAAAM2VzZHMAAAAAA4CAgCIAAAAEgICAFEAUABgAAAAAAAAAu4AFgICAAhIIBoCAgAECAAAAD3NidGQAAAAASTE2AAAAGHN0dHMAAAAAAAAAAQAAABQAAAQAAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAAUAAAAAQAAAGRzdHN6AAAAAAAAAAAAAAAUAAAABAAAAgIAAAHaAAAAowAAAKEAAACeAAAAigAAAIoAAACNAAAAhAAAAJYAAAB7AAAAegAAAH0AAACSAAAAggAAAIEAAACAAAAAUgAAACIAAAAUc3RjbwAAAAAAAAABAAAQAAAAAPp1ZHRhAAAA8m1ldGEAAAAAAAAAImhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAAAMRpbHN0AAAAvC0tLS0AAAAcbWVhbgAAAABjb20uYXBwbGUuaVR1bmVzAAAAFG5hbWUAAAAAaVR1blNNUEIAAACEZGF0YQAAAAEAAAAAIDAwMDAwMDAwIDAwMDAwODQwIDAwMDAwMkQ4IDAwMDAwMDAwMDAwMDQ0RTggMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAAAAxaZnJlZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAyAbWRhdADQAAcBCBQvVCsNCYlBYSCf7KvfC+asmaPe1UZWsqjfG3JcqLE0h8BEKte7ZRP4zfQ4n8kPLxCDzghyPaEM5piGmy5DS7ohyvqZDhmrIZLTEOp8SJ2M0RR2Un83PxOE/0SfVkh8kPxmkPkx6yIeIPBJDoul1bJ9EnisGTyu9J8j5ST5T0Mn17q5OkfAyEJWhIcA2pDOcAIdv8skPMvaSd3sRPwl1InxzihPiO8J67dk9Hg7olkFGIYXZEOZcNIbTgpDkXKSHCJpPH0CG425Pu3xHJ/NX4jEu67khxXXEOTdhIdI4QQ4HyUhxrPkK93AaZMZCZlk2IJpeTecmEhOC2tnkK2AIXJtSoJugWuLB1UWiwZQYQkxLsIQEWZAEwtJDFnWqT1e3x9jCFmoQkyiEQ1yWYDh+Y8nh8H7jqun1vMd0HuxPwdNOFWSv+bHRBEMHW3O4/PyaDSkUggFYsDtnPq2ZssMacMcRpPo8lCqwBHEBWHtfC/W7Ktn+3aBiCATBGnwfE4BMCN4hV9kodfab/kv2mUZQZVyctQnXzcXBUjfYLzWxGZTg3T0tn7Hnsr8t8p5lZLdOpIoh2afLPBqqjBuhRByqt04AagaiC20ZlEOq5dWeffzGx4boBFH1uS2yjx6H415IpMsWSkecr/t8c3V8k7Kr/HPW5aUjUD+AHfyBgwfd3fgAToULSxLDA7DArNQbaX02ensl5IjU1nteWW4uc5JBJGYUEcHnuroYMWaUhSt3SGCCpCHrkdycgRr9nkxMy+hdMSGHpDTSisahX6TzUnIv10e+OjoNHKbioxWUzRKFT5pCIliMUOLnh6PKw6lGFOZ0HnR9mYQkkfN3XeHzY2VVKdNRr0MI/oEESPpvit7I9f6rpeypJclyUbH9JEBAICUQnlJFBvfZqS4X5WMWBgN089yggNnYPLvh81jGrnXcj8Wpgm+/+o8CIFkSzNmaHG9K6d8ryJiDmzZMc9Z97npwgIOTDTKXzp9GlxiuVRI/wiRcK70sqfBUCeWkcFy7D+H5eOOmRnJPISFEXdTlx2RiTskBbWcYj0DtzFLha/W+1yaW0UXDSBSc4fg/F+nNe/Xu/Zj0n7H0+TIDxOpxZY5EoAMx/mwCMMN0U/7ZjpgugJA4roB4qQKgmQ3t12OIHjEIjq6HkNv6T5SlaDJKJvXrPeQgzZYgEGF3pM7sqkkx3DX+TAG+NM0k9OFE/8uOa20p6fBVIaRa3LxdoroD7XzH3fmq6C2iD0bNP//AyAlWIrH4O5+oP81SJ4+8Ryeegw7o8X60yiTKAmQcmIoBX3IgMmTRfPcIIAAAAA4AT4UKSJIDKTE5TKwRCghCEqb9HTEbSWjrCOCYATQzrqFIYCTEnxHRCO5L1MwBtoe/PeKq8oqVcn5f4DbG0AGGPBiLAGG/2X13DbYH/gfz0Cr4/3/t+DhQAMMM4AA1+Xu0pKwxnFeeev1+69FICmroiyun1RUNz0jLG/PhnUANT859g8YHtuRYdvTLYQm+7GmzqRoy16iguYbZlAWzZIU6Zr3DgFGFCEUEBu4xuIhKcuW8eq+/iJt0Dgs4ZeGeQ5IEroSidnCIA3HNZ+TVxV9l1utOyKTFSwVr/urqQAeNszXnABXues5NVnNKBXGiQAL4vhYqgD0nugfnPu9lcXWZK+D1+TEYgtXDkAFJuTKA4D+LWrhifmw3oAAAaZ6N85m+/N186jh0o56XAFl3MVq5jrxDU5nkRbM3YNLV01Huxx+fAA4AUIUADSBHYnUAVKZUKRt78n6uwdBF5Ldd8bEBOb6SzBUrwEAkEUO52YoN7NSiud1TONSGFwwuroF/5qipAC8+DWWlYAv5/xebTqmvmzDPP1Uq31/wkAArKpApV375gAsa9eZoAS9P/S2BIA0rw/C9p9J+I5aWAGllt/wR36HvAetwLx1Xd603LE39QFmrbXvUbMw5FlUVVB4uo9bu78BQBQtIDsUqOBzLePGefc+I+DvWS5SOtjeWDWNw/9R0JcCKXGoQA3od8CCQvNUuMcRYAAGXU8nYAA5+GrpVFyAfc+66GIJpKnvHdumA8+gBu+HDUaH/Z/+Lfq4VI6O0DnUxuOF3JADK6TDo/1XeZwYwGLovR99x9FmkL6O93X//DivGNowAEbSxhwBQBQosnsLvM6BUIjMJ79oX2fgtohAvA2CLF37La2AT2C4chGf5rv2SABntZl4G0ABr/nZa2liACLsAFb9/a6JhqLtVp9P1NwymFAvCYABd6U1nncDGqlxMsrjgCcFST7DoAyUAvrmkcNv8WlOY4dFO66Tek7syQ7sy3EFawdHqrddJc9TffCoAAcBSBQgoisIEkqpFKCEapHdZB9F2yLb0IxVAdCehnJZbyQZFC0DMPc/qO4AFafweyoxIAdXbd5vcQC+r+Wc/LG7yWyrt+7hmKAG/nJlvOYH94YspDP6znopFPY9ZTT4tYfL/vh+eYOCGaIxOlcPWf3w5cf1zdKxTO9b+V+A/jNAmZ2rLQ3D6WjhnCJUAA4BRBQlIDkiwAKCUQCEIXP09PwL080Gipi9sgcvL7BwvD/Pccs61B+lyV+o+G4oAD+94jAAX+7eLkAN5cGNMQi7Z/FrW9UARNF4oElCo2XhS/d2QGQCgVADy1BAbC/iRdaALhCtvayeklQnqZi5pfV7tCJdSG/pdu8TvDKrLre5134QNAcBShQlIDsKpQSkMyDMbrxa9/w/UXH0UaMVa87tcDHhf1XA5PRbcJvaPlkgDj+qewAB6EWAFe7uxU3dYzktfhl8FI5ZWUPzRZDnVSCsXNNwqiS8C0hV69fdCjawQBy3XcFdlt61NtVn6bGUcgAhqOVTzm9/oo6BJah97TMXFvnfRfkueRwOtNcFPNle24AASwbPVeefpw4BSBQZAEcIDdAjQJlUTBAZhZjh4/P4+NDRZo8SXuoAVI4LhKKBIDn71/7efLf3xhOQA1oAC13MmwIguu3zMI1c58ZOxMqFUjy3+oMjjWn2RxnD1KdmX7LIkAC1QC8tBFxMzEIF4z2xi3w9Nm7CuvA6s67zcgHoT+1fow4BShQdAEoIDdAqYQCERSM/b/a3wMxwGy3ObDc/X5tbjcqCR8JE1m3sbf7QCJxyg1eAKjMoq8eorNjSCg1dPJE2QNz8wkNldf4+m26XIa1Iqz39489sTjyrAMl0gBT7ZnK1SBmdIZ2KvruHauFaV0y3CJgAAQEvVRWIcAFCFCUASSnFgoEBCJvfj6v16/c4Y6QtIZvR3yGXYPedHOMbXgq/zW66P61tgARdelcADqeCmmWcMIMUT0yFOx0MFIaDGOGM7nPtqdF/fzx4Nk5d2rCl3VanHHijwk5AEQBTs9Vt9cokNbuDCpzer747/V08fW74gIN/PCHAAVYUFPYgHYQGpSOJmEImCoSV9N+PX+1lxGhvTIbTjYd39ru6nhNSwN5sWBg3B6QpX6swACuxE3mNZ5kQhfAQtE/FnNCpzNlfHeMEBGLFWTxMnSQBLdRaUvbglXNne+BdkbfIiBWeHH4rEYTBhVbELLtlrQFxYBnQDKwEQACUVimRZRmXO6uUezLHq8fXn6ddIA4BVBQYjlAcpFqCMgNHf+PT6BL35jYyza82Aeapnl6CSPhwh/bfz7aAzxKavG5tWhhMSGUGPB0JrOGvwaqxzQAoh0z8469Pq5/ghwjgQvPWquuKJTsinYrzkAXlggCOq2CkT4EqeZSRvUrYjdeYz4TgDj173pbpmau99Fi269K2puaHAVgUHaaSOJUEJCdOmZw8hEHRuwN63WnYqr1JbfBg0V5/4pWAIy9L7v1EFeTl6lipDiZaeNA2qZs59EHPoSyxfyV3iAGAzG3FdCqaN4mHWGQMhKyOVOsSRbYREnQOs65QDC5iLFJnpbhy7Qxk1z27YAe7efTK+193SHTj/f7ZTAHAAVAUGERaCZSMYWCSBWjf1wdvuNENGQioN1XGYDm5S8+hvIJv92DCzaL5NrPoaOkJyjFKHHsTW6cYbvPoPWjlMYBwOnoEEyTqLtDDoGTdCsJ9yedWgHac8IlZNgQ5+GGNGgjcwwlulg9PXBr3A830fw8nrxRJxALLytcCdGQzg4ABQBQYrpQoiAwkAghAQiNcGsPjWnQdrCFyokMiEREc3dJIMSGwrsv/7h4k1kXBlj1U2Er+hbMzMWYpL4oM3lVnaIGKVBQBFAA1wNdi8v4QthBwARIUEYHG2rj0+OulyoiUk8OFwv7X5FqRpF9ES1dDRZimeA=="; let miauBuf = null, miauP = null;   // el miau es la voz de Mery (AAC de 7 KB, fuente: _taller-intro/miau.m4a), incluido en la página para que suene igual en cualquier sitio
   const SONIDOS = {
     clic: (c, t) => { chasquido(c, t, 0.014, 2300, 1.4, 1.5); nota(c, t, 520, 260, 0.03, "sine", 0.18); chasquido(c, t + 0.05, 0.012, 1500, 1.4, 0.9); },   // clic-clac de botón
     abrir: (c, t) => { nota(c, t, 660, 660, 0.1, "sine", 0.32); nota(c, t + 0.07, 880, 880, 0.14, "sine", 0.28); },
@@ -2186,7 +2502,30 @@ desktop.addEventListener("mousedown", (e) => {
       let x = 0; for (let i = 0; i < 16; i++) { chasquido(c, t + x, 0.008 + Math.random() * 0.02, 1800 + Math.random() * 4700, 0.8, (1 - i / 22) * (0.5 + Math.random() * 0.8)); x += 0.012 + Math.random() * 0.045 * (1 + i / 8); }
       chasquido(c, t, 0.5, 3500, 0.5, 0.25);
     },
-    campanazo: (c, t) => { nota(c, t, 880, 880, 1.1, "sine", 0.45); nota(c, t, 1760, 1760, 0.7, "sine", 0.18); nota(c, t, 2637, 2637, 0.4, "sine", 0.08); },
+    miauSint: (c, t) => {                             // «miau» dicho por una voz aguda y suave (como una niña): m-i-a-u con formantes de vocal, sin sirena
+      const dur = 0.64, o = c.createOscillator(), vib = c.createOscillator(), vg = c.createGain(), g = c.createGain(), lp = c.createBiquadFilter();
+      o.type = "sawtooth";
+      o.frequency.setValueAtTime(300, t); o.frequency.linearRampToValueAtTime(340, t + 0.15); o.frequency.linearRampToValueAtTime(410, t + 0.32); o.frequency.linearRampToValueAtTime(320, t + dur);
+      vib.frequency.value = 5.5; vg.gain.value = 5; vib.connect(vg); vg.connect(o.frequency);       // vibrato mínimo: lo que hace que suene a voz
+      lp.type = "lowpass"; lp.frequency.value = 3800; lp.Q.value = 0.3;
+      // vocales en el tiempo: m (nasal) · i · a · u
+      const V = [[0, 260, 1100], [0.09, 310, 2450], [0.2, 330, 2300], [0.3, 850, 1350], [0.44, 750, 1250], [0.55, 340, 850], [dur, 320, 800]];
+      [[1, 8, 1], [2, 10, 0.55]].forEach((fm) => {
+        const f = c.createBiquadFilter(), gg = c.createGain(); f.type = "bandpass"; f.Q.value = fm[1]; gg.gain.value = fm[2];
+        f.frequency.setValueAtTime(V[0][fm[0]], t); V.slice(1).forEach((v) => f.frequency.linearRampToValueAtTime(v[fm[0]], t + v[0]));
+        o.connect(f); f.connect(gg); gg.connect(lp);
+      });
+      const f3 = c.createBiquadFilter(), g3 = c.createGain(); f3.type = "bandpass"; f3.frequency.value = 3200; f3.Q.value = 6; g3.gain.value = 0.25; o.connect(f3); f3.connect(g3); g3.connect(lp);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.5, t + 0.05); g.gain.linearRampToValueAtTime(1.3, t + 0.2); g.gain.setValueAtTime(1.3, t + 0.42); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      lp.connect(g); g.connect(master); o.start(t); vib.start(t); o.stop(t + dur + 0.05); vib.stop(t + dur + 0.05);
+    },
+    miau: (c, t) => {                             // «miau» grabado (voz de Mery); solo si el navegador no pudiera descodificarlo, suena el sintético
+      const tocar = (when) => { const s = c.createBufferSource(), g = c.createGain(); s.buffer = miauBuf; s.playbackRate.value = 0.92; g.gain.value = 1; s.connect(g); g.connect(master); s.start(when); };
+      if (miauBuf) return tocar(t);
+      if (miauBuf === false) return SONIDOS.miauSint(c, t);
+      if (!miauP) miauP = new Promise((res, rej) => { const bin = atob(MIAU_B64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); c.decodeAudioData(u.buffer, res, rej); }).then((b) => { miauBuf = b; }, () => { miauBuf = false; });
+      miauP.then(() => { if (miauBuf) tocar(c.currentTime + 0.01); else SONIDOS.miauSint(c, c.currentTime + 0.01); });
+    },
   };
   function sonar(tipo, forzar) {
     if (!A.sonido && !forzar) return;
@@ -2202,7 +2541,7 @@ desktop.addEventListener("mousedown", (e) => {
   const ACENTOS = [["#99b8e8", tl("Azul Platinum")], ["#aab0b8", tl("Grafito")], ["#a6d8a0", tl("Verde")], ["#f0b3cc", tl("Rosa")], ["#f2c28a", tl("Naranja")], ["#c3b3ea", tl("Violeta")]];
   const radios = (k, lista, iconos, col) => '<div class="pc-radios' + (col ? " col" : "") + '">' + lista.map((o) => '<label class="pc-radio"><input type="radio" name="pc-' + k + '" data-k="' + k + '" data-v="' + o[0] + '"><span class="r" aria-hidden="true"></span>' +
     (iconos ? (iconos[o[0]] ? '<img src="' + iconos[o[0]] + '" alt="">' : '<span class="sp"></span>') : o[2] ? '<span class="chip" style="--c:' + o[0] + '"></span>' : "") + "<span>" + o[1] + "</span></label>").join("") + "</div>";
-  const muestras = (k) => '<div class="pc-sw">' + COLORES.map((c) => '<button type="button" style="--c:' + c[0] + '" data-k="' + k + '" data-v="' + c[0] + '" aria-pressed="false" aria-label="' + c[1] + '" title="' + c[1] + '"></button>').join("") + '<label class="btn pc-otro">' + tl("Otro…") + '<input type="color" data-k="' + k + '" aria-label="' + tl("Otro color") + '"></label></div>';
+  const muestras = (k, lista) => '<div class="pc-sw">' + (lista || COLORES).map((c) => '<button type="button" style="--c:' + c[0] + '" data-k="' + k + '" data-v="' + c[0] + '" aria-pressed="false" aria-label="' + c[1] + '" title="' + c[1] + '"></button>').join("") + '<label class="btn pc-otro">' + tl("Otro…") + '<input type="color" data-k="' + k + '" aria-label="' + tl("Otro color") + '"></label></div>';
   const rango = (k, titulo, min, max, ico) => '<div class="pc-rango">' + (ico ? '<img src="' + ico[0] + '" alt="">' : "") + '<input type="range" data-k="' + k + '" min="' + min + '" max="' + max + '" aria-label="' + titulo + '">' + (ico ? '<img src="' + ico[1] + '" alt="">' : "") + '<span data-out="' + k + '"></span></div>';
   const grupo = (titulo, cuerpo, solo) => '<fieldset class="pc-grupo"' + (solo ? ' data-solo="' + solo + '"' : "") + "><legend>" + titulo + "</legend>" + cuerpo + "</fieldset>";
   const TABS = [
@@ -2211,15 +2550,16 @@ desktop.addEventListener("mousedown", (e) => {
       grupo(tl("Color del escritorio"), muestras("colorFondo")) +
       grupo(tl("Color del gato"), muestras("colorGato"), "gato") +
       grupo(tl("Visibilidad del gato"), rango("opac", tl("Visibilidad del gato"), 10, 100), "gato") +
-      grupo(tl("Tamaño del gato"), rango("tam", tl("Tamaño del gato"), 24, 120), "patron")],
-    ["colores", tl("Colores"), grupo(tl("Color de las barras de ventana"), radios("acento", ACENTOS.map((a) => [a[0], a[1], true])))],
+      grupo(tl("Tamaño del gato"), rango("tam", tl("Tamaño del gato"), 24, 120), "patron") +
+      grupo(tl("Guardar mi fondo"), '<div class="pc-op"><button type="button" class="btn" id="pc-guardar">' + tl("Ver y guardar") + "</button></div>")],
+    ["colores", tl("Colores"), grupo(tl("Color de las barras de ventana"), radios("acento", ACENTOS.map((a) => [a[0], a[1], true]))) + grupo(tl("Color del texto de las carpetas"), muestras("colorTexto"))],
     ["mov", tl("Movimiento"),
       grupo(tl("Cómo se mueven las ventanas"), radios("mov", [["controlada", tl("Controlada")], ["expresiva", tl("Expresiva")], ["caotica", tl("Caótica")]])) +
       grupo(tl("Efectos de movimiento"), radios("efectos", [["true", tl("Activados")], ["false", tl("Desactivados")]]))],
     ["sonidos", tl("Sonidos"),
       grupo(tl("Sonidos del escritorio"), radios("sonido", [["true", tl("Activados")], ["false", tl("Apagados")]])) +
       grupo(tl("Volumen"), rango("volSonido", tl("Volumen de los sonidos"), 0, 100, [IMG.off, IMG.on])) +
-      grupo(tl("Probar"), '<div class="pc-op">' + [["clic", tl("Clic")], ["abrir", tl("Abrir")], ["cerrar", tl("Cerrar")], ["papelera", tl("Papelera")], ["campanazo", tl("Campanazo")]].map((s) => '<button type="button" class="btn" data-snd="' + s[0] + '">' + s[1] + "</button>").join("") + "</div>")],
+      grupo(tl("Probar"), '<div class="pc-op">' + [["clic", tl("Clic")], ["abrir", tl("Abrir")], ["cerrar", tl("Cerrar")], ["papelera", tl("Papelera")], ["miau", tl("Miau")]].map((s) => '<button type="button" class="btn" data-snd="' + s[0] + '">' + s[1] + "</button>").join("") + "</div>")],
   ];
   const html = '<div class="pc"><div class="pc-tabs" role="tablist" aria-label="' + tl("Secciones del panel") + '">' +
     TABS.map((t, i) => '<button type="button" role="tab" id="pc-t-' + t[0] + '" aria-controls="pc-p-' + t[0] + '" aria-selected="' + (i === 0) + '" tabindex="' + (i === 0 ? 0 : -1) + '">' + t[1] + "</button>").join("") + '</div><div class="pc-caja">' +
@@ -2232,22 +2572,24 @@ desktop.addEventListener("mousedown", (e) => {
     pw.querySelectorAll("button[data-k][data-v]").forEach((b) => { b.setAttribute("aria-pressed", String(String(A[b.dataset.k]).toLowerCase() === b.dataset.v.toLowerCase())); });
     pw.querySelectorAll('input[type="radio"][data-k]').forEach((i) => { i.checked = String(A[i.dataset.k]).toLowerCase() === i.dataset.v.toLowerCase(); });
     pw.querySelectorAll('input[type="range"][data-k]').forEach((i) => { i.value = A[i.dataset.k]; const o = pw.querySelector('[data-out="' + i.dataset.k + '"]'); if (o) o.textContent = i.dataset.k === "tam" ? A.tam + " px" : A[i.dataset.k] + " %"; });
-    pw.querySelectorAll('input[type="color"][data-k]').forEach((i) => { i.value = A[i.dataset.k]; });
+    pw.querySelectorAll('input[type="color"][data-k]').forEach((i) => { if (i !== document.activeElement) i.value = A[i.dataset.k]; });
     pw.querySelectorAll("[data-solo]").forEach((f) => { f.hidden = f.dataset.solo === "gato" ? A.fondo === "liso" : A.fondo !== "patron"; });
   }
-  function poner(k, v) { medir("panel/" + k); A[k] = v === "true" ? true : v === "false" ? false : v; aplicar(); guardar(); refrescar(); }
+  function poner(k, v) { medir("panel/" + k); A[k] = v === "true" ? true : v === "false" ? false : v; aplicar(); guardar(); refrescar(); document.dispatchEvent(new CustomEvent("mv-ajuste", { detail: { k: k, v: A[k] } })); }
   pw.addEventListener("click", (e) => {
     const b = e.target.closest("button"); if (!b) return;
     if (b.dataset.k && b.dataset.v) poner(b.dataset.k, b.dataset.v);
+    else if (b.id === "pc-guardar") vistaFondo();
     else if (b.dataset.snd) sonar(b.dataset.snd, true);
     else if (b.id === "pc-restaurar") { medir("panel/restaurar"); Object.keys(DEF).forEach((k) => { if (k !== "radio" && k !== "volRadio") A[k] = DEF[k]; }); aplicar(); guardar(); refrescar(); sonar("papelera"); }
   });
   pw.addEventListener("change", (e) => { const i = e.target; if (i.type === "radio" && i.checked) poner(i.dataset.k, i.dataset.v); });
   pw.addEventListener("input", (e) => {
-    const i = e.target; if (!i.dataset || !i.dataset.k) return;
+    const i = e.target;     if (!i.dataset || !i.dataset.k) return;
     if (i.type === "range") poner(i.dataset.k, +i.value);
     else if (i.type === "color" && HEX.test(i.value)) poner(i.dataset.k, i.value);
   });
+  pw.addEventListener("change", (e) => { const i = e.target; if (i.type === "color" && i.dataset.k && HEX.test(i.value) && A[i.dataset.k] !== i.value.toLowerCase()) poner(i.dataset.k, i.value.toLowerCase()); });
   // pestañas: clic y flechas
   const pestanas = [...pw.querySelectorAll('[role="tab"]')];
   const irA = (t) => { pestanas.forEach((x) => { const on = x === t; x.setAttribute("aria-selected", String(on)); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute("aria-controls")).hidden = !on; }); t.focus(); };
@@ -2299,7 +2641,7 @@ desktop.addEventListener("mousedown", (e) => {
   function fallo() {
     if (!quiere) return;
     if (++intento < SERVIDORES.length) { audioEl.src = urlDe(A.radio, intento); const p = audioEl.play(); if (p && p.catch) p.catch(() => {}); }
-    else { quiere = false; audioEl.removeAttribute("src"); lcd("error"); sonar("campanazo"); }
+    else { quiere = false; audioEl.removeAttribute("src"); lcd("error"); sonar("miau"); }
   }
   audioEl.addEventListener("playing", () => { if (quiere) lcd("sonando"); });
   audioEl.addEventListener("waiting", () => { if (quiere) lcd("conectando"); });
@@ -2365,6 +2707,39 @@ desktop.addEventListener("mousedown", (e) => {
   const pos = originalPos.leeme || { x: Math.max(120, window.innerWidth - 120), y: 40 };
   makeIcon("panel", tl("Panel de control"), ICO_PANEL, pos.x - 88, pos.y);
   makeIcon("radio", tl("Reproductor de radio"), ICO_RADIO, pos.x - 88, pos.y + 88);
+  // «Guardar fondo»: el Mac sonriente con nuestro gato en lugar de la manzana. Al pulsarlo guiña un ojo, hace un flashazo y descarga el fondo.
+  const ICO_FONDO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA+UlEQVR4nN1X7Q2EIAwtTRdwBVewq7gLI7DTrYAruIIjcDH353IgIIX07l5iov3gPYpYNBAjwDiYkiF474exM3PEiaAMyjmttWIC51ybAGstOPcQC1gWgG3bLv0IysCfEsBsbj13FzACeCfY+yDyiwWMALYmtqz37Q9R73J3qQAnZi6pBrXM/JNQUg3SLP8J9V1AuS52NhIpco0oK6Am+S+WAL9SAL/ObtH9CNCVo5a4FFc65GIpqTRACCF7NVfAVx7PpTsFQRmoLcBo/5pRKmpd12T2cRyRbd/3ImsuhlLGeZ6rBjwFvcfWiKkSME1TNilF2ipG/R14AtxeaqbFQQevAAAAAElFTkSuQmCC", ICO_FONDO_GUINO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA/ElEQVR4nN1XwQ3DIAw0FgtkhawQVskujMBOXcFZIStkBKqonyoQQ20QbU+KRLDNHQZkMJAiQj+YUkckom7szrmEE2EwLGf03qsJQggyAd57COGhFrAsANu23doRBgN/SoBz5vb/bF/t6k34CYhi/wyQkKSZgB5AaaBkvZvuAWq0HNhi5ppsWMnMr4SabFhJUMvTgDAYlqtiZyHRgitErICa4L9YAvxKAe51d0vaPWDvDLXEJb/SJRdLQaUBYozsJ84AVV7PtScFYTBwtAAz+mlmc17rumajj+NI+vZ9L7JyPjbXOc9z1YCnoHffGjFVAqZpYoNypFIxw/fAE1oEaxEJ3PYPAAAAAElFTkSuQmCC";
+  makeIcon("fondo", tl("Guardar fondo"), ICO_FONDO, pos.x - 88, pos.y + 176);
+  makeWindow("fondo", tl("Guardar fondo"), null, '<p class="fv-txt">' + tl("Así queda tu fondo, sin carpetas ni post-its.") + '</p><img id="fondo-vista" class="fv-img" alt=""><p class="fv-pie"><button type="button" class="btn" id="fondo-guardar">' + tl("Guardar imagen") + '</button></p>', 200, 80, 470);
+  document.getElementById("fondo-guardar").addEventListener("click", () => { if (window.__guardarFondo) window.__guardarFondo(); });
+  (() => { const el = document.querySelector('.icon[data-id="fondo"]'), img = el.querySelector("img"); let d0 = null, tg = 0;
+    el.addEventListener("mousedown", (e) => { d0 = [e.clientX, e.clientY]; });
+    el.addEventListener("click", (e) => {
+      if (d0 && Math.hypot(e.clientX - d0[0], e.clientY - d0[1]) > 5) return;
+      img.src = ICO_FONDO_GUINO; clearTimeout(tg); tg = setTimeout(() => { img.src = ICO_FONDO; }, 900);
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) { const f = document.createElement("div"); f.className = "flash-foto"; document.body.appendChild(f); setTimeout(() => f.remove(), 700); }
+      if (window.__snd) window.__snd("clic");
+      if (window.__vistaFondo) window.__vistaFondo();
+    });
+  })();
+  // Colocación de iconos según la pantalla: columna de la derecha de arriba abajo, Papelera siempre abajo del todo y entera;
+  // si no cabe, las carpetas pasan a otra columna hacia la izquierda en vez de cortarse.
+  const ordenIconos = DESKTOP.filter((d) => d.kind !== "trash").map((d) => d.id).concat(["panel", "radio", "fondo"]);
+  const colocarIconos = () => {
+    if (window.innerWidth <= 760) return;
+    const W = window.innerWidth, H = window.innerHeight, cx = Math.max(120, W - 120);
+    const yT = Math.min(40 + 88 * 8, H - 78), usable = yT - 40 - 8;
+    const filas = Math.max(3, Math.floor(usable / 82)), cap = Math.min(filas, 8), paso = Math.min(88, usable / cap);
+    const nuevo = { trash: { x: cx, y: yT } };
+    ordenIconos.forEach((id, i) => { nuevo[id] = { x: cx - 88 * Math.floor(i / cap), y: 40 + paso * (i % cap) }; });
+    Object.keys(nuevo).forEach((id) => {
+      const el = document.querySelector('.icon[data-id="' + id + '"]'), antes = originalPos[id]; if (!el) return;
+      const sinMover = !antes || (Math.abs(el.offsetLeft - antes.x) < 2 && Math.abs(el.offsetTop - antes.y) < 2);
+      originalPos[id] = nuevo[id];
+      if (sinMover || id === "trash") { el.style.left = nuevo[id].x + "px"; el.style.top = nuevo[id].y + "px"; }
+    });
+  };
+  colocarIconos(); let rz = 0; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(colocarIconos, 120); });
   // en móvil (rejilla) quedan al final, después de Contacto y la Papelera: primero el panel y luego el reproductor
 
   aplicar(); refrescar();
