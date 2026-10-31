@@ -465,6 +465,7 @@
     /* Panel de control como hoja inferior: deja ver el escritorio mientras se cambian los ajustes */
     #win-panel.window[id^="win-"] { top: auto !important; height: 58vh; height: 58dvh; box-shadow: 0 -3px 0 rgba(0,0,0,0.35); }
     #win-panel.window[id^="win-"] .content { overflow-y: auto; min-height: 0; }
+    #win-panel .btn.pc-otro { min-height: 34px; padding: 4px 12px; margin-left: 0; }
     .en-guia #win-panel.window[id^="win-"] { bottom: 58px !important; }
   }
   #mobile-view .m-head { padding: 28px 0 8px; }
@@ -2418,7 +2419,7 @@ desktop.addEventListener("mousedown", (e) => {
   // Guardar el fondo como imagen: solo el fondo (color + gato), sin carpetas ni post-its, con la marca de agua.
   let ultimoFondo = null;
   function pintarFondo() {
-    const W0 = window.innerWidth, H0 = window.innerHeight, k = Math.max(0.5, Math.min(Math.max(1, 1920 / W0), 4000 / Math.max(W0, H0)));
+    const W0 = window.innerWidth, H0 = window.innerHeight, k = Math.max(0.5, Math.min(Math.max(1, 1920 / W0), 4000 / Math.max(W0, H0), Math.sqrt(4e6 / (W0 * H0)))); // el móvil (iOS) falla con lienzos grandes: tope de ~4 megapíxeles
     const W = Math.round(W0 * k), H = Math.round(H0 * k), c = document.createElement("canvas"); c.width = W; c.height = H;
     const x = c.getContext("2d"); x.fillStyle = A.colorFondo; x.fillRect(0, 0, W, H);
     const gato = new Path2D(GATO);
