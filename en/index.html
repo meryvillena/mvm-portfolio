@@ -2450,12 +2450,20 @@ desktop.addEventListener("mousedown", (e) => {
     return c;
   }
   // Vista previa antes de guardar: se abre una ventana con la imagen y el botón «Guardar imagen».
-  function vistaFondo() {
-    medir("panel/vista-fondo"); ultimoFondo = pintarFondo();
-    const viejo = document.querySelector("#win-fondo .fv-img"); // el propio lienzo hace de vista previa (iOS no cargaba la imagen en base64)
-    if (viejo) { ultimoFondo.className = "fv-img"; ultimoFondo.id = "fondo-vista"; ultimoFondo.setAttribute("role", "img"); ultimoFondo.setAttribute("aria-label", tl("Vista previa del fondo")); viejo.replaceWith(ultimoFondo); }
-    openWindow("fondo");
+  function repintarVista() {
+    ultimoFondo = pintarFondo();
+    // la vista previa es un lienzo pequeño con medidas en píxeles (sin «alto automático», que en el iPhone dejaba la imagen en 0)
+    const k = ultimoFondo.height / ultimoFondo.width, pv = document.createElement("canvas");
+    pv.width = 420; pv.height = Math.max(1, Math.round(420 * k)); pv.getContext("2d").drawImage(ultimoFondo, 0, 0, pv.width, pv.height);
+    const maxH = Math.max(120, window.innerHeight * 0.52), maxW = Math.max(120, Math.min(window.innerWidth - 56, 420));
+    let cw = maxW, ch = cw * k; if (ch > maxH) { ch = maxH; cw = ch / k; }
+    pv.className = "fv-img"; pv.id = "fondo-vista"; pv.setAttribute("role", "img"); pv.setAttribute("aria-label", tl("Vista previa del fondo"));
+    pv.style.cssText = "display:block;margin:0 auto;width:" + Math.round(cw) + "px;height:" + Math.round(ch) + "px;";
+    const viejo = document.querySelector("#win-fondo .fv-img"); if (viejo) viejo.replaceWith(pv);
   }
+  function vistaFondo() { medir("panel/vista-fondo"); repintarVista(); openWindow("fondo"); }
+  // si se cambia un ajuste con la vista previa abierta, la vista previa se actualiza
+  document.addEventListener("mv-ajuste", () => { const w = document.getElementById("win-fondo"); if (w && w.classList.contains("open") && !w.classList.contains("closing")) repintarVista(); });
   function guardarFondo() {
     medir("panel/guardar-fondo"); const c = pintarFondo(); // siempre con los ajustes de ahora, no con los de la vista previa
     c.toBlob((b) => { if (!b) return;
