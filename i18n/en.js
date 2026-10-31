@@ -463,6 +463,7 @@ window.I18N_EN = {
   "Ahora ábrelo aquí.": "Now open it here.",
   "Todo tuyo. Mira con calma.": "All yours. Take your time.",
   "Ver este caso": "See this case",
+  "Vista previa del fondo": "Wallpaper preview",
   "hecho": "done",
   "Iconos": "Icons",
   "Post-it": "Sticky note",

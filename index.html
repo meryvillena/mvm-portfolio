@@ -47,7 +47,7 @@
   window.__LANG = L;
   document.documentElement.lang = L;
   window.__setLang = function (l) { try { localStorage.setItem("mvm-lang", l); } catch (e) {} if (window.medir) medir("idioma/" + l); setTimeout(function () { location.href = (F ? "/" : location.pathname) + "?lang=" + l + location.hash; }, 150); };
-  if (L === "en") document.write('<script src="i18n/en.js?v=20261101a"><\/script>');
+  if (L === "en") document.write('<script src="i18n/en.js?v=20261101b"><\/script>');
 })();
 </script>
 <style>
@@ -243,6 +243,7 @@
   .window .cs-paper { padding-left: max(44px, calc((100% - 760px) / 2)); padding-right: max(44px, calc((100% - 760px) / 2)); }
   .window .titlebar { touch-action: none; user-select: none; -webkit-user-select: none; }
   .window .content { touch-action: pan-y; }
+  #win-panel .content { touch-action: auto; } /* si no, el dedo no arrastra los deslizadores del Panel (pan-y bloquea el gesto horizontal) */
   .window .titlebar .box { position: relative; z-index: 6; }
   .window .titlebar .box::after { content: ""; position: absolute; inset: -6px; }
   /* La X de cerrar se dibuja (el carácter × queda descentrado según la tipografía); el texto sigue ahí para lectores de pantalla */
@@ -1279,6 +1280,7 @@ let usandoTeclado = false;
 document.addEventListener("keydown", () => { usandoTeclado = true; }, true);
 ["mousedown", "touchstart", "pointerdown"].forEach((ev) => document.addEventListener(ev, () => { usandoTeclado = false; }, true));
 function openWindow(id, opener) {
+  if (window.__guiaPermite && !window.__guiaPermite(id)) return; // en móvil, durante la guía solo se abren las ventanas del recorrido
   const el = document.getElementById("win-" + id);
   if (!el) return;
   const yaAbierta = el.classList.contains("open") && !el.classList.contains("closing");
@@ -2125,6 +2127,12 @@ desktop.addEventListener("mousedown", (e) => {
   const mostrar = () => { medir("intro/ver"); window.__enPresentacion = true; prevFocus = document.activeElement; host.classList.remove("bye"); host.classList.add("show"); document.body.classList.add("en-guia"); play(); $("#skip").focus({ preventScroll: true }); };
   // Saltar: en vez de cerrar de golpe, el gato da el cierre (pregunta, fichas y frase final); con el cierre ya a la vista, cierra del todo.
   let irAlFinal = false;
+  window.__guiaPermite = (id) => {
+    if (!host.classList.contains("show") || innerWidth > 760 || !guia) return true;
+    const ok = caso ? (id === caso.d.id || id === caso.c.caseStudy) : fin ? false : (id === "panel" || id === "fondo");
+    if (!ok) { reinicia($("#gato"), "habla"); chispas(); }
+    return ok;
+  };
   // El gato reacciona al ratón (y al toque): se menea y suelta unas chispas.
   const gatoJuega = () => { if (!host.classList.contains("show")) return; const g = $("#gato"); if (window.__snd && (!g.dataset.m || Date.now() - +g.dataset.m > 1500)) { g.dataset.m = Date.now(); window.__snd("miau"); } if (reducido()) return; g.classList.remove("habla"); reinicia(g, "cosquillas"); if (!g.dataset.c || Date.now() - +g.dataset.c > 900) { g.dataset.c = Date.now(); chispas(); } };
   $("#gato").addEventListener("pointerenter", gatoJuega); $("#gato").addEventListener("pointerdown", gatoJuega);
@@ -2441,7 +2449,8 @@ desktop.addEventListener("mousedown", (e) => {
   // Vista previa antes de guardar: se abre una ventana con la imagen y el botón «Guardar imagen».
   function vistaFondo() {
     medir("panel/vista-fondo"); ultimoFondo = pintarFondo();
-    const im = document.getElementById("fondo-vista"); if (im) im.src = ultimoFondo.toDataURL("image/png");
+    const viejo = document.querySelector("#win-fondo .fv-img"); // el propio lienzo hace de vista previa (iOS no cargaba la imagen en base64)
+    if (viejo) { ultimoFondo.className = "fv-img"; ultimoFondo.id = "fondo-vista"; ultimoFondo.setAttribute("role", "img"); ultimoFondo.setAttribute("aria-label", tl("Vista previa del fondo")); viejo.replaceWith(ultimoFondo); }
     openWindow("fondo");
   }
   function guardarFondo() {
