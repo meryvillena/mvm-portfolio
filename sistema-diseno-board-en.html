@@ -320,6 +320,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     // preserve ordering (React before ReactDOM before Babel before text/babel).
     const doc = new DOMParser().parseFromString(template, 'text/html');
     document.documentElement.replaceWith(doc.documentElement);
+    // Botón «Volver al portfolio» (el documento se acaba de sustituir entero, hay que volver a ponerlo).
+    { const v = document.createElement('script'); v.src = '/volver-portfolio.js'; (document.body || document.documentElement).appendChild(v); }
 
     // Resolve page-frame markers: mint this document's own blob for each
     // framed page — from local text when this is the root, otherwise by
