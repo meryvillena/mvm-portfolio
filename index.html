@@ -143,8 +143,8 @@
   .bolsa-row .spark { width: 100px; height: 36px; display: block; }
   .bolsa-row .spark polyline, .bolsa-row .spark line { vector-effect: non-scaling-stroke; }
   .bolsa-row .val { text-align: right; font-size: 13px; color: #fff; white-space: nowrap; }
-  .bolsa-row .pill { display: block; margin: 4px 0 0 auto; width: max-content; min-width: 72px; padding: 2px 7px; text-align: right; font-size: 12px; color: #000; border: 1px solid #000; }
-  .bolsa-row.down .spark { color: #8a8a8a; } .bolsa-row.down .pill { background: #8a8a8a; }
+  .bolsa-row .pill { display: block; margin: 4px 0 0 auto; width: max-content; min-width: 0; padding: 2px 7px; text-align: right; font-size: 12px; color: #000; border: 1px solid #000; }
+  .bolsa-row.down .spark { color: #8a8a8a; } .bolsa-row.down .pill { background: #8a8a8a;  min-width: 0; }
   .bolsa-row.up .spark { color: #4be37a; }   .bolsa-row.up .pill { background: #4be37a; }
   .bolsa-row.up { background: #0f1a12; }
   .bolsa-det { display: none; margin-top: 9px; padding-top: 8px; border-top: 1px solid #2c2c2c; font-size: 11px; line-height: 1.55; color: #cfcfcf; }
@@ -2337,17 +2337,18 @@ desktop.addEventListener("mousedown", (e) => {
   // Tres posiciones (NEG / UX / UI). Cada una abre su case study del escritorio.
   // val = cifra grande · pillA / pillC = texto de la etiqueta de color (abierta / cerrada)
   const filas = [
-    { sym: "NEG", name: tl("Presupuestos"), val: "1 h → 10 min", pillC: tl("abrir"), pillA: "−83%", det: tl("Presupuestar sin echar la tarde. Herramienta no-code en uso."), win: "case-presupuestos", dir: -1 },
-    { sym: "UX", name: "Spotify Now Playing", val: "app + B2B", pillC: tl("abrir"), pillA: tl("abierta"), det: tl("Descubrir música en locales, con el modelo de negocio incluido."), win: "case-spotify", dir: 1 },
-    { sym: "UI", name: "Respira", val: tl("desde cero"), pillC: tl("abrir"), pillA: tl("abierta"), det: tl("HTML y JS sin plantillas ni cuentas. Una luna que respira contigo."), win: "case-respira", dir: 1 },
+    { sym: "NEG", name: tl("Presupuestos"), val: "1 h → 10 min", pillC: "", pillA: "", det: tl("Presupuestar sin echar la tarde. Herramienta no-code en uso."), win: "case-presupuestos", dir: -1, real: [60, 10] },
+    { sym: "UX", name: "Spotify Now Playing", val: "app + B2B", pillC: "", pillA: "", det: tl("Descubrir música en locales, con el modelo de negocio incluido."), win: "case-spotify", dir: 1 },
+    { sym: "UI", name: "Respira", val: tl("desde cero"), pillC: "", pillA: "", det: tl("HTML y JS sin plantillas ni cuentas. Una luna que respira contigo."), win: "case-respira", dir: 1 },
   ];
   // Línea de mercado: salto al abrir, luego se asienta (como Stocks). Semilla fija: siempre sale igual.
   const W = 100, H = 36, N = 52;
-  const grafica = (seed, dir, id) => {
+  const grafica = (seed, dir, id, real) => {
     const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280 - 0.5; };
     let ruido = 0; const v = [];
     for (let i = 0; i < N; i++) {
       const t = i / (N - 1);
+      if (real) { const k = Math.min(1, Math.max(0, (t - 0.45) / 0.12)); v.push(real[0] + (real[1] - real[0]) * (k * k * (3 - 2 * k))); continue; } // dato real: antes plano, salto y plano
       ruido = ruido * 0.72 + rnd() * (0.55 - 0.3 * t);
       v.push(dir * (1 - Math.exp(-t * 5.5)) * 1.0 - dir * 0.18 * t + ruido * 0.5);
     }
@@ -2372,11 +2373,11 @@ desktop.addEventListener("mousedown", (e) => {
     filas.map((f, i) =>
       '<button type="button" class="bolsa-row down" data-i="' + i + '" aria-expanded="false"><div class="bolsa-top">' +
         '<span><span class="sym">' + f.sym + '</span><span class="nm">' + esc(f.name) + '</span></span>' +
-        grafica(i * 977 + 31, f.dir, i) +
+        grafica(i * 977 + 31, f.dir, i, f.real) +
         '<span><span class="val">' + esc(f.val) + '</span><span class="pill"><span class="ar">▼</span> <span class="pt">' + f.pillC + '</span></span></span></div>' +
         '<div class="bolsa-det">' + esc(f.det) + '<br><u>' + tl("Ver caso →") + '</u></div></button>').join("") +
     '<div class="bolsa-cv"><a class="cv-main" href="' + CVURL + '"><b>CV</b>' + tl("Currículum ↗") + '</a><a class="cv-dl" href="' + CVPDF + '" download aria-label="' + tl("Descargar el CV en PDF") + '">PDF ↓</a></div>';
-  const w = makeWindow("bolsa", tl("La Bolsa"), null, html, 10, Math.max(40, window.innerHeight - 395), 330);
+  const w = makeWindow("bolsa", tl("La Bolsa"), null, html, 10, Math.max(40, window.innerHeight - 470), 330);
   if (w) w.classList.add("bolsa");
   // Solo una abierta a la vez. Una fila ya abierta, al pulsarla de nuevo, abre su case study.
   const rows = w ? Array.from(w.querySelectorAll(".bolsa-row")) : [];
@@ -2385,6 +2386,8 @@ desktop.addEventListener("mousedown", (e) => {
     r.classList.toggle("up", abierta); r.classList.toggle("down", !abierta); r.setAttribute("aria-expanded", abierta ? "true" : "false");
     r.querySelector(".ar").textContent = abierta ? "▲" : "▼"; r.querySelector(".pt").textContent = abierta ? f.pillA : f.pillC;
   };
+  // Con ratón, la fila se despliega al pasar por encima; el clic abre el caso. Con el dedo, un toque despliega y otro abre.
+  rows.forEach((r) => r.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") rows.forEach((x) => poner(x, x === r)); }));
   rows.forEach((r) => r.addEventListener("click", () => {
     if (r.classList.contains("up")) { openWindow(filas[+r.dataset.i].win, r); return; }
     rows.forEach((x) => poner(x, x === r));
