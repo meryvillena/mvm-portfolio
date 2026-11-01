@@ -816,7 +816,7 @@ function aboutHtml() {
     "<p>" + tl("Llevo más de 20 años trabajando en publicidad y marketing. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar y Lancôme. Desde 2018 gestiono varios restaurantes McDonald’s®: coordino proveedores, procesos internos, administración y marketing local. De ahí vienen mis ocho años de experiencia directa en operaciones.") + "</p>" +
     "<p>" + tl("Ahora diseño, construyo y pongo en marcha productos digitales para negocios: webs orientadas a cliente, herramientas internas y automatizaciones. Trabajo con diseño, no-code, HTML y JavaScript. Defino la dirección, el contenido y las decisiones de producto; utilizo IA como apoyo en tareas de redacción y desarrollo.") + "</p>" +
     '<div class="chips"><span>' + tl("20+ años en publicidad y marketing") + '</span><span>' + tl("8 años en operaciones") + '</span><span>' + tl("Producto digital") + '</span></div>' +
-    '<p><a class="btn" href="' + CVURL + '" target="_blank" rel="noopener">' + tl("Ver mi CV →") + '</a></p>' +
+    '<p><a class="btn" href="' + CVURL + '">' + tl("Ver mi CV →") + '</a></p>' +
     (visible({ kind: "folder", ref: "trabajo-grafico" }) ? '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: tl("Trabajo gráfico"), desc: tl("Piezas de diseño, Talavera, promos y más.") }) + "</div>" : "");
 }
 
@@ -2377,7 +2377,7 @@ desktop.addEventListener("mousedown", (e) => {
         grafica(i * 977 + 31, f.dir, i) +
         '<span><span class="val">' + esc(f.val) + '</span><span class="pill"><span class="ar">▼</span> <span class="pt">' + f.pillC + '</span></span></span></div>' +
         '<div class="bolsa-det">' + esc(f.det) + '<br><u>' + tl("Ver caso →") + '</u></div></button>').join("") +
-    '<div class="bolsa-cv"><a class="cv-main" href="' + CVURL + '" target="_blank" rel="noopener"><b>CV</b>' + tl("Currículum ↗") + '</a><a class="cv-dl" href="' + CVPDF + '" download aria-label="' + tl("Descargar el CV en PDF") + '">PDF ↓</a></div>';
+    '<div class="bolsa-cv"><a class="cv-main" href="' + CVURL + '"><b>CV</b>' + tl("Currículum ↗") + '</a><a class="cv-dl" href="' + CVPDF + '" download aria-label="' + tl("Descargar el CV en PDF") + '">PDF ↓</a></div>';
   const w = makeWindow("bolsa", tl("La Bolsa"), null, html, 10, Math.max(40, window.innerHeight - 395), 330);
   if (w) w.classList.add("bolsa");
   // Solo una abierta a la vez. Una fila ya abierta, al pulsarla de nuevo, abre su case study.
@@ -2801,6 +2801,19 @@ desktop.addEventListener("mousedown", (e) => {
     avisoEs();
   }, true);
   const openProject = (c) => { if (c.caseStudy) openWindow(c.caseStudy); else { avisoEs(); location.href = c.href; } };
+  // Al salir a una demo y volver (con «Atrás» o con el botón «Volver al portfolio») se recuperan las ventanas que había abiertas.
+  (() => {
+    const K = "mvm-ventanas", idDe = (w) => w.id.replace(/^win-/, "");
+    addEventListener("pagehide", () => { try { sessionStorage.setItem(K, JSON.stringify([...document.querySelectorAll(".window.open:not(.closing)")].map((w) => ({ id: idDe(w), l: w.style.left, t: w.style.top, z: +w.style.zIndex || 0 })))); } catch (e) {} });
+    const nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0], volver = location.hash === "#volver";
+    if (!((nav && nav.type === "back_forward") || volver)) return;
+    if (volver) history.replaceState(null, "", location.pathname + location.search);
+    let o = null; try { o = JSON.parse(sessionStorage.getItem(K)); } catch (e) {}
+    if (!Array.isArray(o)) return;
+    const ids = o.map((x) => x.id);
+    document.querySelectorAll(".window.open").forEach((w) => { if (!ids.includes(idDe(w))) w.classList.remove("open"); });
+    o.sort((a, b) => a.z - b.z).forEach((x) => { const el = document.getElementById("win-" + x.id); if (!el) return; if (x.l) el.style.left = x.l; if (x.t) el.style.top = x.t; el.classList.add("open"); focusWindow(x.id); });
+  })();
   const tidy = () => document.querySelectorAll(".icon").forEach((el) => {
     const pos = originalPos[el.dataset.id]; if (!pos || el.style.display === "none") return;
     el.style.transition = "left .25s, top .25s"; el.style.left = pos.x + "px"; el.style.top = pos.y + "px";
