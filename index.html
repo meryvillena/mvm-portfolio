@@ -2369,7 +2369,7 @@ desktop.addEventListener("mousedown", (e) => {
   const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
   const hoy = new Date().toLocaleDateString(LANG === "en" ? "en-US" : "es-ES", { day: "numeric", month: "long" });
   const html =
-    '<div class="bolsa-head"><div><h2>Mery Villena</h2><p>' + tl("Producto · sistemas · operaciones") + '</p></div><span class="bolsa-fecha">' + esc(hoy) + '</span></div>' +
+    '<div class="bolsa-head"><div><h2>Mery Villena</h2><p>' + tl("Negocio · UX · UI") + '</p></div><span class="bolsa-fecha">' + esc(hoy) + '</span></div>' +
     filas.map((f, i) =>
       '<button type="button" class="bolsa-row down" data-i="' + i + '" aria-expanded="false"><div class="bolsa-top">' +
         '<span><span class="sym">' + f.sym + '</span><span class="nm">' + esc(f.name) + '</span></span>' +
