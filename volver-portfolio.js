@@ -5,9 +5,10 @@
   try { if (window.top !== window.self) return; } catch (e) { return; }
   if (document.getElementById("volver-portfolio")) return;
   var ref = ""; try { ref = document.referrer || ""; } catch (e) {}
-  var en = /\/en(\/|$)/.test(ref.replace(/^https?:\/\/[^/]+/, "")) || document.documentElement.lang === "en" || /-en\.html$/.test(location.pathname);
-  var home = en ? "/en/" : "/";
-  var mismoSitio = false; try { mismoSitio = !!ref && new URL(ref).origin === location.origin; } catch (e) {}
+  var de = ""; try { de = new URLSearchParams(location.search).get("from") || ""; } catch (e) {}
+  var en = de === "en" || /\/en(\/|$)/.test(ref.replace(/^https?:\/\/[^/]+/, "")) || document.documentElement.lang === "en" || /-en\.html$/.test(location.pathname);
+  var home = (/(^|\.)meryvillena\.com$/.test(location.hostname) ? "" : "https://meryvillena.com") + (en ? "/en/" : "/");
+  var mismoSitio = false; try { var o = ref ? new URL(ref) : null; mismoSitio = !!o && (o.origin === location.origin || /^(www\.)?meryvillena\.com$/.test(o.hostname)); } catch (e) {}
   var a = document.createElement("a");
   a.id = "volver-portfolio";
   a.href = home + "#volver"; // si no se puede volver atrás, la portada recupera las ventanas que había abiertas

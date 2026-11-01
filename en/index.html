@@ -1388,7 +1388,7 @@ function caseSpotifyHtml() {
 
 // ===== CASE STUDY: Respira =====
 function caseRespiraHtml() {
-  const DEMO = "https://respira.mvmmaison.com/?demo", IMG = "respira/case/";
+  const DEMO = "https://respira.mvmmaison.com/?demo" + (LANG === "en" ? "&from=en" : ""), IMG = "respira/case/";
   const fig = (n, alt, pie) => '<figure class="cs-fig"><img src="' + IMG + n + '.jpg"' + imgDim(IMG + n + '.jpg') + ' alt="' + alt + '" loading="lazy" decoding="async"><figcaption>' + pie + "</figcaption></figure>";
   return `<div class="cs-toolbar">
       <div class="cs-tfont">Chicago&nbsp;▾</div>
