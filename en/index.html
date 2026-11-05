@@ -100,6 +100,9 @@
   .postit .pi-alias { margin-top: 8px; font-size: 11px; color: rgba(0,0,0,0.6); }
   .postit .pi-x { all: unset; position: absolute; top: 1px; right: 3px; padding: 0 4px; font-size: 13px; font-weight: bold; line-height: 1.2; cursor: pointer; opacity: 0.5; }
   .postit .pi-x:hover, .postit .pi-x:focus-visible { opacity: 1; background: #000; color: #fff; }
+  .postit.tira { top: auto; width: 112px; min-height: 0; max-height: 92px; overflow: hidden; padding: 10px 8px 6px; font-size: 11px; z-index: 5; cursor: pointer; }
+  .postit.tira .pi-alias { font-size: 10px; margin-top: 4px; }
+  @media (max-width: 760px) { .postit.nuevo textarea, .postit.nuevo input[type=text] { font-size: 16px; } }   /* a 16 px el iPhone no hace zoom al escribir */
   .postit.in { position: relative; transform: rotate(var(--pr, 0deg)); z-index: auto; width: auto; }
   .muro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; padding: 6px 4px 10px; }
   .postit:not(.nuevo):not(.in):not(.ghost) { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
@@ -2251,10 +2254,26 @@ desktop.addEventListener("mousedown", (e) => {
   };
 
   // ---- Escritorio: "+" y post-its repartidos
+  // Móvil: unos post-its asomando abajo del escritorio (si hay hueco); al tocarlos se abre el Muro con todos
+  const pintarTira = async () => {
+    let filas; try { filas = await pedir(3); } catch (e) { return; }
+    if (grande()) return;
+    const bajo = Math.max(0, ...[...document.querySelectorAll("#desktop .icon")].filter((i) => i.offsetParent).map((i) => i.getBoundingClientRect().bottom));
+    if (bajo > window.innerHeight - 120) return;   // si no hay hueco, no se pone ninguno (el Muro sigue en el menú Ver)
+    const W = window.innerWidth, ancho = 112, paso = filas.length > 1 ? (W - ancho - 24) / (filas.length - 1) : 0;
+    filas.forEach((r, i) => {
+      const n = nota(r, false); n.classList.add("tira"); n.style.left = (12 + i * paso) + "px"; n.style.bottom = (10 + (i % 2) * 8) + "px";
+      n.setAttribute("role", "button"); n.tabIndex = 0; n.setAttribute("aria-label", tl("Muro de post-its"));
+      const abrir = () => openWindow("muro");
+      n.addEventListener("click", abrir); n.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrir(); } });
+      desktop.appendChild(n);
+    });
+  };
   const pintarEscritorio = async () => {
     pegados.forEach((n) => { FX.para(n); n.remove(); }); pegados = [];
     if (ghost) { ghost.remove(); ghost = null; }
-    if (!grande()) return;
+    document.querySelectorAll(".postit.tira").forEach((n) => n.remove());
+    if (!grande()) return pintarTira();
     const cs = celdas();
     ghost = document.createElement("button"); ghost.type = "button"; ghost.className = "postit ghost";
     ghost.innerHTML = '<span class="plus" aria-hidden="true">+</span><span>' + tl("Deja tu post-it") + '</span>';
