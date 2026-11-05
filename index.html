@@ -2452,10 +2452,20 @@ desktop.addEventListener("mousedown", (e) => {
   }
   // Vista previa antes de guardar: se abre una ventana con la imagen y el botón «Guardar imagen».
   function repintarVista() {
-    // la vista previa se pinta ya pequeña (420 px): el iPhone se queda sin memoria de lienzos si se crean y guardan lienzos grandes cada vez
-    const cv = pintarFondo(true), k = cv.height / cv.width, pv = document.createElement("img");
-    pv.alt = ""; try { pv.src = cv.toDataURL("image/png"); } catch (e) {}
-    cv.width = cv.height = 0; // soltar la memoria del lienzo // imagen normal (no lienzo): Safari del iPhone la pinta mejor
+    // la vista previa es un dibujo vectorial (SVG), sin lienzo: en el iPhone los lienzos fallaban a veces y dejaban la imagen en blanco
+    const W0 = window.innerWidth, H0 = window.innerHeight, k = H0 / W0, pv = document.createElement("img");
+    const h6 = A.colorFondo.replace("#", ""), lum = (parseInt(h6.slice(0, 2), 16) * 299 + parseInt(h6.slice(2, 4), 16) * 587 + parseInt(h6.slice(4, 6), 16) * 114) / 1000;
+    let cuerpo = '<rect width="' + W0 + '" height="' + H0 + '" fill="' + A.colorFondo + '"/>';
+    if (A.fondo === "gato") {
+      const w = Math.min(0.62 * Math.min(W0, H0), 560), e = w / 15;
+      cuerpo += '<path d="' + GATO + '" fill="' + A.colorGato + '" fill-opacity="' + A.opac / 100 + '" transform="translate(' + (W0 - w) / 2 + " " + (H0 - 12 * e) / 2 + ") scale(" + e + ')"/>';
+    } else if (A.fondo === "patron") {
+      const w = A.tam * 38 / 15, h = w * 32 / 38, e = w / 38;
+      for (let j = -1; j * h < H0; j++) for (let i = 0; i * w < W0; i++) [[2, 2], [21, 18]].forEach((o) => { cuerpo += '<path d="' + GATO + '" fill="' + A.colorGato + '" fill-opacity="' + A.opac / 100 + '" transform="translate(' + (i * w + o[0] * e) + " " + (j * h + o[1] * e) + ") scale(" + e + ')"/>'; });
+    }
+    const fs = Math.max(16, Math.round(Math.min(W0, H0) * 0.022));
+    cuerpo += '<text x="' + (W0 - fs * 1.2) + '" y="' + (H0 - fs * 1.1) + '" text-anchor="end" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="' + fs + '" fill="' + (lum > 140 ? "rgba(0,0,0,.55)" : "rgba(255,255,255,.6)") + '">www.meryvillena.com</text>';
+    pv.alt = ""; pv.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="' + W0 + '" height="' + H0 + '" viewBox="0 0 ' + W0 + " " + H0 + '" shape-rendering="crispEdges">' + cuerpo + "</svg>");
     const maxH = Math.max(120, window.innerHeight * 0.52), maxW = Math.max(120, Math.min(window.innerWidth - 56, 420));
     let cw = maxW, ch = cw * k; if (ch > maxH) { ch = maxH; cw = ch / k; }
     pv.className = "fv-img"; pv.id = "fondo-vista"; pv.setAttribute("role", "img"); pv.setAttribute("aria-label", tl("Vista previa del fondo"));
