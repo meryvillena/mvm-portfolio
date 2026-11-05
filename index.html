@@ -2483,7 +2483,7 @@ desktop.addEventListener("mousedown", (e) => {
       if (tactil && arch && navigator.canShare && navigator.canShare({ files: [arch] })) { navigator.share({ files: [arch] }).then(cerrarVista).catch(() => {}); return; }   // se cierra la ventana solo si se llega a guardar/compartir (si cancelas la hoja, sigue abierta)   // móvil: hoja de compartir (Guardar imagen / Guardar en Fotos)
       const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "fondo-meryvillena.png"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); cerrarVista(); }, "image/png");
   }
-  window.__guardarFondo = guardarFondo; window.__vistaFondo = vistaFondo;
+  window.__guardarFondo = guardarFondo; window.__vistaFondo = vistaFondo; window.__repintarVista = repintarVista;
   function aplicar() {
     const raiz = document.documentElement;
     raiz.style.setProperty("--escritorio", A.colorFondo);
@@ -2744,6 +2744,9 @@ desktop.addEventListener("mousedown", (e) => {
   const ICO_FONDO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA+UlEQVR4nN1X7Q2EIAwtTRdwBVewq7gLI7DTrYAruIIjcDH353IgIIX07l5iov3gPYpYNBAjwDiYkiF474exM3PEiaAMyjmttWIC51ybAGstOPcQC1gWgG3bLv0IysCfEsBsbj13FzACeCfY+yDyiwWMALYmtqz37Q9R73J3qQAnZi6pBrXM/JNQUg3SLP8J9V1AuS52NhIpco0oK6Am+S+WAL9SAL/ObtH9CNCVo5a4FFc65GIpqTRACCF7NVfAVx7PpTsFQRmoLcBo/5pRKmpd12T2cRyRbd/3ImsuhlLGeZ6rBjwFvcfWiKkSME1TNilF2ipG/R14AtxeaqbFQQevAAAAAElFTkSuQmCC", ICO_FONDO_GUINO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA/ElEQVR4nN1XwQ3DIAw0FgtkhawQVskujMBOXcFZIStkBKqonyoQQ20QbU+KRLDNHQZkMJAiQj+YUkckom7szrmEE2EwLGf03qsJQggyAd57COGhFrAsANu23doRBgN/SoBz5vb/bF/t6k34CYhi/wyQkKSZgB5AaaBkvZvuAWq0HNhi5ppsWMnMr4SabFhJUMvTgDAYlqtiZyHRgitErICa4L9YAvxKAe51d0vaPWDvDLXEJb/SJRdLQaUBYozsJ84AVV7PtScFYTBwtAAz+mlmc17rumajj+NI+vZ9L7JyPjbXOc9z1YCnoHffGjFVAqZpYoNypFIxw/fAE1oEaxEJ3PYPAAAAAElFTkSuQmCC";
   makeIcon("fondo", tl("Guardar fondo"), ICO_FONDO, pos.x - 88, pos.y + 176);
   makeWindow("fondo", tl("Guardar fondo"), null, '<p class="fv-txt">' + tl("Así queda tu fondo, sin carpetas ni post-its.") + '</p><img id="fondo-vista" class="fv-img" alt=""><p class="fv-pie"><button type="button" class="btn" id="fondo-guardar">' + tl("Guardar imagen") + '</button></p>', 200, 80, 470);
+  // si la ventana se abre por cualquier otro camino (p. ej. al recuperar las ventanas abiertas al volver), la vista previa también se pinta
+  (() => { const w = document.getElementById("win-fondo"); let abierta = false; if (!w || !window.MutationObserver) return;
+    new MutationObserver(() => { const ahora = w.classList.contains("open") && !w.classList.contains("closing"); if (ahora && !abierta && window.__repintarVista) { try { window.__repintarVista(); } catch (e) {} } abierta = ahora; }).observe(w, { attributes: true, attributeFilter: ["class"] }); })();
   document.getElementById("fondo-guardar").addEventListener("click", () => { if (window.__guardarFondo) window.__guardarFondo(); });
   (() => { const el = document.querySelector('.icon[data-id="fondo"]'), img = el.querySelector("img"); let d0 = null, tg = 0;
     el.addEventListener("mousedown", (e) => { d0 = [e.clientX, e.clientY]; });
