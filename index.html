@@ -2510,7 +2510,7 @@ desktop.addEventListener("mousedown", (e) => {
     if (!ctx) {
       try { ctx = new (window.AudioContext || window.webkitAudioContext)(); master = ctx.createGain(); master.gain.value = 0.35 * A.volSonido / 100; const suave = ctx.createBiquadFilter(); suave.type = "lowpass"; suave.frequency.value = 6500; master.connect(suave); suave.connect(ctx.destination); } catch (e) { ctx = null; return null; }
     }
-    if (ctx.state === "suspended") ctx.resume();
+    if (ctx.state !== "running") { try { const r = ctx.resume(); if (r && r.catch) r.catch(() => {}); } catch (e) {} }   // en el iPhone el audio puede quedar «suspended» o «interrupted» (al cambiar de app o de pestaña)
     return ctx;
   }
   function nota(c, t, f0, f1, dur, tipo, vol) {
@@ -2566,6 +2566,12 @@ desktop.addEventListener("mousedown", (e) => {
     SONIDOS[tipo](c, c.currentTime + 0.01);
   }
   window.__snd = sonar;
+  // iPhone: el audio solo despierta dentro de un toque de la persona; en cada toque se despierta y se suena un instante de silencio
+  ["touchstart", "touchend", "pointerdown", "click"].forEach((ev) => document.addEventListener(ev, () => {
+    if (!A.sonido) return; const c = motor(); if (!c) return;
+    if (c.state === "running" && c.__listo) return;
+    try { const b = c.createBuffer(1, 1, 22050), src = c.createBufferSource(); src.buffer = b; src.connect(c.destination); src.start(0); c.__listo = true; } catch (e) {}
+  }, true));
   document.addEventListener("click", (e) => { if (e.target.closest && e.target.closest(".mtitle, .mi, .window button, .window a, .window input[type=radio]")) sonar("clic"); }, true);
 
   /* ---------- Ventana del Panel de control ---------- */
