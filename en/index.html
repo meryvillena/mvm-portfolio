@@ -100,19 +100,26 @@
   .postit .pi-alias { margin-top: 8px; font-size: 11px; color: rgba(0,0,0,0.6); }
   .postit .pi-x { all: unset; position: absolute; top: 1px; right: 3px; padding: 0 4px; font-size: 13px; font-weight: bold; line-height: 1.2; cursor: pointer; opacity: 0.5; }
   .postit .pi-x:hover, .postit .pi-x:focus-visible { opacity: 1; background: #000; color: #fff; }
-  /* pista de cerrar: sin caja, flechas dibujadas a mano (mismo trazo que la entrada guiada) */
-  .pista-cerrar { position: fixed; left: 50%; bottom: 150px; translate: -50% 0; z-index: 9000; display: flex; align-items: center; gap: 8px; font: normal 20px/1 "ChicagoCS","Geneva","Helvetica Neue",Arial,sans-serif; color: #000; white-space: nowrap; pointer-events: none; text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 6px #fff, 0 0 8px #fff; transition: opacity .4s ease; }
+  /* pista de cerrar: círculo de "dedo" que se apoya y arrastra, con flecha a mano (mismo trazo que la entrada guiada) */
+  .pista-cerrar { position: fixed; left: 50%; top: 34%; translate: -50% 0; z-index: 9000; display: flex; flex-direction: column; align-items: center; gap: 14px; pointer-events: none; transition: opacity .4s ease; }
   .pista-cerrar.fuera { opacity: 0; }
-  .pista-cerrar span { transform: rotate(-1.5deg); }
-  .pista-cerrar svg { width: 52px; height: 30px; overflow: visible; flex: none; }
-  .pista-cerrar svg .bl, .pista-cerrar svg .tr { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: pista-traza 1.8s ease-in-out .15s infinite; }
-  .pista-cerrar svg .bl { stroke: #fff; stroke-width: 6px; } .pista-cerrar svg .tr { stroke: #000; stroke-width: 2.4px; }
-  .pista-cerrar.abajo svg { width: 30px; height: 52px; }
-  .pista-cerrar svg:first-child { animation: pista-izq 1.8s ease-in-out .15s infinite; } .pista-cerrar svg:last-child:not(:first-child) { animation: pista-der 1.8s ease-in-out .15s infinite; }
-  .pista-cerrar.abajo svg:first-child { animation: pista-abajo 1.8s ease-in-out .15s infinite; }
-  @keyframes pista-izq { 0%, 100% { transform: translateX(0); } 45% { transform: translateX(-9px); } } @keyframes pista-der { 0%, 100% { transform: translateX(0); } 45% { transform: translateX(9px); } } @keyframes pista-abajo { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(9px); } }
-  @keyframes pista-traza { 0% { stroke-dashoffset: 1; } 45%, 80% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -1; } }
-  @media (prefers-reduced-motion: reduce) { .pista-cerrar svg, .pista-cerrar svg .bl, .pista-cerrar svg .tr { animation: none !important; stroke-dashoffset: 0; } }
+  .pc-gesto { position: relative; width: 290px; height: 46px; }
+  .pista-cerrar.abajo .pc-gesto { rotate: 90deg; margin: 80px 0 60px; }
+  .pc-gesto svg { position: absolute; overflow: visible; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .pc-gesto .pc-estrella { left: 0; top: -5px; width: 160px; height: 56px; fill: #000; stroke: #fff; stroke-width: 2.5px; paint-order: stroke; animation: pc-estrella 2.2s cubic-bezier(.45,0,.75,1) infinite both; }
+  /* el gato con su globo, igual que en la entrada guiada */
+  .pc-dialogo { display: flex; align-items: flex-end; gap: 14px; }
+  .pc-gato { flex: none; width: 40px; height: 33px; filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(2px 2px 0 rgba(0,0,0,.4)); animation: pc-gato-in .8s ease-out both; }
+  .pc-gato svg { width: 100%; height: 100%; fill: #000; display: block; opacity: .78; }
+  .pc-globo { position: relative; flex: none; border-radius: 14px; box-shadow: 4px 4px 0 rgba(0,0,0,.4); background: rgba(236,236,236,.97); padding: 12px 16px 12px 18px; font: normal 15px/1.35 "Geneva","Helvetica Neue",Helvetica,Arial,sans-serif; color: #000; max-width: 230px; transform-origin: 0 90%; animation: pc-aparece .6s cubic-bezier(.3,1.4,.5,1) .25s both; }
+  .pc-globo > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .pc-globo > svg path { fill: none; stroke: #000; stroke-width: 1.8px; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .pc-globo span { position: relative; }
+  .pc-globo::before { content: ""; position: absolute; left: -8px; bottom: 14px; width: 14px; height: 14px; background: #ececec; clip-path: polygon(0 0, 0 100%, 100% 100%); border-left: 1.7px solid #000; border-bottom: 1.7px solid #000; transform: rotate(45deg); border-bottom-left-radius: 3px; }
+  @keyframes pc-aparece { 0% { opacity: 0; transform: scale(.05) rotate(-10deg); } 50% { opacity: 1; transform: scale(1.14) rotate(2.5deg); } 72% { transform: scale(.94) rotate(-1deg); } 88% { transform: scale(1.03); } 100% { opacity: 1; transform: none; } }
+  @keyframes pc-gato-in { 0% { opacity: 0; transform: translateY(90px) scale(.5,.8) rotate(-14deg); } 45% { opacity: 1; transform: translateY(-26px) scale(.88,1.18) rotate(5deg); } 70% { transform: translateY(0) scale(1.14,.86); } 85% { transform: translateY(-5px) scale(.97,1.04); } 100% { opacity: 1; transform: none; } }
+  @keyframes pc-estrella { 0%, 14% { opacity: 0; transform: translateX(0) scaleX(.5); } 26% { opacity: 1; transform: translateX(0) scaleX(1); } 64% { opacity: 1; transform: translateX(110px) scaleX(1.15); } 78%, 100% { opacity: 0; transform: translateX(150px) scaleX(1.2); } }
+  @media (prefers-reduced-motion: reduce) { .pc-estrella, .pc-gato, .pc-globo { animation: none; } }
   .tira-caja { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; gap: 10px; padding: 8px 12px 12px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; scrollbar-width: none; touch-action: pan-x; }
   .tira-caja::-webkit-scrollbar { display: none; }
   .tira-caja .postit.tira { position: relative; flex: none; scroll-snap-align: start; touch-action: pan-x !important; }
@@ -1338,12 +1345,17 @@ function pistaCerrar(id) {
     const abajo = id === "radio";
     const p = document.createElement("div");
     p.className = "pista-cerrar" + (abajo ? " abajo" : ""); p.setAttribute("aria-hidden", "true");
-    const F = (d, vb) => '<svg viewBox="' + vb + '"><path class="bl" pathLength="1" d="' + d + '"/><path class="tr" pathLength="1" d="' + d + '"/></svg>';
-    p.innerHTML = abajo ? F("M16 2 Q13 18 15 46 M15 46 Q8 38 3 33 M15 46 Q22 38 27 33", "0 0 30 52") + "<span>" + tl("Desliza hacia abajo para cerrar") + "</span>" : F("M50 15 Q34 12 8 16 M8 16 Q15 9 20 3 M8 16 Q16 20 21 28", "0 0 52 30") + "<span>" + tl("Desliza para cerrar") + "</span>" + F("M2 15 Q18 12 44 16 M44 16 Q37 9 32 3 M44 16 Q36 20 31 28", "0 0 52 30");
+    p.innerHTML = '<div class="pc-gesto"><svg class="pc-estrella" viewBox="0 0 160 56">' +
+      '<path d="M138 25.8 Q70 26.9 2 28 Q70 29.1 138 30.2 Z M139.7 26.3 L113 4 L136.3 29.7 Z M136.3 26.3 L113 52 L139.7 29.7 Z M139.6 29.8 L152 15 L136.4 26.2 Z M136.4 29.8 L152 41 L139.6 26.2 Z M138.0 29.8 L156 28 L138.0 26.2 Z"/></svg></div>' +
+      '<div class="pc-dialogo"><span class="pc-gato"><svg viewBox="0 0 15 12" shape-rendering="crispEdges"><path d="M0 0h1v1h-1zM14 0h1v1h-1zM0 1h2v1h-2zM13 1h2v1h-2zM0 2h3v1h-3zM12 2h3v1h-3zM0 3h15v1h-15zM0 4h3v1h-3zM5 4h5v1h-5zM12 4h3v1h-3zM0 5h3v1h-3zM5 5h5v1h-5zM12 5h3v1h-3zM0 6h15v1h-15zM0 7h15v1h-15zM0 8h3v1h-3zM12 8h3v1h-3zM0 9h4v1h-4zM5 9h5v1h-5zM11 9h4v1h-4zM1 10h13v1h-13zM2 11h11v1h-11z"/></svg></span><div class="pc-globo"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M4 3 Q30 1 52 2.2 T96.5 3 Q99 6 98.2 30 T98.6 94 Q97 98 92 97.4 T50 98.2 T6 97 Q2 96 2.4 90 T2 50 T3 7 Q3.5 4 7 2.6"/></svg><span>' + (abajo ? tl("Arrastra hacia abajo para cerrar la ventana") : tl("Arrastra para cerrar la ventana")) + '</span></div></div>';
     document.body.appendChild(p);
-    const quita = () => { p.classList.add("fuera"); setTimeout(() => p.remove(), 400); document.removeEventListener("pointerdown", quita, true); };
+    let anim = null;
+    if (!abajo && w.animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {   // la ventana "se deja arrastrar" a la vez que el dedo
+      anim = w.animate([{ transform: "translateX(0) rotate(0)", offset: 0 }, { transform: "translateX(0) rotate(0)", offset: 0.22 }, { transform: "translateX(70px) rotate(4deg)", offset: 0.62 }, { transform: "translateX(0) rotate(0)", offset: 0.88 }, { transform: "translateX(0) rotate(0)", offset: 1 }], { duration: 2200, iterations: 2, easing: "ease-in-out" });
+    }
+    const quita = () => { if (anim) anim.cancel(); p.classList.add("fuera"); setTimeout(() => p.remove(), 400); document.removeEventListener("pointerdown", quita, true); };
     document.addEventListener("pointerdown", quita, true);
-    setTimeout(quita, 4200);
+    setTimeout(quita, 4500);
   }, 700);
 }
 
