@@ -1342,8 +1342,7 @@ function openWindow(id, opener) {
 // Móvil: las 3 primeras veces que se abre algo, una pista animada enseña que se cierra deslizando
 function pistaCerrar(id) {
   if (!window.matchMedia("(max-width: 760px)").matches) return;
-  const KEY = "mvm-pista-cerrar", MAX = 99999; let n = 0;   // MAX provisional (sale siempre mientras se define); definitivo: 3 por sesión
-  
+  const KEY = "mvm-pista-cerrar", MAX = 3; let n = 0;   // 3 veces por sesión (si la cierran deslizando, ya no se repite)
   try { n = +sessionStorage.getItem(KEY) || 0; } catch (e) {}
   if (n >= MAX || document.querySelector(".pista-cerrar")) return;
   try { sessionStorage.setItem(KEY, String(n + 1)); } catch (e) {}
