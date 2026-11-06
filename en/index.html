@@ -106,12 +106,12 @@
   .pc-gesto { position: relative; width: 290px; height: 46px; }
   .pista-cerrar.abajo .pc-gesto { rotate: 90deg; margin: 80px 0 60px; }
   .pc-gesto svg { position: absolute; overflow: visible; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-  .pc-gesto .pc-estrella { left: 0; top: -5px; width: 160px; height: 56px; fill: #000; stroke: #fff; stroke-width: 2.5px; paint-order: stroke; animation: pc-estrella 2.2s cubic-bezier(.45,0,.75,1) infinite both; }
+  .pc-gesto .pc-estrella { left: 0; top: -5px; width: 160px; height: 56px; fill: #000; stroke: #fff; stroke-width: 2.5px; paint-order: stroke; animation: pc-estrella 3.4s cubic-bezier(.45,0,.75,1) infinite both; }
   /* el gato con su globo, igual que en la entrada guiada */
   .pc-dialogo { display: flex; align-items: flex-end; gap: 14px; }
   .pc-gato { flex: none; width: 40px; height: 33px; filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(2px 2px 0 rgba(0,0,0,.4)); animation: pc-gato-in .8s ease-out both; }
   .pc-gato svg { width: 100%; height: 100%; fill: #000; display: block; opacity: .78; }
-  .pc-globo { position: relative; flex: none; border-radius: 14px; box-shadow: 4px 4px 0 rgba(0,0,0,.4); background: rgba(236,236,236,.97); padding: 12px 16px 12px 18px; font: normal 15px/1.35 "Geneva","Helvetica Neue",Helvetica,Arial,sans-serif; color: #000; max-width: 230px; transform-origin: 0 90%; animation: pc-aparece .6s cubic-bezier(.3,1.4,.5,1) .25s both; }
+  .pc-globo { position: relative; flex: none; border-radius: 14px; box-shadow: 4px 4px 0 rgba(0,0,0,.4); background: rgba(236,236,236,.97); padding: 14px 18px 14px 20px; font: normal 17px/1.35 "Geneva","Helvetica Neue",Helvetica,Arial,sans-serif; color: #000; max-width: 250px; transform-origin: 0 90%; animation: pc-aparece .6s cubic-bezier(.3,1.4,.5,1) .25s both; }
   .pc-globo > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .pc-globo > svg path { fill: none; stroke: #000; stroke-width: 1.8px; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
   .pc-globo span { position: relative; }
@@ -1351,11 +1351,12 @@ function pistaCerrar(id) {
     document.body.appendChild(p);
     let anim = null;
     if (!abajo && w.animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {   // la ventana "se deja arrastrar" a la vez que el dedo
-      anim = w.animate([{ transform: "translateX(0) rotate(0)", offset: 0 }, { transform: "translateX(0) rotate(0)", offset: 0.22 }, { transform: "translateX(70px) rotate(4deg)", offset: 0.62 }, { transform: "translateX(0) rotate(0)", offset: 0.88 }, { transform: "translateX(0) rotate(0)", offset: 1 }], { duration: 2200, iterations: 2, easing: "ease-in-out" });
+      anim = w.animate([{ transform: "translateX(0) rotate(0)", offset: 0 }, { transform: "translateX(0) rotate(0)", offset: 0.22 }, { transform: "translateX(70px) rotate(4deg)", offset: 0.62 }, { transform: "translateX(0) rotate(0)", offset: 0.88 }, { transform: "translateX(0) rotate(0)", offset: 1 }], { duration: 3400, iterations: 3, easing: "ease-in-out" });
     }
-    const quita = () => { if (anim) anim.cancel(); p.classList.add("fuera"); setTimeout(() => p.remove(), 400); document.removeEventListener("pointerdown", quita, true); };
-    document.addEventListener("pointerdown", quita, true);
-    setTimeout(quita, 4500);
+    const quita = () => { if (anim) anim.cancel(); p.classList.add("fuera"); setTimeout(() => p.remove(), 400); document.removeEventListener("pointerdown", toca, true); };
+    const t0 = performance.now(); const toca = () => { if (performance.now() - t0 > 3000) quita(); };
+    document.addEventListener("pointerdown", toca, true);
+    setTimeout(quita, 10500);
   }, 700);
 }
 
