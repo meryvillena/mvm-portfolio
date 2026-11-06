@@ -106,7 +106,7 @@
   .pc-gesto { position: relative; width: 290px; height: 46px; }
   .pista-cerrar.abajo .pc-gesto { rotate: 90deg; margin: 80px 0 60px; }
   .pc-gesto svg { position: absolute; overflow: visible; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-  .pc-gesto .pc-estrella { left: 0; top: -5px; width: 160px; height: 56px; fill: #000; stroke: #fff; stroke-width: 2.5px; paint-order: stroke; animation: pc-estrella 3.4s cubic-bezier(.45,0,.75,1) infinite both; }
+  .pc-gesto .pc-estrella { left: 0; top: -5px; width: 160px; height: 56px; fill: #000; stroke: #fff; stroke-width: 2.5px; paint-order: stroke; transform-origin: 86% 50%; animation: pc-estrella 2.6s cubic-bezier(.45,0,.75,1) infinite both; }
   /* el gato con su globo, igual que en la entrada guiada */
   .pc-dialogo { display: flex; align-items: flex-end; gap: 14px; }
   .pc-gato { flex: none; width: 40px; height: 33px; filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff) drop-shadow(2px 2px 0 rgba(0,0,0,.4)); animation: pc-gato-in .8s ease-out both; }
@@ -118,7 +118,7 @@
   .pc-globo::before { content: ""; position: absolute; left: -8px; bottom: 14px; width: 14px; height: 14px; background: #ececec; clip-path: polygon(0 0, 0 100%, 100% 100%); border-left: 1.7px solid #000; border-bottom: 1.7px solid #000; transform: rotate(45deg); border-bottom-left-radius: 3px; }
   @keyframes pc-aparece { 0% { opacity: 0; transform: scale(.05) rotate(-10deg); } 50% { opacity: 1; transform: scale(1.14) rotate(2.5deg); } 72% { transform: scale(.94) rotate(-1deg); } 88% { transform: scale(1.03); } 100% { opacity: 1; transform: none; } }
   @keyframes pc-gato-in { 0% { opacity: 0; transform: translateY(90px) scale(.5,.8) rotate(-14deg); } 45% { opacity: 1; transform: translateY(-26px) scale(.88,1.18) rotate(5deg); } 70% { transform: translateY(0) scale(1.14,.86); } 85% { transform: translateY(-5px) scale(.97,1.04); } 100% { opacity: 1; transform: none; } }
-  @keyframes pc-estrella { 0%, 14% { opacity: 0; transform: translateX(0) scaleX(.5); } 26% { opacity: 1; transform: translateX(0) scaleX(1); } 64% { opacity: 1; transform: translateX(110px) scaleX(1.15); } 78%, 100% { opacity: 0; transform: translateX(150px) scaleX(1.2); } }
+  @keyframes pc-estrella { 0%, 14% { opacity: 0; transform: translate(0,0) rotate(-16deg) scaleX(.5); } 26% { opacity: 1; transform: translate(0,0) rotate(-16deg) scaleX(1); } 45% { opacity: 1; transform: translate(60px,-16px) rotate(0deg) scaleX(1.1); } 64% { opacity: 1; transform: translate(120px,-2px) rotate(16deg) scaleX(1.15); } 78%, 100% { opacity: 0; transform: translate(145px,10px) rotate(20deg) scaleX(1.2); } }
   @media (prefers-reduced-motion: reduce) { .pc-estrella, .pc-gato, .pc-globo { animation: none; } }
   .tira-caja { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; gap: 10px; padding: 8px 12px 12px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; scrollbar-width: none; touch-action: pan-x; }
   .tira-caja::-webkit-scrollbar { display: none; }
@@ -1146,6 +1146,7 @@ function makeWindow(id, title, iconSrc, contentHtml, x, y, w) {
   let g = null, raf = 0, rot = 0;
   const stopFx = () => { if (raf) cancelAnimationFrame(raf); raf = 0; };
   const sueltaYCierra = (dx, dy) => {           // vuela fuera de la pantalla y se cierra
+    window.__cerroDeslizando = true;
     stopFx();
     el.style.transition = "transform .22s ease-in, opacity .22s ease-in";
     el.style.transform = "translate(" + dx + "px," + dy + "px) rotate(" + (dx > 0 ? 10 : dx < 0 ? -10 : 4) + "deg)";
@@ -1351,12 +1352,21 @@ function pistaCerrar(id) {
     document.body.appendChild(p);
     let anim = null;
     if (!abajo && w.animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {   // la ventana "se deja arrastrar" a la vez que el dedo
-      anim = w.animate([{ transform: "translateX(0) rotate(0)", offset: 0 }, { transform: "translateX(0) rotate(0)", offset: 0.22 }, { transform: "translateX(70px) rotate(4deg)", offset: 0.62 }, { transform: "translateX(0) rotate(0)", offset: 0.88 }, { transform: "translateX(0) rotate(0)", offset: 1 }], { duration: 3400, iterations: 3, easing: "ease-in-out" });
+      anim = w.animate([{ transform: "translateX(0) rotate(0)", offset: 0 }, { transform: "translateX(0) rotate(0)", offset: 0.22 }, { transform: "translateX(70px) rotate(4deg)", offset: 0.62 }, { transform: "translateX(0) rotate(0)", offset: 0.88 }, { transform: "translateX(0) rotate(0)", offset: 1 }], { duration: 2600, iterations: 3, easing: "ease-in-out" });
     }
     const quita = () => { if (anim) anim.cancel(); p.classList.add("fuera"); setTimeout(() => p.remove(), 400); document.removeEventListener("pointerdown", toca, true); };
     const t0 = performance.now(); const toca = () => { if (performance.now() - t0 > 3000) quita(); };
     document.addEventListener("pointerdown", toca, true);
-    setTimeout(quita, 10500);
+    setTimeout(quita, 8500);
+    // al cerrarse la ventana desaparece la pista; si la cerraron deslizando, ya han pillado el gesto: no se repite más en esta sesión
+    const mo = new MutationObserver(() => {
+      if (w.classList.contains("open") && !w.classList.contains("closing")) return;
+      mo.disconnect();
+      if (window.__cerroDeslizando) { try { sessionStorage.setItem(KEY, "3"); } catch (e) {} }
+      window.__cerroDeslizando = false;
+      quita();
+    });
+    mo.observe(w, { attributes: true, attributeFilter: ["class"] });
   }, 700);
 }
 
@@ -2810,7 +2820,7 @@ desktop.addEventListener("mousedown", (e) => {
       // como las demás ventanas del móvil: empujarlo hacia abajo (tirada rápida o arrastrarlo muy abajo) lo cierra
       const cierra = mv.moved && e.type === "pointerup" && (parseFloat(rw.style.getPropertyValue("--ry")) > window.innerHeight * 0.8 || (mv.vy > 0.9 && e.clientY - mv.y0 > 70));
       mv = null;
-      if (cierra) { const c = rw.querySelector(".close"); if (c) c.click(); setTimeout(() => { rw.classList.remove("movido"); rw.style.removeProperty("--rx"); rw.style.removeProperty("--ry"); }, 400); }   // al volver a abrirlo, sale en su sitio de siempre
+      if (cierra) { window.__cerroDeslizando = true; const c = rw.querySelector(".close"); if (c) c.click(); setTimeout(() => { rw.classList.remove("movido"); rw.style.removeProperty("--rx"); rw.style.removeProperty("--ry"); }, 400); }   // al volver a abrirlo, sale en su sitio de siempre
     }
   };
   rw.addEventListener("pointerup", finMv); rw.addEventListener("pointercancel", finMv);
