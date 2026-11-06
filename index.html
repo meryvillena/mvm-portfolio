@@ -1340,9 +1340,10 @@ function openWindow(id, opener) {
 // Móvil: las 3 primeras veces que se abre algo, una pista animada enseña que se cierra deslizando
 function pistaCerrar(id) {
   if (!window.matchMedia("(max-width: 760px)").matches) return;
-  const KEY = "mvm-pista-cerrar"; let n = 0;
+  const KEY = "mvm-pista-cerrar", MAX = 99999; let n = 0;   // MAX provisional (sale siempre mientras se define); definitivo: 3 por sesión
+  
   try { n = +sessionStorage.getItem(KEY) || 0; } catch (e) {}
-  if (n >= 3 || document.querySelector(".pista-cerrar")) return;
+  if (n >= MAX || document.querySelector(".pista-cerrar")) return;
   try { sessionStorage.setItem(KEY, String(n + 1)); } catch (e) {}
   setTimeout(() => {
     const w = document.getElementById("win-" + id);
@@ -1359,14 +1360,14 @@ function pistaCerrar(id) {
       anim = w.animate([{ transform: "translateX(0) rotate(0)", offset: 0 }, { transform: "translateX(0) rotate(0)", offset: 0.12 }, { transform: "translateX(-70px) rotate(-4deg)", offset: 0.62 }, { transform: "translateX(0) rotate(0)", offset: 0.88 }, { transform: "translateX(0) rotate(0)", offset: 1 }], { duration: 2600, iterations: 3, easing: "ease-in-out" });
     }
     const quita = () => { if (anim) anim.cancel(); p.classList.add("fuera"); setTimeout(() => p.remove(), 400); document.removeEventListener("pointerdown", toca, true); };
-    const t0 = performance.now(); const toca = () => { if (performance.now() - t0 > 3000) quita(); };
+    const toca = () => { if (anim) { anim.cancel(); anim = null; } };   // el dedo manda: la animación de pista no debe pelearse con el arrastre
     document.addEventListener("pointerdown", toca, true);
     setTimeout(quita, 8500);
     // al cerrarse la ventana desaparece la pista; si la cerraron deslizando, ya han pillado el gesto: no se repite más en esta sesión
     const mo = new MutationObserver(() => {
       if (w.classList.contains("open") && !w.classList.contains("closing")) return;
       mo.disconnect();
-      if (window.__cerroDeslizando) { try { sessionStorage.setItem(KEY, "3"); } catch (e) {} }
+      if (window.__cerroDeslizando && MAX <= 3) { try { sessionStorage.setItem(KEY, String(MAX)); } catch (e) {} }
       window.__cerroDeslizando = false;
       quita();
     });
