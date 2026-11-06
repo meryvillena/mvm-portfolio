@@ -100,7 +100,23 @@
   .postit .pi-alias { margin-top: 8px; font-size: 11px; color: rgba(0,0,0,0.6); }
   .postit .pi-x { all: unset; position: absolute; top: 1px; right: 3px; padding: 0 4px; font-size: 13px; font-weight: bold; line-height: 1.2; cursor: pointer; opacity: 0.5; }
   .postit .pi-x:hover, .postit .pi-x:focus-visible { opacity: 1; background: #000; color: #fff; }
-  .postit.tira { top: auto; width: 112px; min-height: 0; max-height: 92px; overflow: hidden; padding: 10px 8px 6px; font-size: 11px; z-index: 5; cursor: pointer; }
+  /* pista de cerrar: sin caja, flechas dibujadas a mano (mismo trazo que la entrada guiada) */
+  .pista-cerrar { position: fixed; left: 50%; bottom: 150px; translate: -50% 0; z-index: 9000; display: flex; align-items: center; gap: 8px; font: normal 20px/1 "ChicagoCS","Geneva","Helvetica Neue",Arial,sans-serif; color: #000; white-space: nowrap; pointer-events: none; text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 6px #fff, 0 0 8px #fff; transition: opacity .4s ease; }
+  .pista-cerrar.fuera { opacity: 0; }
+  .pista-cerrar span { transform: rotate(-1.5deg); }
+  .pista-cerrar svg { width: 52px; height: 30px; overflow: visible; flex: none; }
+  .pista-cerrar svg .bl, .pista-cerrar svg .tr { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: pista-traza 1.8s ease-in-out .15s infinite; }
+  .pista-cerrar svg .bl { stroke: #fff; stroke-width: 6px; } .pista-cerrar svg .tr { stroke: #000; stroke-width: 2.4px; }
+  .pista-cerrar.abajo svg { width: 30px; height: 52px; }
+  .pista-cerrar svg:first-child { animation: pista-izq 1.8s ease-in-out .15s infinite; } .pista-cerrar svg:last-child:not(:first-child) { animation: pista-der 1.8s ease-in-out .15s infinite; }
+  .pista-cerrar.abajo svg:first-child { animation: pista-abajo 1.8s ease-in-out .15s infinite; }
+  @keyframes pista-izq { 0%, 100% { transform: translateX(0); } 45% { transform: translateX(-9px); } } @keyframes pista-der { 0%, 100% { transform: translateX(0); } 45% { transform: translateX(9px); } } @keyframes pista-abajo { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(9px); } }
+  @keyframes pista-traza { 0% { stroke-dashoffset: 1; } 45%, 80% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -1; } }
+  @media (prefers-reduced-motion: reduce) { .pista-cerrar svg, .pista-cerrar svg .bl, .pista-cerrar svg .tr { animation: none !important; stroke-dashoffset: 0; } }
+  .tira-caja { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; gap: 10px; padding: 8px 12px 12px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; scrollbar-width: none; touch-action: pan-x; }
+  .tira-caja::-webkit-scrollbar { display: none; }
+  .tira-caja .postit.tira { position: relative; flex: none; scroll-snap-align: start; touch-action: pan-x !important; }
+  .postit.tira { top: auto; left: auto; width: 112px; min-height: 0; max-height: 92px; overflow: hidden; padding: 10px 8px 6px; font-size: 11px; z-index: 5; cursor: pointer; }
   .postit.tira .pi-alias { font-size: 10px; margin-top: 4px; }
   @media (max-width: 760px) { .postit.nuevo textarea, .postit.nuevo input[type=text] { font-size: 16px; } }   /* a 16 px el iPhone no hace zoom al escribir */
   .postit.in { position: relative; transform: rotate(var(--pr, 0deg)); z-index: auto; width: auto; }
@@ -1306,6 +1322,29 @@ function openWindow(id, opener) {
   // Llevar el foco al botón de cerrar de la ventana (solo si el teclado está en juego)
   const cb = el.querySelector(".close");
   if (cb && usandoTeclado) cb.focus({ preventScroll: true });
+  if (!yaAbierta) pistaCerrar(id);
+}
+
+// Móvil: las 3 primeras veces que se abre algo, una pista animada enseña que se cierra deslizando
+function pistaCerrar(id) {
+  if (!window.matchMedia("(max-width: 760px)").matches) return;
+  const KEY = "mvm-pista-cerrar"; let n = 0;
+  try { n = +sessionStorage.getItem(KEY) || 0; } catch (e) {}
+  if (n >= 3 || document.querySelector(".pista-cerrar")) return;
+  try { sessionStorage.setItem(KEY, String(n + 1)); } catch (e) {}
+  setTimeout(() => {
+    const w = document.getElementById("win-" + id);
+    if (!w || !w.classList.contains("open")) return;
+    const abajo = id === "radio";
+    const p = document.createElement("div");
+    p.className = "pista-cerrar" + (abajo ? " abajo" : ""); p.setAttribute("aria-hidden", "true");
+    const F = (d, vb) => '<svg viewBox="' + vb + '"><path class="bl" pathLength="1" d="' + d + '"/><path class="tr" pathLength="1" d="' + d + '"/></svg>';
+    p.innerHTML = abajo ? F("M16 2 Q13 18 15 46 M15 46 Q8 38 3 33 M15 46 Q22 38 27 33", "0 0 30 52") + "<span>" + tl("Desliza hacia abajo para cerrar") + "</span>" : F("M50 15 Q34 12 8 16 M8 16 Q15 9 20 3 M8 16 Q16 20 21 28", "0 0 52 30") + "<span>" + tl("Desliza para cerrar") + "</span>" + F("M2 15 Q18 12 44 16 M44 16 Q37 9 32 3 M44 16 Q36 20 31 28", "0 0 52 30");
+    document.body.appendChild(p);
+    const quita = () => { p.classList.add("fuera"); setTimeout(() => p.remove(), 400); document.removeEventListener("pointerdown", quita, true); };
+    document.addEventListener("pointerdown", quita, true);
+    setTimeout(quita, 4200);
+  }, 700);
 }
 
 /* ============================================================
@@ -2257,23 +2296,24 @@ desktop.addEventListener("mousedown", (e) => {
   // ---- Escritorio: "+" y post-its repartidos
   // Móvil: unos post-its asomando abajo del escritorio (si hay hueco); al tocarlos se abre el Muro con todos
   const pintarTira = async () => {
-    let filas; try { filas = await pedir(3); } catch (e) { return; }
-    if (grande()) return;
+    let filas; try { filas = await pedir(60); } catch (e) { return; }
+    if (grande() || !filas.length) return;
     const bajo = Math.max(0, ...[...document.querySelectorAll("#desktop .icon")].filter((i) => i.offsetParent).map((i) => i.getBoundingClientRect().bottom));
     if (bajo > window.innerHeight - 120) return;   // si no hay hueco, no se pone ninguno (el Muro sigue en el menú Ver)
-    const W = window.innerWidth, ancho = 112, paso = filas.length > 1 ? (W - ancho - 24) / (filas.length - 1) : 0;
-    filas.forEach((r, i) => {
-      const n = nota(r, false); n.classList.add("tira"); n.style.left = (12 + i * paso) + "px"; n.style.bottom = (10 + (i % 2) * 8) + "px";
+    const caja = document.createElement("div"); caja.className = "tira-caja"; caja.setAttribute("aria-label", tl("Muro de post-its"));
+    filas.forEach((r) => {
+      const n = nota(r, false); n.classList.add("tira");
       n.setAttribute("role", "button"); n.tabIndex = 0; n.setAttribute("aria-label", tl("Muro de post-its"));
       const abrir = () => openWindow("muro");
       n.addEventListener("click", abrir); n.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrir(); } });
-      desktop.appendChild(n);
+      caja.appendChild(n);
     });
+    desktop.appendChild(caja);
   };
   const pintarEscritorio = async () => {
     pegados.forEach((n) => { FX.para(n); n.remove(); }); pegados = [];
     if (ghost) { ghost.remove(); ghost = null; }
-    document.querySelectorAll(".postit.tira").forEach((n) => n.remove());
+    document.querySelectorAll(".tira-caja").forEach((n) => n.remove());
     if (!grande()) return pintarTira();
     const cs = celdas();
     ghost = document.createElement("button"); ghost.type = "button"; ghost.className = "postit ghost";
