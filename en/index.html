@@ -437,6 +437,7 @@
   .ip-grip::before { content: ""; position: absolute; right: 5px; bottom: 5px; width: 16px; height: 16px; background: repeating-linear-gradient(135deg, transparent 0 3px, #8f8f8a 3px 4px); clip-path: polygon(100% 0, 100% 100%, 0 100%); }
   .ip-grip:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }
   .ip-x { position: absolute; top: -8px; right: -8px; z-index: 2; width: 22px; height: 22px; padding: 0; border: 1px solid #000; border-radius: 50%; background: #f4f4f1; color: #333; font: bold 14px/1 var(--mono); cursor: pointer; }
+  @media (max-width: 760px) { .ip-x { width: 34px; height: 34px; top: -12px; right: -12px; font-size: 20px; } .ip-x::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; } }   /* zona táctil grande: si no, el dedo caía en la carpeta de debajo */
   .ip-x:hover { background: #ddd; } .ip-x:focus-visible { outline: 2px solid #2b5fd6; outline-offset: 2px; }
   .ip-body { position: relative; }
   .ip-body .rd-cred { margin-top: -6px; }
@@ -2728,7 +2729,7 @@ desktop.addEventListener("mousedown", (e) => {
     ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (ptrs.size === 2) { const [p1, p2] = [...ptrs.values()]; pz = { d: Math.hypot(p1.x - p2.x, p1.y - p2.y) || 1, s: A.escalaRadio }; mv = null; return; }
     if (e.target.closest("button, a, input")) return;
-    const r = rw.getBoundingClientRect(); mv = { id: e.pointerId, dx: e.clientX - r.left, dy: e.clientY - r.top };
+    const r = rw.getBoundingClientRect(); mv = { id: e.pointerId, dx: e.clientX - r.left, dy: e.clientY - r.top, y0: e.clientY, ly: e.clientY, lt: performance.now(), vy: 0, moved: false };
     try { rw.setPointerCapture(e.pointerId); } catch (_) {}
     focusWindow("radio");
   });
@@ -2746,12 +2747,18 @@ desktop.addEventListener("mousedown", (e) => {
     if (!mv || e.pointerId !== mv.id) return;
     const w = rw.offsetWidth, h = rw.querySelector(".content").offsetHeight;
     const x = clamp(e.clientX - mv.dx, -w * 0.55, window.innerWidth - w * 0.45), y = clamp(e.clientY - mv.dy, 24, window.innerHeight - Math.min(h, 80));
+    const ahora = performance.now(), dt = Math.max(1, ahora - mv.lt); mv.vy = mv.vy * 0.6 + ((e.clientY - mv.ly) / dt) * 0.4; mv.ly = e.clientY; mv.lt = ahora; if (Math.hypot(e.clientX - mv.dx, e.clientY - mv.y0) > 8) mv.moved = true;
     rw.classList.add("movido"); rw.style.setProperty("--rx", x + "px"); rw.style.setProperty("--ry", y + "px");
   });
   const finMv = (e) => {
     ptrs.delete(e.pointerId);
     if (pz && ptrs.size < 2) { pz = null; guardar(); }
-    if (mv && e.pointerId === mv.id) mv = null;
+    if (mv && e.pointerId === mv.id) {
+      // como las demás ventanas del móvil: empujarlo hacia abajo (tirada rápida o arrastrarlo muy abajo) lo cierra
+      const cierra = mv.moved && e.type === "pointerup" && (parseFloat(rw.style.getPropertyValue("--ry")) > window.innerHeight * 0.8 || (mv.vy > 0.9 && e.clientY - mv.y0 > 70));
+      mv = null;
+      if (cierra) { const c = rw.querySelector(".close"); if (c) c.click(); setTimeout(() => { rw.classList.remove("movido"); rw.style.removeProperty("--rx"); rw.style.removeProperty("--ry"); }, 400); }   // al volver a abrirlo, sale en su sitio de siempre
+    }
   };
   rw.addEventListener("pointerup", finMv); rw.addEventListener("pointercancel", finMv);
   const grip = $r("#rd-grip"); let gr = null;
