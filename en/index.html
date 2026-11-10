@@ -2339,7 +2339,9 @@ desktop.addEventListener("mousedown", (e) => {
     });
     desktop.appendChild(caja);
   };
+  let genEsc = 0;
   const pintarEscritorio = async () => {
+    const miGen = ++genEsc;
     pegados.forEach((n) => { FX.para(n); n.remove(); }); pegados = [];
     if (ghost) { ghost.remove(); ghost = null; }
     document.querySelectorAll(".tira-caja").forEach((n) => n.remove());
@@ -2353,6 +2355,7 @@ desktop.addEventListener("mousedown", (e) => {
     desktop.appendChild(ghost);
     if (editor && !editor.classList.contains("in")) ghost.style.visibility = "hidden";
     let filas; try { filas = await pedir(80); } catch (e) { return; }
+    if (miGen !== genEsc) return; // llegó una llamada más nueva: esta ya no pega nada (evita post-its dobles)
     if (/[?&]restaurar-postits/.test(location.search)) { try { localStorage.removeItem(LS_OCULTOS); } catch (e) {} } // enlace de rescate: devuelve los post-its ocultos con la X
     const ocultos = leer(LS_OCULTOS, []);
     filas.filter((r) => !ocultos.includes(r.id)).slice(0, cs.length - 1).forEach((r, i) => {
