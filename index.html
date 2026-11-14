@@ -937,7 +937,7 @@ function aboutHtml() {
     "<p>" + tl("Llevo más de 20 años trabajando en publicidad y marketing. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar y Lancôme. Desde 2018 gestiono varios restaurantes McDonald’s®: coordino proveedores, procesos internos, administración y marketing local. De ahí vienen mis ocho años de experiencia directa en operaciones.") + "</p>" +
     "<p>" + tl("Ahora diseño, construyo y pongo en marcha productos digitales para negocios: webs orientadas a cliente, herramientas internas y automatizaciones. Trabajo con diseño, no-code, HTML y JavaScript. Defino la dirección, el contenido y las decisiones de producto; utilizo IA como apoyo en tareas de redacción y desarrollo.") + "</p>" +
     '<div class="chips"><span>' + tl("20+ años en publicidad y marketing") + '</span><span>' + tl("8 años en operaciones") + '</span><span>' + tl("Producto digital") + '</span></div>' +
-    '<p><a class="btn" href="' + CVURL + '">' + tl("Ver mi CV →") + '</a>' + (window.__LANG === "en" ? "" : ' <a class="btn btn-cta" href="trabajemos-juntos/">Trabajemos juntos →</a>') + '</p>' +
+    '<p><a class="btn" href="' + CVURL + '">' + tl("Ver mi CV →") + '</a>' + (window.__LANG === "en" ? ' <a class="btn btn-cta" href="en/work-with-me/">Let’s work together →</a>' : ' <a class="btn btn-cta" href="trabajemos-juntos/">Trabajemos juntos →</a>') + '</p>' +
     (visible({ kind: "folder", ref: "trabajo-grafico" }) ? '<div class="cards">' + cardHtml({ kind: "folder", ref: "trabajo-grafico", title: tl("Trabajo gráfico"), desc: tl("Piezas de diseño, Talavera, promos y más.") }) + "</div>" : "");
 }
 
@@ -953,7 +953,7 @@ function contactHtml(idSuffix) {
         '<div class="small" id="contact-err' + s + '" role="status" style="color:#b3261e;min-height:14px"></div>' +
       "</form>" +
     "</div>" +
-    '<p class="small">' + tl("Tu mensaje me llega por correo; no lo guardo en ninguna base de datos. O escríbeme directamente a") + ' <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a>' + (window.__LANG === "en" ? "" : ' · <a href="trabajemos-juntos/">Cómo trabajo →</a>') + '</p>';
+    '<p class="small">' + tl("Tu mensaje me llega por correo; no lo guardo en ninguna base de datos. O escríbeme directamente a") + ' <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a>' + (window.__LANG === "en" ? ' · <a href="en/work-with-me/">How I work →</a>' : ' · <a href="trabajemos-juntos/">Cómo trabajo →</a>') + '</p>';
 }
 
 /* ============================================================
@@ -1496,7 +1496,8 @@ Object.values(NESTED).forEach((n) => {
 ICONS.doc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABBUlEQVR42u2WDQ7CIAyFudPu1DtxJ+5UAQfpavkbFDWZCalERz9eXxkGEQ0d/oOrBl9bGkYCcM6Fh6diL4QIMJsc3wtlkFsAdLE78wTQglBXoAWh6gEKUIJQVaCnO9Q8UJp3A6woQ0mZLR6oeWNIgdZpp6IAr5n136VB/8tPQAo35QEOAAzgQ97D/wI2RkmhYQ/0KJCTh8TgTggX5yKkhgcywEEhLErrqZwDFwXgqoDaObDFA7XkUKhxrUWXKBCT+x0GACjsdNk5IPVxTOxrHKI9Y6nvl74L+M557FFi2gMJIu08KjFQhv/3AO17EPp8631A7W34U/eBr9yInjvh4wHtQfO9ACYWKOeqSNRjAAAAAElFTkSuQmCC";
 const CS_ICONS = { bold:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAAo0lEQVR42u2WMQoEIQxFc0zPYGtrK9h4Bi3FTiztPIOtZ3EJjDLDsFsl08wKH9TCx+cnKowxJgCw6mDA5By11gUEVoi19g5Ci5RCyItBrbWv1SSlpHWUc76U6rklnHO8ICHEbY8c1Hvf6xgjD8gYs+fee96Mzo4QzJqR1po/I5RSih6Ega9DSykzpURfDL8aNoTwv+seBK1HikMbxAnZoKc+Jx/9t2xPdtO0kAAAAABJRU5ErkJggg==", italic:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAApklEQVR42u3WoQ0EIRAFUCwSTR3UQB3UQA0kdAESi8ahkVhq4TKTW8TdyfurlmQcPy+QmV3EWmsLIaD1NsRGrtbaBQooEmP8huiI/yxCHmj/6s6cMwaacx5kjIE7UUqJQ8YY7NU55zjkvcdCWmsOlVJwUO+dA0opbNeFEDhgrcVCBNBeAmEQtbKUkgO1VgxEQ/k5qDRPz7fufuj6SSHqQEjkQHc9Tl6P2K3CgYM/dQAAAABJRU5ErkJggg==", underline:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAAYklEQVR42mO4e/fufwYGBppiqB0M/2kJdu/eDbOQgaaWdHR0YFoE8iI1MciSwWcRtohFF6eaj3AZiM+SUYtGLRq1iHDGJWTJ0CmCSPHZ4PQR1S2CVVK0wHCLaGkJ3CJ6NU4AKj962nkffOYAAAAASUVORK5CYII=", alignL:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAAV0lEQVR42mO4e/fufwYGBppiqB0M/2kJdu/eDbOQgaaWdHR0YFoE8iI1MciSEWgRJSlsNOhIDqrRVIc36EYzLNUz7GjQ0d4iWCVFCwy3iJaWwC2iV+MEANsRgp8FTjYJAAAAAElFTkSuQmCC", alignC:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAAWUlEQVR42mO4e/fufwYGBppiqB0M/2kJdu/eDbOQgaaWdHR0YFoE8iI1MciSEWgRJSlshAcdqUE4mupwYlKCbDToKMqso6mO+hbBKilaYLhFtLQEbhG9GicAH16Cn1PdZBcAAAAASUVORK5CYII=", alignR:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAWCAYAAADeiIy1AAAAVklEQVR42mO4e/fufwYGBppiqB0M/2kJdu/eDbOQgaaWdHR0YFoE8iI1MciSEWgRJSlshAcdOh4NOqpZNBp0BC0azbCDxyJYJUULDLeIlpbALaJX4wQAY5yCn8YJeGoAAAAASUVORK5CYII=" };
 /* Botón hacia una página propia del sitio (solo en español: aún no hay versión en inglés) */
-const PAG = (url, texto) => (window.__LANG === "en" ? "" : ' <a class="btn" href="' + url + '" style="margin-left:10px">' + texto + "</a>");
+const PAG_EN = { "respira/": ["en/respira/", "Respira page →"], "automatizaciones/": ["en/automations/", "AI automations →"], "este-escritorio/": ["en/this-desktop/", "Read it on one page →"] };
+const PAG = (url, texto) => { if (window.__LANG === "en") { const e = PAG_EN[url]; if (e) { url = e[0]; texto = e[1]; } } return ' <a class="btn" href="' + url + '" style="margin-left:10px">' + texto + "</a>"; };
 function caseSpotifyHtml() {
   return `<div class="cs-toolbar">
       <div class="cs-tfont">Chicago&nbsp;▾</div>
@@ -3139,7 +3140,7 @@ desktop.addEventListener("mousedown", (e) => {
       });
       h += "</section>";
     } else if (item.id === "sobremi") {
-      h += "<section><h2>" + tl("Sobre mí") + "</h2><p>" + tl("Llevo más de 20 años trabajando en publicidad y marketing. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar y Lancôme. Desde 2018 gestiono varios restaurantes McDonald’s®: coordino proveedores, procesos internos, administración y marketing local. De ahí vienen mis ocho años de experiencia directa en operaciones.") + "</p><p>" + tl("Ahora diseño, construyo y pongo en marcha productos digitales para negocios: webs orientadas a cliente, herramientas internas y automatizaciones. Trabajo con diseño, no-code, HTML y JavaScript. Defino la dirección, el contenido y las decisiones de producto; utilizo IA como apoyo en tareas de redacción y desarrollo.") + "</p><p><a class=\"btn\" href=\"" + CVURL + "\" target=\"_blank\" rel=\"noopener\">" + tl("Ver mi CV →") + "</a>" + (window.__LANG === "en" ? "" : ' <a class="btn btn-cta" href="trabajemos-juntos/">Trabajemos juntos →</a>') + "</p>";
+      h += "<section><h2>" + tl("Sobre mí") + "</h2><p>" + tl("Llevo más de 20 años trabajando en publicidad y marketing. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar y Lancôme. Desde 2018 gestiono varios restaurantes McDonald’s®: coordino proveedores, procesos internos, administración y marketing local. De ahí vienen mis ocho años de experiencia directa en operaciones.") + "</p><p>" + tl("Ahora diseño, construyo y pongo en marcha productos digitales para negocios: webs orientadas a cliente, herramientas internas y automatizaciones. Trabajo con diseño, no-code, HTML y JavaScript. Defino la dirección, el contenido y las decisiones de producto; utilizo IA como apoyo en tareas de redacción y desarrollo.") + "</p><p><a class=\"btn\" href=\"" + CVURL + "\" target=\"_blank\" rel=\"noopener\">" + tl("Ver mi CV →") + "</a>" + (window.__LANG === "en" ? ' <a class="btn btn-cta" href="en/work-with-me/">Let’s work together →</a>' : ' <a class="btn btn-cta" href="trabajemos-juntos/">Trabajemos juntos →</a>') + "</p>";
       const n = NESTED["trabajo-grafico"];
       if (visible({ kind: "folder", ref: "trabajo-grafico" })) {
         h += '<div class="m-sub">' + n.title + "</div>";
@@ -3153,7 +3154,8 @@ desktop.addEventListener("mousedown", (e) => {
     }
   });
 
-  if (window.__LANG !== "en") h += '<section><h2>Más páginas</h2><ul><li><a href="sobre-mi/">Sobre mí</a></li><li><a href="trabajemos-juntos/">Trabajemos juntos</a></li><li><a href="automatizaciones/">Automatizaciones con IA</a></li><li><a href="este-escritorio/">Este escritorio</a></li><li><a href="respira/">Respira</a></li></ul></section>';
+  if (window.__LANG === "en") h += '<section><h2>More pages</h2><ul><li><a href="en/about/">About me</a></li><li><a href="en/work-with-me/">Let’s work together</a></li><li><a href="en/automations/">AI automations</a></li><li><a href="en/this-desktop/">This desktop</a></li><li><a href="en/respira/">Respira</a></li></ul></section>';
+  else h += '<section><h2>Más páginas</h2><ul><li><a href="sobre-mi/">Sobre mí</a></li><li><a href="trabajemos-juntos/">Trabajemos juntos</a></li><li><a href="automatizaciones/">Automatizaciones con IA</a></li><li><a href="este-escritorio/">Este escritorio</a></li><li><a href="respira/">Respira</a></li></ul></section>';
   m.innerHTML = h;
   attachContact("-m");
   /* «Ver como lista»: alterna entre el escritorio y la lista en texto */

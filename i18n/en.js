@@ -5,6 +5,8 @@ window.I18N_EN = {
   "Archivo": "File",
   "Edición": "Edit",
   "Ver": "View",
+  "Ver como lista": "View as list",
+  "Volver al escritorio": "Back to the desktop",
   "Proyectos": "Projects",
   "Ayuda": "Help",
   "Escritorio de Mery Villena": "Mery Villena's Desktop",
