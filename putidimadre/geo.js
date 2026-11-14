@@ -205,6 +205,6 @@ function inyectarGEO() {
 }
 
 window.GEO = { GEO, negocio: GEO.negocio, fichaRestaurante, fichaFAQ, fichaRecalentar, horariosEstructurados, inyectarGEO };
-inyectarGEO();
+// (desactivado en el portfolio: la demo no es un negocio real) inyectarGEO();
 
 })();
