@@ -364,6 +364,28 @@
   .contact-form { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
   .contact-form input, .contact-form textarea { width: 100%; font-family: inherit; font-size: 12px; padding: 6px 8px; border: 1px solid #000; }
   .contact-form textarea { resize: vertical; min-height: 64px; }
+  .sk { font-size: 12px; }
+  .sk-frase { margin: 0; padding: 6px 8px 2px; font-size: 11px; color: rgba(0,0,0,.6); }
+  .sk-intro { margin: 0 0 8px; }
+  .sk-leyenda { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; margin: 0 0 10px; }
+  .sk-leyenda i { display: inline-block; width: 10px; height: 10px; border: 1px solid #000; vertical-align: -1px; margin-right: 4px; }
+  .sk-leyenda i.yo { background: #000; }
+  .sk-leyenda i.ia { background: #8fb4ec; }
+  .sk details { border: 1px solid #000; margin: 0 0 6px; background: #fff; }
+  .sk summary { cursor: pointer; padding: 6px 8px; font-weight: bold; list-style: none; display: flex; align-items: center; gap: 8px; background: #ddd; }
+  .sk summary::-webkit-details-marker { display: none; }
+  .sk summary::before { content: "\25B8"; font-size: 11px; width: 10px; }
+  .sk details[open] > summary::before { content: "\25BE"; }
+  .sk details[open] > summary { border-bottom: 1px solid #000; }
+  .sk summary:focus-visible { outline: 2px solid #2b5fd6; outline-offset: -3px; }
+  .sk summary span { margin-left: auto; font-weight: normal; font-size: 11px; color: rgba(0,0,0,.6); }
+  .sk-fila { display: grid; grid-template-columns: 132px 1fr 66px; gap: 8px; align-items: center; padding: 4px 8px; }
+  .sk-pista { height: 11px; border: 1px solid #000; position: relative; background: #fff; display: block; }
+  .sk-yo, .sk-ia { position: absolute; left: 0; top: 0; bottom: 0; display: block; }
+  .sk-yo { background: #000; }
+  .sk-ia { background: #8fb4ec; border-right: 1px solid #000; }
+  .sk-num { font-family: var(--mono); font-size: 11px; text-align: right; }
+  @media (max-width: 760px) { .sk-fila { grid-template-columns: 104px 1fr 62px; } }
   .contact-form .btn { align-self: flex-start; }
   .small { font-size: 11px; color: rgba(0,0,0,0.6); }
   .thanks { font-size: 14px; }
@@ -640,53 +662,90 @@
 
 <!-- ===== VERSIÓN MÓVIL / SEO (lista) ===== -->
 <main id="mobile-view"><!-- LISTA-ESTATICA:INICIO (la genera i18n/herramientas/lista_portada.py; no editar a mano) -->
-<div class="m-head"><h1>Mery Villena</h1><p>Mery Villena es diseñadora UX/UI en Madrid: diseña y desarrolla webs y herramientas a medida, y crea automatizaciones con IA para agencias y fundadores.</p></div>
-<section><h2>Léeme primero</h2><p>Este portfolio toma la forma de un escritorio porque los sistemas importan: ayudan a que lo complejo sea comprensible y utilizable. La interfaz de los Mac de los noventa es una referencia temprana de esa idea.</p><p>Ese es también el centro de mi trabajo: diseño productos digitales para quien visita una web, para quien usa una herramienta y para el negocio que necesita que ambas cosas estén conectadas.</p><p>Te recomiendo empezar por Soluciones de negocio o Herramientas.</p></section>
-<section><h2>Soluciones de negocio</h2><p class="intro">Identidad, web y experiencia de cliente para negocios que necesitan una presencia digital a la altura de su propuesta.</p><div class="m-card"><div class="tags-row"><span class="type-tag">Concepto</span><span class="type-tag estado-tag">Prototipo navegable</span></div>
-<h3>Shiatsu</h3><p>Identidad, web y experiencia de reserva para un servicio de shiatsu y facial japonés.</p><a class="btn" aria-label="Abrir proyecto Shiatsu" href="shiatsu/">Abrir proyecto →</a></div>
-<div class="m-card"><div class="tags-row"><span class="type-tag">Concepto</span><span class="type-tag estado-tag">Prototipo navegable</span></div>
-<h3>Puti Di Madre</h3><p>Experiencia de pedido directo para una pizzería de barrio: más control sobre el margen y la relación con sus clientes.</p><a class="btn" aria-label="Abrir proyecto Puti Di Madre" href="putidimadre/">Abrir proyecto →</a></div>
+<div class="m-head"><h1>Mery Villena</h1><p>Digital products · systems · operations</p></div>
+<section><h2>Read me first</h2><p>This portfolio takes the form of a desktop because systems matter: they make complex things understandable and usable. The interface of 1990s Macs is an early reference for that idea.</p><p>That is also at the heart of my work: I design digital products for people visiting a website, people using a tool and the business that needs both to connect.</p><p>I recommend starting with Business solutions or Tools.</p></section>
+<section><h2>About me</h2><p>I have more than 20 years of experience in advertising and marketing. I have worked at agencies such as Publicis, Wunderman and Havas, with clients including Coca-Cola, Movistar and Lancôme. Since 2018, I have managed several McDonald’s® restaurants, coordinating suppliers, internal processes, administration and local marketing. That is where my eight years of direct operations experience come from.</p><p>I now design, build and launch digital products for businesses: customer-facing websites, internal tools and automations. I work with design, no-code, HTML and JavaScript. I define the direction, content and product decisions, using AI to support writing and development tasks.</p><p><a class="btn" href="cv/en.html">See my CV →</a> <a class="btn btn-cta" href="en/work-with-me/">Let’s work together →</a></p></section>
+<section><h2>Contact</h2><h2>Which process, service or experience in your business needs better design?</h2><p class="small">Your message reaches me by email; I don't store it in any database. Or write to me directly at <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a> · <a href="en/work-with-me/">How I work →</a></p></section>
+<section><h2>Skills monitor</h2><div class="sk"><p class="sk-intro">Level of autonomy in each tool, and reach with AI.</p><div class="sk-leyenda"><span><i class="yo"></i>On my own</span><span><i class="ia"></i>With AI</span></div>
+<details open=""><summary>Design<span>10 skills</span></summary><p class="sk-frase">I design interfaces and design systems, from concept to clickable prototype.</p><div class="sk-fila" role="img" aria-label="Figma: 65% On my own, 75% With AI"><span>Figma</span><span class="sk-pista"><span class="sk-ia" data-w="75"></span><span class="sk-yo" data-w="65"></span></span><span class="sk-num" data-yo="65" data-ia="75">65% / 75%</span></div>
+<div class="sk-fila" role="img" aria-label="Photoshop: 75% On my own, 85% With AI"><span>Photoshop</span><span class="sk-pista"><span class="sk-ia" data-w="85"></span><span class="sk-yo" data-w="75"></span></span><span class="sk-num" data-yo="75" data-ia="85">75% / 85%</span></div>
+<div class="sk-fila" role="img" aria-label="Illustrator: 70% On my own, 75% With AI"><span>Illustrator</span><span class="sk-pista"><span class="sk-ia" data-w="75"></span><span class="sk-yo" data-w="70"></span></span><span class="sk-num" data-yo="70" data-ia="75">70% / 75%</span></div>
+<div class="sk-fila" role="img" aria-label="Framer: 60% On my own, 75% With AI"><span>Framer</span><span class="sk-pista"><span class="sk-ia" data-w="75"></span><span class="sk-yo" data-w="60"></span></span><span class="sk-num" data-yo="60" data-ia="75">60% / 75%</span></div>
+<div class="sk-fila" role="img" aria-label="Webflow: 30% On my own, 50% With AI"><span>Webflow</span><span class="sk-pista"><span class="sk-ia" data-w="50"></span><span class="sk-yo" data-w="30"></span></span><span class="sk-num" data-yo="30" data-ia="50">30% / 50%</span></div>
+<div class="sk-fila" role="img" aria-label="Runway: 40% On my own, 70% With AI"><span>Runway</span><span class="sk-pista"><span class="sk-ia" data-w="70"></span><span class="sk-yo" data-w="40"></span></span><span class="sk-num" data-yo="40" data-ia="70">40% / 70%</span></div>
+<div class="sk-fila" role="img" aria-label="Krea: 30% On my own, 45% With AI"><span>Krea</span><span class="sk-pista"><span class="sk-ia" data-w="45"></span><span class="sk-yo" data-w="30"></span></span><span class="sk-num" data-yo="30" data-ia="45">30% / 45%</span></div>
+<div class="sk-fila" role="img" aria-label="Magnific: 40% On my own, 65% With AI"><span>Magnific</span><span class="sk-pista"><span class="sk-ia" data-w="65"></span><span class="sk-yo" data-w="40"></span></span><span class="sk-num" data-yo="40" data-ia="65">40% / 65%</span></div>
+<div class="sk-fila" role="img" aria-label="WCAG accessibility: 60% On my own, 70% With AI"><span>WCAG accessibility</span><span class="sk-pista"><span class="sk-ia" data-w="70"></span><span class="sk-yo" data-w="60"></span></span><span class="sk-num" data-yo="60" data-ia="70">60% / 70%</span></div>
+<div class="sk-fila" role="img" aria-label="Design systems: 70% On my own, 75% With AI"><span>Design systems</span><span class="sk-pista"><span class="sk-ia" data-w="75"></span><span class="sk-yo" data-w="70"></span></span><span class="sk-num" data-yo="70" data-ia="75">70% / 75%</span></div>
+</details><details><summary>Automation and AI<span>4 skills</span></summary><p class="sk-frase">I use AI to automate repetitive tasks so teams can spend their time on higher-value work.</p><div class="sk-fila" role="img" aria-label="Make: 30% On my own, 60% With AI"><span>Make</span><span class="sk-pista"><span class="sk-ia" data-w="60"></span><span class="sk-yo" data-w="30"></span></span><span class="sk-num" data-yo="30" data-ia="60">30% / 60%</span></div>
+<div class="sk-fila" role="img" aria-label="Claude Code: 70% On my own"><span>Claude Code</span><span class="sk-pista"><span class="sk-yo" data-w="70"></span></span><span class="sk-num" data-yo="70" data-ia="0">70%</span></div>
+<div class="sk-fila" role="img" aria-label="Codex: 70% On my own"><span>Codex</span><span class="sk-pista"><span class="sk-yo" data-w="70"></span></span><span class="sk-num" data-yo="70" data-ia="0">70%</span></div>
+<div class="sk-fila" role="img" aria-label="Prompts and generative AI: 80% On my own"><span>Prompts and generative AI</span><span class="sk-pista"><span class="sk-yo" data-w="80"></span></span><span class="sk-num" data-yo="80" data-ia="0">80%</span></div>
+</details><details><summary>Operations<span>3 skills</span></summary><p class="sk-frase">20+ years coordinating suppliers, budgets and teams.</p><div class="sk-fila" role="img" aria-label="Processes and suppliers: 85% On my own"><span>Processes and suppliers</span><span class="sk-pista"><span class="sk-yo" data-w="85"></span></span><span class="sk-num" data-yo="85" data-ia="0">85%</span></div>
+<div class="sk-fila" role="img" aria-label="Invoicing and quotes: 85% On my own"><span>Invoicing and quotes</span><span class="sk-pista"><span class="sk-yo" data-w="85"></span></span><span class="sk-num" data-yo="85" data-ia="0">85%</span></div>
+<div class="sk-fila" role="img" aria-label="Team coordination: 85% On my own"><span>Team coordination</span><span class="sk-pista"><span class="sk-yo" data-w="85"></span></span><span class="sk-num" data-yo="85" data-ia="0">85%</span></div>
+</details><details><summary>Databases<span>5 skills</span></summary><p class="sk-frase">I structure each project's information so the team can use it without friction.</p><div class="sk-fila" role="img" aria-label="Airtable: 65% On my own, 75% With AI"><span>Airtable</span><span class="sk-pista"><span class="sk-ia" data-w="75"></span><span class="sk-yo" data-w="65"></span></span><span class="sk-num" data-yo="65" data-ia="75">65% / 75%</span></div>
+<div class="sk-fila" role="img" aria-label="Supabase: 20% On my own, 50% With AI"><span>Supabase</span><span class="sk-pista"><span class="sk-ia" data-w="50"></span><span class="sk-yo" data-w="20"></span></span><span class="sk-num" data-yo="20" data-ia="50">20% / 50%</span></div>
+<div class="sk-fila" role="img" aria-label="Notion: 80% On my own"><span>Notion</span><span class="sk-pista"><span class="sk-yo" data-w="80"></span></span><span class="sk-num" data-yo="80" data-ia="0">80%</span></div>
+<div class="sk-fila" role="img" aria-label="Excel: 80% On my own"><span>Excel</span><span class="sk-pista"><span class="sk-yo" data-w="80"></span></span><span class="sk-num" data-yo="80" data-ia="0">80%</span></div>
+<div class="sk-fila" role="img" aria-label="Google Sheets: 75% On my own, 85% With AI"><span>Google Sheets</span><span class="sk-pista"><span class="sk-ia" data-w="85"></span><span class="sk-yo" data-w="75"></span></span><span class="sk-num" data-yo="75" data-ia="85">75% / 85%</span></div>
+</details><details><summary>Code and web<span>4 skills</span></summary><p class="sk-frase">I build websites in HTML and JS and WordPress themes, ready to publish.</p><div class="sk-fila" role="img" aria-label="HTML, CSS y JS: 25% On my own, 70% With AI"><span>HTML, CSS y JS</span><span class="sk-pista"><span class="sk-ia" data-w="70"></span><span class="sk-yo" data-w="25"></span></span><span class="sk-num" data-yo="25" data-ia="70">25% / 70%</span></div>
+<div class="sk-fila" role="img" aria-label="WordPress: 15% On my own, 65% With AI"><span>WordPress</span><span class="sk-pista"><span class="sk-ia" data-w="65"></span><span class="sk-yo" data-w="15"></span></span><span class="sk-num" data-yo="15" data-ia="65">15% / 65%</span></div>
+<div class="sk-fila" role="img" aria-label="Cloudflare: 30% On my own, 65% With AI"><span>Cloudflare</span><span class="sk-pista"><span class="sk-ia" data-w="65"></span><span class="sk-yo" data-w="30"></span></span><span class="sk-num" data-yo="30" data-ia="65">30% / 65%</span></div>
+<div class="sk-fila" role="img" aria-label="GitHub: 35% On my own, 60% With AI"><span>GitHub</span><span class="sk-pista"><span class="sk-ia" data-w="60"></span><span class="sk-yo" data-w="35"></span></span><span class="sk-num" data-yo="35" data-ia="60">35% / 60%</span></div>
+</details><details><summary>Marketing and strategy<span>4 skills</span></summary><p class="sk-frase">Strategy, brand and campaigns, with 20+ years in advertising and marketing.</p><div class="sk-fila" role="img" aria-label="Campaign planning: 95% On my own"><span>Campaign planning</span><span class="sk-pista"><span class="sk-yo" data-w="95"></span></span><span class="sk-num" data-yo="95" data-ia="0">95%</span></div>
+<div class="sk-fila" role="img" aria-label="Content and media: 90% On my own"><span>Content and media</span><span class="sk-pista"><span class="sk-yo" data-w="90"></span></span><span class="sk-num" data-yo="90" data-ia="0">90%</span></div>
+<div class="sk-fila" role="img" aria-label="Brand: 85% On my own"><span>Brand</span><span class="sk-pista"><span class="sk-yo" data-w="85"></span></span><span class="sk-num" data-yo="85" data-ia="0">85%</span></div>
+<div class="sk-fila" role="img" aria-label="SEO and GEO: 50% On my own, 65% With AI"><span>SEO and GEO</span><span class="sk-pista"><span class="sk-ia" data-w="65"></span><span class="sk-yo" data-w="50"></span></span><span class="sk-num" data-yo="50" data-ia="65">50% / 65%</span></div>
+</details></div>
 </section>
-<section><h2>Herramientas y operaciones</h2><p class="intro">Herramientas internas, flujos y automatizaciones para hacer más claro el trabajo diario de un equipo.</p><div class="m-card"><div class="tags-row"><span class="type-tag">Proyecto real</span><span class="type-tag estado-tag">En uso</span></div>
-<h3>Presupuestar sin echar la tarde</h3><p>Herramienta no-code que convierte los PDF de proveedores en presupuestos para clientes y reduce el tiempo de preparación de cerca de una hora a unos diez minutos.</p><a class="btn" aria-label="Abrir proyecto Presupuestar sin echar la tarde" href="generador-de-presupuestos/">Abrir proyecto →</a></div>
+<section><h2>Business solutions</h2><p class="intro">Brand identity, websites and customer experience for businesses that need a digital presence equal to their offering.</p><div class="m-card"><div class="tags-row"><span class="type-tag">Concept</span><span class="type-tag estado-tag">Clickable prototype</span></div>
+<h3>Shiatsu</h3><p>Brand identity, website and booking experience for a Japanese shiatsu and facial service.</p><a class="btn" aria-label="Open project Shiatsu" href="shiatsu/">Open project →</a></div>
+<div class="m-card"><div class="tags-row"><span class="type-tag">Concept</span><span class="type-tag estado-tag">Clickable prototype</span></div>
+<h3>Puti Di Madre</h3><p>A direct-ordering experience for a neighbourhood pizzeria: more control over margin and customer relationships.</p><a class="btn" aria-label="Open project Puti Di Madre" href="putidimadre/">Open project →</a></div>
 </section>
-<section><h2>Exploración de producto</h2><p class="intro">Prototipos y exploraciones de producto para probar ideas, interacciones y nuevas formas de usar la tecnología.</p><div class="m-card"><div class="tags-row"><span class="type-tag">Concepto</span><span class="type-tag estado-tag">Prototipo navegable</span></div>
-<h3>Spotify Now Playing</h3><p>Exploración de producto para descubrir clubs a través de la música que suena en ellos.</p><a class="btn" aria-label="Abrir proyecto Spotify Now Playing" href="spotify/">Abrir proyecto →</a></div>
-<div class="m-card"><div class="tags-row"><span class="type-tag">Concepto</span><span class="type-tag estado-tag">Prototipo navegable</span></div>
-<h3>Respira</h3><p>Experiencia de respiración guiada, gratuita y sin registro, articulada alrededor de una luna que marca el ritmo.</p></div>
+<section><h2>Tools and operations</h2><p class="intro">Internal tools, workflows and automations that make a team's day-to-day work clearer.</p><div class="m-card"><div class="tags-row"><span class="type-tag">Real project</span><span class="type-tag estado-tag">In use</span></div>
+<h3>Quoting without losing the afternoon</h3><p>A no-code tool that turns supplier PDFs into customer quotes and reduces preparation time from nearly an hour to around ten minutes.</p><a class="btn" aria-label="Open project Quoting without losing the afternoon" href="generador-de-presupuestos/">Open project →</a></div>
 </section>
-<section><h2>Voz visual</h2><p class="intro">Proyectos visuales donde investigo lenguaje, narrativa e identidad.</p><div class="m-card"><div class="tags-row"><span class="type-tag">Trabajo visual</span><span class="type-tag estado-tag">Caso disponible</span></div>
-<h3>Evolución del depredador</h3><p>Scrollytelling true-crime.</p><a class="btn" aria-label="Abrir proyecto Evolución del depredador" href="depredador/">Abrir proyecto →</a></div>
-<div class="m-card"><div class="tags-row"><span class="type-tag">Concepto</span><span class="type-tag estado-tag">Prototipo navegable</span></div>
-<h3>Mesa de lectura</h3><p>Tarot interactivo de la vida freelance: 12 cartas ilustradas, física al barajar y una lectura que se escribe sola.</p><a class="btn" aria-label="Abrir proyecto Mesa de lectura" href="mesa-de-lectura/">Abrir proyecto →</a></div>
-<div class="m-card"><div class="tags-row"><span class="type-tag">Concepto</span><span class="type-tag estado-tag">Caso disponible</span></div>
-<h3>Este escritorio</h3><p>El porqué de este portfolio.</p></div>
+<section><h2>Product exploration</h2><p class="intro">Product prototypes and explorations for testing ideas, interactions and new ways of using technology.</p><div class="m-card"><div class="tags-row"><span class="type-tag">Concept</span><span class="type-tag estado-tag">Clickable prototype</span></div>
+<h3>Spotify Now Playing</h3><p>A product exploration for discovering clubs through the music playing in them.</p><a class="btn" aria-label="Open project Spotify Now Playing" href="spotify/">Open project →</a></div>
+<div class="m-card"><div class="tags-row"><span class="type-tag">Concept</span><span class="type-tag estado-tag">Clickable prototype</span></div>
+<h3>Respira</h3><p>A free guided-breathing experience with no sign-up, built around a moon that sets the pace.</p></div>
 </section>
-<section><h2>Proyectos en construcción</h2><p class="intro">Lo que estoy preparando. Los casos irán llegando.</p><div class="m-card"><div class="tags-row"><span class="type-tag">Proyecto real</span><span class="type-tag estado-tag">En desarrollo</span></div>
-<h3>Gestión de grupos</h3><p>Herramienta no-code para restaurantes y eventos.</p><span class="btn disabled">Caso próximamente</span></div>
-<div class="m-card"><div class="tags-row"><span class="type-tag">Proyecto real</span><span class="type-tag estado-tag">En desarrollo</span></div>
-<h3>Gestión de delivery</h3><p>Control de incidencias y facturación para restaurantes.</p><span class="btn disabled">Caso próximamente</span></div>
-<div class="m-card"><div class="tags-row"><span class="type-tag">Concepto</span><span class="type-tag estado-tag">En desarrollo</span></div>
-<h3>La Mezcaloteca</h3><p>Rediseño para convertir: web + email marketing.</p><span class="btn disabled">Próximamente</span></div>
-<div class="m-card"><div class="tags-row"><span class="type-tag">Trabajo visual</span><span class="type-tag estado-tag">Próximamente</span></div>
-<h3>Collages</h3><p>Serie de collages personales.</p><span class="btn disabled">Próximamente</span></div>
-<div class="m-card"><div class="tags-row"><span class="type-tag">Trabajo visual</span><span class="type-tag estado-tag">Próximamente</span></div>
-<h3>Piezas de diseño gráfico</h3><p>Todo el trabajo de diseño gráfico que he hecho para McDonald's®, y algunas piezas más.</p><span class="btn disabled">Próximamente</span></div>
-<div class="m-card"><div class="tags-row"><span class="type-tag">Trabajo visual</span><span class="type-tag estado-tag">Próximamente</span></div>
-<h3>Promos</h3><p>Material promocional.</p><span class="btn disabled">Próximamente</span></div>
+<section><h2>Visual voice</h2><p class="intro">Visual projects where I explore language, narrative and identity.</p><div class="m-card"><div class="tags-row"><span class="type-tag">Visual work</span><span class="type-tag estado-tag">Case study available</span></div>
+<h3>Evolución del depredador</h3><p>True-crime scrollytelling.</p><a class="btn" aria-label="Open project Evolución del depredador" href="depredador/">Open project →</a></div>
+<div class="m-card"><div class="tags-row"><span class="type-tag">Concept</span><span class="type-tag estado-tag">Clickable prototype</span></div>
+<h3>Mesa de lectura</h3><p>An interactive tarot for freelance life: 12 illustrated cards, physics when you shuffle, and a reading that writes itself.</p><a class="btn" aria-label="Open project Mesa de lectura" href="mesa-de-lectura/">Open project →</a></div>
+<div class="m-card"><div class="tags-row"><span class="type-tag">Concept</span><span class="type-tag estado-tag">Case study available</span></div>
+<h3>This desktop</h3><p>The why behind this portfolio.</p></div>
 </section>
-<section><h2>Sobre mí</h2><p>Llevo más de 20 años trabajando en publicidad y marketing. He pasado por agencias como Publicis, Wunderman y Havas, con clientes como Coca-Cola, Movistar y Lancôme. Desde 2018 gestiono varios restaurantes McDonald’s®: coordino proveedores, procesos internos, administración y marketing local. De ahí vienen mis ocho años de experiencia directa en operaciones.</p><p>Ahora diseño, construyo y pongo en marcha productos digitales para negocios: webs orientadas a cliente, herramientas internas y automatizaciones. Trabajo con diseño, no-code, HTML y JavaScript. Defino la dirección, el contenido y las decisiones de producto; utilizo IA como apoyo en tareas de redacción y desarrollo.</p><p><a class="btn" href="cv/">Ver mi CV →</a> <a class="btn btn-cta" href="trabajemos-juntos/">Trabajemos juntos →</a></p></section>
-<section><h2>Contacto</h2><h2>¿Qué proceso, servicio o experiencia de tu negocio necesita estar mejor diseñado?</h2><p class="small">Tu mensaje me llega por correo; no lo guardo en ninguna base de datos. O escríbeme directamente a <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a> · <a href="trabajemos-juntos/">Cómo trabajo →</a></p></section>
-<section><h2>Más páginas</h2><ul><li><a href="sobre-mi/">Sobre mí</a></li><li><a href="trabajemos-juntos/">Trabajemos juntos</a></li><li><a href="automatizaciones/">Automatizaciones con IA</a></li><li><a href="este-escritorio/">Este escritorio</a></li><li><a href="respira/">Respira</a></li></ul></section>
+<section><h2>Projects under construction</h2><p class="intro">What I'm working on. The case studies will arrive over time.</p><div class="m-card"><div class="tags-row"><span class="type-tag">Real project</span><span class="type-tag estado-tag">In development</span></div>
+<h3>Group management</h3><p>A no-code tool for restaurants and events.</p><span class="btn disabled">Case study coming soon</span></div>
+<div class="m-card"><div class="tags-row"><span class="type-tag">Real project</span><span class="type-tag estado-tag">In development</span></div>
+<h3>Delivery management</h3><p>Incident tracking and invoicing for restaurants.</p><span class="btn disabled">Case study coming soon</span></div>
+<div class="m-card"><div class="tags-row"><span class="type-tag">Concept</span><span class="type-tag estado-tag">In development</span></div>
+<h3>La Mezcaloteca</h3><p>A redesign built to convert: website plus email marketing.</p><span class="btn disabled">Coming soon</span></div>
+<div class="m-card"><div class="tags-row"><span class="type-tag">Visual work</span><span class="type-tag estado-tag">Coming soon</span></div>
+<h3>Collages</h3><p>A series of personal collages.</p><span class="btn disabled">Coming soon</span></div>
+<div class="m-card"><div class="tags-row"><span class="type-tag">Visual work</span><span class="type-tag estado-tag">Coming soon</span></div>
+<h3>Graphic design pieces</h3><p>All the graphic design work I have done for McDonald's®, plus a few other pieces.</p><span class="btn disabled">Coming soon</span></div>
+<div class="m-card"><div class="tags-row"><span class="type-tag">Visual work</span><span class="type-tag estado-tag">Coming soon</span></div>
+<h3>Promos</h3><p>Promotional material.</p><span class="btn disabled">Coming soon</span></div>
+</section>
+<section><h2>More pages</h2><ul><li><a href="en/about/">About me</a></li><li><a href="en/work-with-me/">Let’s work together</a></li><li><a href="en/automations/">AI automations</a></li><li><a href="en/this-desktop/">This desktop</a></li><li><a href="en/respira/">Respira</a></li></ul></section>
 
 <!-- LISTA-ESTATICA:FIN --></main>
 
 <noscript>
-  <div style="padding:24px;max-width:640px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;">
-    <h1>Mery Villena</h1>
-    <p>Digital product design, no-code and operations for small businesses.</p>
-    <p>This portfolio is interactive and needs JavaScript. Write to me at <a href="mailto:meryvillena@proton.me">meryvillena@proton.me</a>.</p>
-  </div>
+  <style>
+    #desktop { display: none; }
+    #mobile-view { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; max-width: 680px; margin: 0 auto; padding: 8px 24px 40px; font-family: Helvetica, Arial, sans-serif; color: #111; line-height: 1.5; }
+    #mobile-view .m-card { border: 1px solid #000; padding: 12px; margin: 10px 0; }
+    #mobile-view .m-card h3 { margin: 4px 0; font-size: 16px; }
+    #mobile-view .type-tag { display: inline-block; border: 1px solid #555; padding: 0 6px; margin-right: 6px; font-size: 12px; }
+    #mobile-view .btn.disabled { color: #666; }
+    #mobile-view section { border-top: 1px solid #ccc; padding: 16px 0; }
+  </style>
 </noscript>
 
 <script>
@@ -792,6 +851,7 @@ const NESTED = {
 };
 
 // Elementos del escritorio, en orden (los 2 comerciales arriba del todo)
+ICONS.skills = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABXUlEQVR42r2XjRGDIAxGncUVuoKzuIIruIIruEJXcAVWcAVq6IWDNEDCT3v31St35T0DAk7W2qlXng98WdV/eoLv+3bRSHQFhwJSiSHgZVlcJBJdwAhH8HVdPiWJZnAocJ5nBJdIiOA5cKtEl7uXSGA/VERcgVoJ7gZCCdUQaCVyTwpKqCugkeDAxhgf16YRqB0OCq4WOA4rlsiBmwRKEhKwWGDfdxsG4M/EZiU0YJEAAOd5jgJtIMBJaMBFAYTT8lKJIQIpOCcxRAAB0cR6Ty4oABkuAD8Ritdwpo8XWF+RxN8FDKzSgUQowj2C3QWOaXUSJrHYtAhkNyOcZN+OjROBpOAaAQTDVp3dDePOjQu3JUsrEILxzFgUSK3zaE/bpeCswLZtrvxUJBozRoLd5xNgelz/gYvO8kQCBSRg9kyogXMSNWDfTw2cSqCIBuz7qIVzldCAh7wd17yefwCYelbNGphvaAAAAABJRU5ErkJggg==";
 const DESKTOP = [
   {
     id: "leeme", kind: "file", icon: ICONS.favorites, title: tl("Léeme primero"),
@@ -812,6 +872,10 @@ const DESKTOP = [
   {
     id: "contacto", kind: "file", icon: ICONS.mail, title: tl("Contacto"),
     win: { title: tl("Hablemos"), type: "contact" },
+  },
+  {
+    id: "skills", kind: "file", icon: ICONS.skills, title: tl("Monitor de skills"),
+    win: { title: tl("Monitor de skills"), type: "skills" },
   },
   {
     id: "soluciones", kind: "folder", icon: ICONS.directory, title: tl("Soluciones de negocio"), color: "#7fbf7a",
@@ -1461,6 +1525,79 @@ function pistaCerrar(id) {
   }, 700);
 }
 
+/* ===== MONITOR DE SKILLS (ventana tipo Monitor de actividad) =====
+   Para cambiar un porcentaje: editar solo esta lista. Cada skill = [nombre, nivel yo sola, nivel con IA].
+   Si los dos números son iguales, sale una sola barra. */
+const SKILLS = [
+  [tl("Diseño"), [["Figma", 65, 75], ["Photoshop", 75, 85], ["Illustrator", 70, 75], ["Framer", 60, 75], ["Webflow", 30, 50], ["Runway", 40, 70], ["Krea", 30, 45], ["Magnific", 40, 65], [tl("Accesibilidad WCAG"), 60, 70], [tl("Sistemas de diseño"), 70, 75]], tl("Diseño interfaces y sistemas de diseño, del concepto al prototipo navegable.")],
+  [tl("Automatización e IA"), [["Make", 30, 60], ["Claude Code", 70, 70], ["Codex", 70, 70], [tl("Prompts e IA generativa"), 80, 80]], tl("Automatizo con IA las tareas repetitivas para que los equipos dediquen su tiempo a trabajo de más valor.")],
+  [tl("Operaciones"), [[tl("Procesos y proveedores"), 85, 85], [tl("Facturación y presupuestos"), 85, 85], [tl("Coordinación de equipos"), 85, 85]], tl("Más de 20 años coordinando proveedores, presupuestos y equipos.")],
+  [tl("Bases de datos"), [["Airtable", 65, 75], ["Supabase", 20, 50], ["Notion", 80, 80], ["Excel", 80, 80], ["Google Sheets", 75, 85]], tl("Estructuro la información de cada proyecto para que el equipo la use sin fricción.")],
+  [tl("Programación y web"), [["HTML, CSS y JS", 25, 70], ["WordPress", 15, 65], ["Cloudflare", 30, 65], ["GitHub", 35, 60]], tl("Construyo webs en HTML y JS y temas de WordPress, listos para publicar.")],
+  [tl("Marketing y estrategia"), [[tl("Planificación de campañas"), 95, 95], [tl("Contenido y medios"), 90, 90], [tl("Marca"), 85, 85], [tl("SEO y GEO"), 50, 65]], tl("Estrategia, marca y campañas, con más de 20 años en publicidad y marketing.")],
+];
+function skillsHtml() {
+  let h = '<div class="sk"><p class="sk-intro">' + tl("Nivel de autonomía en cada herramienta y alcance con IA.") + '</p>' +
+    '<div class="sk-leyenda"><span><i class="yo"></i>' + tl("Yo sola") + '</span><span><i class="ia"></i>' + tl("Con IA") + '</span></div>';
+  SKILLS.forEach((g, i) => {
+    h += '<details' + (i === 0 ? " open" : "") + '><summary>' + g[0] + '<span>' + g[1].length + ' skills</span></summary>' + (g[2] ? '<p class="sk-frase">' + g[2] + '</p>' : '');
+    g[1].forEach((s) => {
+      const yo = s[1], ia = s[2] > s[1] ? s[2] : 0;
+      const txt = yo + "%" + (ia ? " / " + ia + "%" : "");
+      const aria = (s[0] + ": " + yo + "% " + tl("Yo sola") + (ia ? ", " + ia + "% " + tl("Con IA") : "")).replace(/"/g, "&quot;");
+      h += '<div class="sk-fila" role="img" aria-label="' + aria + '"><span>' + s[0] + '</span><span class="sk-pista">' + (ia ? '<span class="sk-ia" data-w="' + ia + '" style="width:' + ia + '%"></span>' : "") + '<span class="sk-yo" data-w="' + yo + '" style="width:' + yo + '%"></span></span><span class="sk-num" data-yo="' + yo + '" data-ia="' + ia + '">' + txt + "</span></div>";
+    });
+    h += "</details>";
+  });
+  return h + "</div>";
+}
+
+/* Animación del Monitor: al abrir un grupo, las barras se llenan y las cifras cuentan hasta su valor.
+   Con "reducir movimiento" no hay animación. Los valores finales siempre están en el HTML (data-w, data-yo, data-ia). */
+(function skAnim() {
+  const reducido = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const DUR = 700, ESCALON = 45;
+  const suave = (t) => 1 - Math.pow(1 - t, 3);
+  function animar(det) {
+    if (!det || !det.open || reducido()) return;
+    const ahora = performance.now(); if (det._skT && ahora - det._skT < 300) return; det._skT = ahora;  // toggle y observador pueden coincidir al nacer abierto
+    det.querySelectorAll(".sk-fila").forEach((f, i) => {
+      const barras = f.querySelectorAll(".sk-yo, .sk-ia"), num = f.querySelector(".sk-num");
+      const yo = +num.dataset.yo, ia = +num.dataset.ia;
+      barras.forEach((b) => { b.style.transition = "none"; b.style.width = "0%"; });
+      num.textContent = "0%" + (ia ? " / 0%" : "");
+      void f.offsetWidth;  // fuerza el repintado en vacío; sin esto el navegador salta directo al valor final
+      setTimeout(() => {
+        if (!det.open) return;
+        barras.forEach((b) => { b.style.transition = "width " + DUR + "ms cubic-bezier(.2,.7,.2,1)"; b.style.width = b.dataset.w + "%"; });
+        const t0 = performance.now();
+        const paso = (t) => {
+          const k = Math.min(1, (t - t0) / DUR), e = suave(k);
+          num.textContent = Math.round(yo * e) + "%" + (ia ? " / " + Math.round(ia * e) + "%" : "");
+          if (k < 1 && det.open) requestAnimationFrame(paso);
+          else if (k < 1) { barras.forEach((b) => { b.style.transition = "none"; b.style.width = b.dataset.w + "%"; }); num.textContent = yo + "%" + (ia ? " / " + ia + "%" : ""); }
+        };
+        requestAnimationFrame(paso);
+      }, i * ESCALON);
+    });
+  }
+  // abrir un grupo (el evento toggle no sube, por eso se escucha en captura)
+  document.addEventListener("toggle", (e) => { if (e.target.matches && e.target.matches(".sk details")) animar(e.target); }, true);
+  // las ventanas se reutilizan (cerrar solo las oculta): cada vez que se abre el Monitor se vuelve a animar el grupo abierto
+  const abrirOriginal = openWindow;
+  openWindow = function (id) {
+    const r = abrirOriginal.apply(this, arguments);
+    if (id === "skills") setTimeout(() => { const w = document.querySelector(".window .sk"); if (w) w.querySelectorAll("details[open]").forEach(animar); }, 40);
+    return r;
+  };
+  // al aparecer el Monitor (ventana o vista de lista), se anima el grupo que nace abierto
+  new MutationObserver((muts) => muts.forEach((m) => m.addedNodes.forEach((n) => {
+    if (n.nodeType !== 1) return;
+    const sk = n.matches(".sk") ? n : n.querySelector(".sk");
+    if (sk) sk.querySelectorAll("details[open]").forEach(animar);
+  }))).observe(document.body, { childList: true, subtree: true });
+})();
+
 /* ============================================================
    CONSTRUCCIÓN DEL ESCRITORIO
    ============================================================ */
@@ -1476,7 +1613,8 @@ DESKTOP.forEach((item) => {
     let html = "";
     if (item.win.type === "text") html = item.win.html;
     else if (item.win.type === "contact") html = contactHtml("");
-    makeWindow(item.id, item.win.title || item.title, item.icon, html, 160 + Math.random() * 80, 110 + Math.random() * 60, 360);
+    else if (item.win.type === "skills") html = skillsHtml();
+    makeWindow(item.id, item.win.title || item.title, item.icon, html, 160 + Math.random() * 80, 110 + Math.random() * 60, item.win.type === "skills" ? 470 : 360);
   } else if (item.kind === "trash") {
     trashEl = document.querySelector('.icon[data-id="trash"]');
     // Clic en la Papelera = devolver todo a su sitio (no es borrado real).
@@ -2966,9 +3104,9 @@ desktop.addEventListener("mousedown", (e) => {
     const carp = DESKTOP.filter((d) => d.kind === "folder" && d.id !== "sobremi").map((d) => d.id);
     if (cap >= 8) {
       ["leeme"].concat(carp, ["panel", "fondo"]).forEach((id, i) => { nuevo[id] = { x: cx, y: 40 + paso * i }; });
-      ["sobremi", "contacto", "radio"].forEach((id, i) => { nuevo[id] = { x: cx - 88, y: 40 + paso * i }; });
+      ["sobremi", "contacto", "skills", "radio"].forEach((id, i) => { nuevo[id] = { x: cx - 88, y: 40 + paso * i }; });
     } else {
-      ["leeme", "sobremi", "contacto"].concat(carp, ["radio", "panel", "fondo"]).forEach((id, i) => { nuevo[id] = { x: cx - 88 * Math.floor(i / cap), y: 40 + paso * (i % cap) }; });
+      ["leeme", "sobremi", "contacto", "skills"].concat(carp, ["radio", "panel", "fondo"]).forEach((id, i) => { nuevo[id] = { x: cx - 88 * Math.floor(i / cap), y: 40 + paso * (i % cap) }; });
     }
     Object.keys(nuevo).forEach((id) => {
       const el = document.querySelector('.icon[data-id="' + id + '"]'), antes = originalPos[id]; if (!el) return;
@@ -3049,6 +3187,7 @@ desktop.addEventListener("mousedown", (e) => {
       { h: tl("Abrir") },
       ...folders.map((d) => ({ l: d.title, f: () => openWindow(d.id) })),
       { l: tl("Contacto"), f: () => openWindow("contacto") },
+      { l: tl("Monitor de skills"), f: () => openWindow("skills") },
       "-",
       { l: tl("Cerrar ventana"), f: () => closeWin(frontWindow()) },
       { l: tl("Cerrar todas las ventanas"), f: () => document.querySelectorAll(".window.open").forEach((w) => closeWin(w)) },
@@ -3149,6 +3288,8 @@ desktop.addEventListener("mousedown", (e) => {
       h += "<section><h2>" + tl("Léeme primero") + "</h2><p>" + tl("Este portfolio toma la forma de un escritorio porque los sistemas importan: ayudan a que lo complejo sea comprensible y utilizable. La interfaz de los Mac de los noventa es <a href=\"#\" onclick=\"openWindow('case-portfolio');return false\">una referencia temprana de esa idea</a>.") + "</p><p>" + tl("Ese es también el centro de mi trabajo: diseño productos digitales para quien visita una web, para quien usa una herramienta y para el negocio que necesita que ambas cosas estén conectadas.") + "</p><p>" + tl("Te recomiendo empezar por Soluciones de negocio o Herramientas.") + "</p></section>";
     } else if (item.id === "contacto") {
       h += "<section><h2>" + tl("Contacto") + "</h2>" + contactHtml("-m") + "</section>";
+    } else if (item.id === "skills") {
+      h += "<section><h2>" + tl("Monitor de skills") + "</h2>" + skillsHtml() + "</section>";
     }
   });
 
